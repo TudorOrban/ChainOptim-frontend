@@ -14,10 +14,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'chain-optimizer-frontend' title`, () => {
+  it(`should have the 'Chain Optimizer' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('chain-optimizer-frontend');
+    expect(app.title).toEqual('Chain Optimizer');
   });
 
   it('should render title', () => {
