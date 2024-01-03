@@ -1,0 +1,22 @@
+.header-gradient {
+    background: linear-gradient(to bottom, var(--header-top-color), var(--header-bottom-color)); /* Example gradient */
+    color: white;
+    padding: 0.5rem 1rem;
+}
+
+
+
+button.login-button, button.signup-button {
+    background-color: #fff;
+    color: #2193b0;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button.login-button:hover, button.signup-button:hover {
+    background-color: #ddd;
+}

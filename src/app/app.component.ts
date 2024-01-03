@@ -1,14 +1,31 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import {
+    Event,
+    NavigationEnd,
+    Router,
+    RouterModule,
+    RouterOutlet,
+} from '@angular/router';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { JwtInterceptor } from './services/jwt-interceptor.service';
-import { AuthenticationService } from './services/authentication.service';
+import { JwtInterceptor } from './core/services/jwt-interceptor.service';
+import { AuthenticationService } from './core/services/authentication.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { SidebarComponent } from './core/components/sidebar/sidebar.component';
+import { filter } from 'rxjs';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [CommonModule, RouterOutlet, HttpClientModule],
+    imports: [
+        CommonModule,
+        RouterOutlet,
+        HttpClientModule,
+        FontAwesomeModule,
+        RouterModule,
+        SidebarComponent,
+    ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
@@ -16,11 +33,26 @@ import { AuthenticationService } from './services/authentication.service';
     styleUrl: './app.component.css',
 })
 export class AppComponent {
-    constructor(public authService: AuthenticationService) {}
+    hideHeader = false;
 
+    constructor(
+        public authService: AuthenticationService,
+        private router: Router
+    ) {
+        this.router.events.pipe(
+            filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)
+          ).subscribe((event: NavigationEnd) => {
+            this.hideHeader = event.url.startsWith('/dashboard');
+          });
+    }
+
+    get isDashboardRoute(): boolean {
+        return this.router.url.startsWith('/dashboard');
+    }
     logout() {
         this.authService.logout();
     }
 
     title = 'Chain Optimizer';
+    faSearch = faSearch;
 }

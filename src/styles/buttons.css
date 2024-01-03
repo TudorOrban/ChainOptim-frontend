@@ -1,0 +1,18 @@
+.auth-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    height: 40px;
+    line-height: 40px;
+    background-color: #3A3FD6;
+    color: #fff;
+    border-radius: 1rem;
+    font-weight: 600;
+    &:hover {
+        background-color: #2c14b1;
+    }
+}

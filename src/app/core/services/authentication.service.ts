@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from "@angular/common";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
+import * as jwt_decoder from "jwt-decode";
 
 @Injectable({
     providedIn: "root"
@@ -25,5 +26,14 @@ export class AuthenticationService {
 
     public logout(): void {
         localStorage.removeItem("token");
+    }
+
+    public getUsernameFromToken(): string | null {
+        const token = this.getToken();
+        if (token) {
+            const decodedToken = jwt_decoder.jwtDecode<{ sub: string}>(token);
+            return decodedToken.sub;
+        }
+        return null;
     }
 }
