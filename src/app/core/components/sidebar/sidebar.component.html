@@ -4,7 +4,7 @@
 >
     <div>
         <div class="flex items-center justify-between px-6 py-4">
-            <span class="font-semibold text-xl ml-10 mt-1">Dashboard</span>
+            <span class="font-semibold text-xl ml-10 mt-2">Dashboard</span>
             <fa-icon
                 [icon]="faBars"
                 class="w-4 h-4 hover:text-gray-200 cursor-pointer"
@@ -14,14 +14,15 @@
         <div class="flex flex-col p-4 space-y-6">
             <div *ngFor="let item of sidebarItems" class="flex items-center">
                 <fa-icon [icon]="item.icon" class="w-4 h-4 mr-4 mb-2"></fa-icon>
-                <a *ngIf="!!item.link" [href]="item.link">{{ item.label }}</a>
+                <a *ngIf="item.link" [routerLink]="item.link">{{
+                    item.label
+                }}</a>
                 <div *ngIf="!item.link">{{ item.label }}</div>
-                
             </div>
         </div>
     </div>
-    <div class="flex items-center justify-between pl-7 pr-8 pb-6">
-        <a href="/">
+    <div class="flex items-center justify-between pl-6 pr-8 pb-6">
+        <a [routerLink]="['/']">
             <fa-icon
                 [icon]="faHouse"
                 class="w-4 h-4 mr-2 hover:text-gray-200"
@@ -51,7 +52,14 @@
         ></fa-icon>
 
         <ng-container *ngFor="let item of sidebarItems">
+            <a *ngIf="item.link" [routerLink]="item.link">
+                <fa-icon
+                    [icon]="item.icon"
+                    class="w-4 h-4 hover:text-gray-200"
+                ></fa-icon>
+            </a>
             <fa-icon
+                *ngIf="!item.link"
                 [icon]="item.icon"
                 class="w-4 h-4 hover:text-gray-200"
             ></fa-icon>
@@ -59,8 +67,13 @@
     </div>
 
     <!-- Bottom icons -->
-    <div class="flex flex-col items-center space-y-6 py-4">
-        <fa-icon [icon]="faHouse" class="w-4 h-4 hover:text-gray-200"></fa-icon>
+    <div class="flex flex-col items-center space-y-6 py-6">
+        <a [routerLink]="['/']">
+            <fa-icon
+                [icon]="faHouse"
+                class="w-4 h-4 hover:text-gray-200"
+            ></fa-icon>
+        </a>
         <fa-icon
             [icon]="faSearch"
             class="w-4 h-4 hover:text-gray-200"

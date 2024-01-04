@@ -1,12 +1,13 @@
 import { isPlatformBrowser } from "@angular/common";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import * as jwt_decoder from "jwt-decode";
+import { UserService } from "../../dashboard/services/UserService";
 
 @Injectable({
     providedIn: "root"
 })
 export class AuthenticationService {
-    constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+    constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService) {}
 
     public isAuthenticated(): boolean {
         if (isPlatformBrowser(this.platformId)) {
@@ -26,6 +27,7 @@ export class AuthenticationService {
 
     public logout(): void {
         localStorage.removeItem("token");
+        this.userService.setCurrentUser(null);
     }
 
     public getUsernameFromToken(): string | null {

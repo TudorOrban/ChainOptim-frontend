@@ -1,0 +1,12 @@
+<div class="flex p-8">
+    <form (ngSubmit)="onSubmit()">
+        <span class="font-bold text-2xl pb-6">Create Organization</span>
+        <div class="form-field">
+            <label for="name">Name:</label>
+            <input type="text" id="name" [(ngModel)]="name" name="name" />
+        </div>
+        <button type="submit" class="standard-write-button mt-4">
+            Create Organization
+        </button>
+    </form>
+</div>

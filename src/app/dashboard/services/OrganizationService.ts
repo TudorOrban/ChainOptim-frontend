@@ -15,8 +15,9 @@ export class OrganizationService {
         return this.http.post<Organization>(this.apiUrl, organization);
     }
 
-    getOrganizationById(id: number): Observable<Organization> {
-        return this.http.get<Organization>(`${this.apiUrl}/${id}`);
+    getOrganizationById(id: number, includeUsers?: boolean): Observable<Organization> {
+        const url = includeUsers ? `${this.apiUrl}/${id}?includeUsers=true` : `${this.apiUrl}/${id}`;
+        return this.http.get<Organization>(url);
     }
 
     getAllOrganizations(): Observable<Organization[]> {

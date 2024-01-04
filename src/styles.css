@@ -30,3 +30,8 @@ app-root {
     display: flex;
     flex-direction: column;
 }
+
+.small-icon {
+    width: 1rem;
+    height: 1rem;
+}

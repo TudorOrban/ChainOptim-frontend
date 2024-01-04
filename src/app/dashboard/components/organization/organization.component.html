@@ -1,3 +1,82 @@
-<div class="w-full p-4">
-    <span class="p-4 text-lg font-semibold">Organization</span>
+<div *ngIf="!!currentOrganization">
+    <!-- Header -->
+    <div
+        class="flex items-start justify-between px-4 md:px-16 py-8 border-b border-gray-300 shadow-sm"
+    >
+        <div class="">
+            <fa-icon
+                [icon]="faBuilding"
+                class="small-icon text-gray-700 mr-2"
+            ></fa-icon>
+            <span class="font-semibold text-2xl"
+                >Organization: {{ currentOrganization.name }}</span
+            >
+            <div class="flex flex-col pt-2 text-lg text-gray-900">
+                <span>Address: {{ currentOrganization?.address }}</span>
+                <span
+                    >Contact Information:
+                    {{ currentOrganization?.contactInfo }}</span
+                >
+            </div>
+        </div>
+        <div class="flex flex-col justify-end space-y-2">
+            <span class="font-semibold text-lg">
+                Subscription Plan: {{ currentOrganization.subscriptionPlan }}
+            </span>
+            <button class="standard-write-button self-end">Change Plan</button>
+        </div>
+    </div>
+
+    <!-- Users panel -->
+    <div class="flex flex-col px-4 md:px-12 py-4 space-y-2">
+        <div class="flex items-center">
+            <span class="text-xl font-semibold mr-2">Admins:</span>
+            <span *ngFor="let admin of admins; let i = index" class="text-lg">
+                <ng-container *ngIf="0 < i">, </ng-container
+                >{{ admin.username }}
+            </span>
+        </div>
+        <div class="flex items-center">
+            <span class="text-xl font-semibold mr-2">Members:</span>
+            <span *ngFor="let member of members; let i = index" class="text-lg">
+                <ng-container *ngIf="0 < i">, </ng-container
+                >{{ member.username }}
+            </span>
+        </div>
+        <div class="flex items-center">
+            <span class="text-xl font-semibold mr-2">No role:</span>
+            <span *ngFor="let noRole of noRoles; let i = index" class="text-lg">
+                <ng-container *ngIf="0 < i">, </ng-container
+                >{{ noRole.username }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!currentOrganization" class="p-8">
+    <div class="flex items-center justify-between px-8 pb-4">
+        <div class="font-semibold">
+            <fa-icon
+                [icon]="faBuilding"
+                class="w-4 h-4 text-gray-700 mr-2"
+            ></fa-icon>
+            <span class="text-2xl">Organization: No organization</span>
+        </div>
+        <span class="font-semibold text-lg mr-12">
+            Subscription Plan: None
+        </span>
+    </div>
+    <span class="text-lg"
+        >You are not a member of any organization. As such, most features are
+        disabled. To become a member, you must either:</span
+    >
+    <div class="flex flex-col px-4 py-2 text-lg text-gray-900">
+        <a
+            [routerLink]="['/dashboard/organization/create-organization']"
+            class="text-blue-600 hover:text-blue-700 hover:underline hover:underline-offset-1"
+            >Create a new organization</a
+        >
+        <span>Request to join your organization</span>
+        <span>Receive an invitation from your organization</span>
+    </div>
 </div>

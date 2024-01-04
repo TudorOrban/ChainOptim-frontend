@@ -4,7 +4,8 @@ export interface User {
     email: string;
     createdAt: Date;
     updatedAt: Date;
-    organization: Organization;
+    role: UserRole;
+    organization?: Organization;
 }
 
 export interface Organization {
@@ -12,9 +13,32 @@ export interface Organization {
     name: string;
     address?: string;
     contactInfo?: string;
-    subscriptionPlan: string;
+    subscriptionPlan: SubscriptionPlan;
     createdAt: Date;
     updatedAt: Date;
     users: User[];
 }
-  
+
+export type UserRole = "ADMIN" | "MEMBER" | "NONE";
+export type SubscriptionPlan = "NONE" | "BASIC" | "PRO";
+
+export interface OrganizationInvite {
+    id: number;
+    organizationId: number;
+    inviterId: string;
+    inviteeId: string;
+    status: InviteStatus;
+    createdAt: string;
+}
+
+export type InviteStatus = "PENDING" | "ACCEPTED" | "DECLINED";
+
+export interface OrganizationRequests {
+    id: number;
+    organizationId: number;
+    requesterId: string;
+    status: RequestStatus;
+    createdAt: string;
+}
+
+export type RequestStatus = "PENDING" | "ACCEPTED" | "DECLINED";
