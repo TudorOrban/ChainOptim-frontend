@@ -35,3 +35,13 @@ app-root {
     width: 1rem;
     height: 1rem;
 }
+
+.text-with-link {
+    color: rgb(37 99 235);
+}
+
+.text-with-link:hover {
+    color: rgb(29 78 216);
+    text-decoration-line: underline;
+    text-underline-offset: 1px;
+}

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Organization } from '../../models/organization';
+import { CreateOrganizationDTO, Organization } from '../../models/organization';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,8 +11,8 @@ export class OrganizationService {
 
     constructor(private http: HttpClient) {}
 
-    createOrganization(organization: Organization): Observable<Organization> {
-        return this.http.post<Organization>(this.apiUrl, organization);
+    createOrganization(organization: CreateOrganizationDTO): Observable<CreateOrganizationDTO> {
+        return this.http.post<CreateOrganizationDTO>(this.apiUrl, organization);
     }
 
     getOrganizationById(id: number, includeUsers?: boolean): Observable<Organization> {

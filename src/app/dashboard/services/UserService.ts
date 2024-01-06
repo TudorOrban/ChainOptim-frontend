@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../../models/organization';
+import { SearchUserDTO, User } from '../../models/organization';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -23,6 +23,10 @@ export class UserService {
 
     getUserByUsername(username: string): Observable<User> {
         return this.http.get<User>(`${this.apiUrl}/username/${username}`);
+    }
+
+    searchUserByUsername(username: string): Observable<SearchUserDTO[]> {
+        return this.http.get<SearchUserDTO[]>(`${this.apiUrl}/search/${username}`);
     }
 
     getAllUsers(): Observable<User[]> {

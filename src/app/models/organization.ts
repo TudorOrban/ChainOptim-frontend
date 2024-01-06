@@ -19,6 +19,30 @@ export interface Organization {
     users: User[];
 }
 
+export interface SearchUserDTO {
+    id: string;
+    username: string;
+    email: string;
+}
+
+export interface CreateUserDTO {
+    username: string;
+    password: string;
+    email: string;
+    organizationId: number;
+    role: UserRole;
+}
+
+export interface CreateOrganizationDTO {
+    name: string;
+    address?: string;
+    contactInfo?: string;
+    creatorId: string;
+    existingUserIds?: string[];
+    createdUsers?: CreateUserDTO[];
+    subscriptionPlan: SubscriptionPlan;
+}
+
 export type UserRole = "ADMIN" | "MEMBER" | "NONE";
 export type SubscriptionPlan = "NONE" | "BASIC" | "PRO";
 
