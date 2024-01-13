@@ -51,7 +51,7 @@ export class SidebarComponent {
             icon: this.faBuilding,
             link: '/dashboard/organization',
         },
-        { label: 'Products', icon: this.faBox },
+        { label: 'Products', icon: this.faBox, link: '/dashboard/products' },
         { label: 'Orders', icon: this.faCartShopping },
         { label: 'Warehouses', icon: this.faWarehouse },
     ];

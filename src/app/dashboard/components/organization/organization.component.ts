@@ -25,24 +25,24 @@ export class OrganizationComponent implements OnInit {
         private userService: UserService,
         private organizationService: OrganizationService
     ) {}
-
+    
     ngOnInit() {
         this.userService.getCurrentUser().subscribe((data) => {
             this.currentUser = data;
             console.log('User', data);
-            if (this.currentUser?.organization?.id) {
-                this.organizationService
-                    .getOrganizationById(this.currentUser?.organization.id, true)
-                    .subscribe((orgData) => {
-                        console.log('Organization', orgData);
-                        this.currentOrganization = orgData;
-                        this.admins = this.currentOrganization?.users.filter((user) => user.role === 'ADMIN') || [];
-                        this.members = this.currentOrganization?.users.filter((user) => user.role === 'MEMBER') || [];
-                        this.noRoles = this.currentOrganization?.users.filter((user) => user.role === 'NONE') || [];
-                    });
+        });
+    
+        this.organizationService.getCurrentOrganization().subscribe((orgData) => {
+            if (orgData) {
+                console.log('Organization', orgData);
+                this.currentOrganization = orgData;
+                this.admins = orgData.users.filter((user) => user.role === 'ADMIN') || [];
+                this.members = orgData.users.filter((user) => user.role === 'MEMBER') || [];
+                this.noRoles = orgData.users.filter((user) => user.role === 'NONE') || [];
             }
         });
     }
+    
 
     faBuilding = faBuilding;
 }

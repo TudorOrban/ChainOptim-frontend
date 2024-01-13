@@ -1,6 +1,7 @@
 @import "./styles/buttons.css";
 @import "./styles/forms.css";
 @import "./styles/sidebar.css";
+@import "./styles/common-elements.css";
 
 @tailwind base;
 @tailwind components;

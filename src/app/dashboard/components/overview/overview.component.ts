@@ -8,8 +8,8 @@ import { UserService } from '../../services/UserService';
     selector: 'app-dashboard',
     standalone: true,
     imports: [],
-    templateUrl: './dashboard.component.html',
-    styleUrl: './dashboard.component.css',
+    templateUrl: './overview.component.html',
+    styleUrl: './overview.component.css',
 })
 export class DashboardComponent {
     currentUser: User | null = null;

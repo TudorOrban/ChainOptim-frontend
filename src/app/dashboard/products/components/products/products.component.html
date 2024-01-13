@@ -1,0 +1,19 @@
+<div class="px-4 md:px-16 py-8">
+    <h2 class="flex items-center">
+        <fa-icon [icon]="faBox" class="text-lg text-gray-700"></fa-icon>
+        <div class="page-title ml-2">Products</div>
+    </h2>
+    <ul *ngFor="let product of products" class="pt-6 space-y-4">
+        <li
+            key="product.id"
+            class="px-4 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-md shadow-sm"
+        >
+            <a
+                [routerLink]="'/dashboard/products/' + product.id"
+                class="font-semibold text-lg hover:text-blue-700 hover:text-underline"
+                >{{ product.name }}</a
+            >
+            <p class="text-gray-900">{{ product.description }}</p>
+        </li>
+    </ul>
+</div>

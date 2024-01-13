@@ -13,8 +13,9 @@ import { AuthenticationService } from './core/services/authentication.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent } from './core/components/sidebar/sidebar.component';
-import { filter } from 'rxjs';
+import { filter, switchMap } from 'rxjs';
 import { UserService } from './dashboard/services/UserService';
+import { OrganizationService } from './dashboard/services/OrganizationService';
 
 @Component({
     selector: 'app-root',
@@ -34,13 +35,19 @@ import { UserService } from './dashboard/services/UserService';
     styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
+    // Display variables
     hideHeader = false;
+    title = 'Chain Optimizer';
+    faSearch = faSearch;
 
+    // Constructor
     constructor(
         public authService: AuthenticationService,
         private userService: UserService,
+        private organizationService: OrganizationService,
         private router: Router
     ) {
+        // Hide header on dashboard routes
         this.router.events
             .pipe(
                 filter(
@@ -53,20 +60,30 @@ export class AppComponent implements OnInit {
             });
     }
 
+    get isDashboardRoute(): boolean {
+        return this.router.url.startsWith('/dashboard');
+    }
+
+
+    // Fetch current user and organization data on init
     ngOnInit() {
         const username = this.authService.getUsernameFromToken();
         if (username) {
             this.userService.fetchAndSetCurrentUser(username);
+    
+            this.userService.getCurrentUser().pipe(
+                filter(user => user !== null && user.organization !== undefined && user.organization.id !== undefined),
+                switchMap(user => {
+                    return this.organizationService.fetchAndSetCurrentOrganization(user?.organization?.id as number);
+                })
+            ).subscribe();
         }
     }
 
-    get isDashboardRoute(): boolean {
-        return this.router.url.startsWith('/dashboard');
-    }
+    
+    // Logout
     logout() {
         this.authService.logout();
     }
 
-    title = 'Chain Optimizer';
-    faSearch = faSearch;
 }
