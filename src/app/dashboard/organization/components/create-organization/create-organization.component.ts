@@ -7,8 +7,8 @@ import {
     SubscriptionPlan,
     User,
 } from '../../../../models/organization';
-import { OrganizationService } from '../../../services/OrganizationService';
-import { UserService } from '../../../services/UserService';
+import { OrganizationService } from '../../services/OrganizationService';
+import { UserService } from '../../../../core/services/UserService';
 import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch, faUser, faXmark } from '@fortawesome/free-solid-svg-icons';

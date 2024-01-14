@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
     Event,
     NavigationEnd,
@@ -14,8 +14,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent } from './core/components/sidebar/sidebar.component';
 import { filter, switchMap } from 'rxjs';
-import { UserService } from './dashboard/services/UserService';
-import { OrganizationService } from './dashboard/services/OrganizationService';
+import { UserService } from './core/services/UserService';
+import { OrganizationService } from './dashboard/organization/services/OrganizationService';
 
 @Component({
     selector: 'app-root',
@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
 
     // Constructor
     constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
         public authService: AuthenticationService,
         private userService: UserService,
         private organizationService: OrganizationService,
@@ -64,26 +65,35 @@ export class AppComponent implements OnInit {
         return this.router.url.startsWith('/dashboard');
     }
 
-
     // Fetch current user and organization data on init
     ngOnInit() {
-        const username = this.authService.getUsernameFromToken();
-        if (username) {
-            this.userService.fetchAndSetCurrentUser(username);
-    
-            this.userService.getCurrentUser().pipe(
-                filter(user => user !== null && user.organization !== undefined && user.organization.id !== undefined),
-                switchMap(user => {
-                    return this.organizationService.fetchAndSetCurrentOrganization(user?.organization?.id as number);
-                })
-            ).subscribe();
+        if (isPlatformBrowser(this.platformId)) {
+            const username = this.authService.getUsernameFromToken();
+            if (username) {
+                this.userService.fetchAndSetCurrentUser(username);
+
+                this.userService
+                    .getCurrentUser()
+                    .pipe(
+                        filter(
+                            (user) =>
+                                user !== null &&
+                                user.organization !== undefined &&
+                                user.organization.id !== undefined
+                        ),
+                        switchMap((user) => {
+                            return this.organizationService.fetchAndSetCurrentOrganization(
+                                user?.organization?.id as number
+                            );
+                        })
+                    )
+                    .subscribe();
+            }
         }
     }
 
-    
     // Logout
     logout() {
         this.authService.logout();
     }
-
 }

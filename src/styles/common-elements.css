@@ -4,6 +4,20 @@
     line-height: 2rem;
 }
 
+.page-standard-padding {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .page-standard-padding {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+}
+
 .text-with-link {
     color: rgb(37 99 235);
     text-decoration: none;

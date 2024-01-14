@@ -22,9 +22,31 @@ export interface Stage {
 export interface StageInput {
     id: number;
     quantity: number;
+    materialId: number;
+    material?: RawMaterial;
+    componentId: number;
+    component?: Component;
 }
 
 export interface StageOutput {
     id: number;
     quantity: number;
+    componentId: number;
+    component?: Component;
+}
+
+export interface RawMaterial {
+    id: number;
+    name: string;
+    description?: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface Component {
+    id: number;
+    name: string;
+    description?: string;
+    createdAt: Date;
+    updatedAt: Date;
 }

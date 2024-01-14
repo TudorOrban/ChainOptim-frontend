@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Organization } from '../../../../models/organization';
-import { OrganizationService } from '../../../services/OrganizationService';
+import { OrganizationService } from '../../../organization/services/OrganizationService';
 import { faBox, faBuilding } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../models/Product';
 import { ProductService } from '../../services/ProductService';

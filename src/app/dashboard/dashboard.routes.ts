@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './components/overview/overview.component';
-import { OrganizationComponent } from './components/organization/organization.component';
-import { CreateOrganizationComponent } from './components/organization/create-organization/create-organization.component';
+import { DashboardComponent } from './overview/components/overview/overview.component';
+import { OrganizationComponent } from './organization/components/organization/organization.component';
+import { CreateOrganizationComponent } from './organization/components/create-organization/create-organization.component';
 import { ProductsComponent } from './products/components/products/products.component';
 import { ProductComponent } from './products/components/product/product.component';
 

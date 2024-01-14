@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../../dashboard/services/UserService';
+import { UserService } from '../../services/UserService';
 
 @Component({
     selector: 'app-login',
