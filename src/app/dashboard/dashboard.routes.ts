@@ -4,6 +4,12 @@ import { OrganizationComponent } from './organization/components/organization/or
 import { CreateOrganizationComponent } from './organization/components/create-organization/create-organization.component';
 import { ProductsComponent } from './products/components/products/products.component';
 import { ProductComponent } from './products/components/product/product.component';
+import { FactoriesComponent } from './factories/components/factories/factories.component';
+import { FactoryComponent } from './factories/components/factory/factory.component';
+import { SuppliersComponent } from './suppliers/components/suppliers/suppliers.component';
+import { SupplierComponent } from './suppliers/components/supplier/supplier.component';
+import { WarehousesComponent } from './warehouses/components/warehouses/warehouses.component';
+import { WarehouseComponent } from './warehouses/components/warehouse/warehouse.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -24,5 +30,26 @@ export const dashboardRoutes: Routes = [
     },
     {
         path: 'dashboard/products/:productId', component: ProductComponent,
+    },
+    {
+        path: 'dashboard/factories',
+        component: FactoriesComponent,
+    },
+    {
+        path: 'dashboard/factories/:factoryId', component: FactoryComponent,
+    },
+    {
+        path: 'dashboard/suppliers',
+        component: SuppliersComponent,
+    },
+    {
+        path: 'dashboard/suppliers/:supplierId', component: SupplierComponent,
+    },
+    {
+        path: 'dashboard/warehouses',
+        component: WarehousesComponent,
+    },
+    {
+        path: 'dashboard/warehouses/:warehouseId', component: WarehouseComponent,
     }
 ];

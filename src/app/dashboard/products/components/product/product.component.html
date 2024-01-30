@@ -1,5 +1,5 @@
 <!-- Header -->
-<div class="px-4 md:px-16 py-8 border-b border-gray-300 shadow-sm">
+<div class="page-standard-padding border-b border-gray-300 shadow-sm">
     <div class="flex items-center">
         <fa-icon
             [icon]="faBox"
@@ -16,8 +16,8 @@
 
 <!-- Content -->
 <!-- Project Pipeline -->
-<div class="px-4 md:px-8">
-    <div class="flex items-center justify-between py-6">
+<div class="page-standard-padding">
+    <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold">Product Pipeline</h2>
         <a
             [routerLink]="
@@ -29,7 +29,7 @@
             Configure Pipeline</a
         >
     </div>
-    <div class="flex space-x-4">
+    <div class="flex space-x-4 pt-6">
         <ul *ngFor="let stage of product?.stages" class="">
             <li
                 class="w-64 px-4 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm"

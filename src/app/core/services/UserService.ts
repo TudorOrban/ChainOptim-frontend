@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SearchUserDTO, User } from '../../models/organization';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { SearchUserDTO, User } from '../../dashboard/organization/models/organization';
 
 @Injectable({
     providedIn: 'root',

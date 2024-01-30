@@ -6,7 +6,7 @@ import {
     SearchUserDTO,
     SubscriptionPlan,
     User,
-} from '../../../../models/organization';
+} from '../../models/organization';
 import { OrganizationService } from '../../services/OrganizationService';
 import { UserService } from '../../../../core/services/UserService';
 import { Router } from '@angular/router';

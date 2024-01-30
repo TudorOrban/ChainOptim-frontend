@@ -4,8 +4,8 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { OrganizationService } from '../../../organization/services/OrganizationService';
 import { faBox, faBuilding } from '@fortawesome/free-solid-svg-icons';
-import { Product } from '../../models/Product';
-import { ProductService } from '../../services/ProductService';
+import { Factory } from '../../models/Factory';
+import { FactoryService } from '../../services/FactoryService';
 import { Organization } from '../../../organization/models/organization';
 
 
@@ -13,25 +13,25 @@ import { Organization } from '../../../organization/models/organization';
     selector: 'app-organization',
     standalone: true,
     imports: [CommonModule, FontAwesomeModule, RouterModule],
-    templateUrl: './products.component.html',
-    styleUrl: './products.component.css',
+    templateUrl: './factories.component.html',
+    styleUrl: './factories.component.css',
 })
-export class ProductsComponent implements OnInit {
+export class FactoriesComponent implements OnInit {
     currentOrganization: Organization | null = null;
-    products: Product[] = [];
+    factories: Factory[] = [];
 
     constructor(
         private organizationService: OrganizationService,
-        private productService: ProductService
+        private factoryService: FactoryService
     ) {}
     
     ngOnInit() {
         this.organizationService.getCurrentOrganization().subscribe((orgData) => {
             if (orgData) {
                 this.currentOrganization = orgData;
-                this.productService.getProductsByOrganizationId(orgData.id).subscribe((products) => {
-                    this.products = products;
-                    console.log("DAS", orgData, products);
+                this.factoryService.getFactoriesByOrganizationId(orgData.id).subscribe((factories) => {
+                    this.factories = factories;
+                    console.log("DAS", orgData, factories);
                 });
             }
         });

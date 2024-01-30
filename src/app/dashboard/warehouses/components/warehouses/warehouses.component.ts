@@ -2,36 +2,36 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { Organization } from '../../../../models/organization';
 import { OrganizationService } from '../../../organization/services/OrganizationService';
-import { faBox, faBuilding } from '@fortawesome/free-solid-svg-icons';
-import { Product } from '../../models/Product';
-import { ProductService } from '../../services/ProductService';
+import { faBox, faBuilding, faWarehouse } from '@fortawesome/free-solid-svg-icons';
+import { Warehouse } from '../../models/Warehouse';
+import { WarehouseService } from '../../services/WarehouseService';
+import { Organization } from '../../../organization/models/organization';
 
 
 @Component({
     selector: 'app-organization',
     standalone: true,
     imports: [CommonModule, FontAwesomeModule, RouterModule],
-    templateUrl: './products.component.html',
-    styleUrl: './products.component.css',
+    templateUrl: './warehouses.component.html',
+    styleUrl: './warehouses.component.css',
 })
-export class ProductsComponent implements OnInit {
+export class WarehousesComponent implements OnInit {
     currentOrganization: Organization | null = null;
-    products: Product[] = [];
+    warehouses: Warehouse[] = [];
 
     constructor(
         private organizationService: OrganizationService,
-        private productService: ProductService
+        private warehouseService: WarehouseService
     ) {}
     
     ngOnInit() {
         this.organizationService.getCurrentOrganization().subscribe((orgData) => {
             if (orgData) {
                 this.currentOrganization = orgData;
-                this.productService.getProductsByOrganizationId(orgData.id).subscribe((products) => {
-                    this.products = products;
-                    console.log("DAS", orgData, products);
+                this.warehouseService.getWarehousesByOrganizationId(orgData.id).subscribe((warehouses) => {
+                    this.warehouses = warehouses;
+                    console.log("DAS", orgData, warehouses);
                 });
             }
         });
@@ -39,5 +39,5 @@ export class ProductsComponent implements OnInit {
     
 
     faBuilding = faBuilding;
-    faBox = faBox;
+    faWarehouse = faWarehouse;
 }

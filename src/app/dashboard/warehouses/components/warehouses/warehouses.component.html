@@ -1,0 +1,19 @@
+<div class="page-standard-padding">
+    <h2 class="flex items-center">
+        <fa-icon [icon]="faWarehouse" class="text-lg text-gray-700"></fa-icon>
+        <div class="page-title ml-2">Warehouses</div>
+    </h2>
+    <ul *ngFor="let warehouse of warehouses" class="pt-6 space-y-4">
+        <li
+            key="warehouse.id"
+            class="px-4 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-md shadow-sm"
+        >
+            <a
+                [routerLink]="'/dashboard/warehouses/' + warehouse.id"
+                class="font-semibold text-lg hover:text-blue-700 hover:text-underline"
+                >{{ warehouse.name }}</a
+            >
+            <p class="text-gray-900">{{ warehouse.location.address }}</p>
+        </li>
+    </ul>
+</div>

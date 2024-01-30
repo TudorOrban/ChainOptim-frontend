@@ -10,7 +10,9 @@ import {
     faCartShopping,
     faGlobe,
     faHouse,
+    faIndustry,
     faSearch,
+    faTruckArrowRight,
     faWarehouse,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -41,7 +43,9 @@ export class SidebarComponent {
     faBuilding = faBuilding;
     faBox = faBox;
     faCartShopping = faCartShopping;
+    faIndustry = faIndustry;
     faWarehouse = faWarehouse;
+    faTruckArrowRight = faTruckArrowRight;
 
     // Sidebar items
     sidebarItems: SidebarItem[] = [
@@ -53,6 +57,8 @@ export class SidebarComponent {
         },
         { label: 'Products', icon: this.faBox, link: '/dashboard/products' },
         { label: 'Orders', icon: this.faCartShopping },
-        { label: 'Warehouses', icon: this.faWarehouse },
+        { label: 'Factories', icon: this.faIndustry, link: '/dashboard/factories' },
+        { label: 'Warehouses', icon: this.faWarehouse, link: '/dashboard/warehouses'},
+        { label: 'Suppliers', icon: this.faTruckArrowRight, link: '/dashboard/suppliers' }
     ];
 }

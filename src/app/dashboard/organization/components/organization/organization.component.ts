@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Organization, User } from '../../../../models/organization';
+import { Organization, User } from '../../models/organization';
 import { UserService } from '../../../../core/services/UserService';
 import { OrganizationService } from '../../services/OrganizationService';
 import { faBuilding } from '@fortawesome/free-solid-svg-icons';

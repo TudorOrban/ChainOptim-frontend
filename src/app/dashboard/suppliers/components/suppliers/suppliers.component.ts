@@ -3,9 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { OrganizationService } from '../../../organization/services/OrganizationService';
-import { faBox, faBuilding } from '@fortawesome/free-solid-svg-icons';
-import { Product } from '../../models/Product';
-import { ProductService } from '../../services/ProductService';
+import { faBox, faBuilding, faTruckArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { Supplier } from '../../models/Supplier';
+import { SupplierService } from '../../services/SupplierService';
 import { Organization } from '../../../organization/models/organization';
 
 
@@ -13,25 +13,25 @@ import { Organization } from '../../../organization/models/organization';
     selector: 'app-organization',
     standalone: true,
     imports: [CommonModule, FontAwesomeModule, RouterModule],
-    templateUrl: './products.component.html',
-    styleUrl: './products.component.css',
+    templateUrl: './suppliers.component.html',
+    styleUrl: './suppliers.component.css',
 })
-export class ProductsComponent implements OnInit {
+export class SuppliersComponent implements OnInit {
     currentOrganization: Organization | null = null;
-    products: Product[] = [];
+    suppliers: Supplier[] = [];
 
     constructor(
         private organizationService: OrganizationService,
-        private productService: ProductService
+        private supplierService: SupplierService
     ) {}
     
     ngOnInit() {
         this.organizationService.getCurrentOrganization().subscribe((orgData) => {
             if (orgData) {
                 this.currentOrganization = orgData;
-                this.productService.getProductsByOrganizationId(orgData.id).subscribe((products) => {
-                    this.products = products;
-                    console.log("DAS", orgData, products);
+                this.supplierService.getSuppliersByOrganizationId(orgData.id).subscribe((suppliers) => {
+                    this.suppliers = suppliers;
+                    console.log("DAS", orgData, suppliers);
                 });
             }
         });
@@ -39,5 +39,5 @@ export class ProductsComponent implements OnInit {
     
 
     faBuilding = faBuilding;
-    faBox = faBox;
+    faTruckArrowRight = faTruckArrowRight;
 }
