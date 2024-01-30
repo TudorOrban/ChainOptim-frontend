@@ -1,5 +1,5 @@
 <!-- Header -->
-<div class="page-standard-padding border-b border-gray-300 shadow-sm">
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-padding item-page-header">
     <div class="flex items-center">
         <fa-icon
             [icon]="faIndustry"
@@ -9,12 +9,14 @@
     </div>
 
     <div class="flex items-center pt-4">
-        <span class="font-semibold text-lg mr-1">Location:</span>
+        <span class="font-semibold text-lg mr-1">Description:</span>
         <p class="text-gray-900">{{ factory?.location?.address }}</p>
     </div>
 </div>
 
 <!-- Content -->
-<div class="page-standard-padding">
-    Capacity, inventory, yield...
-</div>
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>

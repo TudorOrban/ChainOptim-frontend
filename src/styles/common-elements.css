@@ -13,9 +13,14 @@
 
 @media (min-width: 768px) {
     .page-standard-padding {
-        padding-left: 4rem;
-        padding-right: 4rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
     }
+}
+
+.item-page-header {
+    border-bottom: 1px solid rgb(209 213 219);
+    box-shadow: 0 0 5px rgba(20, 20, 20, 0.05);
 }
 
 .text-with-link {

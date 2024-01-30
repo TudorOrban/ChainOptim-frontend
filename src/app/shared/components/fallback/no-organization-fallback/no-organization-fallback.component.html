@@ -1,0 +1,28 @@
+<!-- Header -->
+<div class="flex items-center justify-between page-standard-padding item-page-header">
+    <div class="w-4 whitespace-nowrap font-semibold">
+        <fa-icon
+            [icon]="faBuilding"
+            class="text-lg text-gray-700 mr-2 mb-2"
+        ></fa-icon>
+        <span class="text-2xl">Organization: No organization</span>
+    </div>
+    <span class="font-semibold text-lg mr-12"> Subscription Plan: None </span>
+</div>
+
+<!-- Page content -->
+<div class="text-lg page-standard-padding">
+    <p>
+        You are not a member of any organization. As such, most features are
+        disabled. To become a member, you must either:
+    </p>
+    <div class="flex flex-col p-6 space-y-2 text-gray-900">
+        <a
+            [routerLink]="['/dashboard/organization/create-organization']"
+            class="text-with-link"
+            >Create a new organization</a
+        >
+        <span>Request to join your organization</span>
+        <span>Receive an invitation from your organization</span>
+    </div>
+</div>

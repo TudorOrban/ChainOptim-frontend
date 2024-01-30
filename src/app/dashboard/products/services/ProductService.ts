@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { Product } from '../models/Product';
+import { ErrorHandlerService } from '../../../shared/services/fallback/error/error-handler.service';
 
 @Injectable({
     providedIn: 'root',
@@ -10,18 +11,33 @@ export class ProductService {
     private apiUrl = 'http://localhost:8080/api/products';
     // private currentProductSubject = new BehaviorSubject<Product | null>(null);
 
-    constructor(private http: HttpClient) {}
+    constructor(
+        private http: HttpClient,
+        private errorHandlerService: ErrorHandlerService
+    ) {}
 
     // createProduct(product: CreateProductDTO): Observable<CreateProductDTO> {
     //     return this.http.post<CreateProductDTO>(this.apiUrl, product);
     // }
 
     getProductsByOrganizationId(organizationId: number): Observable<Product[]> {
-        return this.http.get<Product[]>(`${this.apiUrl}/organizations/${organizationId}`);
+        return this.http
+            .get<Product[]>(`${this.apiUrl}/organizations/${organizationId}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
     }
 
     getProductById(id: number): Observable<Product> {
-        return this.http.get<Product>(`${this.apiUrl}/${id}`);
+        return this.http
+            .get<Product>(`${this.apiUrl}/${id}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
     }
 
     // getAllProducts(): Observable<Product[]> {

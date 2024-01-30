@@ -1,19 +1,29 @@
-<div class="page-standard-padding">
+<!-- Header -->
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-padding">
     <h2 class="flex items-center">
-        <fa-icon [icon]="faBox" class="text-lg text-gray-700"></fa-icon>
+        <fa-icon [icon]="faIndustry" class="text-lg text-gray-700"></fa-icon>
         <div class="page-title ml-2">Factories</div>
     </h2>
-    <ul *ngFor="let factory of factories" class="pt-6 space-y-4">
+</div>
+
+<!-- Page content-->
+<div *ngIf="!fallbackManagerState.fallBack" class="page-standard-padding">
+    <ul *ngFor="let factory of factories">
         <li
             key="factory.id"
-            class="px-4 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-md shadow-sm"
+            class="px-4 py-2 my-4 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-sm shadow-sm"
         >
             <a
                 [routerLink]="'/dashboard/factories/' + factory.id"
                 class="font-semibold text-lg hover:text-blue-700 hover:text-underline"
                 >{{ factory.name }}</a
             >
-            <p class="text-gray-900">{{ factory.location.address }}</p>
+            <p class="text-gray-900">{{ factory.location?.address }}</p>
         </li>
     </ul>
 </div>
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>

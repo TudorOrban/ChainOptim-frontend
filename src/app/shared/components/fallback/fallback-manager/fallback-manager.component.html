@@ -1,0 +1,4 @@
+<app-loading-fallback *ngIf="fallbackManagerState.loading"></app-loading-fallback>
+<app-error-fallback *ngIf="fallbackManagerState.errorMessage" [errorMessage]="fallbackManagerState.errorMessage"></app-error-fallback>
+<app-no-organization-fallback *ngIf="!fallbackManagerState.loading && fallbackManagerState.noOrganization && !fallbackManagerState.errorMessage"></app-no-organization-fallback>
+<app-no-results-fallback *ngIf="fallbackManagerState.noResults && !fallbackManagerState.noOrganization && !fallbackManagerState.errorMessage && !fallbackManagerState.loading"></app-no-results-fallback>

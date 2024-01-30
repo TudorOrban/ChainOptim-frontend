@@ -53,30 +53,4 @@
     </div>
 </div>
 
-<div *ngIf="!currentOrganization" class="p-8">
-    <div class="flex items-center justify-between px-8 pb-4">
-        <div class="font-semibold">
-            <fa-icon
-                [icon]="faBuilding"
-                class="w-4 h-4 text-gray-700 mr-2"
-            ></fa-icon>
-            <span class="text-2xl">Organization: No organization</span>
-        </div>
-        <span class="font-semibold text-lg mr-12">
-            Subscription Plan: None
-        </span>
-    </div>
-    <span class="text-lg"
-        >You are not a member of any organization. As such, most features are
-        disabled. To become a member, you must either:</span
-    >
-    <div class="flex flex-col px-4 py-2 text-lg text-gray-900">
-        <a
-            [routerLink]="['/dashboard/organization/create-organization']"
-            class="text-with-link"
-            >Create a new organization</a
-        >
-        <span>Request to join your organization</span>
-        <span>Receive an invitation from your organization</span>
-    </div>
-</div>
+<!-- Fallback -->

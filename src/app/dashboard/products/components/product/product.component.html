@@ -1,5 +1,5 @@
 <!-- Header -->
-<div class="page-standard-padding border-b border-gray-300 shadow-sm">
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-padding item-page-header">
     <div class="flex items-center">
         <fa-icon
             [icon]="faBox"
@@ -16,7 +16,7 @@
 
 <!-- Content -->
 <!-- Project Pipeline -->
-<div class="page-standard-padding">
+<div *ngIf="!fallbackManagerState.fallBack"  class="page-standard-padding">
     <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold">Product Pipeline</h2>
         <a
@@ -44,3 +44,8 @@
         </ul>
     </div>
 </div>
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>
