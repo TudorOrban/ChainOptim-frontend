@@ -1,0 +1,32 @@
+<button
+    (click)="toggleCard()"
+    *ngIf="!isCardOpen"
+    class="site-card-closed-container"
+>
+    <img src="assets/warehouse.png" alt="Warehouse" />
+</button>
+<div *ngIf="isCardOpen" class="site-card-expanded-container">
+    <div class="border-b border-gray-300 py-1">
+        <div class="relative flex items-start justify-center">
+            <!-- Warehouse Card Closed Container (Centered) -->
+            <div class="site-card-closed-container">
+                <img src="assets/warehouse.png" alt="Warehouse" />
+            </div>
+
+            <!-- X-mark Icon (Positioned at the end) -->
+            <fa-icon
+                [icon]="faXmark"
+                (click)="toggleCard()"
+                class="site-card-close-button"
+            ></fa-icon>
+        </div>
+
+        <span class="flex justify-center text-lg font-semibold pt-1">Warehouse: Battery Warehouse 1</span>
+    </div>
+
+    <div class="p-2">
+        <span>Production stages: 3</span>
+        <span>Incoming Shipments: 3</span>
+        <span>Outgoing : 3</span>
+    </div>
+</div>
