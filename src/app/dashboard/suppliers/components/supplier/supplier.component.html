@@ -1,5 +1,5 @@
 <!-- Header -->
-<div class="page-standard-padding border-b border-gray-300 shadow-sm">
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-padding item-page-header">
     <div class="flex items-center">
         <fa-icon
             [icon]="faTruckArrowRight"
@@ -15,6 +15,12 @@
 </div>
 
 <!-- Content -->
-<div class="page-standard-padding">
-    Capacity, inventory, yield...
+<!-- Project Pipeline -->
+<div *ngIf="!fallbackManagerState.fallBack"  class="page-standard-padding">
+    Orders, performance, etc.
 </div>
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>
