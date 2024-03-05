@@ -15,8 +15,8 @@ import { OrganizationService } from '../../../organization/services/Organization
 import {
     FallbackManagerService,
     FallbackManagerState,
-} from '../../../../shared/services/fallback/fallback-manager/fallback-manager.service';
-import { FallbackManagerComponent } from '../../../../shared/components/fallback/fallback-manager/fallback-manager.component';
+} from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
+import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 
 @Component({
     selector: 'app-supplier',

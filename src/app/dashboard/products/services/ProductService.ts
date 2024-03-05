@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { Product } from '../models/Product';
-import { ErrorHandlerService } from '../../../shared/services/fallback/error/error-handler.service';
+import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
 
 @Injectable({

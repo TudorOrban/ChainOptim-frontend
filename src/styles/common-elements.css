@@ -4,15 +4,13 @@
     line-height: 2rem;
 }
 
-.page-standard-padding {
+.page-standard-horizontal-padding {
     padding-left: 1rem;
     padding-right: 1rem;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
 }
 
 @media (min-width: 768px) {
-    .page-standard-padding {
+    .page-standard-horizontal-padding {
         padding-left: 3rem;
         padding-right: 3rem;
     }

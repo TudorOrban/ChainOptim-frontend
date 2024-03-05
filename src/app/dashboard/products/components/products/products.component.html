@@ -1,13 +1,8 @@
 <!-- Header -->
-<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-padding">
-    <h2 class="flex items-center">
-        <fa-icon [icon]="faBox" class="text-lg text-gray-700"></fa-icon>
-        <div class="page-title ml-2">Products</div>
-    </h2>
-</div>
+<app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" ></app-list-header>
 
 <!-- Page content-->
-<div *ngIf="!fallbackManagerState.fallBack" class="page-standard-padding">
+<div *ngIf="!fallbackManagerState.fallBack" class="page-standard-horizontal-padding pt-4">
     <ul *ngFor="let product of products">
         <li
             key="product.id"

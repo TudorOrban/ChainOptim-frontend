@@ -1,5 +1,5 @@
 <!-- Header -->
-<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-padding">
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-horizontal-padding">
     <h2 class="flex items-center">
         <fa-icon [icon]="faIndustry" class="text-lg text-gray-700"></fa-icon>
         <div class="page-title ml-2">Factories</div>
@@ -7,7 +7,7 @@
 </div>
 
 <!-- Page content-->
-<div *ngIf="!fallbackManagerState.fallBack" class="page-standard-padding">
+<div *ngIf="!fallbackManagerState.fallBack" class="page-standard-horizontal-padding">
     <ul *ngFor="let factory of factories">
         <li
             key="factory.id"

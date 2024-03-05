@@ -1,0 +1,17 @@
+<!-- sort-selector.component.html -->
+<div class="relative flex items-center">
+    <div class="flex items-center justify-between h-10 border border-gray-300 text-gray-800 text-sm font-semibold rounded-md shadow-sm p-2 w-40 cursor-pointer" (click)="toggleDropdown()">
+        {{ currentSortOption.label | titlecase }}
+        <fa-icon [icon]="faChevronDown" class="text-gray-700"></fa-icon>
+    </div>
+    <div *ngIf="isOpen" class="absolute mt-32 w-40 border border-gray-300 text-gray-800 text-sm font-semibold rounded-md bg-white shadow-lg z-10">
+        <div *ngFor="let option of sortOptions" 
+             class="p-2 hover:bg-gray-100 cursor-pointer"
+             (click)="selectSortOption(option)">
+            {{ option.label | titlecase }}
+        </div>
+    </div>
+    <button (click)="toggleSortOrder()" class="flex items-center justify-center w-10 h-10 border border-gray-300 text-gray-800 rounded-md shadow-sm ml-1">
+        <fa-icon [icon]="ascending ? faArrowUpWideShort : faArrowDownShortWide" class="text-gray-700"></fa-icon>
+    </button>
+</div>

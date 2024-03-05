@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import {
     FallbackManagerService,
     FallbackManagerState,
-} from '../../../services/fallback/fallback-manager/fallback-manager.service';
+} from '../../services/fallback-manager/fallback-manager.service';
 import { LoadingFallbackComponent } from '../loading-fallback/loading-fallback.component';
 
 @Component({

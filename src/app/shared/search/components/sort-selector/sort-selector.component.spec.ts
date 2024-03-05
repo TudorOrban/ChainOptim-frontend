@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchUIComponent } from './search-ui.component';
+import { SortSelectorComponent } from './sort-selector.component';
 
-describe('SearchUIComponent', () => {
-  let component: SearchUIComponent;
-  let fixture: ComponentFixture<SearchUIComponent>;
+describe('SortSelectorComponent', () => {
+  let component: SortSelectorComponent;
+  let fixture: ComponentFixture<SortSelectorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchUIComponent]
+      imports: [SortSelectorComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(SearchUIComponent);
+    fixture = TestBed.createComponent(SortSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

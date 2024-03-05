@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError } from 'rxjs';
 import { Factory } from '../models/Factory';
-import { ErrorHandlerService } from '../../../shared/services/fallback/error/error-handler.service';
+import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 
 @Injectable({
     providedIn: 'root',

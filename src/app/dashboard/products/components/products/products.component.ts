@@ -7,12 +7,13 @@ import { faBox, faBuilding } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../models/Product';
 import { ProductService } from '../../services/ProductService';
 import { Organization } from '../../../organization/models/organization';
-import { FallbackManagerComponent } from '../../../../shared/components/fallback/fallback-manager/fallback-manager.component';
+import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import {
     FallbackManagerService,
     FallbackManagerState,
-} from '../../../../shared/services/fallback/fallback-manager/fallback-manager.service';
+} from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { distinctUntilChanged, filter } from 'rxjs';
+import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
 
 @Component({
     selector: 'app-organization',
@@ -22,6 +23,7 @@ import { distinctUntilChanged, filter } from 'rxjs';
         FontAwesomeModule,
         RouterModule,
         FallbackManagerComponent,
+        ListHeaderComponent
     ],
     templateUrl: './products.component.html',
     styleUrl: './products.component.css',

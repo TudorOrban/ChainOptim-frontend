@@ -7,11 +7,11 @@ import { faBox, faBuilding, faTruckArrowRight } from '@fortawesome/free-solid-sv
 import { Supplier } from '../../models/Supplier';
 import { SupplierService } from '../../services/SupplierService';
 import { Organization } from '../../../organization/models/organization';
-import { FallbackManagerComponent } from '../../../../shared/components/fallback/fallback-manager/fallback-manager.component';
+import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import {
     FallbackManagerService,
     FallbackManagerState,
-} from '../../../../shared/services/fallback/fallback-manager/fallback-manager.service';
+} from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { distinctUntilChanged, filter } from 'rxjs';
 
 @Component({

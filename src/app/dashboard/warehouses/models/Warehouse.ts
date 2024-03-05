@@ -1,4 +1,4 @@
-import { Location } from "../../../shared/models/ReusableTypes";
+import { Location } from "../../../shared/common/models/ReusableTypes";
 
 export interface Warehouse {
     id: number;

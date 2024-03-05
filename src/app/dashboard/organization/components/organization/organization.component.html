@@ -1,7 +1,7 @@
 <div *ngIf="!!currentOrganization">
     <!-- Header -->
     <div
-        class="flex items-start justify-between page-standard-padding border-b border-gray-300 shadow-sm"
+        class="flex items-start justify-between page-standard-horizontal-padding border-b border-gray-300 shadow-sm"
     >
         <div class="">
             <fa-icon
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Users panel -->
-    <div class="flex flex-col page-standard-padding space-y-2">
+    <div class="flex flex-col page-standard-horizontal-padding space-y-2">
         <div class="flex items-center">
             <span class="text-xl font-semibold mr-2">Admins:</span>
             <span *ngFor="let admin of admins; let i = index" class="text-lg">
