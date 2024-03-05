@@ -5,7 +5,7 @@ export interface SortOption {
 
 export interface SearchOptions {
     searchQuery: string;
-    sortOption: SortOption;
+    sortOption: string;
     ascending: boolean;
     page: number;
     itemsPerPage: number;

@@ -26,10 +26,6 @@ export class PageSelectorComponent {
         const end = Math.min(this.totalPages, start + this.MAX_DISPLAY_PAGES - 1);
         return Array.from({ length: end - start + 1 }, (_, i) => start + i);
     }
-
-    ngOnChanges(): void {
-        console.log('Page:', this.page, 'ItemsPerPage:', this.itemsPerPage, 'TotalItems:', this.totalItems, 'TotalPages:', this.totalPages);
-    }
     
     @Output() pageChange = new EventEmitter<number>();
 
