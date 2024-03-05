@@ -19,7 +19,16 @@
             <p class="text-gray-900">{{ product.description }}</p>
         </li>
     </ul>
+    <div class="flex items-center justify-end py-4">
+        <app-page-selector
+            [page]="page"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="totalCount"
+            (pageChange)="changePage($event)"
+        ></app-page-selector>
+    </div>
 </div>
+
 
 <!-- Fallback manager -->
 <app-fallback-manager

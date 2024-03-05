@@ -15,6 +15,7 @@ import {
 import { distinctUntilChanged, filter } from 'rxjs';
 import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
 import { SortOption } from '../../../../shared/search/models/Search';
+import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 
 @Component({
     selector: 'app-organization',
@@ -24,7 +25,8 @@ import { SortOption } from '../../../../shared/search/models/Search';
         FontAwesomeModule,
         RouterModule,
         FallbackManagerComponent,
-        ListHeaderComponent
+        ListHeaderComponent,
+        PageSelectorComponent
     ],
     templateUrl: './products.component.html',
     styleUrl: './products.component.css',
@@ -32,6 +34,7 @@ import { SortOption } from '../../../../shared/search/models/Search';
 export class ProductsComponent implements OnInit {
     currentOrganization: Organization | null = null;
     products: Product[] = [];
+    totalCount = 0;
     fallbackManagerState: FallbackManagerState = {};
 
     // Search params
@@ -43,7 +46,7 @@ export class ProductsComponent implements OnInit {
     currentSortOption: SortOption = { label: 'createdAt', value: 'createdAt' };
     ascending = false;
     page = 1;
-    itemsPerPage = 10;
+    itemsPerPage = 3;
 
     constructor(
         private organizationService: OrganizationService,
@@ -98,6 +101,7 @@ export class ProductsComponent implements OnInit {
                 next: (paginatedResults) => {
                     // Get results and count
                     this.products = paginatedResults.results;
+                    this.totalCount = paginatedResults.totalCount;
                     
                     // Manage fallback state
                     if (this.products.length === 0) {
@@ -117,6 +121,7 @@ export class ProductsComponent implements OnInit {
     handleSearch(query: string): void {
         if (this.searchQuery !== query) {
             this.searchQuery = query;
+            this.page = 1; // Reset page
             this.loadProducts(this.currentOrganization!.id);
         }
     }
@@ -125,6 +130,14 @@ export class ProductsComponent implements OnInit {
         if (this.currentSortOption.value !== sortChange.value || this.ascending !== sortChange.ascending) {
             this.currentSortOption = this.sortOptions.find((option) => option.value === sortChange.value)!;
             this.ascending = sortChange.ascending;
+            this.page = 1; // Reset page
+            this.loadProducts(this.currentOrganization!.id);
+        }
+    }
+
+    changePage(page: number): void {
+        if (this.page !== page) {
+            this.page = page;
             this.loadProducts(this.currentOrganization!.id);
         }
     }
