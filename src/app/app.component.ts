@@ -8,13 +8,13 @@ import {
     RouterOutlet,
 } from '@angular/router';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { JwtInterceptor } from './core/services/jwt-interceptor.service';
-import { AuthenticationService } from './core/services/authentication.service';
+import { JwtInterceptor } from './core/auth/services/jwt-interceptor.service';
+import { AuthenticationService } from './core/auth/services/authentication.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { SidebarComponent } from './core/components/sidebar/sidebar.component';
+import { SidebarComponent } from './core/main/components/sidebar/sidebar.component';
 import { filter, switchMap } from 'rxjs';
-import { UserService } from './core/services/UserService';
+import { UserService } from './core/auth/services/UserService';
 import { OrganizationService } from './dashboard/organization/services/OrganizationService';
 
 @Component({
