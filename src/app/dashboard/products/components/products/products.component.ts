@@ -31,6 +31,13 @@ export class ProductsComponent implements OnInit {
     products: Product[] = [];
     fallbackManagerState: FallbackManagerState = {};
 
+    // Search params
+    searchQuery = '';
+    sortOption = 'createdAt';
+    ascending = false;
+    page = 1;
+    itemsPerPage = 2;
+
     constructor(
         private organizationService: OrganizationService,
         private productService: ProductService,
@@ -77,19 +84,20 @@ export class ProductsComponent implements OnInit {
 
     private loadProducts(organizationId: number) {
         this.productService
-            .getProductsByOrganizationId(organizationId)
+            .getProductsByOrganizationIdAdvanced(organizationId, this.searchQuery, this.sortOption, this.ascending, this.page, this.itemsPerPage)
             .subscribe({
-                next: (products) => {
-                    this.products = products;
+                next: (paginatedResults) => {
+                    this.products = paginatedResults.results;
 
                     // Manage fallback state
-                    if (products.length === 0) {
+                    if (this.products.length === 0) {
                         this.fallbackManagerService.updateNoResults(true);
                     }
                     this.fallbackManagerService.updateLoading(false);
                 },
                 error: (err: Error) => {
                     this.fallbackManagerService.updateError(err.message ?? '');
+                    this.fallbackManagerService.updateLoading(false);
                 },
             });
     }

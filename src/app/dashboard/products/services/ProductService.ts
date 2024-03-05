@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { Product } from '../models/Product';
 import { ErrorHandlerService } from '../../../shared/services/fallback/error/error-handler.service';
+import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
 
 @Injectable({
     providedIn: 'root',
@@ -23,6 +24,30 @@ export class ProductService {
     getProductsByOrganizationId(organizationId: number): Observable<Product[]> {
         return this.http
             .get<Product[]>(`${this.apiUrl}/organizations/${organizationId}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
+
+    getProductsByOrganizationIdAdvanced(
+        organizationId: number,
+        searchQuery: string,
+        sortOption: string,
+        ascending: boolean,
+        page: number,
+        itemsPerPage: number
+    ): Observable<PaginatedResults<Product>> {
+        let url = `${this.apiUrl}/organizations/advanced/${organizationId}?
+            searchQuery=${searchQuery}
+            &sortOption=${sortOption}
+            &ascending=${ascending}
+            &page=${page}
+            &itemsPerPage=${itemsPerPage}`;
+
+        return this.http
+            .get<PaginatedResults<Product>>(url)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)
