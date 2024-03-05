@@ -39,12 +39,7 @@ export class ProductService {
         page: number,
         itemsPerPage: number
     ): Observable<PaginatedResults<Product>> {
-        let url = `${this.apiUrl}/organizations/advanced/${organizationId}?
-            searchQuery=${searchQuery}
-            &sortOption=${sortOption}
-            &ascending=${ascending}
-            &page=${page}
-            &itemsPerPage=${itemsPerPage}`;
+        let url = `${this.apiUrl}/organizations/advanced/${organizationId}?searchQuery=${encodeURIComponent(searchQuery)}&sortBy=${encodeURIComponent(sortOption)}&ascending=${ascending}&page=${page}&itemsPerPage=${itemsPerPage}`;
 
         return this.http
             .get<PaginatedResults<Product>>(url)

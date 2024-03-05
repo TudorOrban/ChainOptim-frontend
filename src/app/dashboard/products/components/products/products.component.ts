@@ -14,6 +14,7 @@ import {
 } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { distinctUntilChanged, filter } from 'rxjs';
 import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
+import { SortOption } from '../../../../shared/search/models/Search';
 
 @Component({
     selector: 'app-organization',
@@ -35,10 +36,14 @@ export class ProductsComponent implements OnInit {
 
     // Search params
     searchQuery = '';
-    sortOption = 'createdAt';
+    sortOptions: SortOption[] = [
+        { label: "Created At", value: "createdAt" },
+        { label: "Updated At", value: "updatedAt" }
+    ];
+    currentSortOption: SortOption = { label: 'createdAt', value: 'createdAt' };
     ascending = false;
     page = 1;
-    itemsPerPage = 2;
+    itemsPerPage = 10;
 
     constructor(
         private organizationService: OrganizationService,
@@ -51,7 +56,7 @@ export class ProductsComponent implements OnInit {
         this.fallbackManagerService.fallbackManagerState$.subscribe((state) => {
             this.fallbackManagerState = state;
         });
-        this.fallbackManagerState.loading = true;
+        this.fallbackManagerService.updateLoading(true);
 
         // Get current user's organization
         this.organizationService
@@ -85,15 +90,20 @@ export class ProductsComponent implements OnInit {
     }
 
     private loadProducts(organizationId: number) {
+        this.fallbackManagerService.updateLoading(true);
+
         this.productService
-            .getProductsByOrganizationIdAdvanced(organizationId, this.searchQuery, this.sortOption, this.ascending, this.page, this.itemsPerPage)
+            .getProductsByOrganizationIdAdvanced(organizationId, this.searchQuery, this.currentSortOption.value, this.ascending, this.page, this.itemsPerPage)
             .subscribe({
                 next: (paginatedResults) => {
+                    // Get results and count
                     this.products = paginatedResults.results;
-
+                    
                     // Manage fallback state
                     if (this.products.length === 0) {
                         this.fallbackManagerService.updateNoResults(true);
+                    } else {
+                        this.fallbackManagerService.updateNoResults(false);
                     }
                     this.fallbackManagerService.updateLoading(false);
                 },
@@ -102,6 +112,21 @@ export class ProductsComponent implements OnInit {
                     this.fallbackManagerService.updateLoading(false);
                 },
             });
+    }
+
+    handleSearch(query: string): void {
+        if (this.searchQuery !== query) {
+            this.searchQuery = query;
+            this.loadProducts(this.currentOrganization!.id);
+        }
+    }
+
+    handleSortChange(sortChange: { value: string, ascending: boolean }): void {
+        if (this.currentSortOption.value !== sortChange.value || this.ascending !== sortChange.ascending) {
+            this.currentSortOption = this.sortOptions.find((option) => option.value === sortChange.value)!;
+            this.ascending = sortChange.ascending;
+            this.loadProducts(this.currentOrganization!.id);
+        }
     }
 
     faBuilding = faBuilding;

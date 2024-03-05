@@ -1,12 +1,12 @@
 <h2 class="flex items-center page-standard-horizontal-padding pt-8">
-    <fa-icon [icon]="faBox" class="text-lg text-gray-700"></fa-icon>
-    <div class="page-title ml-2">Products</div>
+    <fa-icon [icon]="icon" class="text-lg text-gray-700"></fa-icon>
+    <div class="page-title ml-2">{{ title }}</div>
 </h2>
 <div class="flex items-center flex-wrap lg:flex-nowrap justify-between page-standard-horizontal-padding py-8 border-b border-gray-300 shadow-sm">
-    <app-search-input (searchEvent)="performSearch($event)" placeholder="Search products..."></app-search-input>
-    <app-sort-selector></app-sort-selector>
-    <button class="standard-write-button flex items-center">
+    <app-search-input (searchEvent)="performSearch($event)" [placeholder]="searchPlaceholder"></app-search-input>
+    <app-sort-selector (sortChange)="handleSortChange($event)" [sortOptions]="sortOptions"></app-sort-selector>
+    <a [routerLink]="createLink" class="standard-write-button flex items-center">
         <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
-        Create New Product
-    </button>
+        Create New {{ createName }}
+    </a>
 </div>

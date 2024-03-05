@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowDownShortWide, faArrowUpWideShort, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { SortOption } from '../../models/Sort';
+import { SortOption } from '../../models/Search';
 
 @Component({
   selector: 'app-sort-selector',

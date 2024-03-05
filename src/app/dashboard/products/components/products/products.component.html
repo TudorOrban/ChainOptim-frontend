@@ -1,5 +1,8 @@
 <!-- Header -->
-<app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" ></app-list-header>
+<app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    [title]="'Products'" [icon]="faBox" [searchPlaceholder]="'Search Products'" [sortOptions]="sortOptions" [createName]="'Product'" [createLink]="'create-product'"
+    (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
+></app-list-header>
 
 <!-- Page content-->
 <div *ngIf="!fallbackManagerState.fallBack" class="page-standard-horizontal-padding pt-4">
