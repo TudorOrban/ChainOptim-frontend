@@ -13,6 +13,9 @@ import {
     FallbackManagerState,
 } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { distinctUntilChanged, filter } from 'rxjs';
+import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
+import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
+import { SortOption } from '../../../../shared/search/models/Search';
 
 @Component({
     selector: 'app-factory',
@@ -22,6 +25,8 @@ import { distinctUntilChanged, filter } from 'rxjs';
         FontAwesomeModule,
         RouterModule,
         FallbackManagerComponent,
+        ListHeaderComponent,
+        PageSelectorComponent
     ],
     templateUrl: './factories.component.html',
     styleUrl: './factories.component.css',
@@ -29,8 +34,20 @@ import { distinctUntilChanged, filter } from 'rxjs';
 export class FactoriesComponent implements OnInit {
     currentOrganization: Organization | null = null;
     factories: Factory[] = [];
+    totalCount = 0;
     fallbackManagerState: FallbackManagerState = {};
 
+    // Search params
+    searchQuery = "";
+    sortOptions: SortOption[] = [
+        { label: "Created At", value: "createdAt" },
+        { label: "Updated At", value: "updatedAt" }
+    ];
+    currentSortOption: SortOption = { label: "createdAt", value: "createdAt" };
+    ascending = false;
+    page = 1;
+    itemsPerPage = 3;
+    
     constructor(
         private organizationService: OrganizationService,
         private factoryService: FactoryService,
@@ -42,7 +59,7 @@ export class FactoriesComponent implements OnInit {
         this.fallbackManagerService.fallbackManagerState$.subscribe((state) => {
             this.fallbackManagerState = state;
         });
-        this.fallbackManagerState.loading = true;
+        this.fallbackManagerService.updateLoading(true);
 
         // Get current user's organization
         this.organizationService
@@ -76,22 +93,52 @@ export class FactoriesComponent implements OnInit {
     }
 
     private loadFactories(organizationId: number) {
+        this.fallbackManagerService.updateLoading(true);
+
         this.factoryService
-            .getFactoriesByOrganizationId(organizationId)
+            .getFactoriesByOrganizationIdAdvanced(organizationId, this.searchQuery, this.currentSortOption.value, this.ascending, this.page, this.itemsPerPage)
             .subscribe({
-                next: (factories) => {
-                    this.factories = factories;
+                next: (paginatedResults) => {
+                    this.factories = paginatedResults.results;
+                    this.totalCount = paginatedResults.totalCount;
 
                     // Manage fallback state
-                    if (factories.length === 0) {
+                    if (this.factories.length === 0) {
                         this.fallbackManagerService.updateNoResults(true);
+                    } else {
+                        this.fallbackManagerService.updateNoResults(false);
                     }
                     this.fallbackManagerService.updateLoading(false);
                 },
                 error: (err: Error) => {
                     this.fallbackManagerService.updateError(err.message ?? '');
+                    this.fallbackManagerService.updateLoading(false);
                 },
             });
+    }
+
+    handleSearch(query: string): void {
+        if (this.searchQuery !== query) {
+            this.searchQuery = query;
+            this.page = 1; // Reset page
+            this.loadFactories(this.currentOrganization!.id);
+        }
+    }
+
+    handleSortChange(sortChange: { value: string, ascending: boolean }): void {
+        if (this.currentSortOption.value !== sortChange.value || this.ascending !== sortChange.ascending) {
+            this.currentSortOption = this.sortOptions.find((option) => option.value === sortChange.value)!;
+            this.ascending = sortChange.ascending;
+            this.page = 1; // Reset page
+            this.loadFactories(this.currentOrganization!.id);
+        }
+    }
+
+    changePage(page: number): void {
+        if (this.page !== page) {
+            this.page = page;
+            this.loadFactories(this.currentOrganization!.id);
+        }
     }
 
     faIndustry = faIndustry;

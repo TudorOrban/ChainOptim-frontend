@@ -50,12 +50,13 @@ export class ProductService {
         }
 
         // Hit endpoint
-        const STALE_TIME = 60000; // 60 seconds
-        
-        return this.http.get<PaginatedResults<Product>>(`${this.apiUrl}/organizations/advanced/${organizationId}?searchQuery=${encodeURIComponent(searchQuery)}&sortBy=${encodeURIComponent(sortOption)}&ascending=${ascending}&page=${page}&itemsPerPage=${itemsPerPage}`).pipe(
+        const STALE_TIME = 300000; // 5 minutes
+
+        return this.http.get<PaginatedResults<Product>>(url).pipe(
             catchError(error => {
                 // Pass error through without caching
                 console.error("Error fetching products:", error);
+                this.errorHandlerService.handleError(error);
                 return throwError(() => error);
             }),
             tap(data => {

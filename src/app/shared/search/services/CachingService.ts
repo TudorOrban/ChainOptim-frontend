@@ -2,6 +2,9 @@ import { Injectable } from "@angular/core";
 import { SearchOptions } from "../models/Search";
 import { CacheEntry } from "../models/PaginatedResults";
 
+/**
+ * Service for caching search query results for the pages Products, Factories etc.
+ */
 @Injectable({
     providedIn: 'root'
 })

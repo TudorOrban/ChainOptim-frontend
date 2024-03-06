@@ -38,12 +38,12 @@ export class ProductsComponent implements OnInit {
     fallbackManagerState: FallbackManagerState = {};
 
     // Search params
-    searchQuery = '';
+    searchQuery = "";
     sortOptions: SortOption[] = [
         { label: "Created At", value: "createdAt" },
         { label: "Updated At", value: "updatedAt" }
     ];
-    currentSortOption: SortOption = { label: 'createdAt', value: 'createdAt' };
+    currentSortOption: SortOption = { label: "createdAt", value: "createdAt" };
     ascending = false;
     page = 1;
     itemsPerPage = 3;
@@ -81,6 +81,7 @@ export class ProductsComponent implements OnInit {
                         this.loadProducts(orgData.id);
                     } else {
                         this.fallbackManagerService.updateNoOrganization(true);
+                        this.fallbackManagerService.updateLoading(false);
                     }
                 },
                 error: (error: Error) => {

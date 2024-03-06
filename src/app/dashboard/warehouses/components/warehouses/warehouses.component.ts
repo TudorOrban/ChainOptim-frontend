@@ -13,6 +13,9 @@ import {
     FallbackManagerState,
 } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { distinctUntilChanged, filter } from 'rxjs';
+import { SortOption } from '../../../../shared/search/models/Search';
+import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
+import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 
 @Component({
     selector: 'app-organization',
@@ -22,6 +25,8 @@ import { distinctUntilChanged, filter } from 'rxjs';
         FontAwesomeModule,
         RouterModule,
         FallbackManagerComponent,
+        ListHeaderComponent,
+        PageSelectorComponent
     ],
     templateUrl: './warehouses.component.html',
     styleUrl: './warehouses.component.css',
@@ -29,7 +34,19 @@ import { distinctUntilChanged, filter } from 'rxjs';
 export class WarehousesComponent implements OnInit {
     currentOrganization: Organization | null = null;
     warehouses: Warehouse[] = [];
+    totalCount = 0;
     fallbackManagerState: FallbackManagerState = {};
+    
+    // Search params
+    searchQuery = "";
+    sortOptions: SortOption[] = [
+        { label: "Created At", value: "createdAt" },
+        { label: "Updated At", value: "updatedAt" }
+    ];
+    currentSortOption: SortOption = { label: "createdAt", value: "createdAt" };
+    ascending = false;
+    page = 1;
+    itemsPerPage = 3;
 
     constructor(
         private organizationService: OrganizationService,
@@ -42,7 +59,7 @@ export class WarehousesComponent implements OnInit {
         this.fallbackManagerService.fallbackManagerState$.subscribe((state) => {
             this.fallbackManagerState = state;
         });
-        this.fallbackManagerState.loading = true;
+        this.fallbackManagerService.updateLoading(true);
 
         // Get current user's organization
         this.organizationService
@@ -64,6 +81,7 @@ export class WarehousesComponent implements OnInit {
                         this.loadWarehouses(orgData.id);
                     } else {
                         this.fallbackManagerService.updateNoOrganization(true);
+                        this.fallbackManagerService.updateLoading(false);
                     }
                 },
                 error: (error: Error) => {
@@ -76,22 +94,53 @@ export class WarehousesComponent implements OnInit {
     }
 
     private loadWarehouses(organizationId: number) {
-        this.warehouseService
-            .getWarehousesByOrganizationId(organizationId)
-            .subscribe({
-                next: (warehouses) => {
-                    this.warehouses = warehouses;
+        this.fallbackManagerService.updateLoading(true);
 
+        this.warehouseService
+            .getWarehousesByOrganizationIdAdvanced(organizationId, this.searchQuery, this.currentSortOption.value, this.ascending, this.page, this.itemsPerPage)
+            .subscribe({
+                next: (paginatedResults) => {
+                    // Get results and count
+                    this.warehouses = paginatedResults.results;
+                    this.totalCount = paginatedResults.totalCount;
+                    
                     // Manage fallback state
-                    if (warehouses.length === 0) {
+                    if (this.warehouses.length === 0) {
                         this.fallbackManagerService.updateNoResults(true);
+                    } else {
+                        this.fallbackManagerService.updateNoResults(false);
                     }
                     this.fallbackManagerService.updateLoading(false);
                 },
                 error: (err: Error) => {
                     this.fallbackManagerService.updateError(err.message ?? '');
+                    this.fallbackManagerService.updateLoading(false);
                 },
             });
+    }
+
+    handleSearch(query: string): void {
+        if (this.searchQuery !== query) {
+            this.searchQuery = query;
+            this.page = 1; // Reset page
+            this.loadWarehouses(this.currentOrganization!.id);
+        }
+    }
+
+    handleSortChange(sortChange: { value: string, ascending: boolean }): void {
+        if (this.currentSortOption.value !== sortChange.value || this.ascending !== sortChange.ascending) {
+            this.currentSortOption = this.sortOptions.find((option) => option.value === sortChange.value)!;
+            this.ascending = sortChange.ascending;
+            this.page = 1; // Reset page
+            this.loadWarehouses(this.currentOrganization!.id);
+        }
+    }
+
+    changePage(page: number): void {
+        if (this.page !== page) {
+            this.page = page;
+            this.loadWarehouses(this.currentOrganization!.id);
+        }
     }
 
     faBuilding = faBuilding;

@@ -1,10 +1,8 @@
 <!-- Header -->
-<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-horizontal-padding">
-    <h2 class="flex items-center">
-        <fa-icon [icon]="faWarehouse" class="text-lg text-gray-700"></fa-icon>
-        <div class="page-title ml-2">Warehouses</div>
-    </h2>
-</div>
+<app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    [title]="'Warehouses'" [icon]="faWarehouse" [searchPlaceholder]="'Search Warehouses'" [sortOptions]="sortOptions" [createName]="'Warehouse'" [createLink]="'create-warehouse'"
+    (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
+></app-list-header>
 
 <!-- Page content-->
 <div *ngIf="!fallbackManagerState.fallBack" class="page-standard-horizontal-padding">
@@ -21,6 +19,14 @@
             <p class="text-gray-900">{{ warehouse.location?.address }}</p>
         </li>
     </ul>
+    <div class="flex items-center justify-end py-4">
+        <app-page-selector
+            [page]="page"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="totalCount"
+            (pageChange)="changePage($event)"
+        ></app-page-selector>
+    </div>
 </div>
 
 <!-- Fallback manager -->
