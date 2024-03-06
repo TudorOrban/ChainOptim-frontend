@@ -93,7 +93,7 @@ export class ProductsComponent implements OnInit {
             });
     }
 
-    private loadProducts(organizationId: number) {
+    loadProducts(organizationId: number) {
         this.fallbackManagerService.updateLoading(true);
 
         this.productService
