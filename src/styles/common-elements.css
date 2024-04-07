@@ -17,6 +17,7 @@
 }
 
 .item-page-header {
+    padding: 2rem;
     border-bottom: 1px solid rgb(209 213 219);
     box-shadow: 0 0 5px rgba(20, 20, 20, 0.05);
 }

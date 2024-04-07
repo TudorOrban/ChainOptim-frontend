@@ -17,6 +17,8 @@ import {
     FallbackManagerState,
 } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
+import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
+import { NavigationItem } from '../../../../shared/common/models/UITypes';
 
 @Component({
     selector: 'app-product',
@@ -25,6 +27,7 @@ import { FallbackManagerComponent } from '../../../../shared/fallback/components
         CommonModule,
         RouterModule,
         FontAwesomeModule,
+        TabsComponent,
         FallbackManagerComponent,
     ],
     templateUrl: './product.component.html',
@@ -36,6 +39,21 @@ export class ProductComponent implements OnInit {
     rawMaterials: RawMaterial[] = [];
     components: ProdComponent[] = [];
     fallbackManagerState: FallbackManagerState = {};
+    tabs: NavigationItem[] = [
+        {
+            label: "Overview",
+            link: "/dashboard/products/${this.productId}/overview",
+        },
+        {
+            label: "Production",
+            link: "/dashboard/products/${this.productId}/production",
+        },
+        {
+            label: "Evaluation",
+            link: "/dashboard/products/${this.productId}/evaluation",
+        },
+    ]
+    activeTab: string = "Overview";
 
     constructor(
         private route: ActivatedRoute,
@@ -61,6 +79,7 @@ export class ProductComponent implements OnInit {
                     next: (product) => {
                         console.log('PRODUCT', product);
                         this.product = product;
+                        this.fallbackManagerService.updateLoading(false);
                     },
 
                     error: (error: Error) => {

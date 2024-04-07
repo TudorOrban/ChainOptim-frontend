@@ -14,6 +14,14 @@
     </div>
 </div>
 
+<!-- Tabs -->
+<app-tabs
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+></app-tabs>
+
+    <!-- (onTabChange)="handleTabChange($event)" -->
+
 <!-- Content -->
 <!-- Project Pipeline -->
 <div *ngIf="!fallbackManagerState.fallBack"  class="page-standard-horizontal-padding">
