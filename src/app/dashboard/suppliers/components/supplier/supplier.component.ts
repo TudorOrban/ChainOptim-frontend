@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { SupplierService } from '../../services/SupplierService';
+import { SupplierService } from '../../services/supplier.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
     faBox,
@@ -11,7 +11,7 @@ import {
     Supplier,
 } from '../../models/Supplier';
 import { CommonModule } from '@angular/common';
-import { OrganizationService } from '../../../organization/services/OrganizationService';
+import { OrganizationService } from '../../../organization/services/organization.service';
 import {
     FallbackManagerService,
     FallbackManagerState,

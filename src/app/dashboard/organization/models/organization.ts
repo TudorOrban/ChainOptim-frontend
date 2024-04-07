@@ -1,12 +1,4 @@
-export interface User {
-    id: string;
-    username: string;
-    email: string;
-    createdAt: Date;
-    updatedAt: Date;
-    role: UserRole;
-    organization?: Organization;
-}
+import { User, UserRole } from "../../../core/user/model/user";
 
 export interface Organization {
     id: number;
@@ -16,7 +8,7 @@ export interface Organization {
     subscriptionPlan: SubscriptionPlan;
     createdAt: Date;
     updatedAt: Date;
-    users: User[];
+    users?: User[];
 }
 
 export interface SearchUserDTO {
@@ -43,7 +35,6 @@ export interface CreateOrganizationDTO {
     subscriptionPlan: SubscriptionPlan;
 }
 
-export type UserRole = "ADMIN" | "MEMBER" | "NONE";
 export type SubscriptionPlan = "NONE" | "BASIC" | "PRO";
 
 export interface OrganizationInvite {

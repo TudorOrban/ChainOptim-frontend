@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { OrganizationService } from '../../../organization/services/OrganizationService';
+import { OrganizationService } from '../../../organization/services/organization.service';
 import { AuthenticationService } from '../../../../core/auth/services/authentication.service';
-import { UserService } from '../../../../core/auth/services/UserService';
+import { UserService } from '../../../../core/auth/services/user.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faGlobe, faMap } from '@fortawesome/free-solid-svg-icons';
 import { MapComponent } from '../map/map.component';
-import { User } from '../../../organization/models/organization';
+import { User } from '../../../../core/user/model/user';
 
 @Component({
     selector: 'app-dashboard',

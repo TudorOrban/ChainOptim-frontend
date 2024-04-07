@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Organization, User } from '../../models/organization';
-import { UserService } from '../../../../core/auth/services/UserService';
-import { OrganizationService } from '../../services/OrganizationService';
+import { Organization } from '../../models/organization';
+import { UserService } from '../../../../core/auth/services/user.service';
+import { OrganizationService } from '../../services/organization.service';
 import { faBuilding } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { User } from '../../../../core/user/model/user';
 
 @Component({
     selector: 'app-organization',
@@ -36,9 +37,9 @@ export class OrganizationComponent implements OnInit {
             if (orgData) {
                 console.log('Organization', orgData);
                 this.currentOrganization = orgData;
-                this.admins = orgData.users.filter((user) => user.role === 'ADMIN') || [];
-                this.members = orgData.users.filter((user) => user.role === 'MEMBER') || [];
-                this.noRoles = orgData.users.filter((user) => user.role === 'NONE') || [];
+                this.admins = orgData.users?.filter((user) => user.role === 'ADMIN') || [];
+                this.members = orgData.users?.filter((user) => user.role === 'MEMBER') || [];
+                this.noRoles = orgData.users?.filter((user) => user.role === 'NONE') || [];
             }
         });
     }

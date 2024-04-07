@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { ProductService } from '../../services/ProductService';
+import { ProductService } from '../../services/product.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBox, faGear } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -9,9 +9,9 @@ import {
     Component as ProdComponent,
 } from '../../models/Product';
 import { CommonModule } from '@angular/common';
-import { RawMaterialService } from '../../services/RawMaterialService';
-import { ComponentService } from '../../services/ComponentService';
-import { OrganizationService } from '../../../organization/services/OrganizationService';
+import { RawMaterialService } from '../../services/rawmaterial.service';
+import { ComponentService } from '../../services/component.service';
+import { OrganizationService } from '../../../organization/services/organization.service';
 import {
     FallbackManagerService,
     FallbackManagerState,

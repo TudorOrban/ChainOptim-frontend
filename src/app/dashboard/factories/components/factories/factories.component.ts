@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { OrganizationService } from '../../../organization/services/OrganizationService';
+import { OrganizationService } from '../../../organization/services/organization.service';
 import { faBox, faBuilding, faIndustry } from '@fortawesome/free-solid-svg-icons';
 import { Factory } from '../../models/Factory';
-import { FactoryService } from '../../services/FactoryService';
+import { FactoryService } from '../../services/factory.service';
 import { Organization } from '../../../organization/models/organization';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import {

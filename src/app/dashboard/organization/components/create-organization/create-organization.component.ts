@@ -5,13 +5,13 @@ import {
     CreateOrganizationDTO,
     SearchUserDTO,
     SubscriptionPlan,
-    User,
 } from '../../models/organization';
-import { OrganizationService } from '../../services/OrganizationService';
-import { UserService } from '../../../../core/auth/services/UserService';
+import { OrganizationService } from '../../services/organization.service';
+import { UserService } from '../../../../core/auth/services/user.service';
 import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch, faUser, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { User } from '../../../../core/user/model/user';
 
 @Component({
     selector: 'app-create-organization',

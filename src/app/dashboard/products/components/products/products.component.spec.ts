@@ -7,8 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { ProductsComponent } from './products.component';
 import { of } from 'rxjs';
-import { ProductService } from '../../services/ProductService';
-import { OrganizationService } from '../../../organization/services/OrganizationService';
+import { ProductService } from '../../services/product.service';
+import { OrganizationService } from '../../../organization/services/organization.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { By } from '@angular/platform-browser';
 

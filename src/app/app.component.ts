@@ -14,8 +14,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent } from './core/main/components/sidebar/sidebar.component';
 import { filter, switchMap } from 'rxjs';
-import { UserService } from './core/auth/services/UserService';
-import { OrganizationService } from './dashboard/organization/services/OrganizationService';
+import { UserService } from './core/auth/services/user.service';
+import { OrganizationService } from './dashboard/organization/services/organization.service';
 
 @Component({
     selector: 'app-root',
@@ -72,22 +72,22 @@ export class AppComponent implements OnInit {
             if (username) {
                 this.userService.fetchAndSetCurrentUser(username);
 
-                this.userService
-                    .getCurrentUser()
-                    .pipe(
-                        filter(
-                            (user) =>
-                                user !== null &&
-                                user.organization !== undefined &&
-                                user.organization.id !== undefined
-                        ),
-                        switchMap((user) => {
-                            return this.organizationService.fetchAndSetCurrentOrganization(
-                                user?.organization?.id as number
-                            );
-                        })
-                    )
-                    .subscribe();
+                // this.userService
+                //     .getCurrentUser()
+                //     .pipe(
+                //         filter(
+                //             (user) =>
+                //                 user !== null &&
+                //                 user.organization !== undefined &&
+                //                 user.organization.id !== undefined
+                //         ),
+                //         switchMap((user) => {
+                //             return this.organizationService.fetchAndSetCurrentOrganization(
+                //                 user?.organization?.id as number
+                //             );
+                //         })
+                //     )
+                //     .subscribe();
             }
         }
     }

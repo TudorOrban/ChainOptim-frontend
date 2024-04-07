@@ -3,14 +3,14 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBox, faGear, faWarehouse } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
-import { OrganizationService } from '../../../organization/services/OrganizationService';
+import { OrganizationService } from '../../../organization/services/organization.service';
 import {
     FallbackManagerService,
     FallbackManagerState,
 } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { Warehouse } from '../../models/Warehouse';
-import { WarehouseService } from '../../services/WarehouseService';
+import { WarehouseService } from '../../services/warehouse.service';
 
 @Component({
     selector: 'app-warehouse',

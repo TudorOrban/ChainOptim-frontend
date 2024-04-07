@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { FactoryService } from '../../services/FactoryService';
+import { FactoryService } from '../../services/factory.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faGear, faIndustry } from '@fortawesome/free-solid-svg-icons';
 import {
     Factory,
 } from '../../models/Factory';
 import { CommonModule } from '@angular/common';
-import { OrganizationService } from '../../../organization/services/OrganizationService';
+import { OrganizationService } from '../../../organization/services/organization.service';
 import {
     FallbackManagerService,
     FallbackManagerState,

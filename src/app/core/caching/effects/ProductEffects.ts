@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from "@ngrx/store";
 import { catchError, map, mergeMap, of, take } from "rxjs";
-import { ProductService } from "../../../dashboard/products/services/ProductService";
+import { ProductService } from "../../../dashboard/products/services/product.service";
 import { loadProducts, productsLoaded } from "../actions/generic.actions";
 import { selectProductData } from "../selectors/product.selectors";
 import { AppState } from "../models/caching.model";
