@@ -10,6 +10,8 @@ import { SuppliersComponent } from './suppliers/components/suppliers/suppliers.c
 import { SupplierComponent } from './suppliers/components/supplier/supplier.component';
 import { WarehousesComponent } from './warehouses/components/warehouses/warehouses.component';
 import { WarehouseComponent } from './warehouses/components/warehouse/warehouse.component';
+import { ClientsComponent } from './clients/components/clients/clients.component';
+import { SettingsComponent } from './settings/components/settings/settings.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -51,5 +53,13 @@ export const dashboardRoutes: Routes = [
     },
     {
         path: 'dashboard/warehouses/:warehouseId', component: WarehouseComponent,
+    },
+    {
+        path: 'dashboard/clients',
+        component: ClientsComponent,
+    },
+    {
+        path: 'dashboard/settings',
+        component: SettingsComponent,
     }
 ];

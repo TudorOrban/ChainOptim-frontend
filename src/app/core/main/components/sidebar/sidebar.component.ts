@@ -8,11 +8,13 @@ import {
     faBox,
     faBuilding,
     faCartShopping,
+    faGear,
     faGlobe,
     faHouse,
     faIndustry,
     faSearch,
     faTruckArrowRight,
+    faUniversalAccess,
     faWarehouse,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -46,6 +48,8 @@ export class SidebarComponent {
     faIndustry = faIndustry;
     faWarehouse = faWarehouse;
     faTruckArrowRight = faTruckArrowRight;
+    faUniversalAccess = faUniversalAccess;
+    faGear = faGear;
 
     // Sidebar items
     sidebarItems: SidebarItem[] = [
@@ -56,9 +60,10 @@ export class SidebarComponent {
             link: '/dashboard/organization',
         },
         { label: 'Products', icon: this.faBox, link: '/dashboard/products' },
-        { label: 'Orders', icon: this.faCartShopping },
         { label: 'Factories', icon: this.faIndustry, link: '/dashboard/factories' },
         { label: 'Warehouses', icon: this.faWarehouse, link: '/dashboard/warehouses'},
-        { label: 'Suppliers', icon: this.faTruckArrowRight, link: '/dashboard/suppliers' }
+        { label: 'Suppliers', icon: this.faTruckArrowRight, link: '/dashboard/suppliers' },
+        { label: 'Clients', icon: this.faUniversalAccess, link: '/dashboard/clients' },
+        { label: 'Settings', icon: this.faGear, link: '/dashboard/settings' },
     ];
 }

@@ -16,6 +16,7 @@ import { distinctUntilChanged, filter } from 'rxjs';
 import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 import { SortOption } from '../../../../shared/search/models/Search';
+import { UserService } from '../../../../core/auth/services/user.service';
 
 @Component({
     selector: 'app-factory',
@@ -32,7 +33,7 @@ import { SortOption } from '../../../../shared/search/models/Search';
     styleUrl: './factories.component.css',
 })
 export class FactoriesComponent implements OnInit {
-    currentOrganization: Organization | null = null;
+    currentOrganization: Organization | undefined = undefined;
     factories: Factory[] = [];
     totalCount = 0;
     fallbackManagerState: FallbackManagerState = {};
@@ -41,15 +42,16 @@ export class FactoriesComponent implements OnInit {
     searchQuery = "";
     sortOptions: SortOption[] = [
         { label: "Created At", value: "createdAt" },
-        { label: "Updated At", value: "updatedAt" }
+        { label: "Updated At", value: "updatedAt" },
+        { label: "Name", value: "name" }
     ];
     currentSortOption: SortOption = { label: "createdAt", value: "createdAt" };
     ascending = false;
     page = 1;
-    itemsPerPage = 3;
+    itemsPerPage = 10;
     
     constructor(
-        private organizationService: OrganizationService,
+        private userService: UserService,
         private factoryService: FactoryService,
         private fallbackManagerService: FallbackManagerService
     ) {}
@@ -62,23 +64,17 @@ export class FactoriesComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         // Get current user's organization
-        this.organizationService
-            .getCurrentOrganization()
-            // Prevent receiving null emissions after the first one
-            .pipe(
-                distinctUntilChanged(),
-                filter((org, index) => org !== null || index === 0)
-            )
+        this.userService
+            .getCurrentUser()
             .subscribe({
-                next: (orgData) => {
-                    console.log('Organization Data:', orgData);
-                    if (orgData) {
-                        this.currentOrganization = orgData;
-
+                next: (user) => {
+                    console.log('Current User:', user);
+                    this.currentOrganization = user?.organization;
+                    if (user && user.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
                         // Load factories
-                        this.loadFactories(orgData.id);
+                        this.loadFactories(this.currentOrganization?.id ?? 0);
                     } else {
                         this.fallbackManagerService.updateNoOrganization(true);
                     }

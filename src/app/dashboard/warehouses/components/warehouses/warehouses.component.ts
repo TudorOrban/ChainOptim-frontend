@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { OrganizationService } from '../../../organization/services/organization.service';
 import { faBox, faBuilding, faWarehouse } from '@fortawesome/free-solid-svg-icons';
 import { Warehouse } from '../../models/Warehouse';
 import { WarehouseService } from '../../services/warehouse.service';
@@ -12,10 +11,10 @@ import {
     FallbackManagerService,
     FallbackManagerState,
 } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { distinctUntilChanged, filter } from 'rxjs';
 import { SortOption } from '../../../../shared/search/models/Search';
 import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
+import { UserService } from '../../../../core/auth/services/user.service';
 
 @Component({
     selector: 'app-organization',
@@ -32,7 +31,7 @@ import { PageSelectorComponent } from '../../../../shared/search/components/page
     styleUrl: './warehouses.component.css',
 })
 export class WarehousesComponent implements OnInit {
-    currentOrganization: Organization | null = null;
+    currentOrganization: Organization | undefined = undefined;
     warehouses: Warehouse[] = [];
     totalCount = 0;
     fallbackManagerState: FallbackManagerState = {};
@@ -41,15 +40,16 @@ export class WarehousesComponent implements OnInit {
     searchQuery = "";
     sortOptions: SortOption[] = [
         { label: "Created At", value: "createdAt" },
-        { label: "Updated At", value: "updatedAt" }
+        { label: "Updated At", value: "updatedAt" },
+        { label: "Name", value: "name" }
     ];
     currentSortOption: SortOption = { label: "createdAt", value: "createdAt" };
     ascending = false;
     page = 1;
-    itemsPerPage = 3;
+    itemsPerPage = 10;
 
     constructor(
-        private organizationService: OrganizationService,
+        private userService: UserService,
         private warehouseService: WarehouseService,
         private fallbackManagerService: FallbackManagerService
     ) {}
@@ -62,23 +62,17 @@ export class WarehousesComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         // Get current user's organization
-        this.organizationService
-            .getCurrentOrganization()
-            // Prevent receiving null emissions after the first one
-            .pipe(
-                distinctUntilChanged(),
-                filter((org, index) => org !== null || index === 0)
-            )
+        this.userService
+            .getCurrentUser()
             .subscribe({
-                next: (orgData) => {
-                    console.log('Organization Data:', orgData);
-                    if (orgData) {
-                        this.currentOrganization = orgData;
-
+                next: (user) => {
+                    console.log('Current User:', user);
+                    this.currentOrganization = user?.organization;
+                    if (user && user.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
                         // Load warehouses
-                        this.loadWarehouses(orgData.id);
+                        this.loadWarehouses(this.currentOrganization?.id ?? 0);
                     } else {
                         this.fallbackManagerService.updateNoOrganization(true);
                         this.fallbackManagerService.updateLoading(false);

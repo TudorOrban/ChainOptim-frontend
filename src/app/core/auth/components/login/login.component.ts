@@ -29,7 +29,7 @@ export class LoginComponent {
             username: this.username,
             password: this.password,
         };
-        this.http.post<any>('api/login', loginPayload).subscribe(
+        this.http.post<any>('api/v1/login', loginPayload).subscribe(
             (response) => {
                 console.log('Login successful', response);
                 this.authService.login(response.accessToken);

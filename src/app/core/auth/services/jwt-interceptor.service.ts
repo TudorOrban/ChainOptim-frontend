@@ -4,6 +4,8 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
+    constructor() {}
+
     intercept(request: HttpRequest<any>, next: HttpHandler) {
         const token = localStorage.getItem("token");
         if (token) {

@@ -11,7 +11,7 @@
                 (click)="toggleSidebar()"
             ></fa-icon>
         </div>
-        <div class="flex flex-col p-4 space-y-6">
+        <div class="flex flex-col px-6 py-4 space-y-8">
             <div *ngFor="let item of sidebarItems" class="flex items-center">
                 <fa-icon [icon]="item.icon" class="w-4 h-4 mr-4 mb-2"></fa-icon>
                 <a *ngIf="item.link" [routerLink]="item.link">{{
