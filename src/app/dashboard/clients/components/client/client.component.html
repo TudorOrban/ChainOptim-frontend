@@ -3,16 +3,16 @@
     class="page-standard-horizontal-padding entity-page-header">
     <div class="flex items-center justify-between w-full">
         <div>
-            <h2 class="page-title">{{ product?.name }}</h2>
-            <p class="text-gray-900 pt-1">{{ product?.description }}</p>
+            <h2 class="page-title">{{ client?.name }}</h2>
+            <p class="text-gray-900">{{ client?.location?.address || "" }}</p>
         </div>
         <button
             class="standard-write-button"
             [routerLink]="
-                '/dashboard/products/' + product?.id + '/edit'
+                '/dashboard/clients/' + client?.id + '/edit'
             "
         >    
-            Edit Product    
+            Edit Client    
         </button>
     </div>
 </div>
@@ -24,9 +24,9 @@
     (tabSelected)="onTabSelected($event)"
 ></app-tabs>
 
-<app-product-overview *ngIf="activeTab === 'Overview'" [product]="product"></app-product-overview>
-<app-product-production *ngIf="activeTab === 'Production'" [product]="product"></app-product-production>
-<app-product-evaluation *ngIf="activeTab === 'Evaluation'" [product]="product"></app-product-evaluation>
+<app-client-overview *ngIf="activeTab === 'Overview'" [client]="client"></app-client-overview>
+<app-client-orders *ngIf="activeTab === 'Client Orders'" [client]="client"></app-client-orders>
+<app-client-evaluation *ngIf="activeTab === 'Evaluation'" [client]="client"></app-client-evaluation>
 
 
 <!-- Fallback manager -->

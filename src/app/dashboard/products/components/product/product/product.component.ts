@@ -19,9 +19,9 @@ import {
 import { FallbackManagerComponent } from '../../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { TabsComponent } from '../../../../../shared/common/components/tabs/tabs.component';
 import { NavigationItem } from '../../../../../shared/common/models/UITypes';
-import { ProductProductionComponent } from '../product-production/product-production.component';
-import { ProductEvaluationComponent } from '../product-evaluation/product-evaluation.component';
-import { ProductOverviewComponent } from '../product-overview/product-overview.component';
+import { ProductProductionComponent } from './product-production/product-production.component';
+import { ProductEvaluationComponent } from './product-evaluation/product-evaluation.component';
+import { ProductOverviewComponent } from './product-overview/product-overview.component';
 
 @Component({
     selector: 'app-product',
@@ -48,15 +48,12 @@ export class ProductComponent implements OnInit {
     tabs: NavigationItem[] = [
         {
             label: "Overview",
-            link: "/dashboard/products/${this.productId}/overview",
         },
         {
             label: "Production",
-            link: "/dashboard/products/${this.productId}/production",
         },
         {
             label: "Evaluation",
-            link: "/dashboard/products/${this.productId}/evaluation",
         },
     ]
     activeTab: string = "Overview";

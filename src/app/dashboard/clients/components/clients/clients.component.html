@@ -16,7 +16,7 @@
                 class="font-semibold text-lg hover:text-blue-700 hover:text-underline"
                 >{{ client.name }}</a
             >
-            <p class="text-gray-900">{{ client.location.address }}</p>
+            <p class="text-gray-900">{{ client?.location?.address || "" }}</p>
         </li>
     </ul>
     <div class="flex items-center justify-end py-4">

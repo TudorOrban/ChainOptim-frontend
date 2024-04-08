@@ -11,9 +11,10 @@ import { WarehousesComponent } from './warehouses/components/warehouses/warehous
 import { WarehouseComponent } from './warehouses/components/warehouse/warehouse.component';
 import { ClientsComponent } from './clients/components/clients/clients.component';
 import { SettingsComponent } from './settings/components/settings/settings.component';
-import { ProductEvaluationComponent } from './products/components/product/product-evaluation/product-evaluation.component';
-import { ProductProductionComponent } from './products/components/product/product-production/product-production.component';
+import { ProductEvaluationComponent } from './products/components/product/product/product-evaluation/product-evaluation.component';
+import { ProductProductionComponent } from './products/components/product/product/product-production/product-production.component';
 import { ProductComponent } from './products/components/product/product/product.component';
+import { ClientComponent } from './clients/components/client/client.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -59,6 +60,9 @@ export const dashboardRoutes: Routes = [
     {
         path: 'dashboard/clients',
         component: ClientsComponent,
+    },
+    {
+        path: 'dashboard/clients/:clientId', component: ClientComponent,
     },
     {
         path: 'dashboard/settings',
