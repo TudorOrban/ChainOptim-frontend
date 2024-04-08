@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { FactoryService } from '../../services/factory.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faGear, faIndustry } from '@fortawesome/free-solid-svg-icons';
-import {
-    Factory,
-} from '../../models/Factory';
+import { faBox, faGear } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
-import { OrganizationService } from '../../../organization/services/organization.service';
-import {
-    FallbackManagerService,
-    FallbackManagerState,
-} from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
+import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
+import { NavigationItem } from '../../../../shared/common/models/UITypes';
+import { FactoryService } from '../../services/factory.service';
+import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
+import { FactoryOverviewComponent } from './factory-overview/factory-overview.component';
+import { FactoryInventoryComponent } from './factory-inventory/factory-inventory.component';
+import { FactoryPerformanceComponent } from './factory-performance/factory-performance.component';
+import { Factory } from '../../models/Factory';
+import { FactoryProductionComponent } from './factory-production/factory-production.component';
 
 @Component({
     selector: 'app-factory',
@@ -21,6 +21,11 @@ import { FallbackManagerComponent } from '../../../../shared/fallback/components
         CommonModule,
         RouterModule,
         FontAwesomeModule,
+        TabsComponent,
+        FactoryOverviewComponent,
+        FactoryProductionComponent,
+        FactoryInventoryComponent,
+        FactoryPerformanceComponent,
         FallbackManagerComponent,
     ],
     templateUrl: './factory.component.html',
@@ -30,11 +35,25 @@ export class FactoryComponent implements OnInit {
     factoryId: string | null = null;
     factory: Factory | null = null;
     fallbackManagerState: FallbackManagerState = {};
+    tabs: NavigationItem[] = [
+        {
+            label: "Overview",
+        },
+        {
+            label: "Production",
+        },
+        {
+            label: "Inventory",
+        },
+        {
+            label: "Performance",
+        },
+    ]
+    activeTab: string = "Overview";
 
     constructor(
         private route: ActivatedRoute,
         private factoryService: FactoryService,
-        private organizationService: OrganizationService,
         private fallbackManagerService: FallbackManagerService
     ) {}
 
@@ -43,10 +62,11 @@ export class FactoryComponent implements OnInit {
         this.fallbackManagerService.fallbackManagerState$.subscribe((state) => {
             this.fallbackManagerState = state;
         });
-        this.fallbackManagerState.loading = true;
+        this.fallbackManagerService.updateLoading(true);
 
         this.route.paramMap.subscribe((params) => {
             this.factoryId = params.get('factoryId');
+            
             this.factoryService
                 .getFactoryById(Number(this.factoryId))
                 .subscribe({
@@ -66,6 +86,10 @@ export class FactoryComponent implements OnInit {
         });
     }
 
-    faIndustry = faIndustry;
+    onTabSelected(selectedTabLabel: string) {
+        this.activeTab = selectedTabLabel;
+    }
+
+    faBox = faBox;
     faGear = faGear;
 }

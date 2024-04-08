@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between w-full">
         <div>
             <h2 class="page-title">{{ product?.name }}</h2>
-            <p class="text-gray-900 pt-1">{{ product?.description }}</p>
+            <p class="text-gray-900 pt-1">{{ product?.description || "" }}</p>
         </div>
         <button
             class="standard-write-button"

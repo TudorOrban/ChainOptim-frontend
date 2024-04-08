@@ -1,23 +1,33 @@
 <!-- Header -->
-<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-horizontal-padding entity-page-header">
-    <div class="flex items-center">
-        <fa-icon
-            [icon]="faWarehouse"
-            class="small-icon text-gray-700 mr-2 mb-1"
-        ></fa-icon>
-        <h2 class="page-title">Warehouse: {{ warehouse?.name }}</h2>
-    </div>
-
-    <div class="flex items-center pt-4">
-        <span class="font-semibold text-lg mr-1">Location:</span>
-        <p class="text-gray-900">{{ warehouse?.location?.address }}</p>
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    class="page-standard-horizontal-padding entity-page-header">
+    <div class="flex items-center justify-between w-full">
+        <div>
+            <h2 class="page-title">{{ warehouse?.name }}</h2>
+            <p class="text-gray-900">{{ warehouse?.location?.address || "" }}</p>
+        </div>
+        <button
+            class="standard-write-button"
+            [routerLink]="
+                '/dashboard/warehouses/' + warehouse?.id + '/edit'
+            "
+        >    
+            Edit Warehouse    
+        </button>
     </div>
 </div>
 
-<!-- Content -->
-<div *ngIf="!fallbackManagerState.fallBack"  class="page-standard-horizontal-padding">
-    Capacity, inventory, yield...
-</div>
+<!-- Tabs -->
+<app-tabs
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+    (tabSelected)="onTabSelected($event)"
+></app-tabs>
+
+<app-warehouse-overview *ngIf="activeTab === 'Overview'" [warehouse]="warehouse"></app-warehouse-overview>
+<app-warehouse-inventory *ngIf="activeTab === 'Inventory'" [warehouse]="warehouse"></app-warehouse-inventory>
+<app-warehouse-performance *ngIf="activeTab === 'Performance'" [warehouse]="warehouse"></app-warehouse-performance>
+
 
 <!-- Fallback manager -->
 <app-fallback-manager

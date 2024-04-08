@@ -1,24 +1,34 @@
 <!-- Header -->
-<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading" class="page-standard-horizontal-padding entity-page-header">
-    <div class="flex items-center">
-        <fa-icon
-            [icon]="faTruckArrowRight"
-            class="small-icon text-gray-700 mr-2 mb-1"
-        ></fa-icon>
-        <h2 class="page-title">Supplier: {{ supplier?.name }}</h2>
-    </div>
-
-    <div class="flex items-center pt-4">
-        <span class="font-semibold text-lg mr-1">Location:</span>
-        <p class="text-gray-900">To be added</p>
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    class="page-standard-horizontal-padding entity-page-header">
+    <div class="flex items-center justify-between w-full">
+        <div>
+            <h2 class="page-title">{{ supplier?.name }}</h2>
+            <p class="text-gray-900 pt-1">{{ supplier?.location?.address || "" }}</p>
+        </div>
+        <button
+            class="standard-write-button"
+            [routerLink]="
+                '/dashboard/suppliers/' + supplier?.id + '/edit'
+            "
+        >    
+            Edit Supplier    
+        </button>
     </div>
 </div>
 
-<!-- Content -->
-<!-- Project Pipeline -->
-<div *ngIf="!fallbackManagerState.fallBack"  class="page-standard-horizontal-padding">
-    Orders, performance, etc.
-</div>
+<!-- Tabs -->
+<app-tabs
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+    (tabSelected)="onTabSelected($event)"
+></app-tabs>
+
+<app-supplier-overview *ngIf="activeTab === 'Overview'" [supplier]="supplier"></app-supplier-overview>
+<app-supplier-orders *ngIf="activeTab === 'Supplier Orders'" [supplier]="supplier"></app-supplier-orders>
+<app-supplier-shipments *ngIf="activeTab === 'Supplier Shipments'" [supplier]="supplier"></app-supplier-shipments>
+<app-supplier-performance *ngIf="activeTab === 'Performance'" [supplier]="supplier"></app-supplier-performance>
+
 
 <!-- Fallback manager -->
 <app-fallback-manager

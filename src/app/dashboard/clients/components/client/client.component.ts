@@ -44,6 +44,9 @@ export class ClientComponent implements OnInit {
             label: "Client Orders",
         },
         {
+            label: "Client Shipments",
+        },
+        {
             label: "Evaluation",
         },
     ]
@@ -52,7 +55,6 @@ export class ClientComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private clientService: ClientService,
-        private organizationService: OrganizationService,
         private fallbackManagerService: FallbackManagerService
     ) {}
 
@@ -61,10 +63,11 @@ export class ClientComponent implements OnInit {
         this.fallbackManagerService.fallbackManagerState$.subscribe((state) => {
             this.fallbackManagerState = state;
         });
-        this.fallbackManagerState.loading = true;
+        this.fallbackManagerService.updateLoading(true);
 
         this.route.paramMap.subscribe((params) => {
             this.clientId = params.get('clientId');
+            
             this.clientService
                 .getClientById(Number(this.clientId))
                 .subscribe({
