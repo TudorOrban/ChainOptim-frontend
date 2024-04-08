@@ -16,9 +16,10 @@
     }
 }
 
-.item-page-header {
-    padding: 2rem;
-    border-bottom: 1px solid rgb(209 213 219);
+.entity-page-header {
+    padding: 1rem 1.5rem;
+    background-color: #eeeeee;
+    border-bottom: 1px solid #c0c0c0;
     box-shadow: 0 0 5px rgba(20, 20, 20, 0.05);
 }
 
@@ -32,4 +33,9 @@
     color: rgb(29 78 216);
     text-decoration: underline;
     text-underline-offset: 4px;
+}
+
+
+.active-tab {
+    border-bottom: 2px solid rgb(37 99 235);
 }

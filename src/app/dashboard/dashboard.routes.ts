@@ -3,7 +3,6 @@ import { DashboardComponent } from './overview/components/overview/overview.comp
 import { OrganizationComponent } from './organization/components/organization/organization.component';
 import { CreateOrganizationComponent } from './organization/components/create-organization/create-organization.component';
 import { ProductsComponent } from './products/components/products/products.component';
-import { ProductComponent } from './products/components/product/product.component';
 import { FactoriesComponent } from './factories/components/factories/factories.component';
 import { FactoryComponent } from './factories/components/factory/factory.component';
 import { SuppliersComponent } from './suppliers/components/suppliers/suppliers.component';
@@ -12,6 +11,9 @@ import { WarehousesComponent } from './warehouses/components/warehouses/warehous
 import { WarehouseComponent } from './warehouses/components/warehouse/warehouse.component';
 import { ClientsComponent } from './clients/components/clients/clients.component';
 import { SettingsComponent } from './settings/components/settings/settings.component';
+import { ProductEvaluationComponent } from './products/components/product/product-evaluation/product-evaluation.component';
+import { ProductProductionComponent } from './products/components/product/product-production/product-production.component';
+import { ProductComponent } from './products/components/product/product/product.component';
 
 export const dashboardRoutes: Routes = [
     {

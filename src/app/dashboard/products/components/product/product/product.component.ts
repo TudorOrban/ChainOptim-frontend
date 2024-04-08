@@ -1,24 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { ProductService } from '../../services/product.service';
+import { ProductService } from '../../../services/product.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBox, faGear } from '@fortawesome/free-solid-svg-icons';
 import {
     Product,
     RawMaterial,
     Component as ProdComponent,
-} from '../../models/Product';
+} from '../../../models/Product';
 import { CommonModule } from '@angular/common';
-import { RawMaterialService } from '../../services/rawmaterial.service';
-import { ComponentService } from '../../services/component.service';
-import { OrganizationService } from '../../../organization/services/organization.service';
+import { RawMaterialService } from '../../../services/rawmaterial.service';
+import { ComponentService } from '../../../services/component.service';
+import { OrganizationService } from '../../../../organization/services/organization.service';
 import {
     FallbackManagerService,
     FallbackManagerState,
-} from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
-import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
-import { NavigationItem } from '../../../../shared/common/models/UITypes';
+} from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
+import { FallbackManagerComponent } from '../../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
+import { TabsComponent } from '../../../../../shared/common/components/tabs/tabs.component';
+import { NavigationItem } from '../../../../../shared/common/models/UITypes';
+import { ProductProductionComponent } from '../product-production/product-production.component';
+import { ProductEvaluationComponent } from '../product-evaluation/product-evaluation.component';
+import { ProductOverviewComponent } from '../product-overview/product-overview.component';
 
 @Component({
     selector: 'app-product',
@@ -28,6 +31,9 @@ import { NavigationItem } from '../../../../shared/common/models/UITypes';
         RouterModule,
         FontAwesomeModule,
         TabsComponent,
+        ProductOverviewComponent,
+        ProductProductionComponent,
+        ProductEvaluationComponent,
         FallbackManagerComponent,
     ],
     templateUrl: './product.component.html',
@@ -153,6 +159,10 @@ export class ProductComponent implements OnInit {
                 );
             });
         });
+    }
+
+    onTabSelected(selectedTabLabel: string) {
+        this.activeTab = selectedTabLabel;
     }
 
     faBox = faBox;

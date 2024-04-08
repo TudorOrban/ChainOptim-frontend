@@ -1,0 +1,37 @@
+<!-- Header -->
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    class="page-standard-horizontal-padding entity-page-header">
+    <div class="flex items-center justify-between w-full">
+        <div>
+            <h2 class="page-title">{{ product?.name }}</h2>
+            <p class="text-gray-900 pt-1">{{ product?.description }}</p>
+        </div>
+        <button
+            class="standard-write-button"
+            [routerLink]="
+                '/dashboard/products/' + product?.id + '/edit'
+            "
+        >    
+            Edit Product    
+        </button>
+    </div>
+</div>
+
+<!-- Tabs -->
+<app-tabs
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+    (tabSelected)="onTabSelected($event)"
+></app-tabs>
+
+<app-product-overview *ngIf="activeTab === 'Overview'" [product]="product"></app-product-overview>
+<app-product-production *ngIf="activeTab === 'Production'" [product]="product"></app-product-production>
+<app-product-evaluation *ngIf="activeTab === 'Evaluation'" [product]="product"></app-product-evaluation>
+
+    <!-- (onTabChange)="handleTabChange($event)" -->
+
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>

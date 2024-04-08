@@ -1,0 +1,6 @@
+<div class="flex items-center">
+    <div *ngFor="let tab of tabs" class="p-4 hover:bg-gray-100 hover:border-b-2 hover:border-blue-600"
+         [class.active-tab]="tab.label === activeTab">
+        <div (click)="selectTab(tab.label)" class="font-semibold text-lg">{{ tab.label }}</div>
+    </div>
+</div>
