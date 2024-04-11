@@ -1,56 +1,65 @@
-<div *ngIf="!!currentOrganization">
-    <!-- Header -->
-    <div
-        class="flex items-start justify-between page-standard-horizontal-padding border-b border-gray-300 shadow-sm"
-    >
-        <div class="">
-            <fa-icon
-                [icon]="faBuilding"
-                class="small-icon text-gray-700 mr-2"
-            ></fa-icon>
-            <span class="page-title"
-                >Organization: {{ currentOrganization.name }}</span
-            >
-            <div class="flex flex-col pt-2 text-lg text-gray-900">
-                <span>Address: {{ currentOrganization?.address }}</span>
-                <span
-                    >Contact Information:
-                    {{ currentOrganization?.contactInfo }}</span
-                >
-            </div>
-        </div>
-        <div class="flex flex-col justify-end space-y-2">
-            <span class="font-semibold text-lg">
-                Subscription Plan: {{ currentOrganization.subscriptionPlan }}
-            </span>
-            <button class="standard-write-button self-end">Change Plan</button>
+<!-- Header -->
+<div
+    *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    class="flex items-start justify-between page-standard-horizontal-padding entity-page-header"
+>
+    <div class="">
+        <fa-icon
+            [icon]="faBuilding"
+            class="small-icon text-gray-700 mr-2"
+        ></fa-icon>
+        <span class="page-title"
+            >Organization: {{ organization.name }}</span
+        >
+        <div class="flex flex-col pt-2 text-lg text-gray-900">
+            <span>Address: {{ organization?.address }}</span>
         </div>
     </div>
+    <div class="flex flex-col justify-end space-y-2">
+        <span class="font-semibold text-lg">
+            Subscription Plan: {{ organization?.subscriptionPlanTier }}
+        </span>
+        <button class="standard-write-button self-end">Edit Organization</button>
+    </div>
+</div>
 
-    <!-- Users panel -->
-    <div class="flex flex-col page-standard-horizontal-padding space-y-2">
-        <div class="flex items-center">
-            <span class="text-xl font-semibold mr-2">Admins:</span>
-            <span *ngFor="let admin of admins; let i = index" class="text-lg">
-                <ng-container *ngIf="0 < i">, </ng-container
-                >{{ admin.username }}
-            </span>
-        </div>
-        <div class="flex items-center">
-            <span class="text-xl font-semibold mr-2">Members:</span>
-            <span *ngFor="let member of members; let i = index" class="text-lg">
-                <ng-container *ngIf="0 < i">, </ng-container
-                >{{ member.username }}
-            </span>
-        </div>
-        <div class="flex items-center">
-            <span class="text-xl font-semibold mr-2">No role:</span>
-            <span *ngFor="let noRole of noRoles; let i = index" class="text-lg">
-                <ng-container *ngIf="0 < i">, </ng-container
-                >{{ noRole.username }}
-            </span>
-        </div>
+<!-- Tabs -->
+<app-tabs
+[tabs]="tabs"
+[activeTab]="activeTab"
+(tabSelected)="onTabSelected($event)"
+></app-tabs>
+
+<app-organization-overview *ngIf="activeTab === 'Overview'" [organization]="organization"></app-organization-overview>
+<app-organization-custom-roles *ngIf="activeTab === 'Custom Roles'" [organization]="organization"></app-organization-custom-roles>
+<app-organization-subscription-plan *ngIf="activeTab === 'Subscription Plan'" [organization]="organization"></app-organization-subscription-plan>
+
+<!-- Users panel -->
+<div class="flex flex-col page-standard-horizontal-padding space-y-2">
+    <div class="flex items-center">
+        <span class="text-xl font-semibold mr-2">Admins:</span>
+        <span *ngFor="let admin of admins; let i = index" class="text-lg">
+            <ng-container *ngIf="0 < i">, </ng-container
+            >{{ admin.username }}
+        </span>
+    </div>
+    <div class="flex items-center">
+        <span class="text-xl font-semibold mr-2">Members:</span>
+        <span *ngFor="let member of members; let i = index" class="text-lg">
+            <ng-container *ngIf="0 < i">, </ng-container
+            >{{ member.username }}
+        </span>
+    </div>
+    <div class="flex items-center">
+        <span class="text-xl font-semibold mr-2">No role:</span>
+        <span *ngFor="let noRole of noRoles; let i = index" class="text-lg">
+            <ng-container *ngIf="0 < i">, </ng-container
+            >{{ noRole.username }}
+        </span>
     </div>
 </div>
 
 <!-- Fallback -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>

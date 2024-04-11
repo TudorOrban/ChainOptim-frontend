@@ -5,7 +5,7 @@ export interface Organization {
     name: string;
     address?: string;
     contactInfo?: string;
-    subscriptionPlan: SubscriptionPlan;
+    subscriptionPlanTier: SubscriptionPlan;
     createdAt: Date;
     updatedAt: Date;
     users?: User[];
