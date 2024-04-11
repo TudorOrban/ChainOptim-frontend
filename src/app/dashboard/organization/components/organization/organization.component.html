@@ -9,7 +9,7 @@
             class="small-icon text-gray-700 mr-2"
         ></fa-icon>
         <span class="page-title"
-            >Organization: {{ organization.name }}</span
+            >Organization: {{ organization?.name }}</span
         >
         <div class="flex flex-col pt-2 text-lg text-gray-900">
             <span>Address: {{ organization?.address }}</span>
@@ -33,31 +33,6 @@
 <app-organization-overview *ngIf="activeTab === 'Overview'" [organization]="organization"></app-organization-overview>
 <app-organization-custom-roles *ngIf="activeTab === 'Custom Roles'" [organization]="organization"></app-organization-custom-roles>
 <app-organization-subscription-plan *ngIf="activeTab === 'Subscription Plan'" [organization]="organization"></app-organization-subscription-plan>
-
-<!-- Users panel -->
-<div class="flex flex-col page-standard-horizontal-padding space-y-2">
-    <div class="flex items-center">
-        <span class="text-xl font-semibold mr-2">Admins:</span>
-        <span *ngFor="let admin of admins; let i = index" class="text-lg">
-            <ng-container *ngIf="0 < i">, </ng-container
-            >{{ admin.username }}
-        </span>
-    </div>
-    <div class="flex items-center">
-        <span class="text-xl font-semibold mr-2">Members:</span>
-        <span *ngFor="let member of members; let i = index" class="text-lg">
-            <ng-container *ngIf="0 < i">, </ng-container
-            >{{ member.username }}
-        </span>
-    </div>
-    <div class="flex items-center">
-        <span class="text-xl font-semibold mr-2">No role:</span>
-        <span *ngFor="let noRole of noRoles; let i = index" class="text-lg">
-            <ng-container *ngIf="0 < i">, </ng-container
-            >{{ noRole.username }}
-        </span>
-    </div>
-</div>
 
 <!-- Fallback -->
 <app-fallback-manager

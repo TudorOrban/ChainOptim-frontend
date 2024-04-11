@@ -1,18 +1,21 @@
+import { isPlatformBrowser } from "@angular/common";
 import { HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-    constructor() {}
+    constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler) {
-        const token = localStorage.getItem("token");
-        if (token) {
-            const clonedRequest = request.clone({
-                headers: request.headers.set("Authorization", "Bearer " + token)
-            });
-            return next.handle(clonedRequest);
+        if (isPlatformBrowser(this.platformId)) {
+            const token = localStorage.getItem("token");
+            if (token) {
+                const clonedRequest = request.clone({
+                    headers: request.headers.set("Authorization", "Bearer " + token)
+                });
+                return next.handle(clonedRequest);
+            }
         }
         return next.handle(request);
     }

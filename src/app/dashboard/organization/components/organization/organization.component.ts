@@ -34,9 +34,6 @@ import { NavigationItem } from '../../../../shared/common/models/UITypes';
 export class OrganizationComponent implements OnInit {
     currentUser: User | null = null;
     organization: Organization | null = null;
-    admins: User[] = [];
-    members: User[] = [];
-    noRoles: User[] = [];
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
         {
@@ -72,9 +69,10 @@ export class OrganizationComponent implements OnInit {
                 if (orgData) {
                     console.log('Organization', orgData);
                     this.organization = orgData;
-                    this.admins = orgData.users?.filter((user) => user.role === 'ADMIN') || [];
-                    this.members = orgData.users?.filter((user) => user.role === 'MEMBER') || [];
-                    this.noRoles = orgData.users?.filter((user) => user.role === 'NONE') || [];
+                    this.fallbackManagerService.updateLoading(false);
+                } else {
+                    this.fallbackManagerService.updateError('Organization not found');
+                    this.fallbackManagerService.updateLoading(false);
                 }
             });
         });
