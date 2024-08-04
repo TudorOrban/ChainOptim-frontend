@@ -4,13 +4,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SignupComponent } from './core/auth/components/signup/signup.component';
 import { HomeComponent } from './home/home.component';
-import { DashboardComponent } from './dashboard/overview/components/overview/overview.component';
-import { OrganizationComponent } from './dashboard/organization/components/organization/organization.component';
 import { dashboardRoutes } from './dashboard/dashboard.routes';
+import { PricingComponent } from './core/main/components/pricing/pricing.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
+    { path: 'pricing', component: PricingComponent },
     { path: '', component: HomeComponent },
     ...dashboardRoutes,
 ];

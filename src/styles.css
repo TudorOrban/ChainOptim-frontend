@@ -2,6 +2,7 @@
 @import "./styles/forms.css";
 @import "./styles/sidebar.css";
 @import "./styles/common-elements.css";
+@import "./styles/specific/pricing.css";
 
 @tailwind base;
 @tailwind components;
