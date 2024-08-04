@@ -7,7 +7,7 @@ import { CreateCustomRoleDTO, UpdateCustomRoleDTO } from "../models/dto";
 @Injectable({
     providedIn: 'root',
 })
-export class OrganizationService {
+export class CustomRoleService {
     private apiUrl = 'http://localhost:8080/api/v1/custom-roles';
 
     constructor(private http: HttpClient) {}

@@ -1,1 +1,39 @@
-<p>organization-overview works!</p>
+<div class="flex px-6 py-6">
+    @if(membersNumber != 0) {
+        <p class="flex-1 font-bold text-lg">Members ({{ membersNumber }})</p>
+    } @else {
+        <p class="flex-1 font-bold text-lg">No members found!</p>
+    }
+    <p></p>
+</div>
+<hr>
+<div class="px-6 py-8">
+    <table class="w-full">
+        <tbody>
+        <tr class="text-lg text-center p-2 underline decoration-lightgrey decoration-1 underline-offset-4">
+            <th>Username</th>
+            <th>Joined At</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Custom Role</th>
+        </tr>
+
+            @for(user of users; track user) {
+                <tr class="text-center text-base p-4">
+                    <td class="py-4 px-2">{{ user.username }}</td>
+                    <td class="py-4 px-2">{{ user.createdAt | date: 'MM/dd/yyyy' }}</td>
+                    <td class="py-4 px-2 text-with-link">{{ user.email }}</td>
+                    <td class="py-4 px-2 text-with-link">{{ user.role }}</td>
+
+                    <td class="py-4 px-2 text-with-link">
+                        @if (user.customRole == undefined) {
+                            <span>Assign</span>
+                        } @else {
+                            <span>{{ user.customRole.name }} </span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
