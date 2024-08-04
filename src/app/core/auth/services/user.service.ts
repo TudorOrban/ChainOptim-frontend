@@ -58,7 +58,7 @@ export class UserService {
         return this.http.put<void>(`${this.apiUrl}/${userId}/remove-from-organization/${organizationId}`, {});
     }
 
-    
+
     createUser(user: User): Observable<User> {
         return this.http.post<User>(this.apiUrl, user);
     }

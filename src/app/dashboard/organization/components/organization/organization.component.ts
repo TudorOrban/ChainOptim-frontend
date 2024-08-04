@@ -19,7 +19,7 @@ import { NavigationItem } from '../../../../shared/common/models/UITypes';
     selector: 'app-organization',
     standalone: true,
     imports: [
-        CommonModule, 
+        CommonModule,
         FontAwesomeModule,
         RouterModule,
         TabsComponent,
@@ -53,7 +53,7 @@ export class OrganizationComponent implements OnInit {
         private organizationService: OrganizationService,
         private fallbackManagerService: FallbackManagerService
     ) {}
-    
+
     ngOnInit() {
         // Manage fallbacks
         this.fallbackManagerService.fallbackManagerState$.subscribe((state) => {
@@ -65,18 +65,20 @@ export class OrganizationComponent implements OnInit {
             this.currentUser = data;
             console.log('User', data);
 
-            this.organizationService.getOrganizationById(this.currentUser?.organization?.id || 0).subscribe((orgData) => {
-                if (orgData) {
-                    console.log('Organization', orgData);
-                    this.organization = orgData;
-                    this.fallbackManagerService.updateLoading(false);
-                } else {
-                    this.fallbackManagerService.updateError('Organization not found');
-                    this.fallbackManagerService.updateLoading(false);
-                }
-            });
+            if (this.currentUser?.organization?.id) {
+                this.organizationService.getOrganizationById(this.currentUser?.organization?.id || 0).subscribe((orgData) => {
+                    if (orgData) {
+                        console.log('Organization', orgData);
+                        this.organization = orgData;
+                        this.fallbackManagerService.updateLoading(false);
+                    } else {
+                        this.fallbackManagerService.updateError('Organization not found');
+                        this.fallbackManagerService.updateLoading(false);
+                    }
+                });
+            }
         });
-        
+
     }
 
     onTabSelected(selectedTabLabel: string) {

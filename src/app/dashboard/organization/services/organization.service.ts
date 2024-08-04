@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrganizationDTO, Organization } from '../models/organization';
 import { BehaviorSubject, Observable } from 'rxjs';
+import {User} from "../../../core/user/model/user";
 
 @Injectable({
     providedIn: 'root',
@@ -33,7 +34,7 @@ export class OrganizationService {
     createOrganization(organization: CreateOrganizationDTO): Observable<CreateOrganizationDTO> {
         return this.http.post<CreateOrganizationDTO>(this.apiUrl, organization);
     }
-    
+
     updateOrganization(organization: Organization): Observable<Organization> {
         return this.http.put<Organization>(this.apiUrl, organization);
     }

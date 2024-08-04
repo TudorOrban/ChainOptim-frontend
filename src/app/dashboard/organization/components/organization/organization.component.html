@@ -25,14 +25,16 @@
 
 <!-- Tabs -->
 <app-tabs
-[tabs]="tabs"
-[activeTab]="activeTab"
-(tabSelected)="onTabSelected($event)"
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+    (tabSelected)="onTabSelected($event)"
 ></app-tabs>
 
-<app-organization-overview *ngIf="activeTab === 'Overview'" [organization]="organization"></app-organization-overview>
-<app-organization-custom-roles *ngIf="activeTab === 'Custom Roles'" [organization]="organization"></app-organization-custom-roles>
-<app-organization-subscription-plan *ngIf="activeTab === 'Subscription Plan'" [organization]="organization"></app-organization-subscription-plan>
+<ng-container *ngIf="organization as org">
+    <app-organization-overview *ngIf="activeTab === 'Overview'" [organization]="org"></app-organization-overview>
+    <app-organization-custom-roles *ngIf="activeTab === 'Custom Roles'" [organization]="org"></app-organization-custom-roles>
+    <app-organization-subscription-plan *ngIf="activeTab === 'Subscription Plan'" [organization]="org"></app-organization-subscription-plan>
+</ng-container>
 
 <!-- Fallback -->
 <app-fallback-manager
