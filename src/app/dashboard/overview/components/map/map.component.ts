@@ -28,53 +28,6 @@ export class MapComponent implements AfterViewInit {
     private supplyChainMap: SupplyChainMap | undefined;
     private currentOrganization: Organization | undefined;
 
-    private MockData = {
-        shipmentRoutes: [
-            {
-                id: 1,
-                routeData: [
-                    [39.8282, -98.5795],
-                    [36.87962060502676, -119.3622697695437],
-                ],
-            },
-            {
-                id: 2,
-                routeData: [
-                    [-7.362466865535738, -60.1486330742347],
-                    [5.965753671065536, -74.02957461408457],
-                ],
-            },
-        ],
-        ships: [
-            {
-                id: 1,
-                routeId: 1,
-                currentLocation: {
-                    latitude: 41.8282,
-                    longitude: -98.5795,
-                },
-            },
-            {
-                id: 2,
-                routeId: 2,
-                currentLocation: {
-                    latitude: 37.8282,
-                    longitude: 88.5795,
-                },
-            },
-        ],
-        airplanes: [
-            {
-                id: 1,
-                routeId: 1,
-                currentLocation: {
-                    latitude: 34.8282,
-                    longitude: -85.5795,
-                },
-            },
-        ],
-    };
-
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
         private viewContainerRef: ViewContainerRef,
@@ -170,34 +123,35 @@ export class MapComponent implements AfterViewInit {
     }
 
     private createMapElements(): void {
-        // Add markers for sites and transportation
-        if (!this.supplyChainMap) {
+        if (!this.supplyChainMap || !this.supplyChainMap.mapData) {
             console.error('Supply Chain Map data is not available.');
             return;
         }
-        this.supplyChainMap.mapData.facilities.forEach((factory) => {
-            this.createFacilityMarker(factory);
+    
+        // Create markers for each facility
+        this.supplyChainMap.mapData.facilities.forEach((facility) => {
+            this.createFacilityMarker(facility);
         });
-
-        // Add routes
+    
+        // Create a simple direct line for each transport route
         this.supplyChainMap.mapData.transportRoutes.forEach((route) => {
-            // Convert srcLocation and destLocation from Pair<number, number> to L.LatLngTuple
-            const srcLatLng: L.LatLngTuple = [route.srcLocation.first, route.srcLocation.second];
-            const destLatLng: L.LatLngTuple = [route.destLocation.first, route.destLocation.second];
-        
-            // If there are waypoints, transform them into L.LatLngTuple format and include in the route
-            const waypointsLatLng: L.LatLngTuple[] = route.waypoints.map(wp => [wp.first, wp.second]);
-        
-            // Combine src, waypoints (if any), and dest to form a complete route
-            const routePoints: L.LatLngTuple[] = [srcLatLng, ...waypointsLatLng, destLatLng];
-        
-            // Create a polyline using the routePoints and add it to the map
-            const routeOverlay = this.L.polyline(routePoints, {
-                color: 'blue',  // You can customize the color or other options as needed
-            }).addTo(this.map);
+            // Ensure both source and destination locations are available
+            if (route.srcLocation && route.destLocation) {
+                // Extract LatLng tuples from source and destination locations
+                const srcLatLng: L.LatLngTuple = [route.srcLocation.first, route.srcLocation.second];
+                const destLatLng: L.LatLngTuple = [route.destLocation.first, route.destLocation.second];
+    
+                // Create a polyline directly from source to destination and add it to the map
+                const routeOverlay = this.L.polyline([srcLatLng, destLatLng], {
+                    color: 'blue',  // Customize the line color as needed
+                }).addTo(this.map);
+            } else {
+                console.warn('Missing location data for route:', route);
+            }
         });
-        
     }
+    
+    
     
     private createFacilityMarker(facilityData: Facility): void {
         if (!this.L) {

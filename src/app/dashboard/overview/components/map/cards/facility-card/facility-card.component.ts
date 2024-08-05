@@ -30,16 +30,16 @@ export class FacilityCardComponent {
 
         switch (this.facility.type) {
             case FacilityType.FACTORY:
-                this.imageUrl = "assets/factory.png";
+                this.imageUrl = "assets/images/factory.png";
                 break;
             case FacilityType.WAREHOUSE:
-                this.imageUrl = "assets/warehouse.png";
+                this.imageUrl = "assets/images/warehouse.png";
                 break;
             case FacilityType.SUPPLIER:
-                this.imageUrl = "assets/boat-with-containers.png";
+                this.imageUrl = "assets/images/truck-arrow-right-solid.png";
                 break;
             case FacilityType.CLIENT:
-                this.imageUrl = "assets/boat-with-containers.png";
+                this.imageUrl = "assets/images/universal-access-solid.png";
                 break;
             default:
                 console.error("Facility type not recognized:", this.facility.type);
