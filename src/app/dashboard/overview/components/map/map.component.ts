@@ -180,13 +180,23 @@ export class MapComponent implements AfterViewInit {
         });
 
         // Add routes
-        this.MockData.shipmentRoutes.forEach((route) => {
-            const routePoints: L.LatLngTuple[] =
-                route.routeData as L.LatLngTuple[];
+        this.supplyChainMap.mapData.transportRoutes.forEach((route) => {
+            // Convert srcLocation and destLocation from Pair<number, number> to L.LatLngTuple
+            const srcLatLng: L.LatLngTuple = [route.srcLocation.first, route.srcLocation.second];
+            const destLatLng: L.LatLngTuple = [route.destLocation.first, route.destLocation.second];
+        
+            // If there are waypoints, transform them into L.LatLngTuple format and include in the route
+            const waypointsLatLng: L.LatLngTuple[] = route.waypoints.map(wp => [wp.first, wp.second]);
+        
+            // Combine src, waypoints (if any), and dest to form a complete route
+            const routePoints: L.LatLngTuple[] = [srcLatLng, ...waypointsLatLng, destLatLng];
+        
+            // Create a polyline using the routePoints and add it to the map
             const routeOverlay = this.L.polyline(routePoints, {
-                color: 'blue',
+                color: 'blue',  // You can customize the color or other options as needed
             }).addTo(this.map);
         });
+        
     }
     
     private createFacilityMarker(facilityData: Facility): void {

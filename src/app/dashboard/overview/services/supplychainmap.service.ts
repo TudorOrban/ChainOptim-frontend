@@ -17,7 +17,7 @@ export class SupplyChainMapService {
 
     getSupplyChainMapByOrganizationId(organizationId: number): Observable<SupplyChainMap> {
         return this.http
-            .get<SupplyChainMap>(`${this.apiUrl}/${organizationId}`)
+            .get<SupplyChainMap>(`${this.apiUrl}/${organizationId}/refresh`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

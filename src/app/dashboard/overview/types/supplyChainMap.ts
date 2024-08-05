@@ -8,6 +8,7 @@ export interface SupplyChainMap {
 
 export interface MapData {
     facilities: Facility[];
+    transportRoutes: TransportRoute[];
 }
 
 export interface Facility {
@@ -23,4 +24,46 @@ export enum FacilityType {
     WAREHOUSE = 'WAREHOUSE',
     SUPPLIER = 'SUPPLIER',
     CLIENT = 'CLIENT',
+}
+
+export interface TransportRoute {
+    entityId: number;
+    entityType: string;
+
+    srcLocation: Pair<number, number>;
+    srcFacilityId: number;
+    srcFacilityType: FacilityType;
+
+    destLocation: Pair<number, number>;
+    destFacilityId: number;
+    destFacilityType: FacilityType;
+
+    waypoints: Pair<number, number>[];
+    liveLocation: Pair<number, number>;
+
+    transportType: TransportType;
+    status: ShipmentStatus;
+    
+    departureDateTime: Date;
+    estimatedArrivalDateTime: Date;
+    arrivalDateTime: Date;
+}
+
+export interface Pair<S, T> {
+    first: S;
+    second: T;
+}
+
+export enum TransportType {
+    ROAD,
+    RAIL,
+    SEA,
+    AIR
+}
+
+export enum ShipmentStatus {
+    PLANNED,
+    IN_TRANSIT,
+    DELIVERED,
+    CANCELLED
 }
