@@ -19,8 +19,8 @@ export interface Facility {
 }
 
 export enum FacilityType {
-    FACTORY = 'Factory',
-    WAREHOUSE = 'Warehouse',
-    SUPPLIER = 'Supplier',
-    CLIENT = 'Client',
+    FACTORY = 'FACTORY',
+    WAREHOUSE = 'WAREHOUSE',
+    SUPPLIER = 'SUPPLIER',
+    CLIENT = 'CLIENT',
 }

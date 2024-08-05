@@ -7,15 +7,12 @@ import {
     PLATFORM_ID,
     ViewContainerRef,
 } from '@angular/core';
-import { FactoryCardComponent } from './cards/factory-card/factory-card.component';
-import { WarehouseCardComponent } from './cards/warehouse-card/warehouse-card.component';
-import { ShipCardComponent } from './cards/ship-card/ship-card.component';
-import { AirplaneCardComponent } from './cards/airplane-card/airplane-card.component';
 import { Facility, SupplyChainMap } from '../../types/supplyChainMap';
 import { SupplyChainMapService } from '../../services/supplychainmap.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { Organization } from '../../../organization/models/organization';
+import { FacilityCardComponent } from './cards/facility-card/facility-card.component';
 
 @Component({
     selector: 'app-map',
@@ -32,52 +29,6 @@ export class MapComponent implements AfterViewInit {
     private currentOrganization: Organization | undefined;
 
     private MockData = {
-        factories: [
-            {
-                id: 1,
-                location: {
-                    latitude: 39.8282,
-                    longitude: -98.5795,
-                },
-            },
-            {
-                id: 2,
-                location: {
-                    latitude: 40.713955826286046,
-                    longitude: -3.922034431804742,
-                },
-            },
-            {
-                id: 3,
-                location: {
-                    latitude: -7.362466865535738,
-                    longitude: -60.1486330742347,
-                },
-            },
-        ],
-        warehouses: [
-            {
-                id: 1,
-                location: {
-                    latitude: 43.32517767999296,
-                    longitude: 0.2949604663774786,
-                },
-            },
-            {
-                id: 2,
-                location: {
-                    latitude: 36.87962060502676,
-                    longitude: -119.3622697695437,
-                },
-            },
-            {
-                id: 3,
-                location: {
-                    latitude: 5.965753671065536,
-                    longitude: -74.02957461408457,
-                },
-            },
-        ],
         shipmentRoutes: [
             {
                 id: 1,
@@ -225,16 +176,7 @@ export class MapComponent implements AfterViewInit {
             return;
         }
         this.supplyChainMap.mapData.facilities.forEach((factory) => {
-            this.createFactoryMarker(factory);
-        });
-        this.MockData.warehouses.forEach((warehouse) => {
-            this.createWarehouseMarker(warehouse);
-        });
-        this.MockData.ships.forEach((ship) => {
-            this.createShipMarker(ship);
-        });
-        this.MockData.airplanes.forEach((airplane) => {
-            this.createAirplaneMarker(airplane);
+            this.createFacilityMarker(factory);
         });
 
         // Add routes
@@ -247,9 +189,7 @@ export class MapComponent implements AfterViewInit {
         });
     }
     
-
-    // Create component markers for sites and transportation
-    private createFactoryMarker(factoryData: Facility): void {
+    private createFacilityMarker(facilityData: Facility): void {
         if (!this.L) {
             console.error('Leaflet (L) is not available.');
             return;
@@ -257,15 +197,19 @@ export class MapComponent implements AfterViewInit {
 
         // Dynamically create the FactoryCardComponent
         const componentRef =
-            this.viewContainerRef.createComponent(FactoryCardComponent);
-
+            this.viewContainerRef.createComponent(FacilityCardComponent);
+            
+        // Set the facility input on the component instance
+        componentRef.instance.facility = facilityData;
+        componentRef.instance.initializeData(); // Trigger changes to update facility icon image
+        
         // Access the DOM element of the component
         const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
             .rootNodes[0] as HTMLElement;
 
         // Create a Leaflet marker with the component's element
         const marker = this.L.marker(
-            [factoryData.latitude, factoryData.longitude],
+            [facilityData.latitude, facilityData.longitude],
             {
                 icon: this.L.divIcon({
                     html: domElem,
@@ -279,90 +223,4 @@ export class MapComponent implements AfterViewInit {
         marker.addTo(this.map);
     }
 
-    private createWarehouseMarker(warehouseData: any): void {
-        if (!this.L) {
-            console.error('Leaflet (L) is not available.');
-            return;
-        }
-
-        const componentRef = this.viewContainerRef.createComponent(
-            WarehouseCardComponent
-        );
-
-        const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
-            .rootNodes[0] as HTMLElement;
-
-        const marker = this.L.marker(
-            [warehouseData.location.latitude, warehouseData.location.longitude],
-            {
-                icon: this.L.divIcon({
-                    html: domElem,
-                    className: 'flex justify-center',
-                    iconSize: [30, 30],
-                }),
-            }
-        );
-
-        marker.addTo(this.map);
-    }
-
-    private createShipMarker(shipData: any): void {
-        if (!this.L) {
-            console.error('Leaflet (L) is not available.');
-            return;
-        }
-
-        const componentRef =
-            this.viewContainerRef.createComponent(ShipCardComponent);
-
-        const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
-            .rootNodes[0] as HTMLElement;
-
-        const marker = this.L.marker(
-            [
-                shipData.currentLocation.latitude,
-                shipData.currentLocation.longitude,
-            ],
-            {
-                icon: this.L.divIcon({
-                    html: domElem,
-                    className: 'flex justify-center',
-                    iconSize: [30, 30],
-                }),
-            }
-        );
-
-        marker.addTo(this.map);
-    }
-
-
-    private createAirplaneMarker(airplaneData: any): void {
-        if (!this.L) {
-            console.error('Leaflet (L) is not available.');
-            return;
-        }
-
-        const componentRef = this.viewContainerRef.createComponent(
-            AirplaneCardComponent
-        );
-
-        const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
-            .rootNodes[0] as HTMLElement;
-
-        const marker = this.L.marker(
-            [
-                airplaneData.currentLocation.latitude,
-                airplaneData.currentLocation.longitude,
-            ],
-            {
-                icon: this.L.divIcon({
-                    html: domElem,
-                    className: 'flex justify-center',
-                    iconSize: [30, 30],
-                }),
-            }
-        );
-
-        marker.addTo(this.map);
-    }
 }
