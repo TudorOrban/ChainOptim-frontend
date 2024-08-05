@@ -55,10 +55,10 @@ export interface Pair<S, T> {
 }
 
 export enum TransportType {
-    ROAD,
-    RAIL,
-    SEA,
-    AIR
+    ROAD = 'ROAD',
+    RAIL = 'RAIL',
+    SEA = 'SEA',
+    AIR = 'AIR'
 }
 
 export enum ShipmentStatus {

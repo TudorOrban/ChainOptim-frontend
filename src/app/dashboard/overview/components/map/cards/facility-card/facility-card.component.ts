@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Facility, FacilityType } from '../../../../types/supplyChainMapTypes';
@@ -9,7 +9,7 @@ import { Facility, FacilityType } from '../../../../types/supplyChainMapTypes';
   standalone: true,
   imports: [CommonModule, FontAwesomeModule],
   templateUrl: './facility-card.component.html',
-  styleUrls: ['./facility-card.component.css', '../../map.component.css'],
+  styleUrls: ['./facility-card.component.css'],
 })
 export class FacilityCardComponent {
     @Input() facility!: Facility;

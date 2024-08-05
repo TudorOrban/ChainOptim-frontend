@@ -132,7 +132,7 @@ export class MapComponent implements AfterViewInit {
         this.supplyChainMap.mapData.facilities.forEach((facility) => {
             this.createFacilityMarker(facility);
         });
-    
+        console.log("Transport routes:", this.supplyChainMap.mapData.transportRoutes);
         // Create a simple direct line for each transport route
         this.supplyChainMap.mapData.transportRoutes.forEach(route => {
             this.createRouteComponent(route);
@@ -145,11 +145,42 @@ export class MapComponent implements AfterViewInit {
             this.viewContainerRef.createComponent(TransportRouteUIComponent);
             
             componentRef.instance.route = route;
-            componentRef.instance.map = this.map; 
             componentRef.instance.initializeData();
+            this.drawRoute(route);
+
+            const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
+            .rootNodes[0] as HTMLElement;
+
+            // Create a Leaflet marker with the component's element
+            const midPointLat = (route.srcLocation.first + route.destLocation.first) / 2;
+            const midPointLng = (route.srcLocation.second + route.destLocation.second) / 2;
+            const marker = this.L.marker(
+                [midPointLat, midPointLng],
+                {
+                    icon: this.L.divIcon({
+                        html: domElem,
+                        className: 'flex justify-center',
+                        iconSize: [30, 30],
+                    }),
+                }
+            );
+
+            // Add the marker to the map
+            marker.addTo(this.map);
         } else {
             console.warn('Missing location data for route:', route);
         }
+    }
+    
+    private drawRoute(route: TransportRoute): void {
+        const srcLatLng: [number, number] = [route.srcLocation.first, route.srcLocation.second];
+        const destLatLng: [number, number] = [route.destLocation.first, route.destLocation.second];
+
+        const polyline = this.L.polyline([srcLatLng, destLatLng], {
+            color: 'blue', 
+            weight: 5
+        }).addTo(this.map);
+
     }
     
     private createFacilityMarker(facilityData: Facility): void {
@@ -164,8 +195,8 @@ export class MapComponent implements AfterViewInit {
             
         // Set the facility input on the component instance
         componentRef.instance.facility = facilityData;
-        componentRef.instance.initializeData(); // Trigger changes to update facility icon image
-        
+        componentRef.instance.initializeData(); 
+
         // Access the DOM element of the component
         const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
             .rootNodes[0] as HTMLElement;
