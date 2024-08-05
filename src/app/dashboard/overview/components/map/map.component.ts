@@ -7,12 +7,13 @@ import {
     PLATFORM_ID,
     ViewContainerRef,
 } from '@angular/core';
-import { Facility, SupplyChainMap } from '../../types/supplyChainMap';
+import { Facility, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
 import { SupplyChainMapService } from '../../services/supplychainmap.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { Organization } from '../../../organization/models/organization';
 import { FacilityCardComponent } from './cards/facility-card/facility-card.component';
+import { TransportRouteUIComponent } from './transport-route-ui/transport-route-ui.component';
 
 @Component({
     selector: 'app-map',
@@ -84,7 +85,6 @@ export class MapComponent implements AfterViewInit {
                 },
             });
     }
-    
 
     private async initMap(): Promise<void> {
         if (isPlatformBrowser(this.platformId)) {
@@ -134,24 +134,23 @@ export class MapComponent implements AfterViewInit {
         });
     
         // Create a simple direct line for each transport route
-        this.supplyChainMap.mapData.transportRoutes.forEach((route) => {
-            // Ensure both source and destination locations are available
-            if (route.srcLocation && route.destLocation) {
-                // Extract LatLng tuples from source and destination locations
-                const srcLatLng: L.LatLngTuple = [route.srcLocation.first, route.srcLocation.second];
-                const destLatLng: L.LatLngTuple = [route.destLocation.first, route.destLocation.second];
-    
-                // Create a polyline directly from source to destination and add it to the map
-                const routeOverlay = this.L.polyline([srcLatLng, destLatLng], {
-                    color: 'blue',  // Customize the line color as needed
-                }).addTo(this.map);
-            } else {
-                console.warn('Missing location data for route:', route);
-            }
-        });
+        this.supplyChainMap.mapData.transportRoutes.forEach(route => {
+            this.createRouteComponent(route);
+          });
     }
-    
-    
+
+    private createRouteComponent(route: TransportRoute): void {
+        if (route.srcLocation && route.destLocation) {
+            const componentRef =
+            this.viewContainerRef.createComponent(TransportRouteUIComponent);
+            
+            componentRef.instance.route = route;
+            componentRef.instance.map = this.map; 
+            componentRef.instance.initializeData();
+        } else {
+            console.warn('Missing location data for route:', route);
+        }
+    }
     
     private createFacilityMarker(facilityData: Facility): void {
         if (!this.L) {

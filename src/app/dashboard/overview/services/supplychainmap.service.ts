@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
-import { SupplyChainMap } from '../types/supplyChainMap';
+import { SupplyChainMap } from '../types/supplyChainMapTypes';
 
 @Injectable({
     providedIn: 'root',

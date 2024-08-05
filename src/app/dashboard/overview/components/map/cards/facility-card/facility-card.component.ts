@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { Facility, FacilityType } from '../../../../types/supplyChainMap';
+import { Facility, FacilityType } from '../../../../types/supplyChainMapTypes';
 
 @Component({
   selector: 'app-facility-card',
@@ -51,10 +51,6 @@ export class FacilityCardComponent {
 
     toggleCard(): void {
         this.isCardOpen = !this.isCardOpen;
-    }
-
-    logFacility() {
-        console.log("Facility: ", this.facility);
     }
 
     faXmark = faXmark;
