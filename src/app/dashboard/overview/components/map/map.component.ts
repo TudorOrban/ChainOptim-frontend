@@ -11,6 +11,11 @@ import { FactoryCardComponent } from './cards/factory-card/factory-card.componen
 import { WarehouseCardComponent } from './cards/warehouse-card/warehouse-card.component';
 import { ShipCardComponent } from './cards/ship-card/ship-card.component';
 import { AirplaneCardComponent } from './cards/airplane-card/airplane-card.component';
+import { Facility, SupplyChainMap } from '../../types/supplyChainMap';
+import { SupplyChainMapService } from '../../services/supplychainmap.service';
+import { UserService } from '../../../../core/auth/services/user.service';
+import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
+import { Organization } from '../../../organization/models/organization';
 
 @Component({
     selector: 'app-map',
@@ -22,6 +27,10 @@ import { AirplaneCardComponent } from './cards/airplane-card/airplane-card.compo
 export class MapComponent implements AfterViewInit {
     private map: any;
     private L: any;
+
+    private supplyChainMap: SupplyChainMap | undefined;
+    private currentOrganization: Organization | undefined;
+
     private MockData = {
         factories: [
             {
@@ -117,8 +126,61 @@ export class MapComponent implements AfterViewInit {
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
-        private viewContainerRef: ViewContainerRef
+        private viewContainerRef: ViewContainerRef,
+        private supplyChainMapService: SupplyChainMapService,
+        private fallbackManagerService: FallbackManagerService,
+        private userService: UserService
     ) {}
+
+    
+    ngAfterViewInit(): void {
+        this.loadData();
+    }
+
+    private async loadData(): Promise<void> {
+        this.userService
+            .getCurrentUser()
+            .subscribe({
+                next: (user) => {
+                    console.log('Current User:', user);
+                    this.currentOrganization = user?.organization;
+                    if (user && user.organization) {
+                        this.fallbackManagerService.updateNoOrganization(false);
+
+                        this.loadSupplyChainMap(this.currentOrganization?.id ?? 0);
+                    } else {
+                        this.fallbackManagerService.updateNoOrganization(true);
+                        this.fallbackManagerService.updateLoading(false);
+                    }
+                },
+                error: (error: Error) => {
+                    this.fallbackManagerService.updateError(
+                        error.message ?? ''
+                    );
+                    this.fallbackManagerService.updateLoading(false);
+                },
+            });
+    }
+
+    private loadSupplyChainMap(organizationId: number) {
+        this.fallbackManagerService.updateLoading(true);
+
+        this.supplyChainMapService
+            .getSupplyChainMapByOrganizationId(organizationId)
+            .subscribe({
+                next: (supplyChainMap) => {
+                    this.supplyChainMap = supplyChainMap;
+                    this.fallbackManagerService.updateLoading(false);
+                    
+                    this.initMap();
+                },
+                error: (err: Error) => {
+                    this.fallbackManagerService.updateError(err.message ?? '');
+                    this.fallbackManagerService.updateLoading(false);
+                },
+            });
+    }
+    
 
     private async initMap(): Promise<void> {
         if (isPlatformBrowser(this.platformId)) {
@@ -152,16 +214,17 @@ export class MapComponent implements AfterViewInit {
                 console.log(
                     `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
                 );
-
-                // You can also call a method here to handle the click event
-                // this.handleMapClick(clickedLat, clickedLng);
             });
         }
     }
 
     private createMapElements(): void {
         // Add markers for sites and transportation
-        this.MockData.factories.forEach((factory) => {
+        if (!this.supplyChainMap) {
+            console.error('Supply Chain Map data is not available.');
+            return;
+        }
+        this.supplyChainMap.mapData.facilities.forEach((factory) => {
             this.createFactoryMarker(factory);
         });
         this.MockData.warehouses.forEach((warehouse) => {
@@ -183,9 +246,10 @@ export class MapComponent implements AfterViewInit {
             }).addTo(this.map);
         });
     }
+    
 
     // Create component markers for sites and transportation
-    private createFactoryMarker(factoryData: any): void {
+    private createFactoryMarker(factoryData: Facility): void {
         if (!this.L) {
             console.error('Leaflet (L) is not available.');
             return;
@@ -201,7 +265,7 @@ export class MapComponent implements AfterViewInit {
 
         // Create a Leaflet marker with the component's element
         const marker = this.L.marker(
-            [factoryData.location.latitude, factoryData.location.longitude],
+            [factoryData.latitude, factoryData.longitude],
             {
                 icon: this.L.divIcon({
                     html: domElem,
@@ -271,9 +335,6 @@ export class MapComponent implements AfterViewInit {
         marker.addTo(this.map);
     }
 
-    ngAfterViewInit(): void {
-        this.initMap();
-    }
 
     private createAirplaneMarker(airplaneData: any): void {
         if (!this.L) {
