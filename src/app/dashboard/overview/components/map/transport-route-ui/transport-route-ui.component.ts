@@ -21,11 +21,8 @@ export class TransportRouteUIComponent {
     }
     
     updateImageUrl(): void {
-        console.log("A:", this.imageUrl); 
-
         if (!this.route) return;
         
-
         switch (this.route.transportType) {
             case TransportType.ROAD:
                 this.imageUrl = "assets/images/truck-solid.png";
@@ -40,10 +37,9 @@ export class TransportRouteUIComponent {
                 this.imageUrl = "assets/images/black-plane.png";
                 break;
             default:
-                this.imageUrl = ""; // Default or fallback image
+                this.imageUrl = ""; 
         }
         
-        console.log("B:", this.imageUrl); 
     }
 
     toggleSelection(): void {

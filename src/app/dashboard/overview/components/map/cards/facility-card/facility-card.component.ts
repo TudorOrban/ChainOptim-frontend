@@ -9,7 +9,7 @@ import { Facility, FacilityType } from '../../../../types/supplyChainMapTypes';
   standalone: true,
   imports: [CommonModule, FontAwesomeModule],
   templateUrl: './facility-card.component.html',
-  styleUrls: ['./facility-card.component.css'],
+  styleUrl: './facility-card.component.css',
 })
 export class FacilityCardComponent {
     @Input() facility!: Facility;
@@ -22,9 +22,6 @@ export class FacilityCardComponent {
     }
 
     updateImageUrl(): void {
-        console.log("A:", this.imageUrl); 
-        console.log("Facility data:", this.facility);
-
         if (!this.facility) return;
         
 
@@ -46,7 +43,6 @@ export class FacilityCardComponent {
                 this.imageUrl = ""; // Default or fallback image
         }
         
-        console.log("B:", this.imageUrl); 
     }
 
     toggleCard(): void {

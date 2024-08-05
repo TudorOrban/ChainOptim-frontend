@@ -1,15 +1,15 @@
 <button
     (click)="toggleCard()"
     *ngIf="!isCardOpen"
-    class="site-card-closed-container"
+    class="facility-card-closed-container"
 >
     <img [src]="imageUrl" alt="Facility" />
 </button>
-<div *ngIf="isCardOpen" class="site-card-expanded-container">
+<div *ngIf="isCardOpen" class="facility-card-expanded-container">
     <div class="border-b border-gray-300 py-1">
         <div class="relative flex items-start justify-center">
             <!-- Facility Card Closed Container (Centered) -->
-            <div class="site-card-closed-container">
+            <div class="facility-card-closed-container">
                 <img [src]="imageUrl" alt="Facility" />
             </div>
 
@@ -17,7 +17,7 @@
             <fa-icon
                 [icon]="faXmark"
                 (click)="toggleCard()"
-                class="site-card-close-button"
+                class="facility-card-close-button"
             ></fa-icon>
         </div>
 

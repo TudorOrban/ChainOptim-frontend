@@ -1,10 +1,10 @@
 <button
     (click)="toggleSelection()"
     *ngIf="!isSelected"
-    class="site-card-closed-container"
+    class="route-card-closed-container"
 >
     <img [src]="imageUrl" alt="Route" />
 </button>
-<div class="site-card-expanded-container">
+<div *ngIf="isSelected" class="route-card-expanded-container">
     Test
 </div>

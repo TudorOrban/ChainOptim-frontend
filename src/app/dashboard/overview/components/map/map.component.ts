@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import {
     AfterViewInit,
     Component,
+    ComponentRef,
     EmbeddedViewRef,
     Inject,
     PLATFORM_ID,
@@ -90,6 +91,7 @@ export class MapComponent implements AfterViewInit {
         if (isPlatformBrowser(this.platformId)) {
             // Import leaflet and load map
             this.L = await import('leaflet');
+
             this.map = this.L.map('map', {
                 center: [39.8282, -98.5795],
                 zoom: 5,
@@ -130,7 +132,7 @@ export class MapComponent implements AfterViewInit {
     
         // Create markers for each facility
         this.supplyChainMap.mapData.facilities.forEach((facility) => {
-            this.createFacilityMarker(facility);
+            this.createFacilityComponent(facility);
         });
         console.log("Transport routes:", this.supplyChainMap.mapData.transportRoutes);
         // Create a simple direct line for each transport route
@@ -139,51 +141,7 @@ export class MapComponent implements AfterViewInit {
           });
     }
 
-    private createRouteComponent(route: TransportRoute): void {
-        if (route.srcLocation && route.destLocation) {
-            const componentRef =
-            this.viewContainerRef.createComponent(TransportRouteUIComponent);
-            
-            componentRef.instance.route = route;
-            componentRef.instance.initializeData();
-            this.drawRoute(route);
-
-            const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
-            .rootNodes[0] as HTMLElement;
-
-            // Create a Leaflet marker with the component's element
-            const midPointLat = (route.srcLocation.first + route.destLocation.first) / 2;
-            const midPointLng = (route.srcLocation.second + route.destLocation.second) / 2;
-            const marker = this.L.marker(
-                [midPointLat, midPointLng],
-                {
-                    icon: this.L.divIcon({
-                        html: domElem,
-                        className: 'flex justify-center',
-                        iconSize: [30, 30],
-                    }),
-                }
-            );
-
-            // Add the marker to the map
-            marker.addTo(this.map);
-        } else {
-            console.warn('Missing location data for route:', route);
-        }
-    }
-    
-    private drawRoute(route: TransportRoute): void {
-        const srcLatLng: [number, number] = [route.srcLocation.first, route.srcLocation.second];
-        const destLatLng: [number, number] = [route.destLocation.first, route.destLocation.second];
-
-        const polyline = this.L.polyline([srcLatLng, destLatLng], {
-            color: 'blue', 
-            weight: 5
-        }).addTo(this.map);
-
-    }
-    
-    private createFacilityMarker(facilityData: Facility): void {
+    private createFacilityComponent(facilityData: Facility): void {
         if (!this.L) {
             console.error('Leaflet (L) is not available.');
             return;
@@ -217,4 +175,118 @@ export class MapComponent implements AfterViewInit {
         marker.addTo(this.map);
     }
 
+    private createRouteComponent(route: TransportRoute): void {
+        if (route.srcLocation && route.destLocation) {
+            const componentRef =
+            this.viewContainerRef.createComponent(TransportRouteUIComponent);
+            
+            componentRef.instance.route = route;
+            componentRef.instance.initializeData();
+            this.drawRoute(route, componentRef);
+
+            
+        } else {
+            console.warn('Missing location data for route:', route);
+        }
+    }
+    
+    private drawRoute(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+        const srcLatLng: [number, number] = [route.srcLocation.first, route.srcLocation.second];
+        const destLatLng: [number, number] = [route.destLocation.first, route.destLocation.second];
+
+        const polyline = this.L.polyline([srcLatLng, destLatLng], {
+            color: 'blue', 
+            weight: 3
+        }).addTo(this.map);
+
+        this.createRouteMarker(route, (componentRef.hostView as EmbeddedViewRef<any>));
+
+        this.addArrowheads(srcLatLng, destLatLng, 5);
+    }
+    
+    private createRouteMarker(route: TransportRoute, hostView: EmbeddedViewRef<any>): void {
+        const domElem = hostView
+            .rootNodes[0] as HTMLElement;
+
+            // Create a Leaflet marker with the component's element
+            const midPointLat = (route.srcLocation.first + route.destLocation.first) / 2;
+            const midPointLng = (route.srcLocation.second + route.destLocation.second) / 2;
+            const marker = this.L.marker(
+                [midPointLat, midPointLng],
+                {
+                    icon: this.L.divIcon({
+                        html: domElem,
+                        className: 'flex justify-center',
+                        iconSize: [25, 25],
+                    }),
+                }
+            );
+
+            // Add the marker to the map
+            marker.addTo(this.map);
+    }
+    
+    private addArrowheads(start: [number, number], end: [number, number], n: number): void {
+        // Calculate the geographical midpoints for arrows
+        const arrowPoints = this.calculateIntermediatePoints(start, end, n);
+        
+        // Calculate the bearing for each segment
+        arrowPoints.forEach((point, index) => {
+            const angle = this.calculateBearing(
+                index === 0 ? start : arrowPoints[index - 1], // Previous point
+                point
+            );
+            const offset = 36;
+            const adjustedAngle = (angle + offset) % 360;
+
+            // Create an arrow marker
+            const arrowIcon = this.L.divIcon({
+                className: 'arrow-icon',
+                html: `<div style="transform: rotate(${adjustedAngle}deg); width: 8px; height: 8px; border-left: 3px solid black; border-top: 3px solid black;"></div>`,
+                iconSize: [10, 10]
+            });
+
+            // Add the marker at the calculated point
+            this.L.marker(point, { icon: arrowIcon }).addTo(this.map);
+        });
+    }
+
+    private calculateIntermediatePoints(start: [number, number], end: [number, number], n: number): [number, number][] {
+        const points: [number, number][] = [];
+
+        // Calculate step increments
+        const stepLat = (end[0] - start[0]) / (n + 1);
+        const stepLng = (end[1] - start[1]) / (n + 1);
+
+        // Calculate intermediate points
+        for (let i = 1; i <= n; i++) {
+            const lat = start[0] + stepLat * i;
+            const lng = start[1] + stepLng * i;
+            points.push([lat, lng]);
+        }
+
+        return points;
+    }
+
+    private calculateBearing(start: [number, number], end: [number, number]): number {
+        const startLat = this.deg2rad(start[0]);
+        const startLng = this.deg2rad(start[1]);
+        const endLat = this.deg2rad(end[0]);
+        const endLng = this.deg2rad(end[1]);
+    
+        const y = Math.sin(endLng - startLng) * Math.cos(endLat);
+        const x = Math.cos(startLat) * Math.sin(endLat) -
+                  Math.sin(startLat) * Math.cos(endLat) * Math.cos(endLng - startLng);
+    
+        const brng = Math.atan2(y, x);
+        return (this.rad2deg(brng) + 360) % 360;  // Convert to degrees and ensure it's positive
+    }
+    
+    private deg2rad(deg: number): number {
+        return deg * (Math.PI / 180);
+    }
+    
+    private rad2deg(rad: number): number {
+        return rad * (180 / Math.PI);
+    }
 }

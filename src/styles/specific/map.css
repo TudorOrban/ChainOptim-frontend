@@ -14,7 +14,7 @@
 }
 
 
-.site-card-closed-container {
+.facility-card-closed-container {
     position: relative;
     display: flex;
     justify-content: center;
@@ -28,18 +28,18 @@
     z-index: 20;
 }
 
-.site-card-closed-container img {
+.facility-card-closed-container img {
     width: 25px; 
     height: auto;
 }
 
-.site-card-closed-container:hover {
+.facility-card-closed-container:hover {
     cursor: pointer;
     background-color: rgb(233, 233, 233);
     border: 2px solid rgb(18, 18, 18);
 }
 
-.site-card-expanded-container {
+.facility-card-expanded-container {
     width: 240px; 
     height: 360px; 
     border-radius: 0.375rem;
@@ -51,7 +51,7 @@
     z-index: 100;
 }
 
-.site-card-close-button {
+.facility-card-close-button {
     position: absolute;
     right: 0.5rem;
     font-size: 1rem;
@@ -59,6 +59,6 @@
     color: rgb(243 244 246);
 }
 
-.site-card-close-button:hover {
+.facility-card-close-button:hover {
     color: rgb(185 28 28);
 }
