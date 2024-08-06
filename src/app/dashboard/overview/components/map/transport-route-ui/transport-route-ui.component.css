@@ -45,7 +45,6 @@
     border-radius: 0.375rem;
     background-color: var(--sidebar-color); 
     color: white;
-    /* background-color: rgb(245, 245, 245);  */
     border: 1px solid rgb(173, 173, 173);
     box-shadow: 0 0 4px rgba(20, 20, 20, 0.05);
     z-index: 100;

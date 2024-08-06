@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
-    AfterViewInit,
+    ChangeDetectorRef,
     Component,
     ComponentRef,
     EmbeddedViewRef,
@@ -8,14 +8,13 @@ import {
     PLATFORM_ID,
     ViewContainerRef,
 } from '@angular/core';
-import { Facility, FacilityType, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
+import { Facility, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
 import { SupplyChainMapService } from '../../services/supplychainmap.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { Organization } from '../../../organization/models/organization';
 import { FacilityCardComponent } from './cards/facility-card/facility-card.component';
 import { TransportRouteUIComponent } from './transport-route-ui/transport-route-ui.component';
-import { LeafletMouseEvent } from 'leaflet';
 
 @Component({
     selector: 'app-map',
@@ -28,7 +27,7 @@ export class MapComponent {
     private map: any;
     private L: any;
 
-    private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent>> = new Map();
+    private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent | TransportRouteUIComponent>> = new Map();
 
     private supplyChainMap: SupplyChainMap | undefined;
     private currentOrganization: Organization | undefined;
@@ -38,13 +37,9 @@ export class MapComponent {
         private viewContainerRef: ViewContainerRef,
         private supplyChainMapService: SupplyChainMapService,
         private fallbackManagerService: FallbackManagerService,
-        private userService: UserService
+        private userService: UserService,
+        private changeDetectorRef: ChangeDetectorRef
     ) {}
-
-    
-    // ngAfterViewInit(): void {
-    //     this.loadData();
-    // }
 
     loadMap(): void {
         this.loadData();
@@ -55,7 +50,6 @@ export class MapComponent {
             .getCurrentUser()
             .subscribe({
                 next: (user) => {
-                    console.log('Current User:', user);
                     this.currentOrganization = user?.organization;
                     if (user && user.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
@@ -118,7 +112,6 @@ export class MapComponent {
 
             tiles.addTo(this.map);
 
-            // Create map elements
             this.createMapElements();
 
             this.map.on('click', (e: L.LeafletMouseEvent) => {
@@ -127,14 +120,6 @@ export class MapComponent {
                 console.log(
                     `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
                 );
-                console.log('Map clicked');
-                this.openCardComponentRef.forEach((value, key) => {
-                    if (value.instance.isCardOpen) {
-                        console.log(`Closing card from map click: ${key}`);
-                        value.instance.toggleCard();
-                        this.openCardComponentRef.delete(key);
-                    }
-                });
             });
         }
     }
@@ -145,16 +130,15 @@ export class MapComponent {
             return;
         }
     
-        // Create markers for each facility
         this.supplyChainMap.mapData.facilities.forEach((facility) => {
             this.createFacilityComponent(facility);
         });
 
-        // Create a simple direct line for each transport route
         this.supplyChainMap.mapData.transportRoutes.forEach(route => {
             this.createRouteComponent(route);
           });
     }
+
     private createFacilityComponent(facilityData: Facility): void {
         if (!this.L) {
             console.error('Leaflet (L) is not available.');
@@ -175,40 +159,26 @@ export class MapComponent {
             }),
         });
     
-        marker.on('click', (event: LeafletMouseEvent) => {
-            console.log('Marker clicked');
-            this.L.DomEvent.stopPropagation(event);  // Prevent the event from bubbling up to the map
-    
-            const facilityKey = this.getFacilityKey(facilityData);
-            console.log(`Marker clicked, facilityKey: ${facilityKey}`);
-    
-            const currentOpenRef = this.openCardComponentRef.get(facilityKey);
-            console.log(`Current open card reference: ${currentOpenRef ? 'Exists' : 'Does not exist'}`);
-    
-            // Close any currently open card that is not the one being clicked
+        componentRef.instance.onToggle.subscribe(({ first, second }) => {
+            const facilityKey = `${first}-${second}`;
+
+            // Manage other cards
             this.openCardComponentRef.forEach((value, key) => {
                 if (key !== facilityKey && value.instance.isCardOpen) {
-                    console.log(`Closing card: ${key}`);
-                    value.instance.toggleCard();
-                    this.openCardComponentRef.delete(key);
+                    value.instance.toggleCard(); 
                 }
             });
-    
-            // Toggle the clicked card
-            if (!currentOpenRef || !currentOpenRef.instance.isCardOpen) {
-                console.log(`Toggling card open: ${facilityKey}`);
-                componentRef.instance.toggleCard();
+
+            // Update the reference map
+            if (componentRef.instance.isCardOpen) {
                 this.openCardComponentRef.set(facilityKey, componentRef);
             } else {
-                console.log(`Toggling card closed: ${facilityKey}`);
                 this.openCardComponentRef.delete(facilityKey);
             }
         });
-    
+
         marker.addTo(this.map);
     }
-    
-    
 
     private createRouteComponent(route: TransportRoute): void {
         if (route.srcLocation && route.destLocation) {
@@ -232,42 +202,59 @@ export class MapComponent {
             weight: 3
         }).addTo(this.map);
 
-        this.createRouteMarker(route, (componentRef.hostView as EmbeddedViewRef<any>));
+        this.createRouteMarker(route, (componentRef));
 
         this.addArrowheads(srcLatLng, destLatLng, 5);
     }
     
-    private createRouteMarker(route: TransportRoute, hostView: EmbeddedViewRef<any>): void {
-        const domElem = hostView
+    private createRouteMarker(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+        const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
             .rootNodes[0] as HTMLElement;
 
-            let lat = 0;
-            let lng = 0;
-            // Create a Leaflet marker with the component's element
-            const midPointLat = (route.srcLocation.first + route.destLocation.first) / 2;
-            const midPointLng = (route.srcLocation.second + route.destLocation.second) / 2;
-            
-            if (route.liveLocation && route.liveLocation.first && route.liveLocation.second) {
-                lat = route.liveLocation.first;
-                lng = route.liveLocation.second;
-            } else {
-                lat = midPointLat;
-                lng = midPointLng;
+        // Create a Leaflet marker with the component's element
+        let lat = 0;
+        let lng = 0;
+        const midPointLat = (route.srcLocation.first + route.destLocation.first) / 2;
+        const midPointLng = (route.srcLocation.second + route.destLocation.second) / 2;
+        if (route.liveLocation && route.liveLocation.first && route.liveLocation.second) {
+            lat = route.liveLocation.first;
+            lng = route.liveLocation.second;
+        } else {
+            lat = midPointLat;
+            lng = midPointLng;
+        }
+
+        const marker = this.L.marker(
+            [lat, lng],
+            {
+                icon: this.L.divIcon({
+                    html: domElem,
+                    className: 'flex justify-center',
+                    iconSize: [25, 25],
+                }),
             }
+        );
 
-            const marker = this.L.marker(
-                [lat, lng],
-                {
-                    icon: this.L.divIcon({
-                        html: domElem,
-                        className: 'flex justify-center',
-                        iconSize: [25, 25],
-                    }),
+        componentRef.instance.onToggle.subscribe(({ first, second }) => {
+            const routeKey = `${first}-${second}`;
+
+            // Manage other cards
+            this.openCardComponentRef.forEach((value, key) => {
+                if (key !== routeKey && value.instance.isCardOpen) {
+                    value.instance.toggleCard(); 
                 }
-            );
+            });
 
-            // Add the marker to the map
-            marker.addTo(this.map);
+            // Update the reference map
+            if (componentRef.instance.isCardOpen) {
+                this.openCardComponentRef.set(routeKey, componentRef);
+            } else {
+                this.openCardComponentRef.delete(routeKey);
+            }
+        });
+
+        // Add the marker to the map
+        marker.addTo(this.map);
     }
     
     private addArrowheads(start: [number, number], end: [number, number], n: number): void {
@@ -277,7 +264,7 @@ export class MapComponent {
         // Calculate the bearing for each segment
         arrowPoints.forEach((point, index) => {
             const angle = this.calculateBearing(
-                index === 0 ? start : arrowPoints[index - 1], // Previous point
+                index === 0 ? start : arrowPoints[index - 1],
                 point
             );
             const offset = 38;
@@ -332,9 +319,5 @@ export class MapComponent {
     
     private rad2deg(rad: number): number {
         return rad * (180 / Math.PI);
-    }
-
-    private getFacilityKey(facilityData: Facility): string {
-        return `${facilityData.id}-${facilityData.type}`;
     }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TransportRoute, TransportType } from '../../../types/supplyChainMapTypes';
+import { EntityType, FacilityType, Pair, TransportRoute, TransportType } from '../../../types/supplyChainMapTypes';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -13,9 +13,9 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 })
 export class TransportRouteUIComponent {
     @Input() route!: TransportRoute;
-    @Output() onRouteSelected = new EventEmitter<TransportRoute>();
+    @Output() onToggle = new EventEmitter<Pair<number, EntityType>>();
 
-    isSelected: boolean = false;
+    isCardOpen: boolean = false;
     imageUrl: string = "";
     estimatedProgress: number = 0;
 
@@ -46,8 +46,9 @@ export class TransportRouteUIComponent {
         
     }
 
-    toggleSelection(): void {
-        this.isSelected = !this.isSelected;
+    toggleCard(): void {
+        this.isCardOpen = !this.isCardOpen;
+        this.onToggle.emit({ first: this.route.entityId, second: this.route.entityType });
     }
 
     computeMetrics(): void {
