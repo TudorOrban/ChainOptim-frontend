@@ -19,6 +19,7 @@ export class TransportRouteUIComponent {
     imageUrl: string = "";
     estimatedProgress: number = 0;
     timeToArrivalSeconds: number = 0;
+    etaString: string = "";
 
     public initializeData(): void {
         this.updateImageUrl();
@@ -43,9 +44,7 @@ export class TransportRouteUIComponent {
                 break;
             default:
                 this.imageUrl = "assets/images/circle-solid.png"; 
-        }
-        console.log("this image url: ", this.imageUrl);
-        
+        }        
     }
 
     toggleCard(): void {
@@ -62,22 +61,25 @@ export class TransportRouteUIComponent {
             this.estimatedProgress = elapsedDuration / totalDuration;
         }
 
-        // if (this.route.estimatedArrivalDateTime) {
-        //     this.timeToArrivalSeconds = (this.route.estimatedArrivalDateTime.getTime() - new Date().getTime()) / 1000;
-        // }
+        if (this.route.estimatedArrivalDateTime) {
+            const estimatedArrivalDateTime = new Date(this.route.estimatedArrivalDateTime);
+            this.timeToArrivalSeconds = (estimatedArrivalDateTime.getTime() - new Date().getTime()) / 1000;
+            this.updateETAString();
+        }
     }
 
-    // getETAString(): string {
-    //     if (this.timeToArrivalSeconds <= 0) {
-    //         return "Arrived";
-    //     }
+    updateETAString(): void {
+        if (this.timeToArrivalSeconds <= 0) {
+            this.etaString = "Arrived";
+            return;
+        }
 
-    //     const hours = Math.floor(this.timeToArrivalSeconds / 3600);
-    //     const minutes = Math.floor((this.timeToArrivalSeconds % 3600) / 60);
-    //     const seconds = Math.floor(this.timeToArrivalSeconds % 60);
+        const hours = Math.floor(this.timeToArrivalSeconds / 3600);
+        const minutes = Math.floor((this.timeToArrivalSeconds % 3600) / 60);
+        const seconds = Math.floor(this.timeToArrivalSeconds % 60);
 
-    //     return `${hours}h ${minutes}m ${seconds}s`;
-    // }
+        this.etaString = `${hours}h ${minutes}m ${seconds}s`;
+    }
 
     faXmark = faXmark;
 }

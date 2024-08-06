@@ -203,6 +203,7 @@ export class MapComponent {
             
             componentRef.instance.route = route;
             componentRef.instance.initializeData();
+            
             this.drawRoute(route, componentRef);
         } else {
             console.warn('Missing location data for route:', route);
@@ -210,6 +211,14 @@ export class MapComponent {
     }
     
     private drawRoute(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+        this.createRoutePolyline(route, (componentRef));
+        
+        this.createRouteMarker(route, (componentRef));
+
+        this.addArrowheads(route, 5);
+    }
+    
+    private createRoutePolyline(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
         const srcLatLng: [number, number] = [route.srcLocation.first, route.srcLocation.second];
         const destLatLng: [number, number] = [route.destLocation.first, route.destLocation.second];
 
@@ -221,21 +230,15 @@ export class MapComponent {
         const routeKey = `${route.entityId}-${route.entityType}`;
         this.routePolylines.set(routeKey, polyline);
 
-        // Listen to toggle events from the route UI component
         componentRef.instance.onToggle.subscribe(event => {
             if (componentRef.instance.isCardOpen) {
-                // Route selected, increase weight
-                polyline.setStyle({ weight: 8 });
+                polyline.setStyle({ weight: 6 });
             } else {
-                // Route deselected, reset weight
                 polyline.setStyle({ weight: 3 });
             }
         });
-        this.createRouteMarker(route, (componentRef));
-
-        this.addArrowheads(srcLatLng, destLatLng, 5);
     }
-    
+
     private createRouteMarker(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
         const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
             .rootNodes[0] as HTMLElement;
@@ -286,8 +289,11 @@ export class MapComponent {
         marker.addTo(this.map);
     }
     
-    private addArrowheads(start: [number, number], end: [number, number], n: number): void {
+    private addArrowheads(route: TransportRoute, n: number): void {
         // Calculate the geographical midpoints for arrows
+        const start: [number, number] = [route.srcLocation.first, route.srcLocation.second];
+        const end: [number, number] = [route.destLocation.first, route.destLocation.second];
+
         const arrowPoints = this.calculateIntermediatePoints(start, end, n);
         
         // Calculate the bearing for each segment
