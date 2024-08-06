@@ -8,13 +8,14 @@ import {
     PLATFORM_ID,
     ViewContainerRef,
 } from '@angular/core';
-import { Facility, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
+import { Facility, FacilityType, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
 import { SupplyChainMapService } from '../../services/supplychainmap.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { Organization } from '../../../organization/models/organization';
 import { FacilityCardComponent } from './cards/facility-card/facility-card.component';
 import { TransportRouteUIComponent } from './transport-route-ui/transport-route-ui.component';
+import { LeafletMouseEvent } from 'leaflet';
 
 @Component({
     selector: 'app-map',
@@ -23,9 +24,11 @@ import { TransportRouteUIComponent } from './transport-route-ui/transport-route-
     templateUrl: './map.component.html',
     styleUrl: './map.component.css',
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent {
     private map: any;
     private L: any;
+
+    private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent>> = new Map();
 
     private supplyChainMap: SupplyChainMap | undefined;
     private currentOrganization: Organization | undefined;
@@ -39,7 +42,11 @@ export class MapComponent implements AfterViewInit {
     ) {}
 
     
-    ngAfterViewInit(): void {
+    // ngAfterViewInit(): void {
+    //     this.loadData();
+    // }
+
+    loadMap(): void {
         this.loadData();
     }
 
@@ -120,6 +127,14 @@ export class MapComponent implements AfterViewInit {
                 console.log(
                     `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
                 );
+                console.log('Map clicked');
+                this.openCardComponentRef.forEach((value, key) => {
+                    if (value.instance.isCardOpen) {
+                        console.log(`Closing card from map click: ${key}`);
+                        value.instance.toggleCard();
+                        this.openCardComponentRef.delete(key);
+                    }
+                });
             });
         }
     }
@@ -134,46 +149,66 @@ export class MapComponent implements AfterViewInit {
         this.supplyChainMap.mapData.facilities.forEach((facility) => {
             this.createFacilityComponent(facility);
         });
-        console.log("Transport routes:", this.supplyChainMap.mapData.transportRoutes);
+
         // Create a simple direct line for each transport route
         this.supplyChainMap.mapData.transportRoutes.forEach(route => {
             this.createRouteComponent(route);
           });
     }
-
     private createFacilityComponent(facilityData: Facility): void {
         if (!this.L) {
             console.error('Leaflet (L) is not available.');
             return;
         }
-
-        // Dynamically create the FactoryCardComponent
-        const componentRef =
-            this.viewContainerRef.createComponent(FacilityCardComponent);
-            
-        // Set the facility input on the component instance
+    
+        const componentRef = this.viewContainerRef.createComponent(FacilityCardComponent);
         componentRef.instance.facility = facilityData;
         componentRef.instance.initializeData(); 
-
-        // Access the DOM element of the component
-        const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
-            .rootNodes[0] as HTMLElement;
-
-        // Create a Leaflet marker with the component's element
-        const marker = this.L.marker(
-            [facilityData.latitude, facilityData.longitude],
-            {
-                icon: this.L.divIcon({
-                    html: domElem,
-                    className: 'flex justify-center',
-                    iconSize: [30, 30],
-                }),
+    
+        const domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+    
+        const marker = this.L.marker([facilityData.latitude, facilityData.longitude], {
+            icon: this.L.divIcon({
+                html: domElem,
+                className: 'flex justify-center',
+                iconSize: [30, 30],
+            }),
+        });
+    
+        marker.on('click', (event: LeafletMouseEvent) => {
+            console.log('Marker clicked');
+            this.L.DomEvent.stopPropagation(event);  // Prevent the event from bubbling up to the map
+    
+            const facilityKey = this.getFacilityKey(facilityData);
+            console.log(`Marker clicked, facilityKey: ${facilityKey}`);
+    
+            const currentOpenRef = this.openCardComponentRef.get(facilityKey);
+            console.log(`Current open card reference: ${currentOpenRef ? 'Exists' : 'Does not exist'}`);
+    
+            // Close any currently open card that is not the one being clicked
+            this.openCardComponentRef.forEach((value, key) => {
+                if (key !== facilityKey && value.instance.isCardOpen) {
+                    console.log(`Closing card: ${key}`);
+                    value.instance.toggleCard();
+                    this.openCardComponentRef.delete(key);
+                }
+            });
+    
+            // Toggle the clicked card
+            if (!currentOpenRef || !currentOpenRef.instance.isCardOpen) {
+                console.log(`Toggling card open: ${facilityKey}`);
+                componentRef.instance.toggleCard();
+                this.openCardComponentRef.set(facilityKey, componentRef);
+            } else {
+                console.log(`Toggling card closed: ${facilityKey}`);
+                this.openCardComponentRef.delete(facilityKey);
             }
-        );
-
-        // Add the marker to the map
+        });
+    
         marker.addTo(this.map);
     }
+    
+    
 
     private createRouteComponent(route: TransportRoute): void {
         if (route.srcLocation && route.destLocation) {
@@ -183,8 +218,6 @@ export class MapComponent implements AfterViewInit {
             componentRef.instance.route = route;
             componentRef.instance.initializeData();
             this.drawRoute(route, componentRef);
-
-            
         } else {
             console.warn('Missing location data for route:', route);
         }
@@ -208,11 +241,22 @@ export class MapComponent implements AfterViewInit {
         const domElem = hostView
             .rootNodes[0] as HTMLElement;
 
+            let lat = 0;
+            let lng = 0;
             // Create a Leaflet marker with the component's element
             const midPointLat = (route.srcLocation.first + route.destLocation.first) / 2;
             const midPointLng = (route.srcLocation.second + route.destLocation.second) / 2;
+            
+            if (route.liveLocation && route.liveLocation.first && route.liveLocation.second) {
+                lat = route.liveLocation.first;
+                lng = route.liveLocation.second;
+            } else {
+                lat = midPointLat;
+                lng = midPointLng;
+            }
+
             const marker = this.L.marker(
-                [midPointLat, midPointLng],
+                [lat, lng],
                 {
                     icon: this.L.divIcon({
                         html: domElem,
@@ -236,7 +280,7 @@ export class MapComponent implements AfterViewInit {
                 index === 0 ? start : arrowPoints[index - 1], // Previous point
                 point
             );
-            const offset = 36;
+            const offset = 38;
             const adjustedAngle = (angle + offset) % 360;
 
             // Create an arrow marker
@@ -288,5 +332,9 @@ export class MapComponent implements AfterViewInit {
     
     private rad2deg(rad: number): number {
         return rad * (180 / Math.PI);
+    }
+
+    private getFacilityKey(facilityData: Facility): string {
+        return `${facilityData.id}-${facilityData.type}`;
     }
 }

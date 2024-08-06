@@ -6,5 +6,26 @@
     <img [src]="imageUrl" alt="Route" />
 </button>
 <div *ngIf="isSelected" class="route-card-expanded-container">
-    Test
+    <div class="border-b border-gray-300 py-1">
+        <div class="relative flex items-start justify-center">
+            <!-- Route Card Closed Container (Centered) -->
+            <div class="route-card-closed-container">
+                <img [src]="imageUrl" alt="Route" />
+            </div>
+
+
+            <!-- X-mark Icon (Positioned at the end) -->
+            <fa-icon
+                [icon]="faXmark"
+                (click)="toggleSelection()"
+                class="route-card-close-button"
+            ></fa-icon>
+        </div>
+    </div>
+
+    <div class="p-2">
+        <div>
+            Estimated Progress: {{ estimatedProgress * 100 }}%
+        </div>
+    </div>
 </div>

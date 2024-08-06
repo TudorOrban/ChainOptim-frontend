@@ -1,11 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TransportRoute, TransportType } from '../../../types/supplyChainMapTypes';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-transport-route-ui',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FontAwesomeModule],
     templateUrl: './transport-route-ui.component.html',
     styleUrls: ['./transport-route-ui.component.css']
 })
@@ -15,9 +17,11 @@ export class TransportRouteUIComponent {
 
     isSelected: boolean = false;
     imageUrl: string = "";
+    estimatedProgress: number = 0;
 
     public initializeData(): void {
         this.updateImageUrl();
+        this.computeMetrics();
     }
     
     updateImageUrl(): void {
@@ -46,4 +50,13 @@ export class TransportRouteUIComponent {
         this.isSelected = !this.isSelected;
     }
 
+    computeMetrics(): void {
+        if (this.route.departureDateTime && this.route.estimatedArrivalDateTime) {
+            const totalDuration = this.route.estimatedArrivalDateTime.getTime() - this.route.departureDateTime.getTime();
+            const elapsedDuration = new Date().getTime() - this.route.departureDateTime.getTime();
+            this.estimatedProgress = elapsedDuration / totalDuration;
+        }
+    }
+
+    faXmark = faXmark;
 }

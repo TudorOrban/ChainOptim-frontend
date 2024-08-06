@@ -28,7 +28,7 @@ export enum FacilityType {
 
 export interface TransportRoute {
     entityId: number;
-    entityType: string;
+    entityType: EntityType;
 
     srcLocation: Pair<number, number>;
     srcFacilityId: number;
@@ -66,4 +66,9 @@ export enum ShipmentStatus {
     IN_TRANSIT,
     DELIVERED,
     CANCELLED
+}
+
+export enum EntityType {
+    SUPPLIER_SHIPMENT = 'SUPPLIER_SHIPMENT',
+    CLIENT_SHIPMENT = 'CLIENT_SHIPMENT',
 }
