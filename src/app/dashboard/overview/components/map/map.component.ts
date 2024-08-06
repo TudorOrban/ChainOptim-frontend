@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -8,18 +8,20 @@ import {
     PLATFORM_ID,
     ViewContainerRef,
 } from '@angular/core';
-import { Facility, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
+import { EntityType, Facility, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
 import { SupplyChainMapService } from '../../services/supplychainmap.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { Organization } from '../../../organization/models/organization';
 import { FacilityCardComponent } from './cards/facility-card/facility-card.component';
 import { TransportRouteUIComponent } from './transport-route-ui/transport-route-ui.component';
+import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-map',
     standalone: true,
-    imports: [],
+    imports: [FontAwesomeModule, CommonModule],
     templateUrl: './map.component.html',
     styleUrl: './map.component.css',
 })
@@ -27,7 +29,9 @@ export class MapComponent {
     private map: any;
     private L: any;
 
+    private isMapInitialized: boolean = false;
     private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent | TransportRouteUIComponent>> = new Map();
+    private routePolylines: Map<string, L.Polyline> = new Map();
 
     private supplyChainMap: SupplyChainMap | undefined;
     private currentOrganization: Organization | undefined;
@@ -42,10 +46,14 @@ export class MapComponent {
     ) {}
 
     loadMap(): void {
-        this.loadData();
+        this.loadData(false);
     }
 
-    private async loadData(): Promise<void> {
+    refreshMap(): void {
+        this.loadData(true);
+    }
+
+    private async loadData(refresh: boolean): Promise<void> {
         this.userService
             .getCurrentUser()
             .subscribe({
@@ -54,7 +62,7 @@ export class MapComponent {
                     if (user && user.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
-                        this.loadSupplyChainMap(this.currentOrganization?.id ?? 0);
+                        this.loadSupplyChainMap(this.currentOrganization?.id ?? 0, refresh);
                     } else {
                         this.fallbackManagerService.updateNoOrganization(true);
                         this.fallbackManagerService.updateLoading(false);
@@ -69,17 +77,21 @@ export class MapComponent {
             });
     }
 
-    private loadSupplyChainMap(organizationId: number) {
+    private async loadSupplyChainMap(organizationId: number, refresh: boolean): Promise<void> {
         this.fallbackManagerService.updateLoading(true);
 
         this.supplyChainMapService
-            .getSupplyChainMapByOrganizationId(organizationId)
+            .getSupplyChainMapByOrganizationId(organizationId, refresh)
             .subscribe({
-                next: (supplyChainMap) => {
+                next: async (supplyChainMap) => {
                     this.supplyChainMap = supplyChainMap;
                     this.fallbackManagerService.updateLoading(false);
                     
-                    this.initMap();
+                    if (!this.isMapInitialized) {
+                        await this.initMap();
+                        this.isMapInitialized = true;
+                    }
+                    this.createMapElements();
                 },
                 error: (err: Error) => {
                     this.fallbackManagerService.updateError(err.message ?? '');
@@ -89,42 +101,46 @@ export class MapComponent {
     }
 
     private async initMap(): Promise<void> {
-        if (isPlatformBrowser(this.platformId)) {
-            // Import leaflet and load map
-            this.L = await import('leaflet');
-
-            this.map = this.L.map('map', {
-                center: [39.8282, -98.5795],
-                zoom: 5,
-                worldCopyJump: true,
-            });
-
-            // Load tiles
-            const tiles = this.L.tileLayer(
-                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                {
-                    maxZoom: 18,
-                    minZoom: 3,
-                    attribution:
-                        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                }
-            );
-
-            tiles.addTo(this.map);
-
-            this.createMapElements();
-
-            this.map.on('click', (e: L.LeafletMouseEvent) => {
-                const clickedLat = e.latlng.lat;
-                const clickedLng = e.latlng.lng;
-                console.log(
-                    `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
-                );
-            });
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
         }
+
+        // Import leaflet and load map
+        this.L = await import('leaflet');
+
+        this.map = this.L.map('map', {
+            center: [39.8282, -98.5795],
+            zoom: 5,
+            worldCopyJump: true,
+        });
+
+        // Load tiles
+        const tiles = this.L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                maxZoom: 18,
+                minZoom: 3,
+                attribution:
+                    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            }
+        );
+
+        tiles.addTo(this.map);
+
+        this.map.on('click', (e: L.LeafletMouseEvent) => {
+            const clickedLat = e.latlng.lat;
+            const clickedLng = e.latlng.lng;
+            console.log(
+                `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
+            );
+        });
     }
 
     private createMapElements(): void {
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+
         if (!this.supplyChainMap || !this.supplyChainMap.mapData) {
             console.error('Supply Chain Map data is not available.');
             return;
@@ -198,10 +214,23 @@ export class MapComponent {
         const destLatLng: [number, number] = [route.destLocation.first, route.destLocation.second];
 
         const polyline = this.L.polyline([srcLatLng, destLatLng], {
-            color: 'blue', 
+            color: route.entityType === EntityType.SUPPLIER_SHIPMENT ? 'blue' : 'green', 
             weight: 3
         }).addTo(this.map);
 
+        const routeKey = `${route.entityId}-${route.entityType}`;
+        this.routePolylines.set(routeKey, polyline);
+
+        // Listen to toggle events from the route UI component
+        componentRef.instance.onToggle.subscribe(event => {
+            if (componentRef.instance.isCardOpen) {
+                // Route selected, increase weight
+                polyline.setStyle({ weight: 8 });
+            } else {
+                // Route deselected, reset weight
+                polyline.setStyle({ weight: 3 });
+            }
+        });
         this.createRouteMarker(route, (componentRef));
 
         this.addArrowheads(srcLatLng, destLatLng, 5);
@@ -320,4 +349,6 @@ export class MapComponent {
     private rad2deg(rad: number): number {
         return rad * (180 / Math.PI);
     }
+
+    faArrowRotateRight = faArrowRotateRight;
 }

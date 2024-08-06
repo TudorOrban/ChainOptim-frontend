@@ -15,9 +15,9 @@ export class SupplyChainMapService {
         private errorHandlerService: ErrorHandlerService
     ) {}
 
-    getSupplyChainMapByOrganizationId(organizationId: number): Observable<SupplyChainMap> {
+    getSupplyChainMapByOrganizationId(organizationId: number, refresh: boolean): Observable<SupplyChainMap> {
         return this.http
-            .get<SupplyChainMap>(`${this.apiUrl}/${organizationId}/refresh`)
+            .get<SupplyChainMap>(`${this.apiUrl}/${organizationId}` + (refresh ? '/refresh' : ''))
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

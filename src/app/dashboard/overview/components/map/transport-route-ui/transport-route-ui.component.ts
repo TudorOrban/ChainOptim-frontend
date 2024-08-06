@@ -18,6 +18,7 @@ export class TransportRouteUIComponent {
     isCardOpen: boolean = false;
     imageUrl: string = "";
     estimatedProgress: number = 0;
+    timeToArrivalSeconds: number = 0;
 
     public initializeData(): void {
         this.updateImageUrl();
@@ -41,8 +42,9 @@ export class TransportRouteUIComponent {
                 this.imageUrl = "assets/images/black-plane.png";
                 break;
             default:
-                this.imageUrl = ""; 
+                this.imageUrl = "assets/images/circle-solid.png"; 
         }
+        console.log("this image url: ", this.imageUrl);
         
     }
 
@@ -52,12 +54,30 @@ export class TransportRouteUIComponent {
     }
 
     computeMetrics(): void {
+        if (!this.route) return;
+
         if (this.route.departureDateTime && this.route.estimatedArrivalDateTime) {
             const totalDuration = this.route.estimatedArrivalDateTime.getTime() - this.route.departureDateTime.getTime();
             const elapsedDuration = new Date().getTime() - this.route.departureDateTime.getTime();
             this.estimatedProgress = elapsedDuration / totalDuration;
         }
+
+        // if (this.route.estimatedArrivalDateTime) {
+        //     this.timeToArrivalSeconds = (this.route.estimatedArrivalDateTime.getTime() - new Date().getTime()) / 1000;
+        // }
     }
+
+    // getETAString(): string {
+    //     if (this.timeToArrivalSeconds <= 0) {
+    //         return "Arrived";
+    //     }
+
+    //     const hours = Math.floor(this.timeToArrivalSeconds / 3600);
+    //     const minutes = Math.floor((this.timeToArrivalSeconds % 3600) / 60);
+    //     const seconds = Math.floor(this.timeToArrivalSeconds % 60);
+
+    //     return `${hours}h ${minutes}m ${seconds}s`;
+    // }
 
     faXmark = faXmark;
 }
