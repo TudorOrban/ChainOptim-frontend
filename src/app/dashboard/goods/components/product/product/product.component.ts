@@ -15,11 +15,13 @@ import {
 import { FallbackManagerComponent } from '../../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { TabsComponent } from '../../../../../shared/common/components/tabs/tabs.component';
 import { NavigationItem } from '../../../../../shared/common/models/uiTypes';
-import { ProductProductionComponent } from '../../product-production/product-production.component';
-import { ProductOverviewComponent } from '../../product-overview/product-overview.component';
-import { ProductEvaluationComponent } from '../../product-evaluation/product-evaluation.component';
+import { ProductProductionComponent } from '../product-production/product-production.component';
+import { ProductOverviewComponent } from '../product-overview/product-overview.component';
+import { ProductEvaluationComponent } from '../product-evaluation/product-evaluation.component';
 import { ConfirmDialogInput } from '../../../../../shared/common/models/confirmDialogTypes';
 import { GenericConfirmDialogComponent } from '../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
+import { ToastComponent } from '../../../../../shared/common/components/toast-system/toast/toast.component';
+import { OperationOutcome, ToastInfo } from '../../../../../shared/common/components/toast-system/toastTypes';
 
 @Component({
     selector: 'app-product',
@@ -33,7 +35,8 @@ import { GenericConfirmDialogComponent } from '../../../../../shared/common/comp
         ProductProductionComponent,
         ProductEvaluationComponent,
         FallbackManagerComponent,
-        GenericConfirmDialogComponent
+        GenericConfirmDialogComponent,
+        ToastComponent
     ],
     templateUrl: './product.component.html',
     styleUrl: './product.component.css',
@@ -60,6 +63,11 @@ export class ProductComponent implements OnInit {
         dialogMessage: "Are you sure you want to delete this product?",
     };
     isConfirmDialogOpen = false;
+    toastInfo: ToastInfo = {
+        title: "Product deleted",
+        message: "The product has been deleted successfully",
+        outcome: OperationOutcome.SUCCESS
+    };
 
     constructor(
         private route: ActivatedRoute,
