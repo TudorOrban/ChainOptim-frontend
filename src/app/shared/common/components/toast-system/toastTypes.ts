@@ -1,4 +1,5 @@
 export interface ToastInfo {
+    id: number;
     title: string;
     message: string;
     outcome: OperationOutcome;

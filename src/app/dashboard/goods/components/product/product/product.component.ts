@@ -22,6 +22,7 @@ import { ConfirmDialogInput } from '../../../../../shared/common/models/confirmD
 import { GenericConfirmDialogComponent } from '../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { ToastComponent } from '../../../../../shared/common/components/toast-system/toast/toast.component';
 import { OperationOutcome, ToastInfo } from '../../../../../shared/common/components/toast-system/toastTypes';
+import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
 
 @Component({
     selector: 'app-product',
@@ -64,6 +65,7 @@ export class ProductComponent implements OnInit {
     };
     isConfirmDialogOpen = false;
     toastInfo: ToastInfo = {
+        id: 1,
         title: "Product deleted",
         message: "The product has been deleted successfully",
         outcome: OperationOutcome.SUCCESS
@@ -73,6 +75,7 @@ export class ProductComponent implements OnInit {
         private route: ActivatedRoute,
         private productService: ProductService,
         private fallbackManagerService: FallbackManagerService,
+        private toastService: ToastService,
         private router: Router
     ) {}
 
@@ -128,6 +131,14 @@ export class ProductComponent implements OnInit {
 
     handleCancel() {
         this.isConfirmDialogOpen = false;
+    }
+
+    showSuccess() {
+        this.toastService.addToast({ id: 123, title: 'Success', message: 'Operation successful!', outcome: OperationOutcome.SUCCESS });
+    }
+
+    showError() {
+        this.toastService.addToast({ id: 123, title: 'Error', message: 'Operation failed!', outcome: OperationOutcome.ERROR });
     }
 
     faBox = faBox;

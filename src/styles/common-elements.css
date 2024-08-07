@@ -79,3 +79,14 @@
     background: #fff; 
     border-radius: 8px; 
 }
+
+.toast-container {
+    
+}
+
+.toast-manager-wrapper {
+    position: fixed;
+    right: 2rem;
+    bottom: 1rem;
+    z-index: 1050;
+}

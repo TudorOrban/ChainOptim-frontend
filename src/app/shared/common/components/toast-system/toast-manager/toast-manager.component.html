@@ -1,1 +1,3 @@
-<p>toast-manager works!</p>
+<div>
+    <app-toast *ngFor="let toast of toasts" [toastInfo]="toast" (close)="closeToast(toast.id)"></app-toast>
+</div>

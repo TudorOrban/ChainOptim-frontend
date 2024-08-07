@@ -16,6 +16,7 @@ import { SidebarComponent } from './core/main/components/sidebar/sidebar.compone
 import { filter, switchMap } from 'rxjs';
 import { UserService } from './core/auth/services/user.service';
 import { OrganizationService } from './dashboard/organization/services/organization.service';
+import { ToastManagerComponent } from './shared/common/components/toast-system/toast-manager/toast-manager.component';
 
 @Component({
     selector: 'app-root',
@@ -27,6 +28,7 @@ import { OrganizationService } from './dashboard/organization/services/organizat
         FontAwesomeModule,
         RouterModule,
         SidebarComponent,
+        ToastManagerComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
