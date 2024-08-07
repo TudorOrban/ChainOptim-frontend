@@ -1,7 +1,7 @@
-import { Factory } from "../../../dashboard/factories/models/Factory";
-import { Product } from "../../../dashboard/products/models/Product";
-import { Supplier } from "../../../dashboard/suppliers/models/Supplier";
-import { Warehouse } from "../../../dashboard/warehouses/models/Warehouse";
+import { Factory } from "../../../dashboard/production/models/Factory";
+import { Product } from "../../../dashboard/goods/models/Product";
+import { Supplier } from "../../../dashboard/supply/models/Supplier";
+import { Warehouse } from "../../../dashboard/storage/models/Warehouse";
 import { PaginatedResults } from "../../../shared/search/models/PaginatedResults";
 
 export interface AppState {
