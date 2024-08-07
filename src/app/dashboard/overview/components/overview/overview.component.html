@@ -10,7 +10,7 @@
     <!-- SC Snapshot -->
     <div class="flex items-center justify-between px-10 space-x-10">
         <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
-            <div class="pl-4 pr-3 py-1.5 bg-gray-100 border-r border-gray-300 rounded-l-md">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
                 Products
             </div>
             <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
-            <div class="pl-4 pr-3 py-1.5 bg-gray-100 border-r border-gray-300 rounded-l-md">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
                 Factories
             </div>
             <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
-            <div class="pl-4 pr-3 py-1.5 bg-gray-100 border-r border-gray-300 rounded-l-md">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
                 Warehouses
             </div>
             <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
-            <div class="pl-4 pr-3 py-1.5 bg-gray-100 border-r border-gray-300 rounded-l-md">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
                 Suppliers
             </div>
             <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
-            <div class="pl-4 pr-3 py-1.5 bg-gray-100 border-r border-gray-300 rounded-l-md">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
                 Clients
             </div>
             <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
@@ -53,7 +53,7 @@
 
     <!-- Notifications -->
     <div class="border border-gray-300 rounded-md shadow-sm overflow-y-auto max-h-80">
-        <div class="px-4 py-2 flex items-center bg-gray-100 border-b border-gray-300">
+        <div class="px-4 py-2 flex items-center bg-gray-200 border-b border-gray-300">
             <h2 class="text-lg font-semibold">Notifications ({{ results?.results?.length }})</h2>
         </div>
         <div *ngFor="let notification of results?.results" class="px-4 py-2 border-y border-gray-200">
@@ -67,7 +67,7 @@
     </div>
 
     <!-- Map -->
-    <div>
+    <!-- <div>
         <div class="flex items-center">
             <fa-icon
                 [icon]="faMap"
@@ -77,5 +77,21 @@
         </div>
 
         <app-map></app-map>
+    </div> -->
+
+    <!-- Upcoming Events -->
+    <div>
+        <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold">Upcoming Events ({{ events?.length }})</h2>
+            <div class="flex items-center space-x-4">
+                <span class="font-semibold">Entity Type</span>
+                <div class="border border-gray-300 rounded-md shadow-sm">Select</div>
+                <span class="font-semibold">Period</span>
+                <div class="border border-gray-300 rounded-md shadow-sm">Select</div>
+                <button class="border border-gray-300 rounded-md shadow-sm">
+                    <fa-icon [icon]="faArrowRotateRight" class="text-gray-500"></fa-icon>
+                </button>
+            </div>
+        </div>
     </div>
 </div>

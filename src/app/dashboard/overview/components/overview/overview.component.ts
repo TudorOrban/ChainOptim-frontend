@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faGlobe, faMap } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateRight, faGlobe, faMap } from '@fortawesome/free-solid-svg-icons';
 import { MapComponent } from '../map/map.component';
 import { User } from '../../../../core/user/model/user';
 import { NotificationService } from '../../services/notification.service';
@@ -12,6 +12,8 @@ import { SearchParams } from '../../../../shared/search/models/Search';
 import { PaginatedResults } from '../../../../shared/search/models/PaginatedResults';
 import { SCSnapshotService } from '../../services/scsnapshot.service';
 import { SupplyChainSnapshot } from '../../types/scSnapshotTypes';
+import { UpcomingEventService } from '../../services/upcomingevent.service';
+import { UpcomingEvent } from '../../types/upcomingEventTypes';
 
 @Component({
     selector: 'app-dashboard',
@@ -24,6 +26,8 @@ export class DashboardComponent implements OnInit {
     currentUser: User | null = null;
     scSnapshot: SupplyChainSnapshot | undefined = undefined;
     results: PaginatedResults<NotificationUser> | undefined = undefined;
+    events: UpcomingEvent[] = [];
+
     searchParams: SearchParams = {
         searchQuery: '',
         sortOption: 'createdAt',
@@ -37,6 +41,7 @@ export class DashboardComponent implements OnInit {
         private userService: UserService,
         private notificationService: NotificationService,
         private scSnapshotService: SCSnapshotService,
+        private upcomingEventService: UpcomingEventService,
         private fallbackManagerService: FallbackManagerService
     ) {}
 
@@ -55,6 +60,7 @@ export class DashboardComponent implements OnInit {
 
                         if (user.organization) {
                             this.loadSCSnapshot(user.organization.id);
+                            this.loadUpcomingEvents(user.organization.id);
                         }
                     }
                     this.fallbackManagerService.updateLoading(false);
@@ -106,7 +112,23 @@ export class DashboardComponent implements OnInit {
                 next: (snapshot) => {
                     this.fallbackManagerService.updateLoading(false);
                     this.scSnapshot = snapshot;
-                    console.log(snapshot);
+                },
+                error: (error: Error) => {
+                    this.fallbackManagerService.updateError(error.message ?? '');
+                    this.fallbackManagerService.updateLoading(false);
+                },
+            });
+    }
+
+    private async loadUpcomingEvents(organizationId: number): Promise<void> {
+        this.fallbackManagerService.updateLoading(true);
+
+        this.upcomingEventService
+            .getUpcomingEventsByUserId(organizationId)
+            .subscribe({
+                next: (events) => {
+                    this.fallbackManagerService.updateLoading(false);
+                    this.events = events;
                 },
                 error: (error: Error) => {
                     this.fallbackManagerService.updateError(error.message ?? '');
@@ -117,4 +139,5 @@ export class DashboardComponent implements OnInit {
 
     faGlobe = faGlobe;
     faMap = faMap;
+    faArrowRotateRight = faArrowRotateRight;
 }
