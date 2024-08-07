@@ -34,7 +34,7 @@ export class CreateProductComponent implements OnInit {
     ngOnInit() {
         this.productForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
-            description: ['', [Validators.required, Validators.maxLength(200)]]
+            description: ['', [Validators.maxLength(200)]]
         });
 
         this.loadCurrentUser();
@@ -78,7 +78,6 @@ export class CreateProductComponent implements OnInit {
 
         this.productService.createProduct(productDTO).subscribe(
             product => {
-                console.log('Product created:', product);
                 this.router.navigate(['/dashboard/products', product.id]);
             },
             error => {
@@ -92,7 +91,7 @@ export class CreateProductComponent implements OnInit {
             name: this.productForm.value.name,
             description: this.productForm.value.description,
             newUnit: this.unitOfMeasurement,
-            organizationId: this.currentUser?.organization?.id || 0
+            organizationId: this.currentUser?.organization?.id ?? 0
         };
 
         return productDTO;

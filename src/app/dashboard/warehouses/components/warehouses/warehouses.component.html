@@ -9,7 +9,7 @@
     <ul *ngFor="let warehouse of warehouses">
         <li
             key="warehouse.id"
-            class="px-4 py-2 my-4 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-sm shadow-sm"
+            class="px-4 py-2 my-4 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-md shadow-sm"
         >
             <a
                 [routerLink]="'/dashboard/warehouses/' + warehouse.id"

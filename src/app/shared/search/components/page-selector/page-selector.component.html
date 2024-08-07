@@ -4,7 +4,7 @@
         <li [class.hidden]="page <= 1" (click)="changePage(page - 1)" class="cursor-pointer px-3 py-2 border-r border-grey-light">
             <fa-icon [icon]="faCaretLeft" class="text-gray-700"></fa-icon>
         </li>
-        <li *ngFor="let p of displayPages" [class.bg-blue-500]="p === page" (click)="changePage(p)" class="cursor-pointer px-3 py-2 border-r border-grey-light">{{ p }}</li>
+        <li *ngFor="let p of displayPages" [class.bg-blue-500]="p === page" (click)="changePage(p)" class="cursor-pointer px-3 py-2 border-r border-grey-light font-semibold text-gray-700">{{ p }}</li>
         <li [class.hidden]="page >= totalPages" (click)="changePage(page + 1)" class="cursor-pointer px-3 py-2">
             <fa-icon [icon]="faCaretRight" class="text-gray-700"></fa-icon>
         </li>
