@@ -1,3 +1,5 @@
+import { UnitOfMeasurement } from "./UnitOfMeasurement";
+
 export interface Product {
     id: number;
     name: string;
@@ -49,4 +51,11 @@ export interface Component {
     description?: string;
     createdAt: Date;
     updatedAt: Date;
+}
+
+export interface CreateProductDTO {
+    name: string;
+    description: string;
+    organizationId: number;
+    newUnit: UnitOfMeasurement;    
 }

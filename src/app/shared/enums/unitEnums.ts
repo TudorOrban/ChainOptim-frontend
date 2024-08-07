@@ -1,17 +1,18 @@
 export enum StandardUnit {
-    METER = "Meter (m)",
-    INCH = "Inch (in)",
-    KILOGRAM = "Kilogram (kg)",
-    POUND = "Pound (lb)",
-    LITER = "Liter (l)",
+    METER = "METER",
+    INCH = "INCH",
+    KILOGRAM = "KILOGRAM",
+    POUND = "POUND",
+    LITER = "LITER"
 }
-
+  
 export enum UnitMagnitude {
-    MILLI = "Milli (m)",
-    CENTI = "Centi (c)",
-    DECI = "Deci (d)",
-    BASE = "Base",
-    DECA = "Deca (da)",
-    HECTO = "Hecto (h)",
-    KILO = "Kilo (k)"
-  }
+    MILLI = "MILLI",
+    CENTI = "CENTI",
+    DECI = "DECI",
+    BASE = "BASE",
+    DECA = "DECA",
+    HECTO = "HECTO",
+    KILO = "KILO"
+}
+  

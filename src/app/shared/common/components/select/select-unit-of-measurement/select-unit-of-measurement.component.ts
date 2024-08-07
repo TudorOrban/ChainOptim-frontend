@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { StandardUnit, UnitMagnitude } from '../../../../enums/unitEnums';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -16,6 +16,8 @@ export class SelectUnitOfMeasurementComponent {
     selectedStandardUnit: StandardUnit = StandardUnit.METER;
     selectedUnitMagnitude: UnitMagnitude = UnitMagnitude.BASE;
   
+    @Output() unitChange = new EventEmitter<{ standardUnit: StandardUnit, unitMagnitude: UnitMagnitude }>();
+
     constructor() {}
   
     ngOnInit(): void {}
@@ -23,5 +25,12 @@ export class SelectUnitOfMeasurementComponent {
     initialize(unit: StandardUnit, magnitude: UnitMagnitude): void {
         this.selectedStandardUnit = unit;
         this.selectedUnitMagnitude = magnitude;
+    }
+
+    onSelectionChange(): void {
+        this.unitChange.emit({
+            standardUnit: this.selectedStandardUnit,
+            unitMagnitude: this.selectedUnitMagnitude
+        });
     }
 }

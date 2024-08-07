@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { Product } from '../models/Product';
+import { CreateProductDTO, Product } from '../models/Product';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -75,7 +75,12 @@ export class ProductService {
                 )
             );
     }
-    
+
+        createProduct(productDTO: CreateProductDTO): Observable<Product> {
+            console.log("Creating");
+            return this.http.post<Product>(`${this.apiUrl}/create`, productDTO);
+        }
+        
 
     // createProduct(product: CreateProductDTO): Observable<CreateProductDTO> {
     //     return this.http.post<CreateProductDTO>(this.apiUrl, product);

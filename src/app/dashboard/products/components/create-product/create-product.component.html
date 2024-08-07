@@ -20,9 +20,9 @@
             </div>
         </div>
 
-        <app-select-unit-of-measurement></app-select-unit-of-measurement>
+        <app-select-unit-of-measurement (unitChange)="onUnitChange($event)"></app-select-unit-of-measurement>
 
-        <div class="flex items-center w-full justify-end">
+        <div class="flex items-center w-full justify-end py-4">
             <button type="submit" class="standard-write-button">
                 Create Product
             </button>
