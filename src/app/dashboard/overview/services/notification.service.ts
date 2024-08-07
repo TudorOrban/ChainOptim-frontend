@@ -28,13 +28,6 @@ export class NotificationService {
     }
 
     getNotificationsByUserIdAdvanced(userId: string, searchParams: SearchParams): Observable<PaginatedResults<NotificationUser>> {
-        const key = `notifications/user/advanced/${userId}
-                ?searchQuery=${encodeURIComponent(searchParams.searchQuery)}
-                &sortBy=${encodeURIComponent(searchParams.sortOption)}
-                &ascending=${searchParams.ascending}
-                &page=${searchParams.page}
-                &itemsPerPage=${searchParams.itemsPerPage}`;
-
         return this.http
             .get<PaginatedResults<NotificationUser>>(`${this.apiUrl}/user/advanced/${userId}`, {
                 params: {

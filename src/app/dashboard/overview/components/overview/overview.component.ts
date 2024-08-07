@@ -10,6 +10,8 @@ import { NotificationUser } from '../../types/notificationTypes';
 import { CommonModule } from '@angular/common';
 import { SearchParams } from '../../../../shared/search/models/Search';
 import { PaginatedResults } from '../../../../shared/search/models/PaginatedResults';
+import { SCSnapshotService } from '../../services/scsnapshot.service';
+import { SupplyChainSnapshot } from '../../types/scSnapshotTypes';
 
 @Component({
     selector: 'app-dashboard',
@@ -20,6 +22,7 @@ import { PaginatedResults } from '../../../../shared/search/models/PaginatedResu
 })
 export class DashboardComponent implements OnInit {
     currentUser: User | null = null;
+    scSnapshot: SupplyChainSnapshot | undefined = undefined;
     results: PaginatedResults<NotificationUser> | undefined = undefined;
     searchParams: SearchParams = {
         searchQuery: '',
@@ -33,6 +36,7 @@ export class DashboardComponent implements OnInit {
     constructor(
         private userService: UserService,
         private notificationService: NotificationService,
+        private scSnapshotService: SCSnapshotService,
         private fallbackManagerService: FallbackManagerService
     ) {}
 
@@ -48,6 +52,10 @@ export class DashboardComponent implements OnInit {
                     if (user) {
                         this.currentUser = user;
                         this.loadNotifications(user?.id ?? "");
+
+                        if (user.organization) {
+                            this.loadSCSnapshot(user.organization.id);
+                        }
                     }
                     this.fallbackManagerService.updateLoading(false);
                 },
@@ -68,7 +76,11 @@ export class DashboardComponent implements OnInit {
             .subscribe({
                 next: async (paginatedResults) => {
                     this.fallbackManagerService.updateLoading(false);
-                    this.results = paginatedResults;
+                    if (this.results) {
+                        this.results.results.push(...paginatedResults.results);
+                    } else {
+                        this.results = paginatedResults;
+                    }
                     this.isNextPage = paginatedResults.results.length + this.searchParams.page * this.searchParams.itemsPerPage < paginatedResults.totalCount;
                 },
                 error: (err: Error) => {
@@ -79,8 +91,28 @@ export class DashboardComponent implements OnInit {
     }
 
     loadNextPage(): void {
-        this.searchParams.page++;
-        this.loadNotifications(this.currentUser?.id ?? "");
+        if (this.isNextPage) {
+            this.searchParams.page++;
+            this.loadNotifications(this.currentUser?.id ?? "");
+        }
+    }
+
+    private async loadSCSnapshot(organizationId: number): Promise<void> {
+        this.fallbackManagerService.updateLoading(true);
+
+        this.scSnapshotService
+            .getSCSnapshotByOrganizationId(organizationId)
+            .subscribe({
+                next: (snapshot) => {
+                    this.fallbackManagerService.updateLoading(false);
+                    this.scSnapshot = snapshot;
+                    console.log(snapshot);
+                },
+                error: (error: Error) => {
+                    this.fallbackManagerService.updateError(error.message ?? '');
+                    this.fallbackManagerService.updateLoading(false);
+                },
+            });
     }
 
     faGlobe = faGlobe;

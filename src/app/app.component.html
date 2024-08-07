@@ -67,12 +67,13 @@
         </div>
     </nav>
 </header>
-<main>
-    <div class="flex h-full">
+<main class="flex h-screen overflow-hidden bg-gray-100">
+    <div class="flex h-full w-full">
         <app-sidebar
             *ngIf="hideHeader"
+            class="h-full w-64 bg-white shadow-md overflow-auto"
         ></app-sidebar>
-        <div class="w-full">
+        <div class="flex-1 overflow-y-auto">
             <router-outlet></router-outlet>
         </div>
     </div>
