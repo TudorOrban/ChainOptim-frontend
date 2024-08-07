@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -23,7 +23,7 @@ export class SupplierService {
         return this.http.get<Supplier[]>(`${this.apiUrl}/organization/${organizationId}`);
     }
 
-    
+
     getSuppliersByOrganizationIdAdvanced(
         organizationId: number,
         searchQuery: string,

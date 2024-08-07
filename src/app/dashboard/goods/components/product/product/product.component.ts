@@ -16,9 +16,9 @@ import {
 import { FallbackManagerComponent } from '../../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { TabsComponent } from '../../../../../shared/common/components/tabs/tabs.component';
 import { NavigationItem } from '../../../../../shared/common/models/UITypes';
-import { ProductProductionComponent } from './product-production/product-production.component';
-import { ProductEvaluationComponent } from './product-evaluation/product-evaluation.component';
-import { ProductOverviewComponent } from './product-overview/product-overview.component';
+import { ProductProductionComponent } from '../../product-production/product-production.component';
+import { ProductOverviewComponent } from '../../product-overview/product-overview.component';
+import { ProductEvaluationComponent } from '../../product-evaluation/product-evaluation.component';
 
 @Component({
     selector: 'app-product',

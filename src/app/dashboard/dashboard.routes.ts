@@ -26,6 +26,7 @@ import { ClientOrdersComponent } from './demand/components/client-orders/client-
 import { ClientShipmentsComponent } from './demand/components/client-shipments/client-shipments.component';
 import { SupplierPerformancesComponent } from './supply/components/supplier-performances/supplier-performances.component';
 import { ClientPerformancesComponent } from './demand/components/client-performances/client-performances.component';
+import { UpdateProductComponent } from './goods/components/update-product/update-product.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -58,6 +59,9 @@ export const dashboardRoutes: Routes = [
     },
     {
         path: 'dashboard/products/:productId', component: ProductComponent,
+    },
+    {
+        path: 'dashboard/products/:productId/update', component: UpdateProductComponent,
     },
     {
         path: 'dashboard/factories',

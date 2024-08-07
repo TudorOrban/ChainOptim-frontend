@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CreateProductDTO, Product } from '../models/Product';
+import { CreateProductDTO, Product, UpdateProductDTO } from '../models/Product';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -76,24 +76,15 @@ export class ProductService {
             );
     }
 
-        createProduct(productDTO: CreateProductDTO): Observable<Product> {
-            console.log("Creating");
-            return this.http.post<Product>(`${this.apiUrl}/create`, productDTO);
-        }
+    createProduct(productDTO: CreateProductDTO): Observable<Product> {
+        console.log("Creating");
+        return this.http.post<Product>(`${this.apiUrl}/create`, productDTO);
+    }
         
-
-    // createProduct(product: CreateProductDTO): Observable<CreateProductDTO> {
-    //     return this.http.post<CreateProductDTO>(this.apiUrl, product);
-    // }
-
-
-    // getAllProducts(): Observable<Product[]> {
-    //     return this.http.get<Product[]>(this.apiUrl);
-    // }
-
-    // updateProduct(product: Product): Observable<Product> {
-    //     return this.http.put<Product>(this.apiUrl, product);
-    // }
+    updateProduct(productDTO: UpdateProductDTO): Observable<Product> {
+        console.log("Updaing");
+        return this.http.put<Product>(`${this.apiUrl}/update`, productDTO);
+    }
 
     // deleteProduct(id: number): Observable<void> {
     //     return this.http.delete<void>(`${this.apiUrl}/${id}`);

@@ -59,3 +59,11 @@ export interface CreateProductDTO {
     organizationId: number;
     newUnit: UnitOfMeasurement;    
 }
+
+export interface UpdateProductDTO {
+    id: number;
+    name: string;
+    description: string;
+    organizationId: number;
+    newUnit: UnitOfMeasurement;    
+}

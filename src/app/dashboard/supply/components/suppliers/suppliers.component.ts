@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBox, faBuilding, faTruckArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faTruckArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Supplier } from '../../models/Supplier';
 import { SupplierService } from '../../services/supplier.service';
 import { Organization } from '../../../organization/models/organization';
@@ -68,7 +68,7 @@ export class SuppliersComponent implements OnInit {
                 next: (user) => {
                     console.log('Current User:', user);
                     this.currentOrganization = user?.organization;
-                    if (user && user.organization) {
+                    if (user?.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
                         this.loadSuppliers(this.currentOrganization?.id ?? 0);
