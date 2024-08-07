@@ -3,7 +3,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition, faBox, faPlus, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { SearchInputComponent } from '../../../search/components/search-input/search-input.component';
 import { SortSelectorComponent } from '../../../search/components/sort-selector/sort-selector.component';
-import { SearchOptions, SortOption } from '../../../search/models/Search';
+import { SearchParams, SortOption } from '../../../search/models/Search';
 import { RouterModule } from '@angular/router';
 
 @Component({

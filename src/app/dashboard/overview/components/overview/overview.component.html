@@ -1,5 +1,5 @@
-<div class="page-standard-horizontal-padding overflow-x-hidden space-y-8">
-    <div class="flex items-center">
+<div class="page-standard-horizontal-padding overflow-x-hidden space-y-4">
+    <div class="flex items-center py-4">
         <fa-icon
             [icon]="faGlobe"
             class="small-icon text-gray-700 mr-2 mb-1"
@@ -10,13 +10,16 @@
     <!-- Notifications -->
     <div class="border border-gray-300 rounded-md shadow-sm overflow-y-auto max-h-80">
         <div class="px-4 py-2 flex items-center bg-gray-100 border-b border-gray-300">
-            <h2 class="text-lg font-semibold">Notifications ({{ notifications?.length }})</h2>
+            <h2 class="text-lg font-semibold">Notifications ({{ results?.results?.length }})</h2>
         </div>
-        <div *ngFor="let notification of notifications" class="px-4 py-2 border-y border-gray-200">
-            <div class="font-semibold">{{ notification.notification.title }}</div>
-            <div class="text-sm">{{ notification.notification.message }}</div>
+        <div *ngFor="let notification of results?.results" class="px-4 py-2 border-y border-gray-200">
+            <div class="font-semibold">{{ notification?.notification?.title }}</div>
+            <div class="text-sm">{{ notification?.notification?.message }}</div>
         </div>
 
+        <button *ngIf="isNextPage" (click)="loadNextPage()" class="px-4 py-2 text-blue-700">
+            Load More
+        </button>
     </div>
 
     <!-- Map -->

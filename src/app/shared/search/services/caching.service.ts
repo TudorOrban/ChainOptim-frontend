@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { SearchOptions } from "../models/Search";
+import { SearchParams } from "../models/Search";
 import { CacheEntry } from "../models/PaginatedResults";
 
 /**
@@ -52,7 +52,7 @@ export class CachingService<T> {
         }
     }
 
-    createCacheKey(feature: string, organizationId: number, searchParams: SearchOptions): string {
+    createCacheKey(feature: string, organizationId: number, searchParams: SearchParams): string {
         return `${feature}/organization/advanced/${organizationId}?searchQuery=${encodeURIComponent(searchParams.searchQuery)}&sortBy=${encodeURIComponent(searchParams.sortOption)}&ascending=${searchParams.ascending}&page=${searchParams.page}&itemsPerPage=${searchParams.itemsPerPage}`;
     }
 }

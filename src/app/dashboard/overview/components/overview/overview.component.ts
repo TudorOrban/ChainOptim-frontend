@@ -8,6 +8,8 @@ import { NotificationService } from '../../services/notification.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { NotificationUser } from '../../types/notificationTypes';
 import { CommonModule } from '@angular/common';
+import { SearchParams } from '../../../../shared/search/models/Search';
+import { PaginatedResults } from '../../../../shared/search/models/PaginatedResults';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,7 +20,15 @@ import { CommonModule } from '@angular/common';
 })
 export class DashboardComponent implements OnInit {
     currentUser: User | null = null;
-    notifications: NotificationUser[] = [];
+    results: PaginatedResults<NotificationUser> | undefined = undefined;
+    searchParams: SearchParams = {
+        searchQuery: '',
+        sortOption: 'createdAt',
+        ascending: false,
+        page: 1,
+        itemsPerPage: 10,
+    };
+    isNextPage: boolean = false;
 
     constructor(
         private userService: UserService,
@@ -36,6 +46,7 @@ export class DashboardComponent implements OnInit {
             .subscribe({
                 next: (user) => {
                     if (user) {
+                        this.currentUser = user;
                         this.loadNotifications(user?.id ?? "");
                     }
                     this.fallbackManagerService.updateLoading(false);
@@ -53,17 +64,23 @@ export class DashboardComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         this.notificationService
-            .getNotificationsByUserId(userId)
+            .getNotificationsByUserIdAdvanced(userId, this.searchParams)
             .subscribe({
-                next: async (notifications) => {
+                next: async (paginatedResults) => {
                     this.fallbackManagerService.updateLoading(false);
-                    this.notifications = notifications;
+                    this.results = paginatedResults;
+                    this.isNextPage = paginatedResults.results.length + this.searchParams.page * this.searchParams.itemsPerPage < paginatedResults.totalCount;
                 },
                 error: (err: Error) => {
                     this.fallbackManagerService.updateError(err.message ?? '');
                     this.fallbackManagerService.updateLoading(false);
                 },
             });
+    }
+
+    loadNextPage(): void {
+        this.searchParams.page++;
+        this.loadNotifications(this.currentUser?.id ?? "");
     }
 
     faGlobe = faGlobe;

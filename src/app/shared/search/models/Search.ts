@@ -3,7 +3,7 @@ export interface SortOption {
     label: string;
 }
 
-export interface SearchOptions {
+export interface SearchParams {
     searchQuery: string;
     sortOption: string;
     ascending: boolean;
