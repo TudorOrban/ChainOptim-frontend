@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NavigationItem } from '../../models/UITypes';
+import { NavigationItem } from '../../models/uiTypes';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 

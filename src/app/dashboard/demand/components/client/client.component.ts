@@ -11,7 +11,7 @@ import { ClientShipmentsComponent } from './client-shipments/client-shipments.co
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { Client } from '../../models/client';
 import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { NavigationItem } from '../../../../shared/common/models/UITypes';
+import { NavigationItem } from '../../../../shared/common/models/uiTypes';
 import { ClientService } from '../../services/client.service';
 import { OrganizationService } from '../../../organization/services/organization.service';
 

@@ -1,0 +1,22 @@
+<div class="w-full space-y-4 p-8 bg-gray-50 border border-gray-300 rounded-md shadow-sm">
+    <div class="text-lg font-semibold text-center">
+        {{ dialogInput?.dialogTitle }}
+    </div>
+    <div class="text-gray-800 text-center">
+        {{ dialogInput?.dialogMessage }}
+    </div>
+    <div class="flex items-center justify-between w-full pt-8">
+        <button
+            (click)="onCancel()"
+            class="p-2 bg-white border border-gray-300 rounded-md shadow-sm font-semibold hover:bg-gray-50"
+        >
+            Cancel
+        </button>
+        <button 
+            (click)="onConfirm()"
+            class="standard-write-button"
+            >
+            Confirm
+        </button>
+    </div>
+</div>

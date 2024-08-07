@@ -5,7 +5,7 @@ import { faBox, faGear } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { NavigationItem } from '../../../../shared/common/models/UITypes';
+import { NavigationItem } from '../../../../shared/common/models/uiTypes';
 import { WarehouseService } from '../../services/warehouse.service';
 import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
 import { WarehouseOverviewComponent } from './warehouse-overview/warehouse-overview.component';

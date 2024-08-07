@@ -13,7 +13,7 @@ import { OrganizationCustomRolesComponent } from './organization-custom-roles/or
 import { OrganizationSubscriptionPlanComponent } from './organization-subscription-plan/organization-subscription-plan.component';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { NavigationItem } from '../../../../shared/common/models/UITypes';
+import { NavigationItem } from '../../../../shared/common/models/uiTypes';
 
 @Component({
     selector: 'app-organization',

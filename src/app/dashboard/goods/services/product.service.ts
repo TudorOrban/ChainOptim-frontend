@@ -86,28 +86,7 @@ export class ProductService {
         return this.http.put<Product>(`${this.apiUrl}/update`, productDTO);
     }
 
-    // deleteProduct(id: number): Observable<void> {
-    //     return this.http.delete<void>(`${this.apiUrl}/${id}`);
-    // }
-
-    // // Current product
-    // async fetchAndSetCurrentProduct(productId: number): Promise<void> {
-    //     this.getProductById(productId).subscribe(
-    //         (product) => {
-    //             this.setCurrentProduct(product);
-    //         },
-    //         (error) => {
-    //             console.error('Error fetching product:', error);
-    //             this.setCurrentProduct(null);
-    //         }
-    //     );
-    // }
-
-    // setCurrentProduct(product: Product | null): void {
-    //     this.currentProductSubject.next(product);
-    // }
-
-    // getCurrentProduct(): Observable<Product | null> {
-    //     return this.currentProductSubject.asObservable();
-    // }
+    deleteProduct(productId: number): Observable<number> {
+        return this.http.delete<number>(`${this.apiUrl}/delete/${productId}`);
+    }
 }

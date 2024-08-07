@@ -10,7 +10,7 @@ import { SupplierPerformanceComponent } from './supplier-performance/supplier-pe
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { Supplier } from '../../models/Supplier';
 import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { NavigationItem } from '../../../../shared/common/models/UITypes';
+import { NavigationItem } from '../../../../shared/common/models/uiTypes';
 import { SupplierShipmentsComponent } from './supplier-shipments/supplier-shipments.component';
 import { SupplierService } from '../../services/supplier.service';
 

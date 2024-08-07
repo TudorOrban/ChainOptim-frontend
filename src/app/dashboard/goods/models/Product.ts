@@ -25,7 +25,6 @@ export interface StageInput {
     id: number;
     quantity: number;
     materialId: number;
-    material?: RawMaterial;
     componentId: number;
     component?: Component;
 }
@@ -35,14 +34,6 @@ export interface StageOutput {
     quantity: number;
     componentId: number;
     component?: Component;
-}
-
-export interface RawMaterial {
-    id: number;
-    name: string;
-    description?: string;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 export interface Component {
