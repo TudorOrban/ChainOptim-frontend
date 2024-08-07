@@ -14,11 +14,12 @@ import { SCSnapshotService } from '../../services/scsnapshot.service';
 import { SupplyChainSnapshot } from '../../types/scSnapshotTypes';
 import { UpcomingEventService } from '../../services/upcomingevent.service';
 import { UpcomingEvent } from '../../types/upcomingEventTypes';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [MapComponent, FontAwesomeModule, CommonModule],
+    imports: [MapComponent, FontAwesomeModule, CommonModule, FormsModule],
     templateUrl: './overview.component.html',
     styleUrl: './overview.component.css',
 })
@@ -28,14 +29,31 @@ export class DashboardComponent implements OnInit {
     results: PaginatedResults<NotificationUser> | undefined = undefined;
     events: UpcomingEvent[] = [];
 
-    searchParams: SearchParams = {
+    notificationsSearchParams: SearchParams = {
         searchQuery: '',
         sortOption: 'createdAt',
         ascending: false,
         page: 1,
         itemsPerPage: 10,
+        filters: {},
     };
     isNextPage: boolean = false;
+    eventsSearchParams: SearchParams = {
+        searchQuery: '',
+        sortOption: 'dateTime',
+        ascending: false,
+        page: 1,
+        itemsPerPage: 10,
+        filters: { "dateTimeStart": new Date(Date.now()).toISOString() },
+    };
+    entityTypes: string[] = [
+        'None', 'Supplier Order', 'Client Order', 'Supplier Shipment', 'Client Shipment'
+    ];
+    selectedEntityType: string = 'None';
+    periods: string[] = [
+        'Today', 'This Week', 'This Month', 'This Year'
+    ];
+    selectedPeriod: string = 'This Month';
 
     constructor(
         private userService: UserService,
@@ -78,7 +96,7 @@ export class DashboardComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         this.notificationService
-            .getNotificationsByUserIdAdvanced(userId, this.searchParams)
+            .getNotificationsByUserIdAdvanced(userId, this.notificationsSearchParams)
             .subscribe({
                 next: async (paginatedResults) => {
                     this.fallbackManagerService.updateLoading(false);
@@ -87,7 +105,7 @@ export class DashboardComponent implements OnInit {
                     } else {
                         this.results = paginatedResults;
                     }
-                    this.isNextPage = paginatedResults.results.length + this.searchParams.page * this.searchParams.itemsPerPage < paginatedResults.totalCount;
+                    this.isNextPage = paginatedResults.results.length + this.notificationsSearchParams.page * this.notificationsSearchParams.itemsPerPage < paginatedResults.totalCount;
                 },
                 error: (err: Error) => {
                     this.fallbackManagerService.updateError(err.message ?? '');
@@ -98,7 +116,7 @@ export class DashboardComponent implements OnInit {
 
     loadNextPage(): void {
         if (this.isNextPage) {
-            this.searchParams.page++;
+            this.notificationsSearchParams.page++;
             this.loadNotifications(this.currentUser?.id ?? "");
         }
     }
@@ -124,7 +142,7 @@ export class DashboardComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         this.upcomingEventService
-            .getUpcomingEventsByUserId(organizationId)
+            .getUpcomingEventsByOrganizationIdAdvanced(organizationId, this.eventsSearchParams)
             .subscribe({
                 next: (events) => {
                     this.fallbackManagerService.updateLoading(false);
@@ -135,6 +153,50 @@ export class DashboardComponent implements OnInit {
                     this.fallbackManagerService.updateLoading(false);
                 },
             });
+    }
+
+    onEntityTypeChange(): void {
+        if (!this.eventsSearchParams.filters) {
+            this.eventsSearchParams.filters = {};
+        }
+        this.eventsSearchParams.filters["associatedEntityType"] = this.selectedEntityType;
+        this.loadUpcomingEvents(this.currentUser?.organization?.id ?? 0);
+    }
+
+    onPeriodChange(): void {
+        if (!this.eventsSearchParams.filters) {
+            this.eventsSearchParams.filters = {};
+        }
+        let endDateTime = new Date();
+        switch (this.selectedPeriod) {
+            case 'Today':
+                endDateTime.setDate(endDateTime.getDate() + 1);
+                break;
+            case 'This Week':
+                endDateTime.setDate(endDateTime.getDate() + 7);
+                break;
+            case 'This Month':
+                endDateTime.setMonth(endDateTime.getMonth() + 1);
+                break;
+            case 'This Year':
+                endDateTime.setFullYear(endDateTime.getFullYear() + 1);
+                break;
+        }
+        this.eventsSearchParams.filters["dateTimeEnd"] = endDateTime.toISOString();
+        this.loadUpcomingEvents(this.currentUser?.organization?.id ?? 0);
+    }
+
+    formatFriendlyDate(dateString: string): string {
+        const date = new Date(dateString);
+        const options: Intl.DateTimeFormatOptions  = {
+            month: 'short', 
+            day: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        };
+        return new Intl.DateTimeFormat('en-US', options).format(date);
     }
 
     faGlobe = faGlobe;

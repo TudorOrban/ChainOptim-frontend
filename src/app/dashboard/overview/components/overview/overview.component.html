@@ -81,16 +81,28 @@
 
     <!-- Upcoming Events -->
     <div>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between py-2">
             <h2 class="text-lg font-semibold">Upcoming Events ({{ events?.length }})</h2>
             <div class="flex items-center space-x-4">
                 <span class="font-semibold">Entity Type</span>
-                <div class="border border-gray-300 rounded-md shadow-sm">Select</div>
+                <select [(ngModel)]="selectedEntityType" (change)="onEntityTypeChange()" class="border border-gray-300 rounded-md shadow-sm p-1 cursor-pointer font-semibold text-sm">
+                    <option *ngFor="let type of entityTypes" [value]="type">{{ type }}</option>
+                </select>
                 <span class="font-semibold">Period</span>
-                <div class="border border-gray-300 rounded-md shadow-sm">Select</div>
+                <select [(ngModel)]="selectedPeriod" (change)="onPeriodChange()" class="border border-gray-300 rounded-md shadow-sm p-1 cursor-pointer font-semibold text-sm">
+                    <option *ngFor="let period of periods" [value]="period">{{ period }}</option>
+                </select>
                 <button class="border border-gray-300 rounded-md shadow-sm">
                     <fa-icon [icon]="faArrowRotateRight" class="text-gray-500"></fa-icon>
                 </button>
+            </div>
+        </div>
+        <div *ngFor="let event of events" class="flex items-center border border-gray-300 rounded-md w-full overflow-x-auto">
+            <div class="bg-gray-200 max-w-48 p-1 text-sm text-center">
+                <div class="w-44 h-2.5 bg-blue-500 rounded-full mb-2 justify-center"></div>
+                <div class="text-ellipsis overflow-hidden whitespace-nowrap font-semibold">{{ event.title }}</div>
+                <div class="text-ellipsis overflow-hidden whitespace-nowrap">{{ event.message }}</div>
+                <div class="text-ellipsis overflow-hidden whitespace-nowrap text-gray-600">{{ formatFriendlyDate(event.dateTime.toString())}}</div>
             </div>
         </div>
     </div>

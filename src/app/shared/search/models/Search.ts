@@ -9,4 +9,5 @@ export interface SearchParams {
     ascending: boolean;
     page: number;
     itemsPerPage: number;
+    filters?: Record<string, string>;
 }

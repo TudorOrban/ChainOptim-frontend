@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
@@ -27,21 +27,23 @@ export class UpcomingEventService {
             );
     }
 
-    getUpcomingEventsByUserIdAdvanced(organizationId: number, searchParams: SearchParams): Observable<UpcomingEvent[]> {
-        return this.http
-            .get<UpcomingEvent[]>(`${this.apiUrl}/organization/advanced/${organizationId}`, {
-                params: {
-                    searchQuery: searchParams.searchQuery,
-                    sortBy: searchParams.sortOption,
-                    ascending: searchParams.ascending.toString(),
-                    page: searchParams.page.toString(),
-                    itemsPerPage: searchParams.itemsPerPage.toString(),
-                },
-            })
+    
+    getUpcomingEventsByOrganizationIdAdvanced(organizationId: number, searchParams: SearchParams): Observable<UpcomingEvent[]> {
+        let params = new HttpParams()
+            .set('searchQuery', searchParams.searchQuery)
+            .set('sortBy', searchParams.sortOption)
+            .set('ascending', searchParams.ascending.toString())
+            .set('page', searchParams.page.toString())
+            .set('itemsPerPage', searchParams.itemsPerPage.toString());
+
+        if (searchParams.filters && Object.keys(searchParams.filters).length > 0) {
+            const filtersJson = JSON.stringify(searchParams.filters);
+           params = params.set('filters', filtersJson);
+        }
+          
+        return this.http.get<UpcomingEvent[]>(`${this.apiUrl}/organization/advanced/${organizationId}`, { params })
             .pipe(
-                catchError((error) =>
-                    this.errorHandlerService.handleError(error)
-                )
+                catchError((error) => this.errorHandlerService.handleError(error))
             );
     }
 }
