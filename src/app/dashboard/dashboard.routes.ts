@@ -13,6 +13,7 @@ import { ClientsComponent } from './clients/components/clients/clients.component
 import { SettingsComponent } from './settings/components/settings/settings.component';
 import { ProductComponent } from './products/components/product/product/product.component';
 import { ClientComponent } from './clients/components/client/client.component';
+import { CreateProductComponent } from './products/components/create-product/create-product.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -30,6 +31,10 @@ export const dashboardRoutes: Routes = [
     {
         path: 'dashboard/products',
         component: ProductsComponent,
+    },
+    {
+        path: 'dashboard/products/create-product',
+        component: CreateProductComponent,
     },
     {
         path: 'dashboard/products/:productId', component: ProductComponent,
