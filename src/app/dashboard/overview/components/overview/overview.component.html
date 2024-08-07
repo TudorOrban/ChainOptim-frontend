@@ -67,7 +67,7 @@
     </div>
 
     <!-- Map -->
-    <!-- <div>
+    <div>
         <div class="flex items-center">
             <fa-icon
                 [icon]="faMap"
@@ -77,10 +77,10 @@
         </div>
 
         <app-map></app-map>
-    </div> -->
+    </div>
 
     <!-- Upcoming Events -->
-    <div>
+    <div class="pb-4">
         <div class="flex items-center justify-between py-2">
             <h2 class="text-lg font-semibold">Upcoming Events ({{ events?.length }})</h2>
             <div class="flex items-center space-x-4">
@@ -92,7 +92,7 @@
                 <select [(ngModel)]="selectedPeriod" (change)="onPeriodChange()" class="border border-gray-300 rounded-md shadow-sm p-1 cursor-pointer font-semibold text-sm">
                     <option *ngFor="let period of periods" [value]="period">{{ period }}</option>
                 </select>
-                <button class="border border-gray-300 rounded-md shadow-sm">
+                <button (click)="refreshEvents()" class="bg-white border border-gray-300 rounded-md shadow-sm px-2 py-1 cursor-pointer font-semibold text-sm">
                     <fa-icon [icon]="faArrowRotateRight" class="text-gray-500"></fa-icon>
                 </button>
             </div>

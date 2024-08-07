@@ -29,7 +29,7 @@ export class MapComponent {
     private map: any;
     private L: any;
 
-    private isMapInitialized: boolean = false;
+    isMapInitialized: boolean = false;
     private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent | TransportRouteUIComponent>> = new Map();
     private routePolylines: Map<string, L.Polyline> = new Map();
 
@@ -88,8 +88,8 @@ export class MapComponent {
                     this.fallbackManagerService.updateLoading(false);
                     
                     if (!this.isMapInitialized) {
-                        await this.initMap();
                         this.isMapInitialized = true;
+                        await this.initMap();
                     }
                     this.createMapElements();
                 },

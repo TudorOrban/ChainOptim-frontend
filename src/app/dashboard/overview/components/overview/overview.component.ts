@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
         ascending: false,
         page: 1,
         itemsPerPage: 10,
-        filters: { "dateTimeStart": new Date(Date.now()).toISOString() },
+        filters: { "dateTimeStart": this.formatDateWithoutTimezone(new Date()) },
     };
     entityTypes: string[] = [
         'None', 'Supplier Order', 'Client Order', 'Supplier Shipment', 'Client Shipment'
@@ -159,7 +159,11 @@ export class DashboardComponent implements OnInit {
         if (!this.eventsSearchParams.filters) {
             this.eventsSearchParams.filters = {};
         }
-        this.eventsSearchParams.filters["associatedEntityType"] = this.selectedEntityType;
+        if (this.selectedEntityType === 'None') {
+            delete this.eventsSearchParams.filters["associatedEntityType"];
+        } else {    
+            this.eventsSearchParams.filters["associatedEntityType"] = this.selectedEntityType;
+        }
         this.loadUpcomingEvents(this.currentUser?.organization?.id ?? 0);
     }
 
@@ -182,7 +186,11 @@ export class DashboardComponent implements OnInit {
                 endDateTime.setFullYear(endDateTime.getFullYear() + 1);
                 break;
         }
-        this.eventsSearchParams.filters["dateTimeEnd"] = endDateTime.toISOString();
+        this.eventsSearchParams.filters["dateTimeEnd"] = this.formatDateWithoutTimezone(endDateTime);
+        this.loadUpcomingEvents(this.currentUser?.organization?.id ?? 0);
+    }
+
+    refreshEvents(): void {
         this.loadUpcomingEvents(this.currentUser?.organization?.id ?? 0);
     }
 
@@ -197,6 +205,20 @@ export class DashboardComponent implements OnInit {
             hour12: true
         };
         return new Intl.DateTimeFormat('en-US', options).format(date);
+    }
+
+    formatDateWithoutTimezone(date: Date): string {
+        const pad = (num: number) => (num < 10 ? '0' + num : num.toString());
+        
+        const year = date.getFullYear();
+        const month = pad(date.getMonth() + 1); // getMonth() is zero-indexed
+        const day = pad(date.getDate());
+        const hour = pad(date.getHours());
+        const minute = pad(date.getMinutes());
+        const second = pad(date.getSeconds());
+        const millisecond = date.getMilliseconds().toString().padStart(3, '0'); // Ensure milliseconds are three digits
+    
+        return `${year}-${month}-${day}T${hour}:${minute}:${second}.${millisecond}`;
     }
 
     faGlobe = faGlobe;
