@@ -31,7 +31,7 @@
                 </div>
 
                 <!-- Sidebar subitems -->
-                <div *ngIf="item.isExpanded" class="px-8 space-y-4 pt-6 font-normal whitespace-nowrap">
+                <div *ngIf="item.isExpanded && (item?.subItems?.length ?? 0) > 0" class="px-8 space-y-4 pt-6 font-normal whitespace-nowrap">
                     <div *ngFor="let subItem of item?.subItems">
                         <button (click)="selectItem(subItem)" [class.font-semibold]="subItem.isSelected">
                             <a *ngIf="subItem.link" [routerLink]="subItem.link" class="">{{

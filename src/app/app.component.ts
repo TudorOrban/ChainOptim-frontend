@@ -13,10 +13,12 @@ import { AuthenticationService } from './core/auth/services/authentication.servi
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent } from './core/main/components/sidebar/sidebar.component';
-import { filter, switchMap } from 'rxjs';
+import { filter, Observable, switchMap } from 'rxjs';
 import { UserService } from './core/auth/services/user.service';
 import { OrganizationService } from './dashboard/organization/services/organization.service';
 import { ToastManagerComponent } from './shared/common/components/toast-system/toast-manager/toast-manager.component';
+import { NotificationLiveService } from './dashboard/overview/services/notificationlive.service';
+import { User } from './core/user/model/user';
 
 @Component({
     selector: 'app-root',
@@ -37,6 +39,7 @@ import { ToastManagerComponent } from './shared/common/components/toast-system/t
     styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
+    messages$: Observable<any> | undefined = undefined;
     // Display variables
     hideHeader = false;
     title = 'Chain Optimizer';
@@ -47,7 +50,7 @@ export class AppComponent implements OnInit {
         @Inject(PLATFORM_ID) private platformId: Object,
         public authService: AuthenticationService,
         private userService: UserService,
-        private organizationService: OrganizationService,
+        private notificationLiveService: NotificationLiveService,
         private router: Router
     ) {
         // Hide header on dashboard routes
@@ -73,6 +76,14 @@ export class AppComponent implements OnInit {
             const username = this.authService.getUsernameFromToken();
             if (username) {
                 this.userService.fetchAndSetCurrentUser(username);
+                this.userService.getCurrentUser().subscribe((user: User | null) => {
+                    if (user) {
+                        console.log('Current in app:', user);
+                        this.messages$ = this.notificationLiveService.connect(`ws://localhost:8080/ws?userId=${user.id}`);
+
+                    }
+                });
+
 
                 // this.userService
                 //     .getCurrentUser()
