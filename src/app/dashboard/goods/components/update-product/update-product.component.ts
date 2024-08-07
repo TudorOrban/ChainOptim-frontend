@@ -10,6 +10,8 @@ import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
+import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
 
 @Component({
   selector: 'app-update-product',
@@ -31,6 +33,7 @@ export class UpdateProductComponent implements OnInit {
         private productService: ProductService,
         private userService: UserService,
         private fallbackManagerService: FallbackManagerService,
+        private toastService: ToastService,
         private router: Router
     ) {}
   
@@ -102,9 +105,11 @@ export class UpdateProductComponent implements OnInit {
 
         this.productService.updateProduct(productDTO).subscribe(
             product => {
+                this.toastService.addToast({ id: 123, title: 'Success', message: 'Product updated successfully.', outcome: OperationOutcome.SUCCESS });
                 this.router.navigate(['/dashboard/products', product.id]);
             },
             error => {
+                this.toastService.addToast({ id: 123, title: 'Error', message: 'Product update failed.', outcome: OperationOutcome.ERROR });
                 console.error('Error updating product:', error);
             }
         );

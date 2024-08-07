@@ -10,6 +10,8 @@ import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ProductService } from '../../services/product.service';
 import { Router } from '@angular/router';
+import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
+import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
 
 @Component({
   selector: 'app-create-product',
@@ -28,6 +30,7 @@ export class CreateProductComponent implements OnInit {
         private productService: ProductService,
         private userService: UserService,
         private fallbackManagerService: FallbackManagerService,
+        private toastService: ToastService,
         private router: Router
     ) {}
   
@@ -78,9 +81,11 @@ export class CreateProductComponent implements OnInit {
 
         this.productService.createProduct(productDTO).subscribe(
             product => {
+                this.toastService.addToast({ id: 123, title: 'Success', message: 'Product created successfully.', outcome: OperationOutcome.SUCCESS });
                 this.router.navigate(['/dashboard/products', product.id]);
             },
             error => {
+                this.toastService.addToast({ id: 123, title: 'Error', message: 'Product creation failed.', outcome: OperationOutcome.ERROR });
                 console.error('Error creating product:', error);
             }
         );

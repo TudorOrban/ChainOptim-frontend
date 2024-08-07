@@ -16,12 +16,10 @@ export class ToastComponent {
     @Output() close = new EventEmitter<number>();
 
     outcomeIcon: IconDefinition = faCheck;
-    baseClasses: {[key: string]: boolean} = {};
 
     ngOnInit(): void {
         console.log('Toast Info', this.toastInfo);
         this.updateOutcomeIcon();
-        this.updateClassObject();
     }
 
     closeToast() {
@@ -44,56 +42,21 @@ export class ToastComponent {
                 break;
         }
     }
-
-    updateClassObject() {
-        this.baseClasses = {
-          'flex': true,
-          'items-center': true,
-          'justify-center': true,
-          'w-6': true,
-          'h-6': true,
-          'rounded-full': true
-        };
     
-        const colorClass = this.getOutcomeColor();
-        this.baseClasses[colorClass] = true; 
-    }
-
-    getOutcomeColor(): string {
-        switch (this.toastInfo?.outcome) {
+    getBackgroundColor(outcome?: OperationOutcome): string {
+        switch (outcome) {
             case OperationOutcome.SUCCESS:
-                return 'text-green-600';
+                return '#16a34a'; 
             case OperationOutcome.ERROR:
-                return 'text-red-600';
+                return '#dc2626';
             case OperationOutcome.WARNING:
-                return 'text-yellow-600';
+                return '#ca8a04'; 
             case OperationOutcome.INFO:
-                return 'text-blue-600';
+                return '#121212';  
             default:
-                return 'text-gray-600';
+                return '#121212';
         }
     }
-
-    get classes(): string {
-        let colorClass = ''; // Default to an empty string or any default class
-        if (this.toastInfo) {
-          switch (this.toastInfo.outcome) {
-            case OperationOutcome.SUCCESS:
-              colorClass = 'text-green-600';
-              break;
-            case OperationOutcome.ERROR:
-              colorClass = 'text-red-600';
-              break;
-            case OperationOutcome.WARNING:
-              colorClass = 'text-yellow-600';
-              break;
-            case OperationOutcome.INFO:
-              colorClass = 'text-blue-600';
-              break;
-          }
-        }
-        return `flex items-center justify-center w-6 h-6 rounded-full ${colorClass}`;
-      }
 
     faCheck = faCheck;
     faXmark = faXmark;

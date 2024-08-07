@@ -120,10 +120,11 @@ export class ProductComponent implements OnInit {
             .deleteProduct(Number(this.productId))
             .subscribe({
                 next: (success) => {
+                    this.toastService.addToast({ id: 123, title: 'Success', message: 'Product deleted successfully.', outcome: OperationOutcome.SUCCESS });
                     this.router.navigate(['/dashboard/products']);
                 },
-
                 error: (error: Error) => {
+                    this.toastService.addToast({ id: 123, title: 'Error', message: 'Product deletion failed.', outcome: OperationOutcome.ERROR });
                     console.error('Error deleting product:', error);
                 },
             });   
