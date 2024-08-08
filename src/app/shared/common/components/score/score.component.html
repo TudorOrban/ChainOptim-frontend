@@ -1,0 +1,9 @@
+<!-- score.component.html -->
+<div class="score-container">
+    <svg width="80" height="80" viewBox="0 0 80 80">
+        <circle cx="36" cy="36" r="28" fill="none" stroke="#eee" stroke-width="10"/>
+        <circle cx="36" cy="36" r="28" fill="none" [attr.stroke]="getColor(score)" stroke-width="10"
+                stroke-linecap="round" [attr.stroke-dasharray]="getDashArray(score, 28)" [attr.stroke-dashoffset]="getDashOffset(score, 28)"/>
+        <text x="36" y="40" font-family="Arial" font-size="16" fill="#333" text-anchor="middle">{{ score }}</text>
+    </svg>
+</div>

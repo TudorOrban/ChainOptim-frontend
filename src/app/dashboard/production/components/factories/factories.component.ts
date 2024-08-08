@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { OrganizationService } from '../../../organization/services/organization.service';
-import { faBox, faBuilding, faIndustry } from '@fortawesome/free-solid-svg-icons';
+import { faIndustry } from '@fortawesome/free-solid-svg-icons';
 import { Factory } from '../../models/Factory';
 import { FactoryService } from '../../services/factory.service';
 import { Organization } from '../../../organization/models/organization';
@@ -12,7 +11,6 @@ import {
     FallbackManagerService,
     FallbackManagerState,
 } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { distinctUntilChanged, filter } from 'rxjs';
 import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 import { SortOption } from '../../../../shared/search/models/Search';
