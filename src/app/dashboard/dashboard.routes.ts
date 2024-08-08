@@ -33,6 +33,8 @@ import { UpdateFactoryComponent } from './production/components/update-factory/u
 import { UpdateWarehouseComponent } from './storage/components/update-warehouse/update-warehouse.component';
 import { CreateSupplierComponent } from './supply/components/create-supplier/create-supplier.component';
 import { UpdateSupplierComponent } from './supply/components/update-supplier/update-supplier.component';
+import { CreateClientComponent } from './demand/components/create-client/create-client.component';
+import { UpdateClientComponent } from './demand/components/update-client/update-client.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -164,8 +166,16 @@ export const dashboardRoutes: Routes = [
         component: ClientPerformancesComponent,
     },
     {
+        path: 'dashboard/clients/create-client',
+        component: CreateClientComponent,
+    },
+    {
         path: 'dashboard/clients/:clientId', 
         component: ClientComponent,
+    },
+    {
+        path: 'dashboard/clients/:clientId/update',
+        component: UpdateClientComponent,
     },
     {
         path: 'dashboard/settings',

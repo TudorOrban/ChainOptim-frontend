@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
+import { CreateClientDTO, Client, UpdateClientDTO } from '../models/Client';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
 import { CachingService } from '../../../shared/search/services/caching.service';
-import { Client } from '../models/client';
 
 @Injectable({
     providedIn: 'root',
@@ -74,22 +74,16 @@ export class ClientService {
                 )
             );
     }
-    
 
-    // createClient(client: CreateClientDTO): Observable<CreateClientDTO> {
-    //     return this.http.post<CreateClientDTO>(this.apiUrl, client);
-    // }
+    createClient(clientDTO: CreateClientDTO): Observable<Client> {
+        return this.http.post<Client>(`${this.apiUrl}/create`, clientDTO);
+    }
+        
+    updateClient(clientDTO: UpdateClientDTO): Observable<Client> {
+        return this.http.put<Client>(`${this.apiUrl}/update`, clientDTO);
+    }
 
-
-    // getAllClients(): Observable<Client[]> {
-    //     return this.http.get<Client[]>(this.apiUrl);
-    // }
-
-    // updateClient(client: Client): Observable<Client> {
-    //     return this.http.put<Client>(this.apiUrl, client);
-    // }
-
-    // deleteClient(id: number): Observable<void> {
-    //     return this.http.delete<void>(`${this.apiUrl}/${id}`);
-    // }
+    deleteClient(clientId: number): Observable<number> {
+        return this.http.delete<number>(`${this.apiUrl}/delete/${clientId}`);
+    }
 }

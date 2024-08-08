@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Client } from '../../../models/client';
+import { Client } from '../../../models/Client';
 
 @Component({
   selector: 'app-client-orders',

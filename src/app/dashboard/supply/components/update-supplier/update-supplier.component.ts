@@ -81,19 +81,9 @@ export class UpdateSupplierComponent implements OnInit {
                 .getSupplierById(Number(this.supplierId))
                 .subscribe({
                     next: (supplier) => {
-                        console.log('SUPPLIER', supplier);
                         this.supplier = supplier;
                         this.supplierForm.patchValue({
                             name: supplier.name,
-                            location: {
-                                address: supplier.location?.address,
-                                city: supplier.location?.city,
-                                state: supplier.location?.state,
-                                country: supplier.location?.country,
-                                zipCode: supplier.location?.zipCode,
-                                latitude: supplier.location?.latitude,
-                                longitude: supplier.location?.longitude
-                            }
                         });
                         this.fallbackManagerService.updateLoading(false);
                     },

@@ -14,7 +14,7 @@ import { ListHeaderComponent } from '../../../../shared/common/components/list-h
 import { SortOption } from '../../../../shared/search/models/Search';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 import { UserService } from '../../../../core/auth/services/user.service';
-import { Client } from '../../models/client';
+import { Client } from '../../models/Client';
 
 @Component({
     selector: 'app-organization',

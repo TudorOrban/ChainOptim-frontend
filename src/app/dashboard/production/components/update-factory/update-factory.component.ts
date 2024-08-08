@@ -81,7 +81,6 @@ export class UpdateFactoryComponent implements OnInit {
                 .getFactoryById(Number(this.factoryId))
                 .subscribe({
                     next: (factory) => {
-                        console.log('FACTORY', factory);
                         this.factory = factory;
                         this.factoryForm.patchValue({
                             name: factory.name,
@@ -130,9 +129,6 @@ export class UpdateFactoryComponent implements OnInit {
     }
 
     private isFormInvalid(): boolean {
-        console.log("Is locform valid", this.isLocationFormValid);
-        console.log("Choice", this.createLocation);
-        console.log("Location ID", this.locationId);
         return this.factoryForm.invalid || 
             (!this.createLocation && !this.locationId) || 
             (this.createLocation && (!this.isLocationFormValid || 

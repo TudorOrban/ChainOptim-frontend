@@ -81,19 +81,9 @@ export class UpdateWarehouseComponent implements OnInit {
                 .getWarehouseById(Number(this.warehouseId))
                 .subscribe({
                     next: (warehouse) => {
-                        console.log('WAREHOUSE', warehouse);
                         this.warehouse = warehouse;
                         this.warehouseForm.patchValue({
                             name: warehouse.name,
-                            location: {
-                                address: warehouse.location?.address,
-                                city: warehouse.location?.city,
-                                state: warehouse.location?.state,
-                                country: warehouse.location?.country,
-                                zipCode: warehouse.location?.zipCode,
-                                latitude: warehouse.location?.latitude,
-                                longitude: warehouse.location?.longitude
-                            }
                         });
                         this.fallbackManagerService.updateLoading(false);
                     },
