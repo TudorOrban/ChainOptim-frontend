@@ -28,6 +28,8 @@ import { SupplierPerformancesComponent } from './supply/components/supplier-perf
 import { ClientPerformancesComponent } from './demand/components/client-performances/client-performances.component';
 import { UpdateProductComponent } from './goods/components/update-product/update-product.component';
 import { CreateFactoryComponent } from './production/components/create-factory/create-factory.component';
+import { CreateWarehouseComponent } from './storage/components/create-warehouse/create-warehouse.component';
+import { UpdateFactoryComponent } from './production/components/update-factory/update-factory.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -84,6 +86,9 @@ export const dashboardRoutes: Routes = [
         path: 'dashboard/factories/:factoryId', component: FactoryComponent,
     },
     {
+        path: 'dashboard/factories/:factoryId/update', component: UpdateFactoryComponent,
+    },
+    {
         path: 'dashboard/suppliers',
         component: SuppliersComponent,
     },
@@ -113,6 +118,10 @@ export const dashboardRoutes: Routes = [
     {
         path: 'dashboard/warehouse-evaluations',
         component: WarehouseEvaluationsComponent,
+    },
+    {
+        path: 'dashboard/warehouses/create-warehouse',
+        component: CreateWarehouseComponent,
     },
     {
         path: 'dashboard/warehouses/:warehouseId', component: WarehouseComponent,

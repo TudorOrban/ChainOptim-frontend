@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LocationService } from '../../../services/location.service';
 import { UserService } from '../../../../../core/auth/services/user.service';
@@ -13,7 +13,8 @@ import { User } from '../../../../../core/user/model/user';
   templateUrl: './select-or-create-location.component.html',
   styleUrl: './select-or-create-location.component.css'
 })
-export class SelectOrCreateLocationComponent {
+export class SelectOrCreateLocationComponent implements OnInit, OnChanges {
+    @Input() initialLocationData: Location | undefined = undefined;
     @Output() locationChoiceChange = new EventEmitter<string>();
     @Output() selectedLocationChange = new EventEmitter<number>();
     @Output() newLocationData = new EventEmitter<CreateLocationDTO>();
@@ -33,6 +34,35 @@ export class SelectOrCreateLocationComponent {
     ) {}
 
     ngOnInit(): void {
+        this.initializeForm();
+        
+        if (this.initialLocationData) {
+            this.locationForm.patchValue(this.initialLocationData);
+        }
+
+        this.userService.getCurrentUser().subscribe({
+            next: (user) => {
+                if (!user?.organization) {
+                    return;
+                }
+                this.currentUser = user;
+
+                this.locationService.getLocationsByOrganizationId(user.organization?.id ?? 0).subscribe({
+                    next: (locations) => {
+                        this.locations = locations;
+                    },
+                    error: (error: Error) => {
+                        console.error('Error loading locations', error);
+                    }
+                });
+            },
+            error: (error: Error) => {
+                console.error('Error loading current user', error);
+            }
+        });
+    }
+
+    private initializeForm() {
         this.locationForm = this.fb.group({
             address: ['', [Validators.maxLength(200)]],
             city: ['', [Validators.maxLength(200)]],
@@ -54,27 +84,6 @@ export class SelectOrCreateLocationComponent {
         this.locationForm.valueChanges.subscribe(values => {
             this.createNewLocation(this.getCreateLocationDTO()); 
             this.validateForm();
-        });
-
-        this.userService.getCurrentUser().subscribe({
-            next: (user) => {
-                if (!user?.organization) {
-                    return;
-                }
-                this.currentUser = user;
-
-                this.locationService.getLocationsByOrganizationId(user.organization?.id ?? 0).subscribe({
-                    next: (locations) => {
-                        this.locations = locations;
-                    },
-                    error: (error: Error) => {
-                        console.error('Error loading locations', error);
-                    }
-                });
-            },
-            error: (error: Error) => {
-                console.error('Error loading current user', error);
-            }
         });
     }
 
@@ -120,5 +129,14 @@ export class SelectOrCreateLocationComponent {
 
     validateForm(): void {
         this.isFormValid.emit(this.locationForm.valid);
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['initialLocationData'] && !changes['initialLocationData'].firstChange) {
+            if (this.initialLocationData) {
+                this.locationChoice = 'create';
+                this.locationForm.patchValue(this.initialLocationData);
+            }
+        }
     }
 }

@@ -28,13 +28,13 @@ export class UpdateProductComponent implements OnInit {
     unitOfMeasurement: UnitOfMeasurement = { standardUnit: StandardUnit.METER, unitMagnitude: UnitMagnitude.BASE};
   
     constructor(
-        private route: ActivatedRoute,
-        private fb: FormBuilder,
         private productService: ProductService,
         private userService: UserService,
         private fallbackManagerService: FallbackManagerService,
         private toastService: ToastService,
-        private router: Router
+        private router: Router,
+        private route: ActivatedRoute,
+        private fb: FormBuilder,
     ) {}
   
     ngOnInit() {

@@ -1,19 +1,18 @@
 <div class="std-form-container space-x-4">
-    <form [formGroup]="factoryForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">
-        <h2 class="text-2xl font-semibold mb-4 text-center">Update Factory</h2>
+    <form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">
+        <h2 class="text-2xl font-semibold mb-4 text-center">Create Warehouse</h2>
 
         <div>
             <label for="name" class="form-label">Name:</label>
             <input type="text" id="name" formControlName="name" class="form-input">
-            <div *ngIf="factoryForm.get('name')?.touched && factoryForm.get('name')?.errors">
-                <p *ngIf="factoryForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
-                <p *ngIf="factoryForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
+            <div *ngIf="warehouseForm.get('name')?.touched && warehouseForm.get('name')?.errors">
+                <p *ngIf="warehouseForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
+                <p *ngIf="warehouseForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
             </div>
         </div>
 
         <div>
             <app-select-or-create-location
-                [initialLocationData]="factory?.location"
                 (locationChoiceChange)="handleLocationChoice($event)"
                 (selectedLocationChange)="handleLocationSelection($event)"
                 (newLocationData)="handleNewLocationData($event)"
@@ -23,7 +22,7 @@
 
         <div class="flex items-center w-full justify-end">
             <button type="submit" class="standard-write-button">
-                Update Factory
+                Create Warehouse
             </button>
         </div>
     </form>
