@@ -31,6 +31,8 @@ import { CreateFactoryComponent } from './production/components/create-factory/c
 import { CreateWarehouseComponent } from './storage/components/create-warehouse/create-warehouse.component';
 import { UpdateFactoryComponent } from './production/components/update-factory/update-factory.component';
 import { UpdateWarehouseComponent } from './storage/components/update-warehouse/update-warehouse.component';
+import { CreateSupplierComponent } from './supply/components/create-supplier/create-supplier.component';
+import { UpdateSupplierComponent } from './supply/components/update-supplier/update-supplier.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -62,10 +64,12 @@ export const dashboardRoutes: Routes = [
         component: StagesComponent,
     },
     {
-        path: 'dashboard/products/:productId', component: ProductComponent,
+        path: 'dashboard/products/:productId', 
+        component: ProductComponent,
     },
     {
-        path: 'dashboard/products/:productId/update', component: UpdateProductComponent,
+        path: 'dashboard/products/:productId/update', 
+        component: UpdateProductComponent,
     },
     {
         path: 'dashboard/factories',
@@ -84,10 +88,12 @@ export const dashboardRoutes: Routes = [
         component: CreateFactoryComponent,
     },
     {
-        path: 'dashboard/factories/:factoryId', component: FactoryComponent,
+        path: 'dashboard/factories/:factoryId', 
+        component: FactoryComponent,
     },
     {
-        path: 'dashboard/factories/:factoryId/update', component: UpdateFactoryComponent,
+        path: 'dashboard/factories/:factoryId/update', 
+        component: UpdateFactoryComponent,
     },
     {
         path: 'dashboard/suppliers',
@@ -106,7 +112,16 @@ export const dashboardRoutes: Routes = [
         component: SupplierPerformancesComponent,
     },
     {
-        path: 'dashboard/suppliers/:supplierId', component: SupplierComponent,
+        path: 'dashboard/suppliers/create-supplier',
+        component: CreateSupplierComponent,
+    },
+    {
+        path: 'dashboard/suppliers/:supplierId', 
+        component: SupplierComponent,
+    },
+    {
+        path: 'dashboard/suppliers/:supplierId/update', 
+        component: UpdateSupplierComponent,
     },
     {
         path: 'dashboard/warehouses',
@@ -125,10 +140,12 @@ export const dashboardRoutes: Routes = [
         component: CreateWarehouseComponent,
     },
     {
-        path: 'dashboard/warehouses/:warehouseId', component: WarehouseComponent,
+        path: 'dashboard/warehouses/:warehouseId', 
+        component: WarehouseComponent,
     },
     {
-        path: 'dashboard/warehouses/:warehouseId/update', component: UpdateWarehouseComponent,
+        path: 'dashboard/warehouses/:warehouseId/update', 
+        component: UpdateWarehouseComponent,
     },
     {
         path: 'dashboard/clients',
@@ -147,7 +164,8 @@ export const dashboardRoutes: Routes = [
         component: ClientPerformancesComponent,
     },
     {
-        path: 'dashboard/clients/:clientId', component: ClientComponent,
+        path: 'dashboard/clients/:clientId', 
+        component: ClientComponent,
     },
     {
         path: 'dashboard/settings',

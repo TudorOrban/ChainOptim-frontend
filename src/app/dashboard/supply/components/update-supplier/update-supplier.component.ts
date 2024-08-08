@@ -1,27 +1,29 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreateWarehouseDTO } from '../../models/Warehouse';
+import { CreateSupplierDTO, Supplier } from '../../models/Supplier';
 import { User } from '../../../../core/user/model/user';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { WarehouseService } from '../../services/warehouse.service';
-import { Router } from '@angular/router';
+import { SupplierService } from '../../services/supplier.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
 import { SelectOrCreateLocationComponent } from '../../../../shared/common/components/select/select-or-create-location/select-or-create-location.component';
 import { CreateLocationDTO } from '../../../../shared/common/models/reusableTypes';
 
 @Component({
-  selector: 'app-create-warehouse',
+  selector: 'app-update-supplier',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, SelectOrCreateLocationComponent],
-  templateUrl: './create-warehouse.component.html',
-  styleUrl: './create-warehouse.component.css'
+  templateUrl: './update-supplier.component.html',
+  styleUrl: './update-supplier.component.css'
 })
-export class CreateWarehouseComponent implements OnInit {
+export class UpdateSupplierComponent implements OnInit {
+    supplierId: number | undefined = undefined;
+    supplier: Supplier | undefined = undefined;
     currentUser: User | undefined = undefined;
-    warehouseForm: FormGroup = new FormGroup({});
+    supplierForm: FormGroup = new FormGroup({});
     createLocation: boolean = false;
     locationId: number = 0;
     newLocationData: CreateLocationDTO = {
@@ -30,30 +32,32 @@ export class CreateWarehouseComponent implements OnInit {
     isLocationFormValid: boolean = false;
   
     constructor(
-        private fb: FormBuilder,
-        private warehouseService: WarehouseService,
+        private supplierService: SupplierService,
         private userService: UserService,
         private fallbackManagerService: FallbackManagerService,
         private toastService: ToastService,
-        private router: Router
+        private router: Router,
+        private route: ActivatedRoute,
+        private fb: FormBuilder,
     ) {}
   
     ngOnInit() {
-        this.warehouseForm = this.fb.group({
+        this.supplierForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
             description: ['', [Validators.maxLength(200)]]
         });
 
-        this.loadCurrentUser();
+        this.loadData();
     }
 
-    private loadCurrentUser() {
+    private loadData() {
         this.userService
             .getCurrentUser()
             .subscribe({
                 next: (user) => {
                     if (user) {
                         this.currentUser = user;
+                        this.loadSupplier();
                     }
                     this.fallbackManagerService.updateLoading(false);
                 },
@@ -66,8 +70,46 @@ export class CreateWarehouseComponent implements OnInit {
             });
     }
 
+    private loadSupplier(): void {
+        this.route.paramMap.subscribe((params) => {
+            this.supplierId = parseInt(params.get('supplierId') || "");
+            if (!this.supplierId) {
+                return;
+            }
+
+            this.supplierService
+                .getSupplierById(Number(this.supplierId))
+                .subscribe({
+                    next: (supplier) => {
+                        console.log('SUPPLIER', supplier);
+                        this.supplier = supplier;
+                        this.supplierForm.patchValue({
+                            name: supplier.name,
+                            location: {
+                                address: supplier.location?.address,
+                                city: supplier.location?.city,
+                                state: supplier.location?.state,
+                                country: supplier.location?.country,
+                                zipCode: supplier.location?.zipCode,
+                                latitude: supplier.location?.latitude,
+                                longitude: supplier.location?.longitude
+                            }
+                        });
+                        this.fallbackManagerService.updateLoading(false);
+                    },
+
+                    error: (error: Error) => {
+                        this.fallbackManagerService.updateError(
+                            error.message ?? ''
+                        );
+                        this.fallbackManagerService.updateLoading(false);
+                    },
+                });
+        });
+    }
+
     hasError(controlName: string, errorName: string): boolean {
-        const control = this.warehouseForm.get(controlName);
+        const control = this.supplierForm.get(controlName);
         return (control?.hasError(errorName) && control?.touched) || false;
     }
 
@@ -82,43 +124,43 @@ export class CreateWarehouseComponent implements OnInit {
             return;
         }
 
-        const warehouseDTO = this.getWarehouseDTO();        
+        const supplierDTO = this.getSupplierDTO();        
 
-        this.warehouseService.createWarehouse(warehouseDTO).subscribe(
-            warehouse => {
-                this.toastService.addToast({ id: 123, title: 'Success', message: 'Warehouse created successfully.', outcome: OperationOutcome.SUCCESS });
-                this.router.navigate(['/dashboard/warehouses', warehouse.id]);
+        this.supplierService.createSupplier(supplierDTO).subscribe(
+            supplier => {
+                this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier created successfully.', outcome: OperationOutcome.SUCCESS });
+                this.router.navigate(['/dashboard/suppliers', supplier.id]);
             },
             error => {
-                this.toastService.addToast({ id: 123, title: 'Error', message: 'Warehouse creation failed.', outcome: OperationOutcome.ERROR });
-                console.error('Error creating warehouse:', error);
+                this.toastService.addToast({ id: 123, title: 'Error', message: 'Supplier creation failed.', outcome: OperationOutcome.ERROR });
+                console.error('Error creating supplier:', error);
             }
         );
     }
 
     private isFormInvalid(): boolean {
-        return this.warehouseForm.invalid || 
+        return this.supplierForm.invalid || 
             (!this.createLocation && !this.locationId) || 
             (this.createLocation && (!this.isLocationFormValid || 
                 (!this.newLocationData || (this.newLocationData as CreateLocationDTO).organizationId === 0)));
     }
 
-    private getWarehouseDTO(): CreateWarehouseDTO {
-        const warehouseDTO: CreateWarehouseDTO = {
-            name: this.warehouseForm.value.name,
+    private getSupplierDTO(): CreateSupplierDTO {
+        const supplierDTO: CreateSupplierDTO = {
+            name: this.supplierForm.value.name,
             organizationId: this.currentUser?.organization?.id ?? 0,
         };
         if (this.createLocation && this.newLocationData) {
             this.newLocationData.organizationId = this.currentUser?.organization?.id ?? 0;
-            warehouseDTO.location = this.newLocationData;
-            warehouseDTO.createLocation = true;
+            supplierDTO.location = this.newLocationData;
+            supplierDTO.createLocation = true;
         } else if (!this.createLocation && this.locationId) {
-            warehouseDTO.locationId = this.locationId;
-            warehouseDTO.createLocation = false;
+            supplierDTO.locationId = this.locationId;
+            supplierDTO.createLocation = false;
         }
-        console.log('Warehouse DTO:', warehouseDTO);
+        console.log('Supplier DTO:', supplierDTO);
 
-        return warehouseDTO;
+        return supplierDTO;
     }
 
     

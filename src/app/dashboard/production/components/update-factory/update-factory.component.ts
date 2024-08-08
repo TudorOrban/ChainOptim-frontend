@@ -85,15 +85,6 @@ export class UpdateFactoryComponent implements OnInit {
                         this.factory = factory;
                         this.factoryForm.patchValue({
                             name: factory.name,
-                            location: {
-                                address: factory.location?.address,
-                                city: factory.location?.city,
-                                state: factory.location?.state,
-                                country: factory.location?.country,
-                                zipCode: factory.location?.zipCode,
-                                latitude: factory.location?.latitude,
-                                longitude: factory.location?.longitude
-                            }
                         });
                         this.fallbackManagerService.updateLoading(false);
                     },
@@ -139,6 +130,9 @@ export class UpdateFactoryComponent implements OnInit {
     }
 
     private isFormInvalid(): boolean {
+        console.log("Is locform valid", this.isLocationFormValid);
+        console.log("Choice", this.createLocation);
+        console.log("Location ID", this.locationId);
         return this.factoryForm.invalid || 
             (!this.createLocation && !this.locationId) || 
             (this.createLocation && (!this.isLocationFormValid || 
@@ -165,6 +159,7 @@ export class UpdateFactoryComponent implements OnInit {
 
     
     handleLocationChoice(choice: string) {
+        console.log('Choice:', choice);
         this.createLocation = (choice === 'create');
     }
 

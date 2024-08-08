@@ -1,17 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
+import { CreateSupplierDTO, Supplier, UpdateSupplierDTO } from '../models/Supplier';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
+import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
 import { CachingService } from '../../../shared/search/services/caching.service';
-import { Supplier } from '../models/Supplier';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SupplierService {
     private apiUrl = 'http://localhost:8080/api/v1/suppliers';
-    // private currentSupplierSubject = new BehaviorSubject<Supplier | null>(null);
 
     constructor(
         private http: HttpClient,
@@ -20,9 +19,14 @@ export class SupplierService {
     ) {}
 
     getSuppliersByOrganizationId(organizationId: number): Observable<Supplier[]> {
-        return this.http.get<Supplier[]>(`${this.apiUrl}/organization/${organizationId}`);
+        return this.http
+            .get<Supplier[]>(`${this.apiUrl}/organization/${organizationId}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
     }
-
 
     getSuppliersByOrganizationIdAdvanced(
         organizationId: number,
@@ -62,43 +66,24 @@ export class SupplierService {
     }
 
     getSupplierById(id: number): Observable<Supplier> {
-        return this.http.get<Supplier>(`${this.apiUrl}/${id}`);
+        return this.http
+            .get<Supplier>(`${this.apiUrl}/${id}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
     }
 
-    // createSupplier(supplier: CreateSupplierDTO): Observable<CreateSupplierDTO> {
-    //     return this.http.post<CreateSupplierDTO>(this.apiUrl, supplier);
-    // }
+    createSupplier(supplierDTO: CreateSupplierDTO): Observable<Supplier> {
+        return this.http.post<Supplier>(`${this.apiUrl}/create`, supplierDTO);
+    }
+        
+    updateSupplier(supplierDTO: UpdateSupplierDTO): Observable<Supplier> {
+        return this.http.put<Supplier>(`${this.apiUrl}/update`, supplierDTO);
+    }
 
-    // getAllSuppliers(): Observable<Supplier[]> {
-    //     return this.http.get<Supplier[]>(this.apiUrl);
-    // }
-
-    // updateSupplier(supplier: Supplier): Observable<Supplier> {
-    //     return this.http.put<Supplier>(this.apiUrl, supplier);
-    // }
-
-    // deleteSupplier(id: number): Observable<void> {
-    //     return this.http.delete<void>(`${this.apiUrl}/${id}`);
-    // }
-
-    // // Current supplier
-    // async fetchAndSetCurrentSupplier(supplierId: number): Promise<void> {
-    //     this.getSupplierById(supplierId).subscribe(
-    //         (supplier) => {
-    //             this.setCurrentSupplier(supplier);
-    //         },
-    //         (error) => {
-    //             console.error('Error fetching supplier:', error);
-    //             this.setCurrentSupplier(null);
-    //         }
-    //     );
-    // }
-
-    // setCurrentSupplier(supplier: Supplier | null): void {
-    //     this.currentSupplierSubject.next(supplier);
-    // }
-
-    // getCurrentSupplier(): Observable<Supplier | null> {
-    //     return this.currentSupplierSubject.asObservable();
-    // }
+    deleteSupplier(supplierId: number): Observable<number> {
+        return this.http.delete<number>(`${this.apiUrl}/delete/${supplierId}`);
+    }
 }

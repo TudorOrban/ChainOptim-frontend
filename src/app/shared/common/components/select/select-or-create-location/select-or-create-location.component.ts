@@ -35,10 +35,6 @@ export class SelectOrCreateLocationComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.initializeForm();
-        
-        if (this.initialLocationData) {
-            this.locationForm.patchValue(this.initialLocationData);
-        }
 
         this.userService.getCurrentUser().subscribe({
             next: (user) => {
@@ -132,10 +128,13 @@ export class SelectOrCreateLocationComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['initialLocationData'] && !changes['initialLocationData'].firstChange) {
-            if (this.initialLocationData) {
-                this.locationChoice = 'create';
-                this.locationForm.patchValue(this.initialLocationData);
+        if (changes['initialLocationData']) {
+            const locationData = changes['initialLocationData'].currentValue;
+            if (locationData && locationData.id) {
+                this.locationChoice = 'select';
+                this.locationChoiceChange.emit(this.locationChoice);
+                this.selectedLocationId = locationData.id; 
+                this.selectedLocationChange.emit(this.selectedLocationId);
             }
         }
     }

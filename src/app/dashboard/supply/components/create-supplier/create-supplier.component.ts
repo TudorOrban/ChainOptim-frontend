@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreateWarehouseDTO } from '../../models/Warehouse';
+import { CreateSupplierDTO } from '../../models/Supplier';
 import { User } from '../../../../core/user/model/user';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { WarehouseService } from '../../services/warehouse.service';
+import { SupplierService } from '../../services/supplier.service';
 import { Router } from '@angular/router';
 import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
@@ -13,15 +13,15 @@ import { SelectOrCreateLocationComponent } from '../../../../shared/common/compo
 import { CreateLocationDTO } from '../../../../shared/common/models/reusableTypes';
 
 @Component({
-  selector: 'app-create-warehouse',
+  selector: 'app-create-supplier',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, SelectOrCreateLocationComponent],
-  templateUrl: './create-warehouse.component.html',
-  styleUrl: './create-warehouse.component.css'
+  templateUrl: './create-supplier.component.html',
+  styleUrl: './create-supplier.component.css'
 })
-export class CreateWarehouseComponent implements OnInit {
+export class CreateSupplierComponent implements OnInit {
     currentUser: User | undefined = undefined;
-    warehouseForm: FormGroup = new FormGroup({});
+    supplierForm: FormGroup = new FormGroup({});
     createLocation: boolean = false;
     locationId: number = 0;
     newLocationData: CreateLocationDTO = {
@@ -31,7 +31,7 @@ export class CreateWarehouseComponent implements OnInit {
   
     constructor(
         private fb: FormBuilder,
-        private warehouseService: WarehouseService,
+        private supplierService: SupplierService,
         private userService: UserService,
         private fallbackManagerService: FallbackManagerService,
         private toastService: ToastService,
@@ -39,7 +39,7 @@ export class CreateWarehouseComponent implements OnInit {
     ) {}
   
     ngOnInit() {
-        this.warehouseForm = this.fb.group({
+        this.supplierForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
             description: ['', [Validators.maxLength(200)]]
         });
@@ -67,7 +67,7 @@ export class CreateWarehouseComponent implements OnInit {
     }
 
     hasError(controlName: string, errorName: string): boolean {
-        const control = this.warehouseForm.get(controlName);
+        const control = this.supplierForm.get(controlName);
         return (control?.hasError(errorName) && control?.touched) || false;
     }
 
@@ -82,43 +82,43 @@ export class CreateWarehouseComponent implements OnInit {
             return;
         }
 
-        const warehouseDTO = this.getWarehouseDTO();        
+        const supplierDTO = this.getSupplierDTO();        
 
-        this.warehouseService.createWarehouse(warehouseDTO).subscribe(
-            warehouse => {
-                this.toastService.addToast({ id: 123, title: 'Success', message: 'Warehouse created successfully.', outcome: OperationOutcome.SUCCESS });
-                this.router.navigate(['/dashboard/warehouses', warehouse.id]);
+        this.supplierService.createSupplier(supplierDTO).subscribe(
+            supplier => {
+                this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier created successfully.', outcome: OperationOutcome.SUCCESS });
+                this.router.navigate(['/dashboard/suppliers', supplier.id]);
             },
             error => {
-                this.toastService.addToast({ id: 123, title: 'Error', message: 'Warehouse creation failed.', outcome: OperationOutcome.ERROR });
-                console.error('Error creating warehouse:', error);
+                this.toastService.addToast({ id: 123, title: 'Error', message: 'Supplier creation failed.', outcome: OperationOutcome.ERROR });
+                console.error('Error creating supplier:', error);
             }
         );
     }
 
     private isFormInvalid(): boolean {
-        return this.warehouseForm.invalid || 
+        return this.supplierForm.invalid || 
             (!this.createLocation && !this.locationId) || 
             (this.createLocation && (!this.isLocationFormValid || 
                 (!this.newLocationData || (this.newLocationData as CreateLocationDTO).organizationId === 0)));
     }
 
-    private getWarehouseDTO(): CreateWarehouseDTO {
-        const warehouseDTO: CreateWarehouseDTO = {
-            name: this.warehouseForm.value.name,
+    private getSupplierDTO(): CreateSupplierDTO {
+        const supplierDTO: CreateSupplierDTO = {
+            name: this.supplierForm.value.name,
             organizationId: this.currentUser?.organization?.id ?? 0,
         };
         if (this.createLocation && this.newLocationData) {
             this.newLocationData.organizationId = this.currentUser?.organization?.id ?? 0;
-            warehouseDTO.location = this.newLocationData;
-            warehouseDTO.createLocation = true;
+            supplierDTO.location = this.newLocationData;
+            supplierDTO.createLocation = true;
         } else if (!this.createLocation && this.locationId) {
-            warehouseDTO.locationId = this.locationId;
-            warehouseDTO.createLocation = false;
+            supplierDTO.locationId = this.locationId;
+            supplierDTO.createLocation = false;
         }
-        console.log('Warehouse DTO:', warehouseDTO);
+        console.log('Supplier DTO:', supplierDTO);
 
-        return warehouseDTO;
+        return supplierDTO;
     }
 
     
