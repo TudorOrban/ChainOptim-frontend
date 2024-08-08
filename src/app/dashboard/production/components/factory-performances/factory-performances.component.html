@@ -1,9 +1,53 @@
+<!-- Header -->
+<app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    [title]="'Factories'" [icon]="faIndustry" [searchPlaceholder]="'Search Factories'" [sortOptions]="sortOptions" [createName]="'Factory'" [createLink]="'create-factory'"
+    (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
+></app-list-header>
 
-<div class="w-full h-full p-40">
-<p>factory-performances works!</p>
-    
-    <app-score
-    [score]="37"
-    ></app-score>
-
+<!-- Page content-->
+<div *ngIf="!fallbackManagerState.fallBack" class="page-standard-horizontal-padding">
+    <ul *ngFor="let factory of factories">
+        <li
+            key="factory.id"
+            class="px-4 py-2 my-4 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-md shadow-sm"
+        >
+            <div class="flex items-center w-full justify-between">
+                <div>
+                    <a
+                        [routerLink]="'/dashboard/factories/' + factory.id"
+                        class="font-semibold text-lg hover:text-blue-700 hover:text-underline"
+                        >{{ factory.name }}</a
+                    >
+                    <p class="text-gray-900">{{ factory.location?.address }}</p>
+                </div>
+                <div class="flex items-center space-x-4 pt-4">
+                    <app-score
+                        [score]="factory?.overallScore || 0"
+                    ></app-score>
+                    <app-score
+                        [score]="factory?.resourceDistributionScore || 0"
+                    ></app-score>
+                    <app-score
+                        [score]="factory?.resourceReadinessScore || 0"
+                    ></app-score>
+                    <app-score
+                        [score]="factory?.resourceUtilizationScore || 0"
+                    ></app-score>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="flex items-center justify-end py-4">
+        <app-page-selector
+            [page]="page"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="totalCount"
+            (pageChange)="changePage($event)"
+        ></app-page-selector>
+    </div>
 </div>
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>
