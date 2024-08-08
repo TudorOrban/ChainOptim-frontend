@@ -67,7 +67,7 @@ export class WarehouseService {
 
     getWarehouseById(id: number): Observable<Warehouse> {
         return this.http
-            .get<Warehouse>(`${this.apiUrl}/${id}/stages`)
+            .get<Warehouse>(`${this.apiUrl}/${id}`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

@@ -89,7 +89,7 @@ export class SidebarComponent {
         },
         { label: 'Storage', icon: this.faWarehouse, link: '/dashboard/warehouses',
             subItems: [
-                { label: 'Warehouses', link: '/dashboard/factories' },
+                { label: 'Warehouses', link: '/dashboard/warehouses' },
                 { label: 'Warehouse Inventory', link: '/dashboard/warehouse-inventory' },
                 { label: 'Evaluations', link: '/dashboard/warehouse-evaluations' },
             ]

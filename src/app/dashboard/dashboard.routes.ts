@@ -30,6 +30,7 @@ import { UpdateProductComponent } from './goods/components/update-product/update
 import { CreateFactoryComponent } from './production/components/create-factory/create-factory.component';
 import { CreateWarehouseComponent } from './storage/components/create-warehouse/create-warehouse.component';
 import { UpdateFactoryComponent } from './production/components/update-factory/update-factory.component';
+import { UpdateWarehouseComponent } from './storage/components/update-warehouse/update-warehouse.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -125,6 +126,9 @@ export const dashboardRoutes: Routes = [
     },
     {
         path: 'dashboard/warehouses/:warehouseId', component: WarehouseComponent,
+    },
+    {
+        path: 'dashboard/warehouses/:warehouseId/update', component: UpdateWarehouseComponent,
     },
     {
         path: 'dashboard/clients',
