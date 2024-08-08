@@ -1,4 +1,4 @@
-<div [formGroup]="locationForm">
+<div>
     <form>
         <!-- Radio buttons for choice -->
         <div class="flex items-center space-x-8 mb-4">
@@ -36,12 +36,12 @@
         </div>
 
         <!-- Section to create location -->
-        <div *ngIf="locationChoice === 'create'" (change)="updateLocationChoice('create')" class="space-y-4">
+        <div *ngIf="locationChoice === 'create'" [formGroup]="locationForm" (change)="updateLocationChoice('create')" class="space-y-4">
             <div>
                 <label for="address" class="form-label">Address:</label>
                 <input type="text" id="address" formControlName="address" class="form-input">
                 <div *ngIf="locationForm.get('address')?.touched && locationForm.get('address')?.errors">
-                    <p *ngIf="locationForm.get('address')?.errors?.['minlength']" class="form-error">Address must be at most 200 characters long.</p>
+                    <p *ngIf="locationForm.get('address')?.errors?.['maxlength']" class="form-error">Address must be at most 200 characters long.</p>
                 </div>
             </div>
 
@@ -49,7 +49,7 @@
                 <label for="city" class="form-label">City:</label>
                 <input type="text" id="city" formControlName="city" class="form-input">
                 <div *ngIf="locationForm.get('city')?.touched && locationForm.get('city')?.errors">
-                    <p *ngIf="locationForm.get('city')?.errors?.['minlength']" class="form-error">City must be at most 200 characters long.</p>
+                    <p *ngIf="locationForm.get('city')?.errors?.['maxlength']" class="form-error">City must be at most 200 characters long.</p>
                 </div>
             </div>
 
@@ -57,7 +57,7 @@
                 <label for="state" class="form-label">State:</label>
                 <input type="text" id="state" formControlName="state" class="form-input">
                 <div *ngIf="locationForm.get('state')?.touched && locationForm.get('state')?.errors">
-                    <p *ngIf="locationForm.get('state')?.errors?.['minlength']" class="form-error">State must be at most 200 characters long.</p>
+                    <p *ngIf="locationForm.get('state')?.errors?.['maxlength']" class="form-error">State must be at most 200 characters long.</p>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@
                 <label for="country" class="form-label">Country:</label>
                 <input type="text" id="country" formControlName="country" class="form-input">
                 <div *ngIf="locationForm.get('country')?.touched && locationForm.get('country')?.errors">
-                    <p *ngIf="locationForm.get('country')?.errors?.['minlength']" class="form-error">Country must be at most 200 characters long.</p>
+                    <p *ngIf="locationForm.get('country')?.errors?.['maxlength']" class="form-error">Country must be at most 200 characters long.</p>
                 </div>
             </div>
 
@@ -73,7 +73,7 @@
                 <label for="zipCode" class="form-label">ZipCode:</label>
                 <input type="text" id="zipCode" formControlName="zipCode" class="form-input">
                 <div *ngIf="locationForm.get('zipCode')?.touched && locationForm.get('zipCode')?.errors">
-                    <p *ngIf="locationForm.get('zipCode')?.errors?.['minlength']" class="form-error">ZipCode must be at most 200 characters long.</p>
+                    <p *ngIf="locationForm.get('zipCode')?.errors?.['maxlength']" class="form-error">ZipCode must be at most 200 characters long.</p>
                 </div>
             </div>
 
@@ -81,7 +81,9 @@
                 <label for="latitude" class="form-label">Latitude:</label>
                 <input type="text" id="latitude" formControlName="latitude" class="form-input">
                 <div *ngIf="locationForm.get('latitude')?.touched && locationForm.get('latitude')?.errors">
-                    <p *ngIf="locationForm.get('latitude')?.errors?.['minlength']" class="form-error">Latitude must be at most 200 characters long.</p>
+                    <p *ngIf="locationForm.get('latitude')?.errors?.['pattern']" class="form-error">
+                        Invalid latitude format. Latitude must be a number between -90 and 90 with up to 6 decimal places.
+                    </p>
                 </div>
             </div>
 
@@ -89,7 +91,9 @@
                 <label for="longitude" class="form-label">Longitude:</label>
                 <input type="text" id="longitude" formControlName="longitude" class="form-input">
                 <div *ngIf="locationForm.get('longitude')?.touched && locationForm.get('longitude')?.errors">
-                    <p *ngIf="locationForm.get('longitude')?.errors?.['minlength']" class="form-error">Longitude must be at most 200 characters long.</p>
+                    <p *ngIf="locationForm.get('latitude')?.errors?.['pattern']" class="form-error">
+                        Invalid latitude format. Latitude must be a number between -90 and 90 with up to 6 decimal places.
+                    </p>
                 </div>
             </div>
 

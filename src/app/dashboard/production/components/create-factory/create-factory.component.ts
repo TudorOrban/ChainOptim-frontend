@@ -27,6 +27,7 @@ export class CreateFactoryComponent implements OnInit {
     newLocationData: CreateLocationDTO = {
         organizationId: 0
     };
+    isLocationFormValid: boolean = false;
   
     constructor(
         private fb: FormBuilder,
@@ -75,6 +76,11 @@ export class CreateFactoryComponent implements OnInit {
             console.error("Missing user");
             return;
         }
+        const isFormInvalid = this.isFormInvalid();
+        if (isFormInvalid) {
+            this.toastService.addToast({ id: 123, title: 'Error', message: 'Some of the inputs are not valid.', outcome: OperationOutcome.ERROR });
+            return;
+        }
 
         const factoryDTO = this.getFactoryDTO();        
 
@@ -90,12 +96,20 @@ export class CreateFactoryComponent implements OnInit {
         );
     }
 
+    private isFormInvalid(): boolean {
+        return this.factoryForm.invalid || 
+            (!this.createLocation && !this.locationId) || 
+            (this.createLocation && (!this.isLocationFormValid || 
+                (!this.newLocationData || (this.newLocationData as CreateLocationDTO).organizationId === 0)));
+    }
+
     private getFactoryDTO(): CreateFactoryDTO {
         const factoryDTO: CreateFactoryDTO = {
             name: this.factoryForm.value.name,
             organizationId: this.currentUser?.organization?.id ?? 0,
         };
         if (this.createLocation && this.newLocationData) {
+            this.newLocationData.organizationId = this.currentUser?.organization?.id ?? 0;
             factoryDTO.location = this.newLocationData;
             factoryDTO.createLocation = true;
         } else if (!this.createLocation && this.locationId) {
@@ -109,17 +123,18 @@ export class CreateFactoryComponent implements OnInit {
 
     
     handleLocationChoice(choice: string) {
-        console.log('Choice:', choice);
         this.createLocation = (choice === 'create');
     }
 
     handleLocationSelection(locationId: number) {
-        console.log('Location ID:', locationId);
         this.locationId = locationId;
     }
 
     handleNewLocationData(locationData: CreateLocationDTO) {
-        console.log('New Location Data:', locationData);
         this.newLocationData = locationData;
+    }
+
+    handleLocationFormValidity(isValid: boolean) {
+        this.isLocationFormValid = isValid;
     }
 }

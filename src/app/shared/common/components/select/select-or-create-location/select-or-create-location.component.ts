@@ -17,6 +17,7 @@ export class SelectOrCreateLocationComponent {
     @Output() locationChoiceChange = new EventEmitter<string>();
     @Output() selectedLocationChange = new EventEmitter<number>();
     @Output() newLocationData = new EventEmitter<CreateLocationDTO>();
+    @Output() isFormValid = new EventEmitter<boolean>();
 
     locationChoice: string = '';
     selectedLocationId: number = 0;
@@ -38,18 +39,25 @@ export class SelectOrCreateLocationComponent {
             state: ['', [Validators.maxLength(200)]],
             country: ['', [Validators.maxLength(200)]],
             zipCode: ['', [Validators.maxLength(200)]],
-            latitude: ['', [Validators.maxLength(200)]],
-            longitude: ['', [Validators.maxLength(200)]],
+            latitude: ['', [   
+                Validators.min(-90),
+                Validators.max(90),
+                Validators.pattern("^-?[0-9]+(\.[0-9]+)?$")
+            ]],
+            longitude: ['', [
+                Validators.min(-90),
+                Validators.max(90),
+                Validators.pattern("^-?[0-9]+(\.[0-9]+)?$")
+            ]]
         });
         
         this.locationForm.valueChanges.subscribe(values => {
-            console.log('Form Values', values);
-            this.createNewLocation(this.getCreateLocationDTO());  // Emit the form data
+            this.createNewLocation(this.getCreateLocationDTO()); 
+            this.validateForm();
         });
 
         this.userService.getCurrentUser().subscribe({
             next: (user) => {
-                console.log('Current User', user);
                 if (!user?.organization) {
                     return;
                 }
@@ -57,7 +65,6 @@ export class SelectOrCreateLocationComponent {
 
                 this.locationService.getLocationsByOrganizationId(user.organization?.id ?? 0).subscribe({
                     next: (locations) => {
-                        console.log('Locations', locations);
                         this.locations = locations;
                     },
                     error: (error: Error) => {
@@ -109,5 +116,9 @@ export class SelectOrCreateLocationComponent {
 
     createNewLocation(data: CreateLocationDTO): void {
         this.newLocationData.emit(data);
+    }
+
+    validateForm(): void {
+        this.isFormValid.emit(this.locationForm.valid);
     }
 }
