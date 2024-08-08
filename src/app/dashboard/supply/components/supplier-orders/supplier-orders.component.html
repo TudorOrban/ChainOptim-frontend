@@ -1,1 +1,13 @@
-<p>supplier-orders works!</p>
+<div>
+    <app-table-toolbar
+        [title]="'Supplier Orders'" [searchPlaceholder]="'Search Orders'" [sortOptions]="sortOptions" [createName]="'Order'"
+        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
+    ></app-table-toolbar>
+</div>
+
+<div *ngFor="let order of (supplierOrders?.results || [])">
+    <div>
+        {{ order.id }}
+    </div>
+
+</div>
