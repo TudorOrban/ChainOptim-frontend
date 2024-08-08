@@ -89,7 +89,6 @@ export class ClientComponent implements OnInit {
                 .getClientById(Number(this.clientId))
                 .subscribe({
                     next: (client) => {
-                        console.log('CLIENT', client);
                         this.client = client;
                         this.fallbackManagerService.updateLoading(false);
                     },
@@ -107,7 +106,6 @@ export class ClientComponent implements OnInit {
     onTabSelected(selectedTabLabel: string) {
         this.activeTab = selectedTabLabel;
     }
-
     
     openConfirmDialog() {
         this.isConfirmDialogOpen = true;

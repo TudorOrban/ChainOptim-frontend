@@ -6,14 +6,17 @@
             <h2 class="page-title">{{ warehouse?.name }}</h2>
             <p class="text-gray-900">{{ warehouse?.location?.address || "" }}</p>
         </div>
-        <button
-            class="standard-write-button"
-            [routerLink]="
-                '/dashboard/warehouses/' + warehouse?.id + '/update'
-            "
-        >    
-            Edit Warehouse    
-        </button>
+        <div class="flex items-center space-x-4">
+            <button (click)="openConfirmDialog()" class="standard-delete-button">
+                <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
+            </button>
+            <button
+                class="standard-write-button"
+                [routerLink]="'/dashboard/warehouses/' + warehouse?.id + '/update'"
+            >
+                Edit Warehouse    
+            </button>
+        </div>
     </div>
 </div>
 
@@ -33,3 +36,15 @@
 <app-fallback-manager
     [fallbackManagerState]="fallbackManagerState"
 ></app-fallback-manager>
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteWarehouse()"
+            (cancel)="handleCancel()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>
