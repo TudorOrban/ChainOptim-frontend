@@ -77,12 +77,24 @@ export class SupplierOrderService {
     createSupplierOrder(supplierOrderDTO: CreateSupplierOrderDTO): Observable<SupplierOrder> {
         return this.http.post<SupplierOrder>(`${this.apiUrl}/create`, supplierOrderDTO);
     }
+
+    createSupplierOrdersInBulk(orderDTOs: CreateSupplierOrderDTO[]): Observable<SupplierOrder[]> {
+        return this.http.post<SupplierOrder[]>(`${this.apiUrl}/create/bulk`, orderDTOs);
+    }
         
     updateSupplierOrder(supplierOrderDTO: UpdateSupplierOrderDTO): Observable<SupplierOrder> {
         return this.http.put<SupplierOrder>(`${this.apiUrl}/update`, supplierOrderDTO);
     }
 
+    updateSupplierOrdersInBulk(orderDTOs: UpdateSupplierOrderDTO[]): Observable<SupplierOrder[]> {
+        return this.http.put<SupplierOrder[]>(`${this.apiUrl}/update/bulk`, orderDTOs);
+    }
+
     deleteSupplierOrder(supplierOrderId: number): Observable<number> {
         return this.http.delete<number>(`${this.apiUrl}/delete/${supplierOrderId}`);
+    }
+
+    deleteSupplierOrdersInBulk(supplierOrderIds: number[]): Observable<number[]> {
+        return this.http.post<number[]>(`${this.apiUrl}/delete/bulk`, supplierOrderIds);
     }
 }

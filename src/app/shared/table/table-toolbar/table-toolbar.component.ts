@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IconDefinition, faArrowRotateRight, faBox, faEdit, faPlus, faQuestion, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition, faArrowRotateRight, faBox, faEdit, faPlus, faQuestion, faSave, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { RouterModule } from '@angular/router';
 import { SortOption } from '../../search/models/Search';
 import { SearchInputComponent } from '../../search/components/search-input/search-input.component';
@@ -22,11 +22,13 @@ export class TableToolbarComponent {
         { label: 'Updated At', value: 'updatedAt' },
     ];
     @Input() selectedItemIds = new Set<number>();
+    @Input() newRawItems: any[] = [];
 
     @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() onSortChange = new EventEmitter<{ value: string, ascending: boolean }>();
-    @Output() onCancelSelection: EventEmitter<void> = new EventEmitter<void>();
+    @Output() onCancel: EventEmitter<void> = new EventEmitter<void>();
     @Output() onAddItem: EventEmitter<void> = new EventEmitter<void>();
+    @Output() onCreateItems: EventEmitter<void> = new EventEmitter<void>();
 
     performSearch(searchQuery: string): void {
         this.onSearch.emit(searchQuery);
@@ -37,11 +39,15 @@ export class TableToolbarComponent {
     }
 
     handleCancelSelection(): void {
-        this.onCancelSelection.emit();
+        this.onCancel.emit();
     }
 
     handleAddItem(): void {
         this.onAddItem.emit();
+    }
+
+    handleCreateItems(): void {
+        this.onCreateItems.emit();
     }
 
     faBox = faBox;
@@ -50,4 +56,5 @@ export class TableToolbarComponent {
     faEdit = faEdit;
     faTrash = faTrash;
     faXmark = faXmark;
+    faSave = faSave;
 }

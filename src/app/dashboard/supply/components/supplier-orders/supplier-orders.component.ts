@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PaginatedResults } from '../../../../shared/search/models/PaginatedResults';
-import { OrderStatus, SupplierOrder } from '../../models/SupplierOrder';
+import { CreateSupplierOrderDTO, OrderStatus, SupplierOrder } from '../../models/SupplierOrder';
 import { SupplierOrderService } from '../../services/supplierorder.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { SearchParams } from '../../../../shared/search/models/Search';
@@ -48,10 +48,10 @@ export class SupplierOrdersComponent implements OnInit {
         this.loadData();
     }
 
+    // Data loading
     private loadData(): void {
         this.userService.getCurrentUser().subscribe((user) => {
             if (!user?.organization) {
-                console.error("User has no organization");
                 return;
             }
             this.currentUser = user;
@@ -69,6 +69,7 @@ export class SupplierOrdersComponent implements OnInit {
             });
     }
 
+    // Searching
     handleSearch(query: string): void {
         if (this.searchParams.searchQuery !== query) {
             this.searchParams.searchQuery = query;
@@ -93,52 +94,8 @@ export class SupplierOrdersComponent implements OnInit {
         }
     }
 
-    handleCancelSelectedOrders(): void {
-        this.selectedOrderIds.clear();
-        if (this.supplierOrders && this.supplierOrders.results) {
-            this.supplierOrders.results = this.supplierOrders.results.map(order => {
-                return { ...order, selected: false };
-            });
-        }
-    }
-    
-    // Create
-    handleAddOrder(): void {
-        this.newRawOrders.push({
-            supplierId: '',
-            component: { id: 0, name: '' },
-            quantity: 0,
-            deliveredQuantity: 0,
-            orderDate: new Date(),
-            estimatedDeliveryDate: new Date(),
-            deliveryDate: null,
-            companyId: '',
-            status: ''
-            // Initialize other properties as needed
-        });
-    }
-    
-    handleCreateOrders(): void {
-        console.log('Creating order:', this.newRawOrders);
-        // if (this.validateNewOrder(this.newOrdersAny)) {
-        //     this.supplierOrderService.createSupplierOrder(this.newOrderAny).subscribe({
-        //         next: (order) => {
-        //             console.log('Created order:', order);
-        //             // this.supplierOrders.results.unshift(order);  // Add to the front
-        //             this.newOrderAny = {};  // Reset new order inputs
-        //         },
-        //         error: (err) => console.error('Failed to create order', err)
-        //     });
-        // } else {
-        //     console.error('Validation failed for new order');
-        // }
-    }
-
-    private validateNewOrder(order: any): boolean {
-        // Perform your validation logic
-        return true;  // Example: always return true
-    }
-    
+    // CRUD ops
+    // - Selection
     toggleSelection(order: SupplierOrder): void {
         if (this.selectedOrderIds.has(order.id)) {
             this.selectedOrderIds.delete(order.id);
@@ -159,9 +116,98 @@ export class SupplierOrdersComponent implements OnInit {
         });
     }
 
+    handleCancel(): void {
+        this.newRawOrders = [];
+        this.selectedOrderIds.clear();
+        if (this.supplierOrders && this.supplierOrders.results) {
+            this.supplierOrders.results = this.supplierOrders.results.map(order => {
+                return { ...order, selected: false };
+            });
+        }
+    }
+    
+    // Create
+    handleAddOrder(): void {
+        this.newRawOrders.push({
+            supplierId: '',
+            component: { id: 0, name: '' },
+            quantity: 0,
+            deliveredQuantity: 0,
+            orderDate: new Date(),
+            estimatedDeliveryDate: new Date(),
+            deliveryDate: null,
+            companyId: '',
+            status: ''
+        });
+    }
 
+    handleCreateOrders(): void {
+        console.log('Creating order:', this.newRawOrders);
+        const newOrderDTOs: CreateSupplierOrderDTO[] = [];
 
-    decapitalize(word: string) {
+        for (const rawOrder of this.newRawOrders) {
+            const newOrder = this.getValidOrderDTO(rawOrder);
+            if (newOrder == null) {
+                console.error('Validation failed for new order:', rawOrder);
+                return;
+            }
+            newOrderDTOs.push(newOrder);
+        }
+
+        console.log('Creating orders:', newOrderDTOs);
+
+        this.supplierOrderService.createSupplierOrdersInBulk(newOrderDTOs).subscribe({
+            next: (orders) => {
+                console.log('Created orders:', orders);
+                this.newRawOrders = [];
+                this.loadSupplierOrders();
+            },
+            error: (err) => console.error('Failed to create orders', err)
+        });
+
+    }
+
+    private getValidOrderDTO(order: any): CreateSupplierOrderDTO | null {
+        // Check for required fields and basic validation
+        if (!order.supplierId) {
+            console.error('Validation failed, missing required order fields.');
+            return null;
+        }
+    
+        // Ensure dates are actual Date objects or valid date strings
+        const orderDate = this.ensureValidDate(order.orderDate);
+        const estimatedDeliveryDate = this.ensureValidDate(order.estimatedDeliveryDate);
+        const deliveryDate = this.ensureValidDate(order.deliveryDate);
+    
+        if (!orderDate || !estimatedDeliveryDate || (order.deliveryDate && !deliveryDate)) {
+            console.error('Validation failed, invalid date format.');
+            return null;
+        }
+    
+        // Construct DTO
+        const dto: CreateSupplierOrderDTO = {
+            organizationId: this.currentUser?.organization?.id || 0,
+            supplierId: Number(order.supplierId),
+            componentId: 1,
+            quantity: Number(order.quantity),
+            orderDate: orderDate,
+            estimatedDeliveryDate: estimatedDeliveryDate,
+            // deliveryDate: deliveryDate,
+            companyId: order.companyId,
+            status: OrderStatus.DELIVERED,
+        };
+    
+        return dto;
+    }
+    
+    private ensureValidDate(date: any): Date | null {
+        if (date instanceof Date) return date;
+        const parsedDate = new Date(date);
+        return isNaN(parsedDate.getTime()) ? null : parsedDate;
+    }
+
+    decapitalize(word?: string) {
+        if (!word) return '';
         return word.charAt(0) + word.slice(1).toLowerCase();
     }
 }

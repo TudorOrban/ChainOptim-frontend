@@ -6,16 +6,16 @@ export interface SupplierOrder {
     supplierId: number;
     createdAt: Date;
     updatedAt: Date;
-    component: Component;
+    component?: Component;
     organizationId: number;
-    quantity: number;
-    deliveredQuantity: number;
-    orderDate: Date;
-    estimatedDeliveryDate: Date;
-    deliveryDate: Date;
-    companyId: string;
-    status: OrderStatus;
-    selected: boolean; // For UI purposes
+    quantity?: number;
+    deliveredQuantity?: number;
+    orderDate?: Date;
+    estimatedDeliveryDate?: Date;
+    deliveryDate?: Date;
+    companyId?: string;
+    status?: OrderStatus;
+    selected?: boolean; // For UI purposes
 }
 
 export enum OrderStatus {
@@ -28,23 +28,25 @@ export enum OrderStatus {
 
 export interface CreateSupplierOrderDTO {
     supplierId: number;
-    componentId: number;
+    componentId?: number;
     organizationId: number;
-    quantity: number;
-    orderDate: Date;
-    estimatedDeliveryDate: Date;
-    deliveryDate: Date;
-    companyId: string;
+    quantity?: number;
+    orderDate?: Date;
+    estimatedDeliveryDate?: Date;
+    deliveryDate?: Date;
+    companyId?: string;
+    status?: OrderStatus;
 }
 
 export interface UpdateSupplierOrderDTO {
     id: number;
     supplierId: number;
-    componentId: number;
+    componentId?: number;
     organizationId: number;
-    quantity: number;
-    orderDate: Date;
-    estimatedDeliveryDate: Date;
-    deliveryDate: Date;
-    companyId: string;
+    quantity?: number;
+    orderDate?: Date;
+    estimatedDeliveryDate?: Date;
+    deliveryDate?: Date;
+    companyId?: string;
+    status?: OrderStatus;
 }

@@ -11,7 +11,7 @@
     </div>
     <div class="flex items-center flex-wrap md:flex-nowrap space-x-2">
         <button 
-            *ngIf="(selectedItemIds?.size ?? 0) > 0"
+            *ngIf="((selectedItemIds?.size ?? 0) > 0) || ((newRawItems?.length ?? 0) > 0)"
             (click)="handleCancelSelection()"
             class="flex items-center justify-center w-9 h-9 bg-white border border-gray-300 text-gray-800 rounded-md shadow-sm ml-1"
         >
@@ -20,13 +20,21 @@
         <button *ngIf="(selectedItemIds?.size ?? 0) > 0" class="standard-delete-button">
             <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
         </button>
+        <button
+            *ngIf="(newRawItems?.length ?? 0) > 0"
+            (click)="handleCreateItems()"
+            class="standard-write-button flex items-center space-x-2"
+        >
+            <fa-icon [icon]="faSave" class="w-4 h-4 mb-2 mr-2"></fa-icon>
+            Save Orders
+        </button>
         <div *ngIf="(selectedItemIds?.size ?? 0) > 0" class="standard-write-button flex items-center">
             <fa-icon [icon]="faEdit" class="text-white mr-2"></fa-icon>
             Edit Orders
         </div>
         <button 
             (click)="handleAddItem()"
-            class="standard-write-button flex items-center"
+            class="standard-write-button flex items-center space-x-2"
         >
             <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
             Add Order
