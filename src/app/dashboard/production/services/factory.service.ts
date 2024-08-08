@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
-import { Factory } from '../models/Factory';
+import { Observable, catchError, tap, throwError } from 'rxjs';
+import { CreateFactoryDTO, Factory, UpdateFactoryDTO } from '../models/Factory';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -11,16 +11,14 @@ import { CachingService } from '../../../shared/search/services/caching.service'
 })
 export class FactoryService {
     private apiUrl = 'http://localhost:8080/api/v1/factories';
-    
+
     constructor(
         private http: HttpClient,
         private errorHandlerService: ErrorHandlerService,
         private cachingService: CachingService<PaginatedResults<Factory>>
     ) {}
 
-    getFactoriesByOrganizationId(
-        organizationId: number
-    ): Observable<Factory[]> {
+    getFactoriesByOrganizationId(organizationId: number): Observable<Factory[]> {
         return this.http
             .get<Factory[]>(`${this.apiUrl}/organization/${organizationId}`)
             .pipe(
@@ -52,11 +50,12 @@ export class FactoryService {
 
         // Hit endpoint
         const STALE_TIME = 300000; // 5 minutes
-        
+
         return this.http.get<PaginatedResults<Factory>>(url).pipe(
             catchError(error => {
                 // Pass error through without caching
                 console.error("Error fetching factories:", error);
+                this.errorHandlerService.handleError(error);
                 return throwError(() => error);
             }),
             tap(data => {
@@ -66,13 +65,9 @@ export class FactoryService {
         );
     }
 
-    // createFactory(factory: CreateFactoryDTO): Observable<CreateFactoryDTO> {
-    //     return this.http.post<CreateFactoryDTO>(this.apiUrl, factory);
-    // }
-
     getFactoryById(id: number): Observable<Factory> {
         return this.http
-            .get<Factory>(`${this.apiUrl}/${id}`)
+            .get<Factory>(`${this.apiUrl}/${id}/stages`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)
@@ -80,36 +75,15 @@ export class FactoryService {
             );
     }
 
-    // getAllFactories(): Observable<Factory[]> {
-    //     return this.http.get<Factory[]>(this.apiUrl);
-    // }
+    createFactory(factoryDTO: CreateFactoryDTO): Observable<Factory> {
+        return this.http.post<Factory>(`${this.apiUrl}/create`, factoryDTO);
+    }
+        
+    updateFactory(factoryDTO: UpdateFactoryDTO): Observable<Factory> {
+        return this.http.put<Factory>(`${this.apiUrl}/update`, factoryDTO);
+    }
 
-    // updateFactory(factory: Factory): Observable<Factory> {
-    //     return this.http.put<Factory>(this.apiUrl, factory);
-    // }
-
-    // deleteFactory(id: number): Observable<void> {
-    //     return this.http.delete<void>(`${this.apiUrl}/${id}`);
-    // }
-
-    // // Current factory
-    // async fetchAndSetCurrentFactory(factoryId: number): Promise<void> {
-    //     this.getFactoryById(factoryId).subscribe(
-    //         (factory) => {
-    //             this.setCurrentFactory(factory);
-    //         },
-    //         (error) => {
-    //             console.error('Error fetching factory:', error);
-    //             this.setCurrentFactory(null);
-    //         }
-    //     );
-    // }
-
-    // setCurrentFactory(factory: Factory | null): void {
-    //     this.currentFactorySubject.next(factory);
-    // }
-
-    // getCurrentFactory(): Observable<Factory | null> {
-    //     return this.currentFactorySubject.asObservable();
-    // }
+    deleteFactory(factoryId: number): Observable<number> {
+        return this.http.delete<number>(`${this.apiUrl}/delete/${factoryId}`);
+    }
 }

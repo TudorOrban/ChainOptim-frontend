@@ -27,6 +27,7 @@ import { ClientShipmentsComponent } from './demand/components/client-shipments/c
 import { SupplierPerformancesComponent } from './supply/components/supplier-performances/supplier-performances.component';
 import { ClientPerformancesComponent } from './demand/components/client-performances/client-performances.component';
 import { UpdateProductComponent } from './goods/components/update-product/update-product.component';
+import { CreateFactoryComponent } from './production/components/create-factory/create-factory.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -74,6 +75,10 @@ export const dashboardRoutes: Routes = [
     {
         path: 'dashboard/factory-performances',
         component: FactoryPerformancesComponent,
+    },
+    {
+        path: 'dashboard/factories/create-factory',
+        component: CreateFactoryComponent,
     },
     {
         path: 'dashboard/factories/:factoryId', component: FactoryComponent,

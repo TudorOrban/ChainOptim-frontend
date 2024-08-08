@@ -77,12 +77,10 @@ export class ProductService {
     }
 
     createProduct(productDTO: CreateProductDTO): Observable<Product> {
-        console.log("Creating");
         return this.http.post<Product>(`${this.apiUrl}/create`, productDTO);
     }
         
     updateProduct(productDTO: UpdateProductDTO): Observable<Product> {
-        console.log("Updaing");
         return this.http.put<Product>(`${this.apiUrl}/update`, productDTO);
     }
 
