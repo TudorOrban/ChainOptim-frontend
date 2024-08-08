@@ -9,7 +9,7 @@ import { WarehousesComponent } from './storage/components/warehouses/warehouses.
 import { WarehouseComponent } from './storage/components/warehouse/warehouse.component';
 import { ClientsComponent } from './demand/components/clients/clients.component';
 import { SettingsComponent } from './settings/components/settings/settings.component';
-import { ProductComponent } from './goods/components/product/product/product.component';
+import { ProductComponent } from './goods/components/product/product.component';
 import { ClientComponent } from './demand/components/client/client.component';
 import { CreateProductComponent } from './goods/components/create-product/create-product.component';
 import { SupplierComponent } from './supply/components/supplier/supplier.component';
