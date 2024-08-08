@@ -8,11 +8,12 @@ import { SearchMode } from '../../../../shared/enums/commonEnums';
 import { TableToolbarComponent } from '../../../../shared/table/table-toolbar/table-toolbar.component';
 import { User } from '../../../../core/user/model/user';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-supplier-orders',
   standalone: true,
-  imports: [CommonModule, TableToolbarComponent],
+  imports: [CommonModule, TableToolbarComponent, FormsModule],
   templateUrl: './supplier-orders.component.html',
   styleUrl: './supplier-orders.component.css'
 })
@@ -28,6 +29,8 @@ export class SupplierOrdersComponent implements OnInit {
         page: 1,
         itemsPerPage: 10,
     };
+    selectedOrderIds = new Set<number>(); 
+    
     sortOptions = [
         { label: 'Created At', value: 'createdAt' },
         { label: 'Updated At', value: 'updatedAt' },
@@ -83,8 +86,36 @@ export class SupplierOrdersComponent implements OnInit {
         }
     }
 
+    handleCancelSelectedOrders(): void {
+        this.selectedOrderIds.clear();
+        if (this.supplierOrders && this.supplierOrders.results) {
+            this.supplierOrders.results = this.supplierOrders.results.map(order => {
+                return { ...order, selected: false };
+            });
+        }
+    }
+    
+    toggleSelection(order: SupplierOrder): void {
+        if (this.selectedOrderIds.has(order.id)) {
+            this.selectedOrderIds.delete(order.id);
+        } else {
+            this.selectedOrderIds.add(order.id);
+        }
+    }
+
+    toggleAllSelections(event: any): void {
+        const checked = event.target.checked;
+        this.supplierOrders?.results.forEach(order => {
+            order.selected = checked;
+            if (checked) {
+                this.selectedOrderIds.add(order.id);
+            } else {
+                this.selectedOrderIds.delete(order.id);
+            }
+        });
+    }
+
     decapitalize(word: string) {
         return word.charAt(0) + word.slice(1).toLowerCase();
     }
-
 }

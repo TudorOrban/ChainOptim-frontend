@@ -5,11 +5,12 @@ import { RouterModule } from '@angular/router';
 import { SortOption } from '../../search/models/Search';
 import { SearchInputComponent } from '../../search/components/search-input/search-input.component';
 import { SortSelectorComponent } from '../../search/components/sort-selector/sort-selector.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-table-toolbar',
   standalone: true,
-  imports: [FontAwesomeModule, RouterModule, SearchInputComponent, SortSelectorComponent],
+  imports: [FontAwesomeModule, RouterModule, CommonModule, SearchInputComponent, SortSelectorComponent],
   templateUrl: './table-toolbar.component.html',
   styleUrl: './table-toolbar.component.css'
 })
@@ -20,9 +21,11 @@ export class TableToolbarComponent {
         { label: 'Created At', value: 'createdAt' },
         { label: 'Updated At', value: 'updatedAt' },
     ];
+    @Input() selectedItemIds = new Set<number>();
 
     @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() onSortChange = new EventEmitter<{ value: string, ascending: boolean }>();
+    @Output() onCancelSelection: EventEmitter<void> = new EventEmitter<void>();
 
     performSearch(searchQuery: string): void {
         this.onSearch.emit(searchQuery);
@@ -30,6 +33,10 @@ export class TableToolbarComponent {
     
     handleSortChange(sortData: { value: string, ascending: boolean }): void {
         this.onSortChange.emit(sortData);
+    }
+
+    handleCancelSelection(): void {
+        this.onCancelSelection.emit();
     }
 
     faBox = faBox;

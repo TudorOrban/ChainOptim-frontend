@@ -37,7 +37,7 @@
 
 .standard-write-button {
     display: flex;
-    height: 36px;
+    height: 2.25rem;
     align-items: center;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -60,7 +60,7 @@
 
 .standard-delete-button {
     display: flex;
-    height: 36px;
+    height: 2.25rem;
     align-items: center;
     padding-left: 1rem;
     padding-right: 1rem;

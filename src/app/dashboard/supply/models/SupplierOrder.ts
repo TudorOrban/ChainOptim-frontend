@@ -15,6 +15,7 @@ export interface SupplierOrder {
     deliveryDate: Date;
     companyId: string;
     status: OrderStatus;
+    selected: boolean; // For UI purposes
 }
 
 export enum OrderStatus {

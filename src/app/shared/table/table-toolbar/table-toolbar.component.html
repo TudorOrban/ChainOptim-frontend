@@ -1,4 +1,4 @@
-<div class="bg-gray-50 py-4 page-standard-horizontal-padding space-y-4 border-b border-gray-300 shadow-sm">
+<div class="bg-gray-100 py-4 page-standard-horizontal-padding space-y-4 border-b border-gray-300 shadow-sm">
     <h2 class="flex items-center page-title">
         {{ title }}
     </h2>
@@ -9,14 +9,18 @@
             <fa-icon [icon]="faArrowRotateRight" class="text-gray-700"></fa-icon>
         </button>
     </div>
-    <div class="flex items-center space-x-2">
-        <button class="flex items-center justify-center w-10 h-10 bg-white border border-gray-300 text-gray-800 rounded-md shadow-sm ml-1">
+    <div class="flex items-center flex-wrap md:flex-nowrap space-x-2">
+        <button 
+            *ngIf="(selectedItemIds?.size ?? 0) > 0"
+            (click)="handleCancelSelection()"
+            class="flex items-center justify-center w-9 h-9 bg-white border border-gray-300 text-gray-800 rounded-md shadow-sm ml-1"
+        >
             <fa-icon [icon]="faXmark" class="text-gray-700"></fa-icon>
         </button>
-        <button class="standard-delete-button">
+        <button *ngIf="(selectedItemIds?.size ?? 0) > 0" class="standard-delete-button">
             <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
         </button>
-        <div class="standard-write-button flex items-center">
+        <div *ngIf="(selectedItemIds?.size ?? 0) > 0" class="standard-write-button flex items-center">
             <fa-icon [icon]="faEdit" class="text-white mr-2"></fa-icon>
             Edit Orders
         </div>

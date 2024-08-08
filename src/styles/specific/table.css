@@ -1,0 +1,32 @@
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 800px;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+    font-family: 'Arial', sans-serif; 
+    white-space: nowrap;
+    overflow-x: auto;
+    text-align: center;
+}
+
+.custom-table th, .custom-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.custom-table thead {
+    background-color: #f4f4f4;
+}
+
+.custom-table td, .custom-table th {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
