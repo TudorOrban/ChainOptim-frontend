@@ -4,6 +4,7 @@
 @import "./styles/common-elements.css";
 @import "./styles/specific/pricing.css";
 @import "./styles/specific/map.css";
+@import "./styles/specific/table.css";
 
 @tailwind base;
 @tailwind components;

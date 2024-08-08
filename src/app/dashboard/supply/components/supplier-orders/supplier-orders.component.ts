@@ -83,5 +83,8 @@ export class SupplierOrdersComponent implements OnInit {
         }
     }
 
+    decapitalize(word: string) {
+        return word.charAt(0) + word.slice(1).toLowerCase();
+    }
 
 }

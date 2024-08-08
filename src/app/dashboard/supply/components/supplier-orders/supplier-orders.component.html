@@ -1,13 +1,44 @@
 <div>
     <app-table-toolbar
-        [title]="'Supplier Orders'" [searchPlaceholder]="'Search Orders'" [sortOptions]="sortOptions" [createName]="'Order'"
+        [title]="'Supplier Orders'" [searchPlaceholder]="'Search Orders'" [sortOptions]="sortOptions"
         (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
     ></app-table-toolbar>
 </div>
 
-<div *ngFor="let order of (supplierOrders?.results || [])">
-    <div>
-        {{ order.id }}
-    </div>
+<div class="table-container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th class="id-col">ID</th>
+                <th class="supplier-id-col">Supplier ID</th>
+                <th class="created-at-col">Created At</th>
+                <th class="updated-at-col">Updated At</th>
+                <th class="component-col">Component</th>
+                <th class="quantity-col">Quantity</th>
+                <th class="delivered-col">Delivered Quantity</th>
+                <th class="order-date-col">Order Date</th>
+                <th class="est-delivery-col">Estimated Delivery Date</th>
+                <th class="delivery-date-col">Delivery Date</th>
+                <th class="company-id-col">Company ID</th>
+                <th class="status-col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of supplierOrders?.results">
+                <td>{{ order.id }}</td>
+                <td>{{ order.supplierId }}</td>
+                <td>{{ order.createdAt | date:'medium' }}</td>
+                <td>{{ order.updatedAt | date:'medium' }}</td>
+                <td>{{ order.component.name }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.deliveredQuantity }}</td>
+                <td>{{ order.orderDate | date:'shortDate' }}</td>
+                <td>{{ order.estimatedDeliveryDate | date:'shortDate' }}</td>
+                <td>{{ order.deliveryDate | date:'shortDate' }}</td>
+                <td>{{ order.companyId }}</td>
+                <td>{{ decapitalize(order.status.toString()) }}</td>
+            </tr>
+        </tbody>
+</table>
 
 </div>

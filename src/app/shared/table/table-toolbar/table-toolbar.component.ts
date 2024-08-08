@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IconDefinition, faBox, faPlus, faQuestion } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition, faArrowRotateRight, faBox, faEdit, faPlus, faQuestion, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { RouterModule } from '@angular/router';
 import { SortOption } from '../../search/models/Search';
 import { SearchInputComponent } from '../../search/components/search-input/search-input.component';
@@ -15,7 +15,6 @@ import { SortSelectorComponent } from '../../search/components/sort-selector/sor
 })
 export class TableToolbarComponent {
     @Input() title: string = '';
-    @Input() createName: string = '';
     @Input() searchPlaceholder: string = 'Search...';
     @Input() sortOptions: SortOption[] = [
         { label: 'Created At', value: 'createdAt' },
@@ -35,4 +34,8 @@ export class TableToolbarComponent {
 
     faBox = faBox;
     faPlus = faPlus;
+    faArrowRotateRight = faArrowRotateRight;
+    faEdit = faEdit;
+    faTrash = faTrash;
+    faXmark = faXmark;
 }

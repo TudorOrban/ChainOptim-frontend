@@ -1,11 +1,28 @@
-<h2 class="flex items-center page-standard-horizontal-padding pt-4 bg-gray-50">
-    <div class="page-title ml-2">{{ title }}</div>
-</h2>
-<div class="flex items-center flex-wrap lg:flex-nowrap justify-between page-standard-horizontal-padding py-4 bg-gray-50 border-b border-gray-300 shadow-sm">
-    <app-search-input (searchEvent)="performSearch($event)" [placeholder]="searchPlaceholder"></app-search-input>
-    <app-sort-selector (sortChange)="handleSortChange($event)" [sortOptions]="sortOptions"></app-sort-selector>
-    <div class="standard-write-button flex items-center">
-        <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
-        Create New {{ createName }}
+<div class="bg-gray-50 py-4 page-standard-horizontal-padding space-y-4 border-b border-gray-300 shadow-sm">
+    <h2 class="flex items-center page-title">
+        {{ title }}
+    </h2>
+    <div class="flex items-center flex-wrap lg:flex-nowrap justify-between">
+        <app-search-input (searchEvent)="performSearch($event)" [placeholder]="searchPlaceholder"></app-search-input>
+        <app-sort-selector (sortChange)="handleSortChange($event)" [sortOptions]="sortOptions"></app-sort-selector>
+        <button class="flex items-center justify-center w-10 h-10 bg-white border border-gray-300 text-gray-800 rounded-md shadow-sm ml-1">
+            <fa-icon [icon]="faArrowRotateRight" class="text-gray-700"></fa-icon>
+        </button>
+    </div>
+    <div class="flex items-center space-x-2">
+        <button class="flex items-center justify-center w-10 h-10 bg-white border border-gray-300 text-gray-800 rounded-md shadow-sm ml-1">
+            <fa-icon [icon]="faXmark" class="text-gray-700"></fa-icon>
+        </button>
+        <button class="standard-delete-button">
+            <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
+        </button>
+        <div class="standard-write-button flex items-center">
+            <fa-icon [icon]="faEdit" class="text-white mr-2"></fa-icon>
+            Edit Orders
+        </div>
+        <div class="standard-write-button flex items-center">
+            <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
+            Add Order
+        </div>
     </div>
 </div>
