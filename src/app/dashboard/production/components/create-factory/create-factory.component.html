@@ -1,4 +1,4 @@
-<div class="std-form-container">
+<div class="std-form-container space-x-4">
     <form [formGroup]="factoryForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">
         <h2 class="text-2xl font-semibold mb-4 text-center">Create Factory</h2>
 
@@ -9,6 +9,14 @@
                 <p *ngIf="factoryForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
                 <p *ngIf="factoryForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
             </div>
+        </div>
+
+        <div>
+            <app-select-or-create-location
+                (locationChoiceChange)="handleLocationChoice($event)"
+                (selectedLocationChange)="handleLocationSelection($event)"
+                (newLocationData)="handleNewLocationData($event)"
+            ></app-select-or-create-location>
         </div>
 
         <div class="flex items-center w-full justify-end">

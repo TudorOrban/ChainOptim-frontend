@@ -11,13 +11,13 @@ export interface Location {
 }
 
 export interface CreateLocationDTO {
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    zipCode: string;
-    latitude: number;
-    longitude: number;
+    address?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+    latitude?: number;
+    longitude?: number;
     organizationId: number;
 }
 

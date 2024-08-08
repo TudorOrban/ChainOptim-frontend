@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SelectUnitOfMeasurementComponent } from '../../../../shared/common/components/select/select-unit-of-measurement/select-unit-of-measurement.component';
-import { StandardUnit, UnitMagnitude } from '../../../../shared/enums/unitEnums';
 import { CreateFactoryDTO } from '../../models/Factory';
 import { User } from '../../../../core/user/model/user';
 import { UserService } from '../../../../core/auth/services/user.service';
@@ -11,17 +9,24 @@ import { FactoryService } from '../../services/factory.service';
 import { Router } from '@angular/router';
 import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
+import { SelectOrCreateLocationComponent } from '../../../../shared/common/components/select/select-or-create-location/select-or-create-location.component';
+import { CreateLocationDTO } from '../../../../shared/common/models/reusableTypes';
 
 @Component({
   selector: 'app-create-factory',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SelectUnitOfMeasurementComponent],
+  imports: [CommonModule, ReactiveFormsModule, SelectOrCreateLocationComponent],
   templateUrl: './create-factory.component.html',
   styleUrl: './create-factory.component.css'
 })
 export class CreateFactoryComponent implements OnInit {
     currentUser: User | undefined = undefined;
     factoryForm: FormGroup = new FormGroup({});
+    createLocation: boolean = false;
+    locationId: number = 0;
+    newLocationData: CreateLocationDTO = {
+        organizationId: 0
+    };
   
     constructor(
         private fb: FormBuilder,
@@ -88,9 +93,33 @@ export class CreateFactoryComponent implements OnInit {
     private getFactoryDTO(): CreateFactoryDTO {
         const factoryDTO: CreateFactoryDTO = {
             name: this.factoryForm.value.name,
-            organizationId: this.currentUser?.organization?.id ?? 0
+            organizationId: this.currentUser?.organization?.id ?? 0,
         };
+        if (this.createLocation && this.newLocationData) {
+            factoryDTO.location = this.newLocationData;
+            factoryDTO.createLocation = true;
+        } else if (!this.createLocation && this.locationId) {
+            factoryDTO.locationId = this.locationId;
+            factoryDTO.createLocation = false;
+        }
+        console.log('Factory DTO:', factoryDTO);
 
         return factoryDTO;
+    }
+
+    
+    handleLocationChoice(choice: string) {
+        console.log('Choice:', choice);
+        this.createLocation = (choice === 'create');
+    }
+
+    handleLocationSelection(locationId: number) {
+        console.log('Location ID:', locationId);
+        this.locationId = locationId;
+    }
+
+    handleNewLocationData(locationData: CreateLocationDTO) {
+        console.log('New Location Data:', locationData);
+        this.newLocationData = locationData;
     }
 }
