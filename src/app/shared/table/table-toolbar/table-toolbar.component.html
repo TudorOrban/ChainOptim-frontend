@@ -24,9 +24,12 @@
             <fa-icon [icon]="faEdit" class="text-white mr-2"></fa-icon>
             Edit Orders
         </div>
-        <div class="standard-write-button flex items-center">
+        <button 
+            (click)="handleAddItem()"
+            class="standard-write-button flex items-center"
+        >
             <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
             Add Order
-        </div>
+        </button>
     </div>
 </div>

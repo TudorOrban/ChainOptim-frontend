@@ -2,7 +2,7 @@
     <app-table-toolbar
         [title]="'Supplier Orders'" [searchPlaceholder]="'Search by company ID'" [sortOptions]="sortOptions"
         [selectedItemIds]="selectedOrderIds"
-        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onCancelSelection)="handleCancelSelectedOrders()"
+        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onCancelSelection)="handleCancelSelectedOrders()" (onAddItem)="handleAddOrder()"
     ></app-table-toolbar>
 </div>
 
@@ -24,6 +24,19 @@
             </tr>
         </thead>
         <tbody>
+            <tr *ngFor="let newOrder of newRawOrders; let i = index">
+                <td><input type="checkbox" [(ngModel)]="newOrder.selected"></td>
+                <td>{{ i + 1 }}</td>
+                <td><input type="text" [(ngModel)]="newOrder.supplierId"></td>
+                <td><input type="text" [(ngModel)]="newOrder.component.name"></td>
+                <td><input type="number" [(ngModel)]="newOrder.quantity"></td>
+                <td><input type="number" [(ngModel)]="newOrder.deliveredQuantity"></td>
+                <td><input type="date" [(ngModel)]="newOrder.orderDate"></td>
+                <td><input type="date" [(ngModel)]="newOrder.estimatedDeliveryDate"></td>
+                <td><input type="text" [(ngModel)]="newOrder.deliveryDate"></td>
+                <td><input type="text" [(ngModel)]="newOrder.companyId"></td>
+                <td><input type="text" [(ngModel)]="newOrder.status"></td>
+            </tr>
             <tr *ngFor="let order of supplierOrders?.results; let i = index">
                 <td><input type="checkbox" [checked]="order.selected" (change)="toggleSelection(order)" /></td> <!-- Row-specific Checkbox -->
                 <td>{{ order.id }}</td>
@@ -39,5 +52,6 @@
             </tr>
         </tbody>
     </table>
+    
 
 </div>

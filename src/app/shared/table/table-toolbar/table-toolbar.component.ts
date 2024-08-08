@@ -26,6 +26,7 @@ export class TableToolbarComponent {
     @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() onSortChange = new EventEmitter<{ value: string, ascending: boolean }>();
     @Output() onCancelSelection: EventEmitter<void> = new EventEmitter<void>();
+    @Output() onAddItem: EventEmitter<void> = new EventEmitter<void>();
 
     performSearch(searchQuery: string): void {
         this.onSearch.emit(searchQuery);
@@ -37,6 +38,10 @@ export class TableToolbarComponent {
 
     handleCancelSelection(): void {
         this.onCancelSelection.emit();
+    }
+
+    handleAddItem(): void {
+        this.onAddItem.emit();
     }
 
     faBox = faBox;
