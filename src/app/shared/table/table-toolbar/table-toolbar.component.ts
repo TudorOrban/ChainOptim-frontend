@@ -1,18 +1,37 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IconDefinition, faArrowRotateRight, faBox, faEdit, faPlus, faQuestion, faSave, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+    IconDefinition,
+    faArrowRotateRight,
+    faBox,
+    faEdit,
+    faPlus,
+    faQuestion,
+    faSave,
+    faTrash,
+    faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 import { RouterModule } from '@angular/router';
 import { SortOption } from '../../search/models/Search';
 import { SearchInputComponent } from '../../search/components/search-input/search-input.component';
 import { SortSelectorComponent } from '../../search/components/sort-selector/sort-selector.component';
 import { CommonModule } from '@angular/common';
+import { FilterBarComponent } from '../../search/components/filter-bar/filter-bar.component';
+import { FilterOption } from '../../common/models/reusableTypes';
 
 @Component({
-  selector: 'app-table-toolbar',
-  standalone: true,
-  imports: [FontAwesomeModule, RouterModule, CommonModule, SearchInputComponent, SortSelectorComponent],
-  templateUrl: './table-toolbar.component.html',
-  styleUrl: './table-toolbar.component.css'
+    selector: 'app-table-toolbar',
+    standalone: true,
+    imports: [
+        FontAwesomeModule,
+        RouterModule,
+        CommonModule,
+        SearchInputComponent,
+        SortSelectorComponent,
+        FilterBarComponent
+    ],
+    templateUrl: './table-toolbar.component.html',
+    styleUrl: './table-toolbar.component.css',
 })
 export class TableToolbarComponent {
     @Input() title: string = '';
@@ -21,12 +40,16 @@ export class TableToolbarComponent {
         { label: 'Created At', value: 'createdAt' },
         { label: 'Updated At', value: 'updatedAt' },
     ];
+    @Input() filterOptions: FilterOption[] = [];
     @Input() selectedItemIds = new Set<number>();
     @Input() newRawItems: any[] = [];
     @Input() isEditing: boolean = false;
 
     @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
-    @Output() onSortChange = new EventEmitter<{ value: string, ascending: boolean }>();
+    @Output() onSortChange = new EventEmitter<{
+        value: string;
+        ascending: boolean;
+    }>();
     @Output() onRefresh: EventEmitter<void> = new EventEmitter<void>();
     @Output() onCancel: EventEmitter<void> = new EventEmitter<void>();
     @Output() onAddItem: EventEmitter<void> = new EventEmitter<void>();
@@ -38,8 +61,8 @@ export class TableToolbarComponent {
     performSearch(searchQuery: string): void {
         this.onSearch.emit(searchQuery);
     }
-    
-    handleSortChange(sortData: { value: string, ascending: boolean }): void {
+
+    handleSortChange(sortData: { value: string; ascending: boolean }): void {
         this.onSortChange.emit(sortData);
     }
 

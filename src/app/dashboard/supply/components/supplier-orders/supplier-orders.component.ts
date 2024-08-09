@@ -17,6 +17,7 @@ import { SupplierService } from '../../services/supplier.service';
 import { Supplier } from '../../models/Supplier';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
+import { FilterOption, FilterType } from '../../../../shared/common/models/reusableTypes';
 
 @Component({
   selector: 'app-supplier-orders',
@@ -55,6 +56,45 @@ export class SupplierOrdersComponent implements OnInit {
     sortOptions = [
         { label: 'Created At', value: 'createdAt' },
         { label: 'Updated At', value: 'updatedAt' },
+    ];
+    filterOptions: FilterOption[] = [
+        {
+            key: {
+                label: "Order Date Start",
+                value: "orderDateStart",
+            },
+            valueOptions: [],
+            filterType: FilterType.DATE
+        },
+        {
+            key: {
+                label: "Quantity",
+                value: "quantity",
+            },
+            valueOptions: [],
+            filterType: FilterType.NUMBER
+        },
+        {
+            key: {
+                label: "Status",
+                value: "status",
+            },
+            valueOptions: [
+                {
+                    label: "Delivered",
+                    value: OrderStatus.DELIVERED
+                },
+                {
+                    label: "Initiated",
+                    value: OrderStatus.INITIATED
+                },
+                {
+                    label: "Placed",
+                    value: OrderStatus.PLACED
+                }
+            ],
+            filterType: FilterType.ENUM
+        },
     ];
 
     constructor(

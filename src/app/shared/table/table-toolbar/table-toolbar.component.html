@@ -2,17 +2,20 @@
     <h2 class="flex items-center page-title">
         {{ title }}
     </h2>
-    <div class="flex items-center flex-wrap lg:flex-nowrap justify-between">
+    <div class="flex items-center flex-wrap justify-between">
         <app-search-input (searchEvent)="performSearch($event)" [placeholder]="searchPlaceholder"></app-search-input>
-        <app-sort-selector (sortChange)="handleSortChange($event)" [sortOptions]="sortOptions"></app-sort-selector>
-        <button
-            (click)="handleRefresh()"
-            class="flex items-center justify-center w-10 h-10 bg-white border border-gray-300 text-gray-800 rounded-md shadow-sm ml-1"
-        >
-            <fa-icon [icon]="faArrowRotateRight" class="text-gray-700"></fa-icon>
-        </button>
+        <app-filter-bar [filterOptions]="filterOptions"></app-filter-bar>
+        <div class="flex items-center space-x-4">
+            <app-sort-selector (sortChange)="handleSortChange($event)" [sortOptions]="sortOptions"></app-sort-selector>
+            <button
+                (click)="handleRefresh()"
+                class="flex items-center justify-center w-10 h-10 bg-white border border-gray-300 text-gray-800 rounded-md shadow-sm ml-1"
+            >
+                <fa-icon [icon]="faArrowRotateRight" class="text-gray-700"></fa-icon>
+            </button>
+        </div>
     </div>
-    <div class="flex items-center flex-wrap md:flex-nowrap space-x-2">
+    <div class="flex items-center flex-wrap space-x-2">
         <button 
             *ngIf="((selectedItemIds?.size ?? 0) > 0) || ((newRawItems?.length ?? 0) > 0)"
             (click)="handleCancelSelection()"

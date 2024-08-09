@@ -1,0 +1,20 @@
+<div class="flex items-center">
+    <select [(ngModel)]="selectedKey" class="custom-select">
+        <option *ngFor="let option of filterOptions" [value]="option.key.value">
+            {{ option.key.label }}
+        </option>
+    </select>
+    
+    <div *ngIf="shouldShowInput()" class="flex items-center">
+        <input class="form-input" placeholder="Enter quantity" class="form-input min-w-20">
+        <button class="standard-button">Apply</button>
+    </div>
+
+    <select *ngIf="shouldShowSelect()" [(ngModel)]="selectedValue" class="custom-select">
+        <option *ngFor="let option of getValueOptions()" [value]="option.value">
+            {{ option.label }}
+        </option>
+    </select>
+
+    <input *ngIf="shouldShowDate()" type="date" [(ngModel)]="selectedDate" class="form-input">
+</div>

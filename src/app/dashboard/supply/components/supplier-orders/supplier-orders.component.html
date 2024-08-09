@@ -1,6 +1,6 @@
 <div>
     <app-table-toolbar
-        [title]="'Supplier Orders'" [searchPlaceholder]="'Search by company ID'" [sortOptions]="sortOptions"
+        [title]="'Supplier Orders'" [searchPlaceholder]="'Search by company ID'" [sortOptions]="sortOptions" [filterOptions]="filterOptions"
         [selectedItemIds]="selectedOrderIds" [newRawItems]="newRawOrders" [isEditing]="isEditing"
         (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onRefresh)="handleRefresh()" (onCancel)="handleCancel()" (onAddItem)="handleAddOrder()" (onCreateItems)="handleCreateOrders()" (onEditItems)="editSelectedOrders()" (onSaveEditedItems)="saveEditedOrders()" (onDeleteItems)="openConfirmDeleteDialog()"
     ></app-table-toolbar>
@@ -12,7 +12,7 @@
             <tr>
                 <th class="select-col"><input type="checkbox" (change)="toggleAllSelections($event)"/></th>
                 <th class="id-col">ID</th>
-                <th class="supplier-id-col">Supplier ID</th>
+                <th class="supplier-id-col px-2">Supplier</th>
                 <th class="component-col">Component</th>
                 <th class="quantity-col">Quantity</th>
                 <th class="delivered-col">Delivered Quantity</th>
@@ -29,7 +29,7 @@
                 <td>{{ i + 1 }}</td>
                 <td>
                     <!-- Dropdown for selecting supplier -->
-                    <select [(ngModel)]="newOrder.supplierId" name="supplierId-{{ i }}">
+                    <select [(ngModel)]="newOrder.supplierId" name="supplierId-{{ i }}" class="custom-select">
                         <option *ngFor="let supplier of suppliers" [value]="supplier.id">
                             {{ supplier.name }}
                         </option>
@@ -37,21 +37,21 @@
                 </td>
                 <td>
                     <!-- Dropdown for selecting component -->
-                    <select [(ngModel)]="newOrder.componentId" name="componentId-{{ i }}">
+                    <select [(ngModel)]="newOrder.componentId" name="componentId-{{ i }}" class="custom-select">
                         <option *ngFor="let component of components" [value]="component.id">
                             {{ component.name }}
                         </option>
                     </select>
                 </td>
-                <td><input type="number" [(ngModel)]="newOrder.quantity"></td>
-                <td><input type="number" [(ngModel)]="newOrder.deliveredQuantity"></td>
-                <td><input type="date" [(ngModel)]="newOrder.orderDate"></td>
-                <td><input type="date" [(ngModel)]="newOrder.estimatedDeliveryDate"></td>
-                <td><input type="date" [(ngModel)]="newOrder.deliveryDate"></td>
-                <td><input type="text" [(ngModel)]="newOrder.companyId"></td>
+                <td><input type="number" [(ngModel)]="newOrder.quantity" class="form-input"></td>
+                <td><input type="number" [(ngModel)]="newOrder.deliveredQuantity" class="form-input"></td>
+                <td><input type="date" [(ngModel)]="newOrder.orderDate" class="form-input"></td>
+                <td><input type="date" [(ngModel)]="newOrder.estimatedDeliveryDate" class="form-input"></td>
+                <td><input type="date" [(ngModel)]="newOrder.deliveryDate" class="form-input"></td>
+                <td><input type="text" [(ngModel)]="newOrder.companyId" class="form-input"></td>
                 <td>
                     <!-- Dropdown for selecting order status -->
-                    <select [(ngModel)]="newOrder.status" name="status-{{ i }}">
+                    <select [(ngModel)]="newOrder.status" name="status-{{ i }}" class="custom-select">
                         <option *ngFor="let status of OrderStatus | keyvalue" [value]="status.value">
                             {{ status.value }}
                         </option>
@@ -77,7 +77,7 @@
                     <td>{{ order.id }}</td>
                     <td>
                         <!-- Dropdown for selecting supplier -->
-                        <select [(ngModel)]="order.supplierId" name="supplierId-{{ i }}">
+                        <select [(ngModel)]="order.supplierId" name="supplierId-{{ i }}" class="custom-select">
                             <option *ngFor="let supplier of suppliers" [value]="supplier.id">
                                 {{ supplier.name }}
                             </option>
@@ -85,22 +85,22 @@
                     </td>
                     <td>
                         <!-- Dropdown for selecting component -->
-                        <select [(ngModel)]="selectedComponentId[order.id]" (ngModelChange)="setComponentId(order, $event)" name="componentId-{{ i }}">
+                        <select [(ngModel)]="selectedComponentId[order.id]" (ngModelChange)="setComponentId(order, $event)" name="componentId-{{ i }}" class="custom-select">
                             <option [value]="null">Select a component</option>
                             <option *ngFor="let component of components" [value]="component.id">
                                 {{ component.name }}
                             </option>
                         </select>                        
                     </td>
-                    <td><input type="number" [(ngModel)]="order.quantity"></td>
-                    <td><input type="number" [(ngModel)]="order.deliveredQuantity"></td>
-                    <td><input type="date" [(ngModel)]="order.orderDate"></td>
-                    <td><input type="date" [(ngModel)]="order.estimatedDeliveryDate"></td>
-                    <td><input type="date" [(ngModel)]="order.deliveryDate"></td>
-                    <td><input type="text" [(ngModel)]="order.companyId"></td>
+                    <td><input type="number" [(ngModel)]="order.quantity" class="form-input"></td>
+                    <td><input type="number" [(ngModel)]="order.deliveredQuantity" class="form-input"></td>
+                    <td><input type="date" [(ngModel)]="order.orderDate" class="form-input"></td>
+                    <td><input type="date" [(ngModel)]="order.estimatedDeliveryDate" class="form-input"></td>
+                    <td><input type="date" [(ngModel)]="order.deliveryDate" class="form-input"></td>
+                    <td><input type="text" [(ngModel)]="order.companyId" class="form-input"></td>
                     <td>
                         <!-- Dropdown for selecting order status -->
-                        <select [(ngModel)]="order.status" name="status-{{ i }}">
+                        <select [(ngModel)]="order.status" name="status-{{ i }}" class="custom-select">
                             <option *ngFor="let status of OrderStatus | keyvalue" [value]="status.value">
                                 {{ status.value }}
                             </option>
