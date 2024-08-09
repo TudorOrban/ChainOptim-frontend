@@ -2,9 +2,9 @@
     <h2 class="flex items-center page-title">
         {{ title }}
     </h2>
-    <div class="flex items-center flex-wrap justify-between">
-        <app-search-input (searchEvent)="performSearch($event)" [placeholder]="searchPlaceholder"></app-search-input>
-        <app-filter-bar [filterOptions]="filterOptions"></app-filter-bar>
+    <div class="flex items-center flex-wrap space-x-4">
+        <app-search-input (searchEvent)="performSearch($event)" [placeholder]="searchPlaceholder" class="ml-4"></app-search-input>
+        <app-filter-bar (filterChange)="handleFilterChange($event)" [filterOptions]="filterOptions"></app-filter-bar>
         <div class="flex items-center space-x-4">
             <app-sort-selector (sortChange)="handleSortChange($event)" [sortOptions]="sortOptions"></app-sort-selector>
             <button
@@ -15,7 +15,7 @@
             </button>
         </div>
     </div>
-    <div class="flex items-center flex-wrap space-x-2">
+    <div class="flex items-center flex-wrap space-x-2 ml-4">
         <button 
             *ngIf="((selectedItemIds?.size ?? 0) > 0) || ((newRawItems?.length ?? 0) > 0)"
             (click)="handleCancelSelection()"

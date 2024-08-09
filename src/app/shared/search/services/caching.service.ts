@@ -57,6 +57,14 @@ export class CachingService<T> {
     }
 
     createCacheKey(feature: string, organizationId: number, searchParams: SearchParams): string {
-        return `${feature}/organization/advanced/${organizationId}?searchQuery=${encodeURIComponent(searchParams.searchQuery)}&sortBy=${encodeURIComponent(searchParams.sortOption)}&ascending=${searchParams.ascending}&page=${searchParams.page}&itemsPerPage=${searchParams.itemsPerPage}`;
+        let url = `${feature}/organization/advanced/${organizationId}?searchQuery=${encodeURIComponent(searchParams.searchQuery)}&sortBy=${encodeURIComponent(searchParams.sortOption)}&ascending=${searchParams.ascending}&page=${searchParams.page}&itemsPerPage=${searchParams.itemsPerPage}`;
+        
+        if (searchParams.filters && Object.keys(searchParams.filters).length > 0) {
+            const filtersJson = JSON.stringify(searchParams.filters);
+            const encodedFilters = encodeURIComponent(filtersJson);
+            url += `&filters=${encodedFilters}`;
+        }
+        
+        return url;
     }
 }

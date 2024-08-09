@@ -36,7 +36,12 @@ export class SupplierOrderService {
         searchMode: SearchMode
     ): Observable<PaginatedResults<SupplierOrder>> {
         let url = `${this.apiUrl}/${searchMode === SearchMode.ORGANIZATION ? "organization" : "supplier"}/advanced/${entityId}?searchQuery=${encodeURIComponent(searchParams.searchQuery)}&sortBy=${encodeURIComponent(searchParams.sortOption)}&ascending=${searchParams.ascending}&page=${searchParams.page}&itemsPerPage=${searchParams.itemsPerPage}`;
-
+        if (searchParams.filters && Object.keys(searchParams.filters).length > 0) {
+            const filtersJson = JSON.stringify(searchParams.filters);
+            const encodedFilters = encodeURIComponent(filtersJson);
+            url += `&filters=${encodedFilters}`;
+        }
+        
         // Check in cache
         let cacheKey = this.cachingService.createCacheKey('supplier-orders', entityId, searchParams);
         if (this.cachingService.isCached(cacheKey) && !this.cachingService.isStale(cacheKey)) {

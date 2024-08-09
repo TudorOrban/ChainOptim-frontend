@@ -46,10 +46,8 @@ export class TableToolbarComponent {
     @Input() isEditing: boolean = false;
 
     @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
-    @Output() onSortChange = new EventEmitter<{
-        value: string;
-        ascending: boolean;
-    }>();
+    @Output() onSortChange = new EventEmitter<{ value: string; ascending: boolean; }>();
+    @Output() onFilterChange = new EventEmitter<{ key: string; value: string; }>();
     @Output() onRefresh: EventEmitter<void> = new EventEmitter<void>();
     @Output() onCancel: EventEmitter<void> = new EventEmitter<void>();
     @Output() onAddItem: EventEmitter<void> = new EventEmitter<void>();
@@ -64,6 +62,10 @@ export class TableToolbarComponent {
 
     handleSortChange(sortData: { value: string; ascending: boolean }): void {
         this.onSortChange.emit(sortData);
+    }
+
+    handleFilterChange(filterData: { key: string; value: string }): void {
+        this.onFilterChange.emit(filterData);
     }
 
     handleRefresh(): void {

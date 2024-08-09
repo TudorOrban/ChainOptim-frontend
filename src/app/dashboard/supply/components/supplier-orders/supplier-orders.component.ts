@@ -60,8 +60,8 @@ export class SupplierOrdersComponent implements OnInit {
     filterOptions: FilterOption[] = [
         {
             key: {
-                label: "Order Date Start",
-                value: "orderDateStart",
+                label: "Order Date",
+                value: "orderDate",
             },
             valueOptions: [],
             filterType: FilterType.DATE
@@ -69,7 +69,7 @@ export class SupplierOrdersComponent implements OnInit {
         {
             key: {
                 label: "Quantity",
-                value: "quantity",
+                value: "Quantity",
             },
             valueOptions: [],
             filterType: FilterType.NUMBER
@@ -164,6 +164,18 @@ export class SupplierOrdersComponent implements OnInit {
             this.searchParams.page = 1; 
             this.loadSupplierOrders()
         }
+    }
+
+    handleFilterChange(filterChange: { key: string, value: string }): void {
+        console.log('Filter change in orders', filterChange);
+        if (!filterChange?.value) {
+            this.searchParams.filters = {};
+        } else {
+            this.searchParams.filters = {
+                [filterChange.key]: filterChange.value
+            }
+        }
+        this.loadSupplierOrders();
     }
 
     changePage(page: number): void {
