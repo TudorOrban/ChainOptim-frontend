@@ -13,6 +13,8 @@ import { ToastService } from '../../../../shared/common/components/toast-system/
 import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ComponentService } from '../../../goods/services/component.service';
 import { ComponentSearchDTO } from '../../../goods/models/Component';
+import { SupplierService } from '../../services/supplier.service';
+import { Supplier } from '../../models/Supplier';
 
 @Component({
   selector: 'app-supplier-orders',
@@ -26,6 +28,7 @@ export class SupplierOrdersComponent implements OnInit {
 
     currentUser: User | undefined = undefined;
     supplierOrders: PaginatedResults<SupplierOrder> | undefined = undefined;
+    suppliers: Supplier[] = [];
     components: ComponentSearchDTO[] = [];
     OrderStatus = OrderStatus;  
 
@@ -47,6 +50,7 @@ export class SupplierOrdersComponent implements OnInit {
     constructor(
         private userService: UserService,
         private supplierOrderService: SupplierOrderService,
+        private supplierService: SupplierService,
         private componentService: ComponentService,
         private toastService: ToastService,
     ) {
@@ -66,6 +70,7 @@ export class SupplierOrdersComponent implements OnInit {
             this.currentUser = user;
             
             this.loadSupplierOrders();
+            this.loadSuppliers();
             this.loadComponents();
         });
     }
@@ -79,13 +84,19 @@ export class SupplierOrdersComponent implements OnInit {
             });
     }
 
+    private loadSuppliers(): void {
+        this.supplierService.getSuppliersByOrganizationId(this.currentUser?.organization?.id || 0).subscribe((suppliers) => {
+            console.log("Suppliers:", suppliers);
+            this.suppliers = suppliers;
+        });
+    }
+
     private loadComponents(): void {
         this.componentService.getComponentsByOrganizationId(this.currentUser?.organization?.id || 0, true).subscribe((components) => {
             console.log("Components:", components);
             this.components = components;
         });
     }
-
 
     // Searching
     handleSearch(query: string): void {
@@ -110,6 +121,10 @@ export class SupplierOrdersComponent implements OnInit {
             this.searchParams.page = page;
             this.loadSupplierOrders();
         }
+    }
+
+    handleRefresh(): void {
+        this.loadSupplierOrders();
     }
 
     // CRUD ops
@@ -214,7 +229,7 @@ export class SupplierOrdersComponent implements OnInit {
             estimatedDeliveryDate: estimatedDeliveryDate,
             // deliveryDate: deliveryDate,
             companyId: order.companyId,
-            status: order.status,
+            status: order.status || OrderStatus.INITIATED,
         };
     
         return dto;
@@ -226,8 +241,14 @@ export class SupplierOrdersComponent implements OnInit {
         return isNaN(parsedDate.getTime()) ? null : parsedDate;
     }
 
+    // Utils
     decapitalize(word?: string) {
         if (!word) return '';
         return word.charAt(0) + word.slice(1).toLowerCase();
+    }
+
+    getSupplierName(supplierId: number): string {
+        const supplier = this.suppliers.find(s => s.id === supplierId);
+        return supplier ? supplier.name : "Unknown Supplier";
     }
 }

@@ -92,7 +92,19 @@ export class SupplierOrderService {
     }
 
     createSupplierOrdersInBulk(orderDTOs: CreateSupplierOrderDTO[]): Observable<SupplierOrder[]> {
-        return this.http.post<SupplierOrder[]>(`${this.apiUrl}/create/bulk`, orderDTOs);
+        return this.http.post<SupplierOrder[]>(`${this.apiUrl}/create/bulk`, orderDTOs).pipe(
+            tap(orders => {
+                console.log("Created orders:", orders);
+                if (orders.length === 0) {
+                    throw new Error("Order creation failed: No orders created");
+                }
+                this.cachingService.invalidateAllCache();
+            }),
+            catchError(error => {
+                console.error("Error in creating orders", error);
+                throw error;
+            })
+        );
     }
         
     updateSupplierOrder(supplierOrderDTO: UpdateSupplierOrderDTO): Observable<SupplierOrder> {
