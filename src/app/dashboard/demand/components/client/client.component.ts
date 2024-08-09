@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ClientEvaluationComponent } from './client-evaluation/client-evaluation.component';
 import { ClientOverviewComponent } from './client-overview/client-overview.component';
 import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
-import { ClientOrdersComponent } from './client-orders/client-orders.component';
+import { ClientOrdersComponent } from '../client-orders/client-orders.component';
 import { ClientShipmentsComponent } from './client-shipments/client-shipments.component';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { Client } from '../../models/Client';
@@ -17,6 +17,7 @@ import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDial
 import { OperationOutcome, ToastInfo } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
+import { SearchMode } from '../../../../shared/enums/commonEnums';
 
 @Component({
     selector: 'app-client',
@@ -37,7 +38,7 @@ import { GenericConfirmDialogComponent } from '../../../../shared/common/compone
     styleUrl: './client.component.css',
 })
 export class ClientComponent implements OnInit {
-    clientId: string | null = null;
+    clientId: number | null = null;
     client: Client | null = null;
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
@@ -54,6 +55,7 @@ export class ClientComponent implements OnInit {
             label: "Evaluation",
         },
     ]
+    SearchMode = SearchMode;
     activeTab: string = "Overview";
     deleteDialogInput: ConfirmDialogInput = {
         dialogTitle: "Delete Client",
@@ -83,7 +85,7 @@ export class ClientComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         this.route.paramMap.subscribe((params) => {
-            this.clientId = params.get('clientId');
+            this.clientId = Number(params.get('clientId'));
             
             this.clientService
                 .getClientById(Number(this.clientId))

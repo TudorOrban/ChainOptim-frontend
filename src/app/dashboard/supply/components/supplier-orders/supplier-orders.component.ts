@@ -1,9 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PaginatedResults } from "../../../../shared/search/models/searchTypes";
-import { CreateSupplierOrderDTO, OrderStatus, SupplierOrder, UpdateSupplierOrderDTO } from '../../models/SupplierOrder';
+import { PaginatedResults } from '../../../../shared/search/models/searchTypes';
+import {
+    CreateSupplierOrderDTO,
+    OrderStatus,
+    SupplierOrder,
+    UpdateSupplierOrderDTO,
+} from '../../models/SupplierOrder';
 import { SupplierOrderService } from '../../services/supplierorder.service';
 import { UserService } from '../../../../core/auth/services/user.service';
-import { FilterOption, SearchParams, UIItem } from '../../../../shared/search/models/searchTypes';
+import {
+    FilterOption,
+    SearchParams,
+    UIItem,
+} from '../../../../shared/search/models/searchTypes';
 import { Feature, SearchMode } from '../../../../shared/enums/commonEnums';
 import { TableToolbarComponent } from '../../../../shared/table/table-toolbar/table-toolbar.component';
 import { User } from '../../../../core/user/model/user';
@@ -18,13 +27,21 @@ import { Supplier } from '../../models/Supplier';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { SearchOptionsService } from '../../../../shared/search/services/searchoptions.service';
+import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 
 @Component({
-  selector: 'app-supplier-orders',
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableToolbarComponent, GenericConfirmDialogComponent],
-  templateUrl: './supplier-orders.component.html',
-  styleUrl: './supplier-orders.component.css'
+    selector: 'app-supplier-orders',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TableToolbarComponent,
+        PageSelectorComponent,
+        GenericConfirmDialogComponent,
+    ],
+    templateUrl: './supplier-orders.component.html',
+    styleUrl: './supplier-orders.component.css',
 })
 export class SupplierOrdersComponent implements OnInit {
     @Input() searchMode: SearchMode = SearchMode.ORGANIZATION;
@@ -37,26 +54,26 @@ export class SupplierOrdersComponent implements OnInit {
     components: ComponentSearchDTO[] = [];
 
     searchParams: SearchParams = {
-        searchQuery: "",
-        sortOption: "createdAt",
+        searchQuery: '',
+        sortOption: 'createdAt',
         ascending: false,
         page: 1,
         itemsPerPage: 20,
     };
     SearchMode = SearchMode;
-    OrderStatus = OrderStatus;  
+    OrderStatus = OrderStatus;
 
-    selectedOrderIds = new Set<number>(); 
+    selectedOrderIds = new Set<number>();
     newRawOrders: any[] = [];
     isEditing: boolean = false;
-    selectedComponentId: {[orderId: number]: number | null} = {};
+    selectedComponentId: { [orderId: number]: number | null } = {};
 
     deleteDialogInput: ConfirmDialogInput = {
-        dialogTitle: "Delete Supplier",
-        dialogMessage: "Are you sure you want to delete this supplier?",
+        dialogTitle: 'Delete Supplier',
+        dialogMessage: 'Are you sure you want to delete this supplier?',
     };
     isConfirmDialogOpen = false;
-    
+
     sortOptions: UIItem[] = [];
     filterOptions: FilterOption[] = [];
 
@@ -68,8 +85,12 @@ export class SupplierOrdersComponent implements OnInit {
         private toastService: ToastService,
         private searchOptionsService: SearchOptionsService
     ) {
-        this.filterOptions = this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_ORDER)?.filterOptions || [];
-        this.sortOptions = this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_ORDER)?.sortOptions || [];
+        this.filterOptions =
+            this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_ORDER)
+                ?.filterOptions || [];
+        this.sortOptions =
+            this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_ORDER)
+                ?.sortOptions || [];
     }
 
     ngOnInit(): void {
@@ -83,7 +104,7 @@ export class SupplierOrdersComponent implements OnInit {
                 return;
             }
             this.currentUser = user;
-            
+
             this.loadSupplierOrders();
             this.loadSuppliers();
             this.loadComponents();
@@ -92,22 +113,37 @@ export class SupplierOrdersComponent implements OnInit {
 
     private loadSupplierOrders(): void {
         this.supplierOrderService
-            .getSupplierOrdersByOrganizationIdAdvanced(this.searchMode == SearchMode.SECONDARY ? (this.supplierId || 0) : (this.currentUser?.organization?.id || 0), this.searchParams, this.searchMode)
+            .getSupplierOrdersByOrganizationIdAdvanced(
+                this.searchMode == SearchMode.SECONDARY
+                    ? this.supplierId || 0
+                    : this.currentUser?.organization?.id || 0,
+                this.searchParams,
+                this.searchMode
+            )
             .subscribe((supplierOrders) => {
                 this.supplierOrders = supplierOrders;
             });
     }
 
     private loadSuppliers(): void {
-        this.supplierService.getSuppliersByOrganizationId(this.currentUser?.organization?.id || 0).subscribe((suppliers) => {
-            this.suppliers = suppliers;
-        });
+        this.supplierService
+            .getSuppliersByOrganizationId(
+                this.currentUser?.organization?.id || 0
+            )
+            .subscribe((suppliers) => {
+                this.suppliers = suppliers;
+            });
     }
 
     private loadComponents(): void {
-        this.componentService.getComponentsByOrganizationId(this.currentUser?.organization?.id || 0, true).subscribe((components) => {
-            this.components = components;
-        });
+        this.componentService
+            .getComponentsByOrganizationId(
+                this.currentUser?.organization?.id || 0,
+                true
+            )
+            .subscribe((components) => {
+                this.components = components;
+            });
     }
 
     // Searching
@@ -119,22 +155,27 @@ export class SupplierOrdersComponent implements OnInit {
         }
     }
 
-    handleSortChange(sortChange: { value: string, ascending: boolean }): void {
-        if (this.searchParams.sortOption !== sortChange.value || this.searchParams.ascending !== sortChange.ascending) {
-            this.searchParams.sortOption = this.sortOptions.find((option) => option.value === sortChange.value)!.value;
+    handleSortChange(sortChange: { value: string; ascending: boolean }): void {
+        if (
+            this.searchParams.sortOption !== sortChange.value ||
+            this.searchParams.ascending !== sortChange.ascending
+        ) {
+            this.searchParams.sortOption = this.sortOptions.find(
+                (option) => option.value === sortChange.value
+            )!.value;
             this.searchParams.ascending = sortChange.ascending;
-            this.searchParams.page = 1; 
-            this.loadSupplierOrders()
+            this.searchParams.page = 1;
+            this.loadSupplierOrders();
         }
     }
 
-    handleFilterChange(filterChange: { key: string, value: string }): void {
+    handleFilterChange(filterChange: { key: string; value: string }): void {
         if (!filterChange?.value) {
             this.searchParams.filters = {};
         } else {
             this.searchParams.filters = {
-                [filterChange.key]: filterChange.value
-            }
+                [filterChange.key]: filterChange.value,
+            };
         }
         this.loadSupplierOrders();
     }
@@ -162,7 +203,7 @@ export class SupplierOrdersComponent implements OnInit {
 
     toggleAllSelections(event: any): void {
         const checked = event.target.checked;
-        this.supplierOrders?.results.forEach(order => {
+        this.supplierOrders?.results.forEach((order) => {
             order.selected = checked;
             if (checked) {
                 this.selectedOrderIds.add(order.id);
@@ -177,12 +218,14 @@ export class SupplierOrdersComponent implements OnInit {
         this.selectedOrderIds.clear();
         this.isEditing = false;
         if (this.supplierOrders && this.supplierOrders.results) {
-            this.supplierOrders.results = this.supplierOrders.results.map(order => {
-                return { ...order, selected: false, isEditing: false };
-            });
+            this.supplierOrders.results = this.supplierOrders.results.map(
+                (order) => {
+                    return { ...order, selected: false, isEditing: false };
+                }
+            );
         }
     }
-    
+
     // Create
     handleAddOrder(): void {
         this.newRawOrders.push({
@@ -194,7 +237,7 @@ export class SupplierOrdersComponent implements OnInit {
             estimatedDeliveryDate: new Date(),
             deliveryDate: null,
             companyId: '',
-            status: ''
+            status: '',
         });
     }
 
@@ -210,19 +253,29 @@ export class SupplierOrdersComponent implements OnInit {
             newOrderDTOs.push(newOrder);
         }
 
-        this.supplierOrderService.createSupplierOrdersInBulk(newOrderDTOs).subscribe({
-            next: (orders) => {
-                this.newRawOrders = [];
-                this.loadSupplierOrders();
-                this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier Order created successfully.', outcome: OperationOutcome.SUCCESS });
-                
-            },
-            error: (err) => {
-                this.toastService.addToast({ id: 123, title: 'Error', message: 'Supplier Order creation failed.', outcome: OperationOutcome.ERROR });
-                console.error('Failed to create orders', err);
-            }
-        });
-
+        this.supplierOrderService
+            .createSupplierOrdersInBulk(newOrderDTOs)
+            .subscribe({
+                next: (orders) => {
+                    this.newRawOrders = [];
+                    this.loadSupplierOrders();
+                    this.toastService.addToast({
+                        id: 123,
+                        title: 'Success',
+                        message: 'Supplier Order created successfully.',
+                        outcome: OperationOutcome.SUCCESS,
+                    });
+                },
+                error: (err) => {
+                    this.toastService.addToast({
+                        id: 123,
+                        title: 'Error',
+                        message: 'Supplier Order creation failed.',
+                        outcome: OperationOutcome.ERROR,
+                    });
+                    console.error('Failed to create orders', err);
+                },
+            });
     }
 
     private getValidOrderDTO(order: any): CreateSupplierOrderDTO | null {
@@ -231,17 +284,23 @@ export class SupplierOrdersComponent implements OnInit {
             console.error('Validation failed, missing required order fields.');
             return null;
         }
-    
+
         // Ensure dates are actual Date objects or valid date strings
         const orderDate = this.ensureValidDate(order.orderDate);
-        const estimatedDeliveryDate = this.ensureValidDate(order.estimatedDeliveryDate);
+        const estimatedDeliveryDate = this.ensureValidDate(
+            order.estimatedDeliveryDate
+        );
         const deliveryDate = this.ensureValidDate(order.deliveryDate);
-    
-        if (!orderDate || !estimatedDeliveryDate || (order.deliveryDate && !deliveryDate)) {
+
+        if (
+            !orderDate ||
+            !estimatedDeliveryDate ||
+            (order.deliveryDate && !deliveryDate)
+        ) {
             console.error('Validation failed, invalid date format.');
             return null;
         }
-    
+
         // Construct DTO
         const dto: CreateSupplierOrderDTO = {
             organizationId: this.currentUser?.organization?.id ?? 0,
@@ -254,10 +313,10 @@ export class SupplierOrdersComponent implements OnInit {
             companyId: order.companyId,
             status: order.status || OrderStatus.INITIATED,
         };
-    
+
         return dto;
     }
-    
+
     private ensureValidDate(date: any): Date | null {
         if (date instanceof Date) return date;
         const parsedDate = new Date(date);
@@ -266,11 +325,12 @@ export class SupplierOrdersComponent implements OnInit {
 
     // Update
     editSelectedOrders(): void {
-        this.supplierOrders?.results.forEach(order => {
+        this.supplierOrders?.results.forEach((order) => {
             if (this.selectedOrderIds.has(order.id)) {
                 order.isEditing = !order.isEditing;
                 if (order.isEditing) {
-                    this.selectedComponentId[order.id] = this.getComponentId(order); // Ensure the current component ID is set
+                    this.selectedComponentId[order.id] =
+                        this.getComponentId(order); // Ensure the current component ID is set
                 }
             }
         });
@@ -280,36 +340,57 @@ export class SupplierOrdersComponent implements OnInit {
     getComponentId(order: SupplierOrder): number | null {
         return order.component ? order.component.id : null;
     }
-    
+
     // Method to set component ID when changed
     setComponentId(order: SupplierOrder, newComponentId: number): void {
         if (!order.component && newComponentId !== null) {
-            order.component = { id: newComponentId, name: '', createdAt: new Date(), updatedAt: new Date() }; // Initialize with a default or lookup name
+            order.component = {
+                id: newComponentId,
+                name: '',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }; // Initialize with a default or lookup name
         } else if (order.component) {
             order.component.id = newComponentId;
         }
     }
 
     saveEditedOrders(): void {
-        const editedOrders = this.supplierOrders?.results.filter(order => order.isEditing);
-        
+        const editedOrders = this.supplierOrders?.results.filter(
+            (order) => order.isEditing
+        );
+
         const editedOrderDTOs = this.getValidUpdateDTO(editedOrders || []);
 
-        this.supplierOrderService.updateSupplierOrdersInBulk(editedOrderDTOs).subscribe({
-            next: (orders) => {
-                this.loadSupplierOrders();
-                this.handleCancel();
-                this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier Order updated successfully.', outcome: OperationOutcome.SUCCESS });
-            },
-            error: (err) => {
-                this.toastService.addToast({ id: 123, title: 'Error', message: 'Supplier Order update failed.', outcome: OperationOutcome.ERROR });
-                console.error('Failed to update orders', err);
-            }
-        });
+        this.supplierOrderService
+            .updateSupplierOrdersInBulk(editedOrderDTOs)
+            .subscribe({
+                next: (orders) => {
+                    this.loadSupplierOrders();
+                    this.handleCancel();
+                    this.toastService.addToast({
+                        id: 123,
+                        title: 'Success',
+                        message: 'Supplier Order updated successfully.',
+                        outcome: OperationOutcome.SUCCESS,
+                    });
+                },
+                error: (err) => {
+                    this.toastService.addToast({
+                        id: 123,
+                        title: 'Error',
+                        message: 'Supplier Order update failed.',
+                        outcome: OperationOutcome.ERROR,
+                    });
+                    console.error('Failed to update orders', err);
+                },
+            });
     }
 
-    private getValidUpdateDTO(editedOrders: SupplierOrder[]): UpdateSupplierOrderDTO[] {
-        const orderDTOs: UpdateSupplierOrderDTO[] = [];    
+    private getValidUpdateDTO(
+        editedOrders: SupplierOrder[]
+    ): UpdateSupplierOrderDTO[] {
+        const orderDTOs: UpdateSupplierOrderDTO[] = [];
 
         for (const order of editedOrders || []) {
             const orderDTO: UpdateSupplierOrderDTO = {
@@ -341,22 +422,32 @@ export class SupplierOrdersComponent implements OnInit {
             .deleteSupplierOrdersInBulk(Array.from(this.selectedOrderIds))
             .subscribe({
                 next: (success) => {
-                    this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier deleted successfully.', outcome: OperationOutcome.SUCCESS });
+                    this.toastService.addToast({
+                        id: 123,
+                        title: 'Success',
+                        message: 'Supplier deleted successfully.',
+                        outcome: OperationOutcome.SUCCESS,
+                    });
                     this.isConfirmDialogOpen = false;
                     this.selectedOrderIds.clear();
                     this.loadSupplierOrders();
                 },
                 error: (error: Error) => {
-                    this.toastService.addToast({ id: 123, title: 'Error', message: 'Supplier deletion failed.', outcome: OperationOutcome.ERROR });
+                    this.toastService.addToast({
+                        id: 123,
+                        title: 'Error',
+                        message: 'Supplier deletion failed.',
+                        outcome: OperationOutcome.ERROR,
+                    });
                     console.error('Error deleting supplier:', error);
                 },
-            });   
+            });
     }
 
     handleCancelDeletion() {
         this.isConfirmDialogOpen = false;
     }
-    
+
     // Utils
     decapitalize(word?: string) {
         if (!word) return '';
@@ -364,7 +455,7 @@ export class SupplierOrdersComponent implements OnInit {
     }
 
     getSupplierName(supplierId: number): string {
-        const supplier = this.suppliers.find(s => s.id === supplierId);
-        return supplier ? supplier.name : "Unknown Supplier";
+        const supplier = this.suppliers.find((s) => s.id === supplierId);
+        return supplier ? supplier.name : 'Unknown Supplier';
     }
 }

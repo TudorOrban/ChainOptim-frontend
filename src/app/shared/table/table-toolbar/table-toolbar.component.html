@@ -39,7 +39,7 @@
         </button>
         <div
             (click)="handleEditItems()"
-            *ngIf="(selectedItemIds?.size ?? 0) > 0" class="standard-write-button flex items-center"
+            *ngIf="((selectedItemIds?.size ?? 0) > 0) && !isEditing" class="standard-write-button flex items-center"
         >
             <fa-icon [icon]="faEdit" class="text-white mr-2"></fa-icon>
             Edit Orders

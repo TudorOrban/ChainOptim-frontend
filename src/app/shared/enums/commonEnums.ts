@@ -10,4 +10,5 @@ export enum Feature {
     SUPPLIER = "SUPPLIER",
     SUPPLIER_ORDER = "SUPPLIER_ORDER",
     CLIENT = "CLIENT",
+    CLIENT_ORDER = "CLIENT_ORDER",
 }

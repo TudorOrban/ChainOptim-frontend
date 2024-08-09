@@ -87,6 +87,78 @@ export class SearchOptionsService {
                     { label: 'Quantity', value: 'quantity' },
                 ],
             }],
+            [Feature.CLIENT_ORDER, {
+                filterOptions: [
+                    {
+                        key: {
+                            label: "Order Date",
+                            value: "orderDate",
+                        },
+                        valueOptions: [],
+                        filterType: FilterType.DATE
+                    },
+                    {
+                        key: {
+                            label: "Estimated Delivery Date",
+                            value: "estimatedDeliveryDate",
+                        },
+                        valueOptions: [],
+                        filterType: FilterType.DATE
+                    },
+                    {
+                        key: {
+                            label: "Delivery Date",
+                            value: "deliveryDate",
+                        },
+                        valueOptions: [],
+                        filterType: FilterType.DATE
+                    },
+                    {
+                        key: {
+                            label: "Quantity",
+                            value: "Quantity",
+                        },
+                        valueOptions: [],
+                        filterType: FilterType.NUMBER
+                    },
+                    {
+                        key: {
+                            label: "Delivered Quantity",
+                            value: "DeliveredQuantity",
+                        },
+                        valueOptions: [],
+                        filterType: FilterType.NUMBER
+                    },
+                    {
+                        key: {
+                            label: "Status",
+                            value: "status",
+                        },
+                        valueOptions: [
+                            {
+                                label: "Delivered",
+                                value: OrderStatus.DELIVERED
+                            },
+                            {
+                                label: "Initiated",
+                                value: OrderStatus.INITIATED
+                            },
+                            {
+                                label: "Placed",
+                                value: OrderStatus.PLACED
+                            }
+                        ],
+                        filterType: FilterType.ENUM
+                    },
+                ],
+                sortOptions: [
+                    { label: 'Created At', value: 'createdAt' },
+                    { label: 'Updated At', value: 'updatedAt' },
+                    { label: 'Order Date', value: 'orderDate' },
+                    { label: 'Delivery Date', value: 'deliveryDate' },
+                    { label: 'Quantity', value: 'quantity' },
+                ],
+            }],
         ]);
     }
 

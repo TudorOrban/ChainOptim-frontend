@@ -52,3 +52,8 @@ export interface UpdateProductDTO {
     organizationId: number;
     newUnit: UnitOfMeasurement;    
 }
+
+export interface ProductSearchDTO {
+    id: number;
+    name: string;
+}

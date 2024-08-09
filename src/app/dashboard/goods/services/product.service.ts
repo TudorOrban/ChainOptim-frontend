@@ -19,9 +19,9 @@ export class ProductService {
         private cachingService: CachingService<PaginatedResults<Product>>
     ) {}
 
-    getProductsByOrganizationId(organizationId: number): Observable<Product[]> {
+    getProductsByOrganizationId(organizationId: number, small: boolean): Observable<Product[]> {
         return this.http
-            .get<Product[]>(`${this.apiUrl}/organization/${organizationId}`)
+            .get<Product[]>(`${this.apiUrl}/organization/${organizationId}${small ? '/small' : ''}`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

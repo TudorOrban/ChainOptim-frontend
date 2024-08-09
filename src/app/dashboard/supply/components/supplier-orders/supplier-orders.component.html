@@ -112,8 +112,17 @@
             </ng-container>
         </tbody>
     </table>
-    
 
+</div>
+
+<!-- Page Selector -->
+<div class="flex items-center justify-end py-4">
+    <app-page-selector
+        [page]="searchParams.page"
+        [itemsPerPage]="searchParams.itemsPerPage"
+        [totalItems]="supplierOrders?.totalCount || supplierOrders?.results?.length || 0"
+        (pageChange)="changePage($event)"
+    ></app-page-selector>
 </div>
 
 
