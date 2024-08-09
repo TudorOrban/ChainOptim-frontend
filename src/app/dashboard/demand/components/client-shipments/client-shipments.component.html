@@ -1,1 +1,120 @@
-<p>client-shipments works!</p>
+<div >
+    <app-table-toolbar
+        [title]="searchMode == SearchMode.ORGANIZATION ? 'Client Shipments' : ''" [searchPlaceholder]="'Search by company ID'" [dontPadHorizontally]="dontPadHorizontally"
+        [sortOptions]="sortOptions" [filterOptions]="filterOptions"
+        [selectedItemIds]="selectedShipmentIds" [newRawItems]="newRawShipments" [isEditing]="isEditing"
+        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onFilterChange)="handleFilterChange($event)" (onRefresh)="handleRefresh()"
+        (onCancel)="handleCancel()"(onAddItem)="handleAddShipment()" (onCreateItems)="handleCreateShipments()" (onEditItems)="editSelectedShipments()" (onSaveEditedItems)="saveEditedShipments()" (onDeleteItems)="openConfirmDeleteDialog()"
+    ></app-table-toolbar>
+</div>
+
+<div class="table-container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th class="select-col"><input type="checkbox" (change)="toggleAllSelections($event)"/></th>
+                <th class="id-col">ID</th>
+                <th class="company-id-col">Company ID</th>
+                <th class="client-id-col px-2">Client</th>
+                <th class="client-order-id-col">Client Order ID</th>
+                <th class="quantity-col">Quantity</th>
+                <th class="shipment-date-col">Shipment Date</th>
+                <th class="est-delivery-col">Estimated Delivery Date</th>
+                <th class="delivery-date-col">Delivery Date</th>
+                <th class="status-col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let newShipment of newRawShipments; let i = index">
+                <td><input type="checkbox" [(ngModel)]="newShipment.selected"></td>
+                <td>{{ i + 1 }}</td>
+                <td><input type="text" [(ngModel)]="newShipment.companyId" class="form-input"></td>
+                <td>
+                    <!-- Dropdown for selecting client -->
+                    <select [(ngModel)]="newShipment.clientId" name="clientId-{{ i }}" class="custom-select">
+                        <option *ngFor="let client of clients" [value]="client.id">
+                            {{ client.name }}
+                        </option>
+                    </select>
+                </td>
+                <td><input type="text" [(ngModel)]="newShipment.clientOrderId" class="form-input"></td>
+                <td><input type="number" [(ngModel)]="newShipment.quantity" class="form-input"></td>
+                <td><input type="date" [(ngModel)]="newShipment.shipmentStartingDate" class="form-input"></td>
+                <td><input type="date" [(ngModel)]="newShipment.estimatedArrivalDate" class="form-input"></td>
+                <td><input type="date" [(ngModel)]="newShipment.arrivalDate" class="form-input"></td>
+                <td>
+                    <!-- Dropdown for selecting shipment status -->
+                    <select [(ngModel)]="newShipment.status" name="status-{{ i }}" class="custom-select">
+                        <option *ngFor="let status of ShipmentStatus | keyvalue" [value]="status.value">
+                            {{ status.value }}
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <ng-container *ngFor="let shipment of clientShipments?.results; let i = index">
+                <tr *ngIf="!shipment.isEditing">
+                    <td><input type="checkbox" [checked]="shipment?.selected" (change)="toggleSelection(shipment)" /></td> <!-- Row-specific Checkbox -->
+                    <td>{{ shipment.id }}</td>
+                    <td>{{ shipment?.companyId }}</td>
+                    <td>{{ getClientName(shipment.clientId) }}</td>
+                    <td>{{ shipment?.clientOrderId }}</td>
+                    <td>{{ shipment?.quantity }}</td>
+                    <td>{{ shipment?.shipmentStartingDate | date:'shortDate' }}</td>
+                    <td>{{ shipment?.estimatedArrivalDate | date:'shortDate' }}</td>
+                    <td>{{ shipment?.arrivalDate | date:'shortDate' }}</td>
+                    <td>{{ decapitalize(shipment?.status?.toString()) }}</td>
+                </tr>
+                <tr *ngIf="shipment.isEditing">
+                    <td><input type="checkbox" [(ngModel)]="shipment.selected"></td>
+                    <td>{{ shipment.id }}</td>
+                    <td><input type="text" [(ngModel)]="shipment.companyId" class="form-input"></td>
+                    <td>
+                        <!-- Dropdown for selecting client -->
+                        <select [(ngModel)]="shipment.clientId" name="clientId-{{ i }}" class="custom-select">
+                            <option *ngFor="let client of clients" [value]="client.id">
+                                {{ client.name }}
+                            </option>
+                        </select>
+                    </td>
+                    <td><input type="text" [(ngModel)]="shipment.clientOrderId" class="form-input"></td>
+                    <td><input type="number" [(ngModel)]="shipment.quantity" class="form-input"></td>
+                    <td><input type="date" [(ngModel)]="shipment.shipmentStartingDate" class="form-input"></td>
+                    <td><input type="date" [(ngModel)]="shipment.estimatedArrivalDate" class="form-input"></td>
+                    <td><input type="date" [(ngModel)]="shipment.arrivalDate" class="form-input"></td>
+                    <td>
+                        <!-- Dropdown for selecting shipment status -->
+                        <select [(ngModel)]="shipment.status" name="status-{{ i }}" class="custom-select">
+                            <option *ngFor="let status of ShipmentStatus | keyvalue" [value]="status.value">
+                                {{ status.value }}
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Page Selector -->
+<div class="flex items-center justify-end py-4">
+    <app-page-selector
+        [page]="searchParams.page"
+        [itemsPerPage]="searchParams.itemsPerPage"
+        [totalItems]="clientShipments?.totalCount || clientShipments?.results?.length || 0"
+        (pageChange)="changePage($event)"
+    ></app-page-selector>
+</div>
+
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteClientShipments()"
+            (cancel)="handleCancelDeletion()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>

@@ -7,7 +7,7 @@ import { ClientEvaluationComponent } from './client-evaluation/client-evaluation
 import { ClientOverviewComponent } from './client-overview/client-overview.component';
 import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
 import { ClientOrdersComponent } from '../client-orders/client-orders.component';
-import { ClientShipmentsComponent } from './client-shipments/client-shipments.component';
+import { ClientShipmentsComponent } from '../client-shipments/client-shipments.component';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { Client } from '../../models/Client';
 import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';

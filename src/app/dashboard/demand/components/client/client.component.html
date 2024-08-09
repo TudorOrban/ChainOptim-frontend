@@ -29,7 +29,7 @@
 
 <app-client-overview *ngIf="activeTab === 'Overview'" [client]="client"></app-client-overview>
 <app-client-orders *ngIf="activeTab === 'Client Orders'" [searchMode]="SearchMode.SECONDARY" [clientId]="client?.id" [dontPadHorizontally]="true"></app-client-orders>
-<app-client-shipments *ngIf="activeTab === 'Client Shipments'" [client]="client"></app-client-shipments>
+<app-client-shipments *ngIf="activeTab === 'Client Shipments'" [searchMode]="SearchMode.SECONDARY" [clientId]="client?.id" [dontPadHorizontally]="true"></app-client-shipments>
 <app-client-evaluation *ngIf="activeTab === 'Evaluation'" [client]="client"></app-client-evaluation>
 
 
