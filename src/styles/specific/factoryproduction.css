@@ -10,3 +10,22 @@
     background-color: #241fb3;
     cursor: col-resize;
 }
+
+.tabs-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;  /* Hide scrollbar for Firefox */
+}
+
+.tabs-scroll-container::-webkit-scrollbar {
+    display: none;  /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+/* Ensuring that no inherited or conflicting styles override your settings */
+.tabs-scroll-container * {
+    scrollbar-width: none;
+}
+
+.tabs-scroll-container *::-webkit-scrollbar {
+    display: none;
+}

@@ -14,18 +14,18 @@
 </div>
 
 <!-- Tab Cards -->
-<div class="flex items-center">
+<div #tabsScrollContainer class="tabs-scroll-container flex items-center overflow-x-auto">
     <button
         *ngFor="let tab of tabsService.getTabs()"
         (click)="tabsService.setActiveTab(tab.id)"
         [ngClass]="{
             'active': tab.id === tabsService.getActiveTabId().value,
             'bg-gray-100': tab.id === tabsService.getActiveTabId().value,
-            'bg-white': tab.id !== tabsService.getActiveTabId().value
+            'bg-white border-b': tab.id !== tabsService.getActiveTabId().value
         }"
         class="flex items-center px-4 py-2 space-x-2 border-t border-x border-gray-300 rounded-t-md"
     >
-        <div class="font-semibold">
+        <div class="font-semibold whitespace-nowrap">
             {{ tab.title }}
         </div>
         <button

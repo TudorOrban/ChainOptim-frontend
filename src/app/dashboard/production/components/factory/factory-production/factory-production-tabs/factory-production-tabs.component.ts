@@ -5,6 +5,7 @@ import {
     ViewChild,
     ViewContainerRef,
     Type,
+    ElementRef,
 } from '@angular/core';
 import { TabsService } from '../../../../services/productiontabs.service';
 import { Tab } from '../../../../models/Production';
@@ -32,6 +33,10 @@ import { Subscription } from 'rxjs';
 export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     @ViewChild('dynamicTabContent', { read: ViewContainerRef })
     dynamicTabContent!: ViewContainerRef;
+
+    @ViewChild('tabsScrollContainer')
+    tabsScrollContainer!: ElementRef;
+
     private tabSubscription!: Subscription;
 
     constructor(public tabsService: TabsService) {}
@@ -41,6 +46,17 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
             const tab = this.tabsService.getTabs().find(t => t.id === activeTabId);
             if (tab) {
                 this.loadComponent(tab);
+            }
+        });
+    }
+
+    ngAfterViewInit(): void {
+        const scrollContainer = this.tabsScrollContainer.nativeElement;
+
+        scrollContainer.addEventListener('wheel', (event: WheelEvent) => {
+            if (event.deltaY) {
+                event.preventDefault();  // Prevent vertical scroll
+                scrollContainer.scrollLeft += event.deltaY + event.deltaX;
             }
         });
     }
