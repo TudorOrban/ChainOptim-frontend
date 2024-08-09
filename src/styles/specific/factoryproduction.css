@@ -1,0 +1,12 @@
+
+.app-panel {
+    overflow-y: auto; 
+    height: 100%; 
+    min-width: 0; 
+}
+
+.resize-handle {
+    width: 5px;
+    background-color: #241fb3;
+    cursor: col-resize;
+}
