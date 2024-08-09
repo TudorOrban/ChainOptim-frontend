@@ -1,6 +1,6 @@
 <div>
     <app-table-toolbar
-        [title]="'Supplier Orders'" [searchPlaceholder]="'Search by company ID'" [sortOptions]="sortOptions" [filterOptions]="filterOptions"
+        [title]="searchMode == SearchMode.ORGANIZATION ? 'Supplier Orders' : ''" [searchPlaceholder]="'Search by company ID'" [sortOptions]="sortOptions" [filterOptions]="filterOptions"
         [selectedItemIds]="selectedOrderIds" [newRawItems]="newRawOrders" [isEditing]="isEditing"
         (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onFilterChange)="handleFilterChange($event)" (onRefresh)="handleRefresh()"
         (onCancel)="handleCancel()"(onAddItem)="handleAddOrder()" (onCreateItems)="handleCreateOrders()" (onEditItems)="editSelectedOrders()" (onSaveEditedItems)="saveEditedOrders()" (onDeleteItems)="openConfirmDeleteDialog()"
@@ -13,6 +13,7 @@
             <tr>
                 <th class="select-col"><input type="checkbox" (change)="toggleAllSelections($event)"/></th>
                 <th class="id-col">ID</th>
+                <th class="company-id-col">Company ID</th>
                 <th class="supplier-id-col px-2">Supplier</th>
                 <th class="component-col">Component</th>
                 <th class="quantity-col">Quantity</th>
@@ -20,7 +21,6 @@
                 <th class="order-date-col">Order Date</th>
                 <th class="est-delivery-col">Estimated Delivery Date</th>
                 <th class="delivery-date-col">Delivery Date</th>
-                <th class="company-id-col">Company ID</th>
                 <th class="status-col">Status</th>
             </tr>
         </thead>
@@ -28,6 +28,7 @@
             <tr *ngFor="let newOrder of newRawOrders; let i = index">
                 <td><input type="checkbox" [(ngModel)]="newOrder.selected"></td>
                 <td>{{ i + 1 }}</td>
+                <td><input type="text" [(ngModel)]="newOrder.companyId" class="form-input"></td>
                 <td>
                     <!-- Dropdown for selecting supplier -->
                     <select [(ngModel)]="newOrder.supplierId" name="supplierId-{{ i }}" class="custom-select">
@@ -49,7 +50,6 @@
                 <td><input type="date" [(ngModel)]="newOrder.orderDate" class="form-input"></td>
                 <td><input type="date" [(ngModel)]="newOrder.estimatedDeliveryDate" class="form-input"></td>
                 <td><input type="date" [(ngModel)]="newOrder.deliveryDate" class="form-input"></td>
-                <td><input type="text" [(ngModel)]="newOrder.companyId" class="form-input"></td>
                 <td>
                     <!-- Dropdown for selecting order status -->
                     <select [(ngModel)]="newOrder.status" name="status-{{ i }}" class="custom-select">
@@ -63,6 +63,7 @@
                 <tr *ngIf="!order.isEditing">
                     <td><input type="checkbox" [checked]="order?.selected" (change)="toggleSelection(order)" /></td> <!-- Row-specific Checkbox -->
                     <td>{{ order.id }}</td>
+                    <td>{{ order?.companyId }}</td>
                     <td>{{ getSupplierName(order.supplierId) }}</td>
                     <td>{{ order?.component?.name }}</td>
                     <td>{{ order?.quantity }}</td>
@@ -70,12 +71,12 @@
                     <td>{{ order?.orderDate | date:'shortDate' }}</td>
                     <td>{{ order?.estimatedDeliveryDate | date:'shortDate' }}</td>
                     <td>{{ order?.deliveryDate | date:'shortDate' }}</td>
-                    <td>{{ order?.companyId }}</td>
                     <td>{{ decapitalize(order?.status?.toString()) }}</td>
                 </tr>
                 <tr *ngIf="order.isEditing">
                     <td><input type="checkbox" [(ngModel)]="order.selected"></td>
                     <td>{{ order.id }}</td>
+                    <td><input type="text" [(ngModel)]="order.companyId" class="form-input"></td>
                     <td>
                         <!-- Dropdown for selecting supplier -->
                         <select [(ngModel)]="order.supplierId" name="supplierId-{{ i }}" class="custom-select">
@@ -98,7 +99,6 @@
                     <td><input type="date" [(ngModel)]="order.orderDate" class="form-input"></td>
                     <td><input type="date" [(ngModel)]="order.estimatedDeliveryDate" class="form-input"></td>
                     <td><input type="date" [(ngModel)]="order.deliveryDate" class="form-input"></td>
-                    <td><input type="text" [(ngModel)]="order.companyId" class="form-input"></td>
                     <td>
                         <!-- Dropdown for selecting order status -->
                         <select [(ngModel)]="order.status" name="status-{{ i }}" class="custom-select">

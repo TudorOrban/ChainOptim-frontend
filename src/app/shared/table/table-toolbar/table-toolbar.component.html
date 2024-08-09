@@ -1,7 +1,7 @@
 <div class="bg-gray-100 py-4 page-standard-horizontal-padding space-y-4 border-b border-gray-300 shadow-sm">
-    <h2 class="flex items-center page-title">
+    <div *ngIf="title !== ''" class="flex items-center page-title">
         {{ title }}
-    </h2>
+    </div>
     <div class="flex items-center flex-wrap space-x-4">
         <app-search-input (searchEvent)="performSearch($event)" [placeholder]="searchPlaceholder" class="ml-4"></app-search-input>
         <app-filter-bar (filterChange)="handleFilterChange($event)" [filterOptions]="filterOptions"></app-filter-bar>

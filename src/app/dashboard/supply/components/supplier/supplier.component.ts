@@ -5,7 +5,7 @@ import { faBox, faGear, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 import { SupplierOverviewComponent } from './supplier-overview/supplier-overview.component';
 import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
-import { SupplierOrdersComponent } from './supplier-orders/supplier-orders.component';
+import { SupplierOrdersComponent } from '../supplier-orders/supplier-orders.component';
 import { SupplierPerformanceComponent } from './supplier-performance/supplier-performance.component';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { Supplier } from '../../models/Supplier';
@@ -17,6 +17,7 @@ import { GenericConfirmDialogComponent } from '../../../../shared/common/compone
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { OperationOutcome, ToastInfo } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
+import { SearchMode } from '../../../../shared/enums/commonEnums';
 
 @Component({
     selector: 'app-supplier',
@@ -37,7 +38,7 @@ import { ToastService } from '../../../../shared/common/components/toast-system/
     styleUrl: './supplier.component.css',
 })
 export class SupplierComponent implements OnInit {
-    supplierId: string | null = null;
+    supplierId: number | null = null;
     supplier: Supplier | null = null;
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
@@ -54,6 +55,7 @@ export class SupplierComponent implements OnInit {
             label: "Performance",
         },
     ]
+    SearchMode = SearchMode;
     activeTab: string = "Overview";
     deleteDialogInput: ConfirmDialogInput = {
         dialogTitle: "Delete Supplier",
@@ -83,7 +85,7 @@ export class SupplierComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         this.route.paramMap.subscribe((params) => {
-            this.supplierId = params.get('supplierId');
+            this.supplierId = Number(params.get('supplierId'));
             
             this.supplierService
                 .getSupplierById(Number(this.supplierId))

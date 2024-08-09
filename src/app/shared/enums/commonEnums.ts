@@ -2,3 +2,12 @@ export enum SearchMode {
     ORGANIZATION = "ORGANIZATION",
     SECONDARY = "SECONDARY",
 }
+
+export enum Feature {
+    PRODUCT = "PRODUCT",
+    FACTORY = "FACTORY",
+    WAREHOUSE = "WAREHOUSE",
+    SUPPLIER = "SUPPLIER",
+    SUPPLIER_ORDER = "SUPPLIER_ORDER",
+    CLIENT = "CLIENT",
+}

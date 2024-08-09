@@ -4,7 +4,7 @@ import { CreateSupplierOrderDTO, OrderStatus, SupplierOrder, UpdateSupplierOrder
 import { SupplierOrderService } from '../../services/supplierorder.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { SearchParams } from '../../../../shared/search/models/Search';
-import { SearchMode } from '../../../../shared/enums/commonEnums';
+import { Feature, SearchMode } from '../../../../shared/enums/commonEnums';
 import { TableToolbarComponent } from '../../../../shared/table/table-toolbar/table-toolbar.component';
 import { User } from '../../../../core/user/model/user';
 import { CommonModule } from '@angular/common';
@@ -17,7 +17,8 @@ import { SupplierService } from '../../services/supplier.service';
 import { Supplier } from '../../models/Supplier';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
-import { FilterOption, FilterType } from '../../../../shared/common/models/reusableTypes';
+import { FilterOption, FilterType, UIItem } from '../../../../shared/common/models/reusableTypes';
+import { SearchOptionsService } from '../../../../shared/search/services/searchoptions.service';
 
 @Component({
   selector: 'app-supplier-orders',
@@ -28,12 +29,12 @@ import { FilterOption, FilterType } from '../../../../shared/common/models/reusa
 })
 export class SupplierOrdersComponent implements OnInit {
     @Input() searchMode: SearchMode = SearchMode.ORGANIZATION;
+    @Input() supplierId: number | undefined = undefined;
 
     currentUser: User | undefined = undefined;
     supplierOrders: PaginatedResults<SupplierOrder> | undefined = undefined;
     suppliers: Supplier[] = [];
     components: ComponentSearchDTO[] = [];
-    OrderStatus = OrderStatus;  
 
     searchParams: SearchParams = {
         searchQuery: "",
@@ -42,6 +43,9 @@ export class SupplierOrdersComponent implements OnInit {
         page: 1,
         itemsPerPage: 20,
     };
+    SearchMode = SearchMode;
+    OrderStatus = OrderStatus;  
+
     selectedOrderIds = new Set<number>(); 
     newRawOrders: any[] = [];
     isEditing: boolean = false;
@@ -53,49 +57,8 @@ export class SupplierOrdersComponent implements OnInit {
     };
     isConfirmDialogOpen = false;
     
-    sortOptions = [
-        { label: 'Created At', value: 'createdAt' },
-        { label: 'Updated At', value: 'updatedAt' },
-    ];
-    filterOptions: FilterOption[] = [
-        {
-            key: {
-                label: "Order Date",
-                value: "orderDate",
-            },
-            valueOptions: [],
-            filterType: FilterType.DATE
-        },
-        {
-            key: {
-                label: "Quantity",
-                value: "Quantity",
-            },
-            valueOptions: [],
-            filterType: FilterType.NUMBER
-        },
-        {
-            key: {
-                label: "Status",
-                value: "status",
-            },
-            valueOptions: [
-                {
-                    label: "Delivered",
-                    value: OrderStatus.DELIVERED
-                },
-                {
-                    label: "Initiated",
-                    value: OrderStatus.INITIATED
-                },
-                {
-                    label: "Placed",
-                    value: OrderStatus.PLACED
-                }
-            ],
-            filterType: FilterType.ENUM
-        },
-    ];
+    sortOptions: UIItem[] = [];
+    filterOptions: FilterOption[] = [];
 
     constructor(
         private userService: UserService,
@@ -103,8 +66,10 @@ export class SupplierOrdersComponent implements OnInit {
         private supplierService: SupplierService,
         private componentService: ComponentService,
         private toastService: ToastService,
+        private searchOptionsService: SearchOptionsService
     ) {
-        
+        this.filterOptions = this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_ORDER)?.filterOptions || [];
+        this.sortOptions = this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_ORDER)?.sortOptions || [];
     }
 
     ngOnInit(): void {
@@ -127,7 +92,7 @@ export class SupplierOrdersComponent implements OnInit {
 
     private loadSupplierOrders(): void {
         this.supplierOrderService
-            .getSupplierOrdersByOrganizationIdAdvanced(this.currentUser?.organization?.id || 0, this.searchParams, this.searchMode)
+            .getSupplierOrdersByOrganizationIdAdvanced(this.searchMode == SearchMode.SECONDARY ? (this.supplierId || 0) : (this.currentUser?.organization?.id || 0), this.searchParams, this.searchMode)
             .subscribe((supplierOrders) => {
                 this.supplierOrders = supplierOrders;
                 console.log("Supplier orders:", supplierOrders);

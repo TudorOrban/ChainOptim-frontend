@@ -1,12 +1,19 @@
-export interface UIItem {
-    label: string;
-    value: string;
+
+// Search
+export interface SearchOptions {
+    filterOptions: FilterOption[];
+    sortOptions?: UIItem[];
 }
 
 export interface FilterOption {
     key: UIItem;
     valueOptions: UIItem[];
     filterType: FilterType;
+}
+
+export interface UIItem {
+    label: string;
+    value: string;
 }
 
 export enum FilterType {
