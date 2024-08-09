@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { CreateSupplierOrderDTO, SupplierOrder, UpdateSupplierOrderDTO } from '../models/SupplierOrder';
@@ -120,6 +120,25 @@ export class SupplierOrderService {
     }
 
     deleteSupplierOrdersInBulk(supplierOrderIds: number[]): Observable<number[]> {
-        return this.http.post<number[]>(`${this.apiUrl}/delete/bulk`, supplierOrderIds);
+        const options = {
+            body: supplierOrderIds,
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+        return this.http.delete<number[]>(`${this.apiUrl}/delete/bulk`, options).pipe(
+            tap(orders => {
+                console.log("Deleted orders:", orders);
+                if (orders.length === 0) {
+                    throw new Error("Order deletion failed: No orders deleted");
+                }
+                this.cachingService.invalidateAllCache();
+            }),
+            catchError(error => {
+                console.error("Error in deleting orders", error);
+                throw error;
+            })
+        );
     }
+    
 }

@@ -15,11 +15,13 @@ import { ComponentService } from '../../../goods/services/component.service';
 import { ComponentSearchDTO } from '../../../goods/models/Component';
 import { SupplierService } from '../../services/supplier.service';
 import { Supplier } from '../../models/Supplier';
+import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
+import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 
 @Component({
   selector: 'app-supplier-orders',
   standalone: true,
-  imports: [CommonModule, TableToolbarComponent, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableToolbarComponent, GenericConfirmDialogComponent],
   templateUrl: './supplier-orders.component.html',
   styleUrl: './supplier-orders.component.css'
 })
@@ -37,10 +39,16 @@ export class SupplierOrdersComponent implements OnInit {
         sortOption: "createdAt",
         ascending: false,
         page: 1,
-        itemsPerPage: 10,
+        itemsPerPage: 20,
     };
     selectedOrderIds = new Set<number>(); 
     newRawOrders: any[] = [];
+    
+    deleteDialogInput: ConfirmDialogInput = {
+        dialogTitle: "Delete Supplier",
+        dialogMessage: "Are you sure you want to delete this supplier?",
+    };
+    isConfirmDialogOpen = false;
     
     sortOptions = [
         { label: 'Created At', value: 'createdAt' },
@@ -241,6 +249,32 @@ export class SupplierOrdersComponent implements OnInit {
         return isNaN(parsedDate.getTime()) ? null : parsedDate;
     }
 
+    // - Update
+    openConfirmDeleteDialog() {
+        this.isConfirmDialogOpen = true;
+    }
+
+    handleDeleteSupplierOrders() {
+        this.supplierOrderService
+            .deleteSupplierOrdersInBulk(Array.from(this.selectedOrderIds))
+            .subscribe({
+                next: (success) => {
+                    this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier deleted successfully.', outcome: OperationOutcome.SUCCESS });
+                    this.isConfirmDialogOpen = false;
+                    this.selectedOrderIds.clear();
+                    this.loadSupplierOrders();
+                },
+                error: (error: Error) => {
+                    this.toastService.addToast({ id: 123, title: 'Error', message: 'Supplier deletion failed.', outcome: OperationOutcome.ERROR });
+                    console.error('Error deleting supplier:', error);
+                },
+            });   
+    }
+
+    handleCancelDeletion() {
+        this.isConfirmDialogOpen = false;
+    }
+    
     // Utils
     decapitalize(word?: string) {
         if (!word) return '';

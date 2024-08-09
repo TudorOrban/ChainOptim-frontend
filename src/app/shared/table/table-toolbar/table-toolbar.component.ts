@@ -30,6 +30,7 @@ export class TableToolbarComponent {
     @Output() onCancel: EventEmitter<void> = new EventEmitter<void>();
     @Output() onAddItem: EventEmitter<void> = new EventEmitter<void>();
     @Output() onCreateItems: EventEmitter<void> = new EventEmitter<void>();
+    @Output() onDeleteItems: EventEmitter<void> = new EventEmitter<void>();
 
     performSearch(searchQuery: string): void {
         this.onSearch.emit(searchQuery);
@@ -53,6 +54,10 @@ export class TableToolbarComponent {
 
     handleCreateItems(): void {
         this.onCreateItems.emit();
+    }
+
+    handleDeleteItems(): void {
+        this.onDeleteItems.emit();
     }
 
     faBox = faBox;

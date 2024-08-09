@@ -2,7 +2,7 @@
     <app-table-toolbar
         [title]="'Supplier Orders'" [searchPlaceholder]="'Search by company ID'" [sortOptions]="sortOptions"
         [selectedItemIds]="selectedOrderIds" [newRawItems]="newRawOrders"
-        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onRefresh)="handleRefresh()" (onCancel)="handleCancel()" (onAddItem)="handleAddOrder()" (onCreateItems)="handleCreateOrders()"
+        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onRefresh)="handleRefresh()" (onCancel)="handleCancel()" (onAddItem)="handleAddOrder()" (onCreateItems)="handleCreateOrders()" (onDeleteItems)="openConfirmDeleteDialog()"
     ></app-table-toolbar>
 </div>
 
@@ -75,4 +75,17 @@
     </table>
     
 
+</div>
+
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteSupplierOrders()"
+            (cancel)="handleCancelDeletion()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
 </div>

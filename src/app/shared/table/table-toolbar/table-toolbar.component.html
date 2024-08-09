@@ -20,7 +20,10 @@
         >
             <fa-icon [icon]="faXmark" class="text-gray-700"></fa-icon>
         </button>
-        <button *ngIf="(selectedItemIds?.size ?? 0) > 0" class="standard-delete-button">
+        <button
+            (click)="handleDeleteItems()"
+            *ngIf="(selectedItemIds?.size ?? 0) > 0" class="standard-delete-button"
+        >
             <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
         </button>
         <button
