@@ -7,6 +7,13 @@ export interface Supplier {
     updatedAt: Date;
     organizationId: number;
     location: Location;
+
+    // Performance Metrics
+    overallScore: number;
+    timelinessScore: number;
+    quantityPerTimeScore: number;
+    availabilityScore: number;
+    qualityScore: number;
 }
 
 export interface CreateSupplierDTO {

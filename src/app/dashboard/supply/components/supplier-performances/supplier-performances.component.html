@@ -1,1 +1,56 @@
-<p>supplier-performances works!</p>
+<!-- Header -->
+<app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    [title]="'Supplier Performances'" [icon]="faIndustry" [searchPlaceholder]="'Search Suppliers'" [sortOptions]="sortOptions" [createName]="'Supplier'" [createLink]="'create-supplier'"
+    (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
+></app-list-header>
+
+<!-- Page content-->
+<div *ngIf="!fallbackManagerState.fallBack" class="page-standard-horizontal-padding">
+    <ul *ngFor="let supplier of suppliers">
+        <li
+            key="supplier.id"
+            class="px-4 py-2 my-4 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-md shadow-sm"
+        >
+            <div class="flex items-center w-full justify-between">
+                <div>
+                    <a
+                        [routerLink]="'/dashboard/suppliers/' + supplier.id"
+                        class="font-semibold text-lg hover:text-blue-700 hover:text-underline"
+                        >{{ supplier.name }}</a
+                    >
+                    <p class="text-gray-900">{{ supplier.location?.address }}</p>
+                </div>
+                <div class="flex items-center space-x-4 pt-4">
+                    <app-score
+                        [score]="supplier?.overallScore || 0"
+                    ></app-score>
+                    <app-score
+                        [score]="supplier?.timelinessScore || 0"
+                    ></app-score>
+                    <app-score
+                        [score]="supplier?.quantityPerTimeScore || 0"
+                    ></app-score>
+                    <app-score
+                        [score]="supplier?.availabilityScore || 0"
+                    ></app-score>
+                    <app-score
+                        [score]="supplier?.qualityScore || 0"
+                    ></app-score>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="flex items-center justify-end py-4">
+        <app-page-selector
+            [page]="page"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="totalCount"
+            (pageChange)="changePage($event)"
+        ></app-page-selector>
+    </div>
+</div>
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>

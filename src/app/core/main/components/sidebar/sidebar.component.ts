@@ -77,7 +77,7 @@ export class SidebarComponent {
                 { label: 'Suppliers', link: '/dashboard/suppliers' },
                 { label: 'Supplier Orders', link: '/dashboard/supplier-orders' },
                 { label: 'Supplier Shipments', link: '/dashboard/supplier-shipments' },
-                { label: 'Supplier Performances', link: '/dashboard/supplier-performances' },
+                { label: 'Performances', link: '/dashboard/supplier-performances' },
             ]
         },
         { label: 'Production', icon: this.faIndustry, link: '/dashboard/factories',
@@ -100,7 +100,7 @@ export class SidebarComponent {
                 { label: 'Clients', link: '/dashboard/clients' },
                 { label: 'Client Orders', link: '/dashboard/client-orders' },
                 { label: 'Client Shipments', link: '/dashboard/client-shipments' },
-                { label: 'Client Performances', link: '/dashboard/client-performances' },
+                { label: 'Performances', link: '/dashboard/client-performances' },
             ]
         },
         { label: 'Settings', icon: this.faGear, link: '/dashboard/settings' },
