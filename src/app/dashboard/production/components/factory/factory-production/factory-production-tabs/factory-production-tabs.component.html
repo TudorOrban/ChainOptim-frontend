@@ -1,46 +1,41 @@
-<div class="w-full h-full px-8 py-4 space-y-4 bg-gray-100 border-l border-gray-300 shadow-sm">
-    <h2 class="text-xl font-semibold">Toolbar</h2>
-    <div class="">
-        <h1 class="text-lg font-semibold text-gray-800 pb-2">Edit Configuration</h1>
+<div class="flex items-center">
+    <button (click)="loadAddStageComponent()">
+        Add Stage
+    </button>
+    <button (click)="loadUpdateStageComponent()">
+        Update Stage
+    </button>
+    <button (click)="loadFactoryGraphComponent()">
+        Factory Graph
+    </button>
+    <button (click)="loadAllocationPlanComponent()">
+        Allocation Plan
+    </button>
+</div>
+
+<!-- Tab Cards -->
+<div class="flex items-center">
+    <button
+        *ngFor="let tab of tabsService.getTabs()"
+        (click)="tabsService.setActiveTab(tab.id)"
+        [ngClass]="{
+            'active': tab.id === tabsService.getActiveTabId().value,
+            'bg-gray-100': tab.id === tabsService.getActiveTabId().value,
+            'bg-white': tab.id !== tabsService.getActiveTabId().value
+        }"
+        class="flex items-center px-4 py-2 space-x-2 border-t border-x border-gray-300 rounded-t-md"
+    >
         <div class="font-semibold">
-            Stages
+            {{ tab.title }}
         </div>
-        <div class="font-semibold">
-            Connections
-        </div>
-    </div>
-    <div class="">
-        <h1 class="text-lg font-semibold text-gray-800 pb-2">Display Info</h1>
-        <div class="">
-            Quantities (Q)
-        </div>
-        <div class="">
-            Capacities (C)
-        </div>
-        <div class="">
-            Priorities (P)
-        </div>
-    </div>
-    <div class="">
-        <h1 class="text-lg font-semibold text-gray-800 pb-2">Allocate Resources</h1>
-        <div class="space-y-2">
-            <button class="standard-button">
-                View Active Plan
-            </button>
-            
-            <button class="standard-button">
-                Compute Allocation Plan
-            </button>
-            
-            <button class="standard-button">
-                View Production History
-            </button>
-        </div>
-    </div>
-    <div class="">
-        <h1 class="text-lg font-semibold text-gray-800 pb-2">Seek Resources</h1>
-        <button class="standard-button">
-            Seek Missing Resources
+        <button
+            (click)="tabsService.closeTab(tab.id); $event.stopPropagation()"
+            class="text-gray-700 hover:text-red-700 pb-2"
+        >
+            <fa-icon [icon]="faTimes"></fa-icon>
         </button>
-    </div>
-</div>  
+    </button>
+</div>
+
+<!-- Active Tab -->
+<div #dynamicTabContent></div>

@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, PLATFORM_ID, ViewChild } from '@angular/core';
 import { Factory } from '../../../models/Factory';
 import { FactoryService } from '../../../services/factory.service';
 import { FactoryProductionTabsComponent } from './factory-production-tabs/factory-production-tabs.component';
 import { FactoryProductionToolbarComponent } from './factory-production-toolbar/factory-production-toolbar.component';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-factory-production',
@@ -20,17 +21,20 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
     private isResizing: boolean = false;
 
     constructor(
-        private factoryService: FactoryService
+        private factoryService: FactoryService,
+        @Inject(PLATFORM_ID) private platformId: Object
     ) {}
 
     
     ngAfterViewInit(): void {
-        const resizer = this.resizer.nativeElement;
-        this.leftPanel = resizer.previousElementSibling as HTMLElement;
-        this.rightPanel = resizer.nextElementSibling as HTMLElement;
+        if (isPlatformBrowser(this.platformId)) {
+            const resizer = this.resizer.nativeElement;
+            this.leftPanel = resizer.previousElementSibling as HTMLElement;
+            this.rightPanel = resizer.nextElementSibling as HTMLElement;
 
-        resizer.addEventListener('mousedown', this.startResizing);
-        document.addEventListener('mouseup', this.stopResizing);
+            resizer.addEventListener('mousedown', this.startResizing);
+            document.addEventListener('mouseup', this.stopResizing);
+        }
     }
 
     private startResizing = (event: MouseEvent) => {
@@ -54,10 +58,11 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // Clean up the event listeners when the component is destroyed
-        this.resizer.nativeElement.removeEventListener('mousedown', this.startResizing);
-        document.removeEventListener('mouseup', this.stopResizing);
-        document.removeEventListener('mousemove', this.resize);
+        if (isPlatformBrowser(this.platformId)) {
+            this.resizer.nativeElement.removeEventListener('mousedown', this.startResizing);
+            document.removeEventListener('mouseup', this.stopResizing);
+            document.removeEventListener('mousemove', this.resize);
+        }
     }
 
 
