@@ -112,7 +112,19 @@ export class SupplierOrderService {
     }
 
     updateSupplierOrdersInBulk(orderDTOs: UpdateSupplierOrderDTO[]): Observable<SupplierOrder[]> {
-        return this.http.put<SupplierOrder[]>(`${this.apiUrl}/update/bulk`, orderDTOs);
+        return this.http.put<SupplierOrder[]>(`${this.apiUrl}/update/bulk`, orderDTOs).pipe(
+            tap(orders => {
+                console.log("Updated orders:", orders);
+                if (orders.length === 0) {
+                    throw new Error("Order update failed: No orders updated");
+                }
+                this.cachingService.invalidateAllCache();
+            }),
+            catchError(error => {
+                console.error("Error in updating orders", error);
+                throw error;
+            })
+        );
     }
 
     deleteSupplierOrder(supplierOrderId: number): Observable<number> {

@@ -23,6 +23,7 @@ export class TableToolbarComponent {
     ];
     @Input() selectedItemIds = new Set<number>();
     @Input() newRawItems: any[] = [];
+    @Input() isEditing: boolean = false;
 
     @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() onSortChange = new EventEmitter<{ value: string, ascending: boolean }>();
@@ -30,7 +31,9 @@ export class TableToolbarComponent {
     @Output() onCancel: EventEmitter<void> = new EventEmitter<void>();
     @Output() onAddItem: EventEmitter<void> = new EventEmitter<void>();
     @Output() onCreateItems: EventEmitter<void> = new EventEmitter<void>();
+    @Output() onEditItems: EventEmitter<void> = new EventEmitter<void>();
     @Output() onDeleteItems: EventEmitter<void> = new EventEmitter<void>();
+    @Output() onSaveEditedItems: EventEmitter<void> = new EventEmitter<void>();
 
     performSearch(searchQuery: string): void {
         this.onSearch.emit(searchQuery);
@@ -54,6 +57,14 @@ export class TableToolbarComponent {
 
     handleCreateItems(): void {
         this.onCreateItems.emit();
+    }
+
+    handleEditItems(): void {
+        this.onEditItems.emit();
+    }
+
+    handleSaveEditedItems(): void {
+        this.onSaveEditedItems.emit();
     }
 
     handleDeleteItems(): void {

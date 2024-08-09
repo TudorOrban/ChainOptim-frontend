@@ -1,8 +1,8 @@
 <div>
     <app-table-toolbar
         [title]="'Supplier Orders'" [searchPlaceholder]="'Search by company ID'" [sortOptions]="sortOptions"
-        [selectedItemIds]="selectedOrderIds" [newRawItems]="newRawOrders"
-        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onRefresh)="handleRefresh()" (onCancel)="handleCancel()" (onAddItem)="handleAddOrder()" (onCreateItems)="handleCreateOrders()" (onDeleteItems)="openConfirmDeleteDialog()"
+        [selectedItemIds]="selectedOrderIds" [newRawItems]="newRawOrders" [isEditing]="isEditing"
+        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onRefresh)="handleRefresh()" (onCancel)="handleCancel()" (onAddItem)="handleAddOrder()" (onCreateItems)="handleCreateOrders()" (onEditItems)="editSelectedOrders()" (onSaveEditedItems)="saveEditedOrders()" (onDeleteItems)="openConfirmDeleteDialog()"
     ></app-table-toolbar>
 </div>
 
@@ -10,7 +10,7 @@
     <table class="custom-table">
         <thead>
             <tr>
-                <th class="select-col"><input type="checkbox" (change)="toggleAllSelections($event)"/></th> <!-- Header Checkbox -->
+                <th class="select-col"><input type="checkbox" (change)="toggleAllSelections($event)"/></th>
                 <th class="id-col">ID</th>
                 <th class="supplier-id-col">Supplier ID</th>
                 <th class="component-col">Component</th>
@@ -58,19 +58,56 @@
                     </select>
                 </td>
             </tr>
-            <tr *ngFor="let order of supplierOrders?.results; let i = index">
-                <td><input type="checkbox" [checked]="order?.selected" (change)="toggleSelection(order)" /></td> <!-- Row-specific Checkbox -->
-                <td>{{ order.id }}</td>
-                <td>{{ getSupplierName(order.supplierId) }}</td>
-                <td>{{ order?.component?.name }}</td>
-                <td>{{ order?.quantity }}</td>
-                <td>{{ order?.deliveredQuantity }}</td>
-                <td>{{ order?.orderDate | date:'shortDate' }}</td>
-                <td>{{ order?.estimatedDeliveryDate | date:'shortDate' }}</td>
-                <td>{{ order?.deliveryDate | date:'shortDate' }}</td>
-                <td>{{ order?.companyId }}</td>
-                <td>{{ decapitalize(order?.status?.toString()) }}</td>
-            </tr>
+            <ng-container *ngFor="let order of supplierOrders?.results; let i = index">
+                <tr *ngIf="!order.isEditing">
+                    <td><input type="checkbox" [checked]="order?.selected" (change)="toggleSelection(order)" /></td> <!-- Row-specific Checkbox -->
+                    <td>{{ order.id }}</td>
+                    <td>{{ getSupplierName(order.supplierId) }}</td>
+                    <td>{{ order?.component?.name }}</td>
+                    <td>{{ order?.quantity }}</td>
+                    <td>{{ order?.deliveredQuantity }}</td>
+                    <td>{{ order?.orderDate | date:'shortDate' }}</td>
+                    <td>{{ order?.estimatedDeliveryDate | date:'shortDate' }}</td>
+                    <td>{{ order?.deliveryDate | date:'shortDate' }}</td>
+                    <td>{{ order?.companyId }}</td>
+                    <td>{{ decapitalize(order?.status?.toString()) }}</td>
+                </tr>
+                <tr *ngIf="order.isEditing">
+                    <td><input type="checkbox" [(ngModel)]="order.selected"></td>
+                    <td>{{ order.id }}</td>
+                    <td>
+                        <!-- Dropdown for selecting supplier -->
+                        <select [(ngModel)]="order.supplierId" name="supplierId-{{ i }}">
+                            <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+                                {{ supplier.name }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <!-- Dropdown for selecting component -->
+                        <select [(ngModel)]="selectedComponentId[order.id]" (ngModelChange)="setComponentId(order, $event)" name="componentId-{{ i }}">
+                            <option [value]="null">Select a component</option>
+                            <option *ngFor="let component of components" [value]="component.id">
+                                {{ component.name }}
+                            </option>
+                        </select>                        
+                    </td>
+                    <td><input type="number" [(ngModel)]="order.quantity"></td>
+                    <td><input type="number" [(ngModel)]="order.deliveredQuantity"></td>
+                    <td><input type="date" [(ngModel)]="order.orderDate"></td>
+                    <td><input type="date" [(ngModel)]="order.estimatedDeliveryDate"></td>
+                    <td><input type="date" [(ngModel)]="order.deliveryDate"></td>
+                    <td><input type="text" [(ngModel)]="order.companyId"></td>
+                    <td>
+                        <!-- Dropdown for selecting order status -->
+                        <select [(ngModel)]="order.status" name="status-{{ i }}">
+                            <option *ngFor="let status of OrderStatus | keyvalue" [value]="status.value">
+                                {{ status.value }}
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </ng-container>
         </tbody>
     </table>
     

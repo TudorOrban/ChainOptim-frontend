@@ -27,18 +27,30 @@
             <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
         </button>
         <button
-            *ngIf="(newRawItems?.length ?? 0) > 0"
+            *ngIf="((newRawItems?.length ?? 0) > 0)"
             (click)="handleCreateItems()"
             class="standard-write-button flex items-center space-x-2"
         >
             <fa-icon [icon]="faSave" class="w-4 h-4 mb-2 mr-2"></fa-icon>
             Save Orders
         </button>
-        <div *ngIf="(selectedItemIds?.size ?? 0) > 0" class="standard-write-button flex items-center">
+        <div
+            (click)="handleEditItems()"
+            *ngIf="(selectedItemIds?.size ?? 0) > 0" class="standard-write-button flex items-center"
+        >
             <fa-icon [icon]="faEdit" class="text-white mr-2"></fa-icon>
             Edit Orders
         </div>
+        <button
+            *ngIf="isEditing"
+            (click)="handleSaveEditedItems()"
+            class="standard-write-button flex items-center space-x-2"
+        >
+            <fa-icon [icon]="faSave" class="w-4 h-4 mb-2 mr-2"></fa-icon>
+            Save Orders
+        </button>
         <button 
+            *ngIf="!isEditing"
             (click)="handleAddItem()"
             class="standard-write-button flex items-center space-x-2"
         >

@@ -16,6 +16,7 @@ export interface SupplierOrder {
     companyId?: string;
     status?: OrderStatus;
     selected?: boolean; // For UI purposes
+    isEditing?: boolean; // For UI purposes
 }
 
 export enum OrderStatus {

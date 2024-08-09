@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PaginatedResults } from '../../../../shared/search/models/PaginatedResults';
-import { CreateSupplierOrderDTO, OrderStatus, SupplierOrder } from '../../models/SupplierOrder';
+import { CreateSupplierOrderDTO, OrderStatus, SupplierOrder, UpdateSupplierOrderDTO } from '../../models/SupplierOrder';
 import { SupplierOrderService } from '../../services/supplierorder.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { SearchParams } from '../../../../shared/search/models/Search';
@@ -43,7 +43,9 @@ export class SupplierOrdersComponent implements OnInit {
     };
     selectedOrderIds = new Set<number>(); 
     newRawOrders: any[] = [];
-    
+    isEditing: boolean = false;
+    selectedComponentId: {[orderId: number]: number | null} = {};
+
     deleteDialogInput: ConfirmDialogInput = {
         dialogTitle: "Delete Supplier",
         dialogMessage: "Are you sure you want to delete this supplier?",
@@ -160,9 +162,10 @@ export class SupplierOrdersComponent implements OnInit {
     handleCancel(): void {
         this.newRawOrders = [];
         this.selectedOrderIds.clear();
+        this.isEditing = false;
         if (this.supplierOrders && this.supplierOrders.results) {
             this.supplierOrders.results = this.supplierOrders.results.map(order => {
-                return { ...order, selected: false };
+                return { ...order, selected: false, isEditing: false };
             });
         }
     }
@@ -205,7 +208,10 @@ export class SupplierOrdersComponent implements OnInit {
                 this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier Order created successfully.', outcome: OperationOutcome.SUCCESS });
                 
             },
-            error: (err) => console.error('Failed to create orders', err)
+            error: (err) => {
+                this.toastService.addToast({ id: 123, title: 'Error', message: 'Supplier Order creation failed.', outcome: OperationOutcome.ERROR });
+                console.error('Failed to create orders', err);
+            }
         });
 
     }
@@ -249,7 +255,74 @@ export class SupplierOrdersComponent implements OnInit {
         return isNaN(parsedDate.getTime()) ? null : parsedDate;
     }
 
-    // - Update
+    // Update
+    editSelectedOrders(): void {
+        this.supplierOrders?.results.forEach(order => {
+            if (this.selectedOrderIds.has(order.id)) {
+                order.isEditing = !order.isEditing;
+                if (order.isEditing) {
+                    this.selectedComponentId[order.id] = this.getComponentId(order); // Ensure the current component ID is set
+                }
+            }
+        });
+        this.isEditing = true;
+    }
+
+    getComponentId(order: SupplierOrder): number | null {
+        return order.component ? order.component.id : null;
+    }
+    
+    // Method to set component ID when changed
+    setComponentId(order: SupplierOrder, newComponentId: number): void {
+        if (!order.component && newComponentId !== null) {
+            order.component = { id: newComponentId, name: '', createdAt: new Date(), updatedAt: new Date() }; // Initialize with a default or lookup name
+        } else if (order.component) {
+            order.component.id = newComponentId;
+        }
+    }
+
+    saveEditedOrders(): void {
+        const editedOrders = this.supplierOrders?.results.filter(order => order.isEditing);
+        
+        const editedOrderDTOs = this.getValidUpdateDTO(editedOrders || []);
+
+        this.supplierOrderService.updateSupplierOrdersInBulk(editedOrderDTOs).subscribe({
+            next: (orders) => {
+                this.loadSupplierOrders();
+                this.handleCancel();
+                this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier Order updated successfully.', outcome: OperationOutcome.SUCCESS });
+            },
+            error: (err) => {
+                this.toastService.addToast({ id: 123, title: 'Error', message: 'Supplier Order update failed.', outcome: OperationOutcome.ERROR });
+                console.error('Failed to update orders', err);
+            }
+        });
+    }
+
+    private getValidUpdateDTO(editedOrders: SupplierOrder[]): UpdateSupplierOrderDTO[] {
+        const orderDTOs: UpdateSupplierOrderDTO[] = [];    
+
+        for (const order of editedOrders || []) {
+            const orderDTO: UpdateSupplierOrderDTO = {
+                id: order.id,
+                supplierId: order.supplierId,
+                componentId: order.component?.id,
+                organizationId: order.organizationId,
+                quantity: order.quantity,
+                orderDate: order.orderDate,
+                estimatedDeliveryDate: order.estimatedDeliveryDate,
+                deliveryDate: order.deliveryDate,
+                companyId: order.companyId,
+                status: order.status,
+            };
+
+            orderDTOs.push(orderDTO);
+        }
+
+        return orderDTOs;
+    }
+
+    // - Delete
     openConfirmDeleteDialog() {
         this.isConfirmDialogOpen = true;
     }
