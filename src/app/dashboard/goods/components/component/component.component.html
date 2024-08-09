@@ -1,0 +1,38 @@
+<!-- Header -->
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    class="page-standard-horizontal-padding entity-page-header">
+    <div class="flex items-center justify-between w-full">
+        <div>
+            <h2 class="page-title">{{ component?.name }}</h2>
+            <p class="text-gray-900 pt-1 h-6">{{ component?.description || "" }}</p>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button (click)="openConfirmDialog()" class="standard-delete-button">
+                <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
+            </button>
+            <button
+                class="standard-write-button"
+                [routerLink]="'/dashboard/components/' + component?.id + '/update'"
+            >
+                Edit Component    
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteComponent()"
+            (cancel)="handleCancel()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>

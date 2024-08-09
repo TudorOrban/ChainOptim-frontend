@@ -35,6 +35,7 @@ import { CreateSupplierComponent } from './supply/components/create-supplier/cre
 import { UpdateSupplierComponent } from './supply/components/update-supplier/update-supplier.component';
 import { CreateClientComponent } from './demand/components/create-client/create-client.component';
 import { UpdateClientComponent } from './demand/components/update-client/update-client.component';
+import { ComponentComponent } from './goods/components/component/component.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -72,6 +73,10 @@ export const dashboardRoutes: Routes = [
     {
         path: 'dashboard/products/:productId/update', 
         component: UpdateProductComponent,
+    },
+    {
+        path: 'dashboard/components/:componentId',
+        component: ComponentComponent,
     },
     {
         path: 'dashboard/factories',

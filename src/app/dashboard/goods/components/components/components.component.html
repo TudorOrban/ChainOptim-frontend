@@ -1,1 +1,36 @@
-<p>components works!</p>
+<!-- Header -->
+<app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    [title]="'Components'" [icon]="faBox" [searchPlaceholder]="'Search components'" [sortOptions]="sortOptions" [createName]="'Component'" [createLink]="'create-component'"
+    (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
+></app-list-header>
+
+<!-- Page content-->
+<div *ngIf="!fallbackManagerState.fallBack" class="page-standard-horizontal-padding pt-4">
+    <ul *ngFor="let component of components">
+        <li
+            key="component.id"
+            class="px-4 py-2 my-4 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-md shadow-sm"
+        >
+            <a
+                [routerLink]="'/dashboard/components/' + component.id"
+                class="font-semibold text-lg hover:text-blue-700 hover:text-underline"
+                >{{ component.name }}</a
+            >
+            <p class="text-gray-900">{{ component.description }}</p>
+        </li>
+    </ul>
+    <div class="flex items-center justify-end py-4">
+        <app-page-selector
+            [page]="page"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="totalCount"
+            (pageChange)="changePage($event)"
+        ></app-page-selector>
+    </div>
+</div>
+
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>
