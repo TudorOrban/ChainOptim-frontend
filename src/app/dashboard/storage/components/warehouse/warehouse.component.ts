@@ -9,13 +9,14 @@ import { NavigationItem } from '../../../../shared/common/models/uiTypes';
 import { WarehouseService } from '../../services/warehouse.service';
 import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
 import { WarehouseOverviewComponent } from './warehouse-overview/warehouse-overview.component';
-import { WarehouseInventoryComponent } from './warehouse-inventory/warehouse-inventory.component';
+import { WarehouseInventoryComponent } from '../warehouse-inventory/warehouse-inventory.component';
 import { WarehousePerformanceComponent } from './warehouse-performance/warehouse-performance.component';
 import { Warehouse } from '../../models/Warehouse';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { OperationOutcome, ToastInfo } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
+import { SearchMode } from '../../../../shared/enums/commonEnums';
 
 @Component({
     selector: 'app-warehouse',
@@ -49,6 +50,8 @@ export class WarehouseComponent implements OnInit {
             label: "Performance",
         },
     ]
+    SearchMode = SearchMode;
+    
     activeTab: string = "Overview";
     deleteDialogInput: ConfirmDialogInput = {
         dialogTitle: "Delete Warehouse",

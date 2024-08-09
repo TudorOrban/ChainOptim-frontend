@@ -18,9 +18,9 @@ export class WarehouseService {
         private cachingService: CachingService<PaginatedResults<Warehouse>>
     ) {}
 
-    getWarehousesByOrganizationId(organizationId: number): Observable<Warehouse[]> {
+    getWarehousesByOrganizationId(organizationId: number, small: boolean): Observable<Warehouse[]> {
         return this.http
-            .get<Warehouse[]>(`${this.apiUrl}/organization/${organizationId}`)
+            .get<Warehouse[]>(`${this.apiUrl}/organization/${organizationId}${small ? '/small' : ''}`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

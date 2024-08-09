@@ -28,7 +28,7 @@
 ></app-tabs>
 
 <app-warehouse-overview *ngIf="activeTab === 'Overview'" [warehouse]="warehouse"></app-warehouse-overview>
-<app-warehouse-inventory *ngIf="activeTab === 'Inventory'" [warehouse]="warehouse"></app-warehouse-inventory>
+<app-warehouse-inventory *ngIf="activeTab === 'Inventory'" [searchMode]="SearchMode.SECONDARY" [warehouseId]="warehouse?.id" [dontPadHorizontally]="true"></app-warehouse-inventory>
 <app-warehouse-performance *ngIf="activeTab === 'Performance'" [warehouse]="warehouse"></app-warehouse-performance>
 
 
