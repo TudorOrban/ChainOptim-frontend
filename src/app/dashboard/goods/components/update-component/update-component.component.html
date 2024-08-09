@@ -1,0 +1,32 @@
+<div class="std-form-container">
+    <form [formGroup]="componentForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">
+        <h2 class="text-2xl font-semibold mb-4 text-center">Update Component</h2>
+
+        <div>
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" formControlName="name" class="form-input">
+            <div *ngIf="componentForm.get('name')?.touched && componentForm.get('name')?.errors">
+                <p *ngIf="componentForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
+                <p *ngIf="componentForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
+            </div>
+        </div>
+
+        <div>
+            <label for="description" class="form-label">Description:</label>
+            <textarea id="description" formControlName="description" class="form-input"></textarea>
+            <div *ngIf="componentForm.get('description')?.touched">
+                <p *ngIf="componentForm.get('description')?.errors?.['maxlength']" class="form-error">Description must not exceed 200 characters.</p>
+            </div>
+        </div>
+
+        <div>
+            <app-select-unit-of-measurement (unitChange)="onUnitChange($event)"></app-select-unit-of-measurement>
+        </div>
+
+        <div class="flex items-center w-full justify-end">
+            <button type="submit" class="standard-write-button">
+                Update Component
+            </button>
+        </div>
+    </form>
+</div>
