@@ -1,3 +1,4 @@
+import { Component } from "./Component";
 import { UnitOfMeasurement } from "./UnitOfMeasurement";
 
 export interface Product {
@@ -36,13 +37,6 @@ export interface StageOutput {
     component?: Component;
 }
 
-export interface Component {
-    id: number;
-    name: string;
-    description?: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
 
 export interface CreateProductDTO {
     name: string;

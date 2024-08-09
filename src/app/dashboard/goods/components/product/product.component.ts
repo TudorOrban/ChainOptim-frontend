@@ -5,8 +5,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBox, faGear, faTrash } from '@fortawesome/free-solid-svg-icons';
 import {
     Product,
-    Component as ProdComponent,
 } from '../../models/Product';
+import { Component as ProdComponent } from '../../models/Component';
 import { CommonModule } from '@angular/common';
 import {
     FallbackManagerService,

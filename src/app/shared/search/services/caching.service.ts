@@ -35,6 +35,10 @@ export class CachingService<T> {
         }
     }
 
+    invalidateAllCache(): void {
+        this.cache.clear();
+    }
+
     getFromCache(key: string): T | undefined {
         if (this.isCached(key)) {
             return this.cache.get(key)?.data;

@@ -9,6 +9,10 @@ import { TableToolbarComponent } from '../../../../shared/table/table-toolbar/ta
 import { User } from '../../../../core/user/model/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
+import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
+import { ComponentService } from '../../../goods/services/component.service';
+import { ComponentSearchDTO } from '../../../goods/models/Component';
 
 @Component({
   selector: 'app-supplier-orders',
@@ -22,6 +26,9 @@ export class SupplierOrdersComponent implements OnInit {
 
     currentUser: User | undefined = undefined;
     supplierOrders: PaginatedResults<SupplierOrder> | undefined = undefined;
+    components: ComponentSearchDTO[] = [];
+    OrderStatus = OrderStatus;  
+
     searchParams: SearchParams = {
         searchQuery: "",
         sortOption: "createdAt",
@@ -40,6 +47,8 @@ export class SupplierOrdersComponent implements OnInit {
     constructor(
         private userService: UserService,
         private supplierOrderService: SupplierOrderService,
+        private componentService: ComponentService,
+        private toastService: ToastService,
     ) {
         
     }
@@ -57,6 +66,7 @@ export class SupplierOrdersComponent implements OnInit {
             this.currentUser = user;
             
             this.loadSupplierOrders();
+            this.loadComponents();
         });
     }
 
@@ -68,6 +78,14 @@ export class SupplierOrdersComponent implements OnInit {
                 console.log("Supplier orders:", supplierOrders);
             });
     }
+
+    private loadComponents(): void {
+        this.componentService.getComponentsByOrganizationId(this.currentUser?.organization?.id || 0, true).subscribe((components) => {
+            console.log("Components:", components);
+            this.components = components;
+        });
+    }
+
 
     // Searching
     handleSearch(query: string): void {
@@ -161,6 +179,8 @@ export class SupplierOrdersComponent implements OnInit {
                 console.log('Created orders:', orders);
                 this.newRawOrders = [];
                 this.loadSupplierOrders();
+                this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier Order created successfully.', outcome: OperationOutcome.SUCCESS });
+                
             },
             error: (err) => console.error('Failed to create orders', err)
         });
@@ -186,15 +206,15 @@ export class SupplierOrdersComponent implements OnInit {
     
         // Construct DTO
         const dto: CreateSupplierOrderDTO = {
-            organizationId: this.currentUser?.organization?.id || 0,
+            organizationId: this.currentUser?.organization?.id ?? 0,
             supplierId: Number(order.supplierId),
-            componentId: 1,
+            componentId: Number(order.componentId),
             quantity: Number(order.quantity),
             orderDate: orderDate,
             estimatedDeliveryDate: estimatedDeliveryDate,
             // deliveryDate: deliveryDate,
             companyId: order.companyId,
-            status: OrderStatus.DELIVERED,
+            status: order.status,
         };
     
         return dto;

@@ -1,4 +1,4 @@
-import { Component } from "../../goods/models/Product";
+import { Component } from "../../goods/models/Component";
 
 
 export interface SupplierOrder {

@@ -74,8 +74,21 @@ export class SupplierOrderService {
             );
     }
 
+    
     createSupplierOrder(supplierOrderDTO: CreateSupplierOrderDTO): Observable<SupplierOrder> {
-        return this.http.post<SupplierOrder>(`${this.apiUrl}/create`, supplierOrderDTO);
+        return this.http.post<SupplierOrder>(`${this.apiUrl}/create`, supplierOrderDTO).pipe(
+            tap(order => {
+                console.log("Created order:", order);
+                if (!order.id) {
+                    throw new Error("Order creation failed: No ID found");
+                }
+                this.cachingService.invalidateAllCache();
+            }),
+            catchError(error => {
+                console.error("Error in creating order", error);
+                throw error;
+            })
+        );
     }
 
     createSupplierOrdersInBulk(orderDTOs: CreateSupplierOrderDTO[]): Observable<SupplierOrder[]> {
