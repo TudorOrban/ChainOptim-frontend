@@ -1,4 +1,4 @@
-<div >
+<div>
     <app-table-toolbar
         [title]="searchMode == SearchMode.ORGANIZATION ? 'Factory Items' : ''" [searchPlaceholder]="'Search by company ID'" [dontPadHorizontally]="dontPadHorizontally"
         [sortOptions]="sortOptions" [filterOptions]="filterOptions"
@@ -8,7 +8,7 @@
     ></app-table-toolbar>
 </div>
 
-<div class="table-container">
+<div class="table-container overflow-y-auto h-full">
     <table class="custom-table">
         <thead>
             <tr>

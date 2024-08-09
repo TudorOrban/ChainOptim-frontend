@@ -1,5 +1,6 @@
-<!-- Header -->
-<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+<div>
+    <!-- Header -->
+    <div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
     class="page-standard-horizontal-padding entity-page-header">
     <div class="flex items-center justify-between w-full">
         <div>
@@ -18,28 +19,28 @@
             </button>
         </div>
     </div>
-</div>
+    </div>
 
-<!-- Tabs -->
-<app-tabs
+    <!-- Tabs -->
+    <app-tabs
     [tabs]="tabs"
     [activeTab]="activeTab"
     (tabSelected)="onTabSelected($event)"
-></app-tabs>
+    ></app-tabs>
 
-<app-factory-overview *ngIf="activeTab === 'Overview'" [factory]="factory"></app-factory-overview>
-<app-factory-production *ngIf="activeTab === 'Production'" [factory]="factory"></app-factory-production>
-<app-factory-inventory *ngIf="activeTab === 'Inventory'" [searchMode]="SearchMode.SECONDARY" [factoryId]="factory?.id" [dontPadHorizontally]="true"></app-factory-inventory>
-<app-factory-performance *ngIf="activeTab === 'Performance'" [factory]="factory"></app-factory-performance>
+    <app-factory-overview *ngIf="activeTab === 'Overview'" [factory]="factory"></app-factory-overview>
+    <app-factory-production *ngIf="activeTab === 'Production'" [factory]="factory"></app-factory-production>
+    <app-factory-inventory *ngIf="activeTab === 'Inventory'" [searchMode]="SearchMode.SECONDARY" [factoryId]="factory?.id" [dontPadHorizontally]="true"></app-factory-inventory>
+    <app-factory-performance *ngIf="activeTab === 'Performance'" [factory]="factory"></app-factory-performance>
 
 
-<!-- Fallback manager -->
-<app-fallback-manager
+    <!-- Fallback manager -->
+    <app-fallback-manager
     [fallbackManagerState]="fallbackManagerState"
-></app-fallback-manager>
+    ></app-fallback-manager>
 
-<!-- Confirm dialog -->
-<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <!-- Confirm dialog -->
+    <div class="overlay" *ngIf="isConfirmDialogOpen">
     <div class="dialog-container">
         <app-generic-confirm-dialog 
             [dialogInput]="deleteDialogInput"
@@ -47,5 +48,6 @@
             (cancel)="handleCancel()"
         >
         </app-generic-confirm-dialog>
+    </div>
     </div>
 </div>

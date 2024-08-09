@@ -1,5 +1,9 @@
-<div class="flex w-full h-full relative overflow-auto">
-    <app-factory-production-tabs class="overflow-auto flex-initial w-2/3 h-full"></app-factory-production-tabs>
+<div class="flex w-full h-full relative">
+    <div class="flex-initial w-2/3 h-full overflow-y-auto">
+        <app-factory-production-tabs [factoryId]="factory?.id || 0"></app-factory-production-tabs>
+    </div>
     <div class="resize-handle cursor-col-resize bg-gray-300" style="width: 5px;" #resizer></div>
-    <app-factory-production-toolbar class="overflow-auto flex-initial w-1/3 h-full"></app-factory-production-toolbar>
+    <div class="flex-initial w-1/3 overflow-y-auto h-full">
+        <app-factory-production-toolbar></app-factory-production-toolbar>
+    </div>
 </div>

@@ -28,7 +28,7 @@ export class GraphRenderer {
             .attr("width", width)
             .attr("height", height)
             .style("background-color", backgroundColor);
-
+           
         this.graphPreprocessor = new GraphPreprocessor();
         this.nodeRenderer = new NodeRenderer(this.svg);
         this.edgeRenderer = new EdgeRenderer(this.svg);

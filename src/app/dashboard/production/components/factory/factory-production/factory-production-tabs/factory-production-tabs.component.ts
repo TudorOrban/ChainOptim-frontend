@@ -6,6 +6,7 @@ import {
     ViewContainerRef,
     Type,
     ElementRef,
+    Input,
 } from '@angular/core';
 import { TabsService } from '../../../../services/productiontabs.service';
 import { Tab } from '../../../../models/Production';
@@ -31,9 +32,10 @@ import { Subscription } from 'rxjs';
     standalone: true,
 })
 export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
+    @Input() factoryId: number | undefined = undefined;
+
     @ViewChild('dynamicTabContent', { read: ViewContainerRef })
     dynamicTabContent!: ViewContainerRef;
-
     @ViewChild('tabsScrollContainer')
     tabsScrollContainer!: ElementRef;
 
@@ -48,6 +50,8 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
                 this.loadComponent(tab);
             }
         });
+
+        // this.loadFactoryGraphComponent();
     }
 
     ngAfterViewInit(): void {
@@ -101,7 +105,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
             id: 'factory-graph',
             title: 'Factory Graph',
             component: FactoryGraphComponent,
-            inputData: {},
+            inputData: { factoryId: this.factoryId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
