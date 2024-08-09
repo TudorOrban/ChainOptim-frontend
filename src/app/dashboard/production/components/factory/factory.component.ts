@@ -9,7 +9,7 @@ import { NavigationItem } from '../../../../shared/common/models/uiTypes';
 import { FactoryService } from '../../services/factory.service';
 import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
 import { FactoryOverviewComponent } from './factory-overview/factory-overview.component';
-import { FactoryInventoryComponent } from './factory-inventory/factory-inventory.component';
+import { FactoryInventoryComponent } from '../factory-inventory/factory-inventory.component';
 import { FactoryPerformanceComponent } from './factory-performance/factory-performance.component';
 import { Factory } from '../../models/Factory';
 import { FactoryProductionComponent } from './factory-production/factory-production.component';
@@ -17,6 +17,7 @@ import { GenericConfirmDialogComponent } from '../../../../shared/common/compone
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { OperationOutcome, ToastInfo } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
+import { SearchMode } from '../../../../shared/enums/commonEnums';
 
 @Component({
     selector: 'app-factory',
@@ -53,7 +54,9 @@ export class FactoryComponent implements OnInit {
         {
             label: "Performance",
         },
-    ]
+    ];
+    SearchMode = SearchMode;
+    
     activeTab: string = "Overview";
     deleteDialogInput: ConfirmDialogInput = {
         dialogTitle: "Delete Factory",

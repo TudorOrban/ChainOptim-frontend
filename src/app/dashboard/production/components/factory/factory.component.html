@@ -29,7 +29,7 @@
 
 <app-factory-overview *ngIf="activeTab === 'Overview'" [factory]="factory"></app-factory-overview>
 <app-factory-production *ngIf="activeTab === 'Production'" [factory]="factory"></app-factory-production>
-<app-factory-inventory *ngIf="activeTab === 'Inventory'" [factory]="factory"></app-factory-inventory>
+<app-factory-inventory *ngIf="activeTab === 'Inventory'" [searchMode]="SearchMode.SECONDARY" [factoryId]="factory?.id" [dontPadHorizontally]="true"></app-factory-inventory>
 <app-factory-performance *ngIf="activeTab === 'Performance'" [factory]="factory"></app-factory-performance>
 
 

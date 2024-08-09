@@ -223,6 +223,32 @@ export class SearchOptionsService {
                     { label: 'Quantity', value: 'quantity' },
                 ],
             }],
+            [Feature.FACTORY_INVENTORY_ITEM, {
+                filterOptions: [
+                    {
+                        key: {
+                            label: "Quantity",
+                            value: "Quantity",
+                        },
+                        valueOptions: [],
+                        filterType: FilterType.NUMBER
+                    },
+                    {
+                        key: {
+                            label: "Minimum Required Quantity",
+                            value: "MinimumRequiredQuantity",
+                        },
+                        valueOptions: [],
+                        filterType: FilterType.NUMBER
+                    },
+                ],
+                sortOptions: [
+                    { label: 'Created At', value: 'createdAt' },
+                    { label: 'Updated At', value: 'updatedAt' },
+                    { label: 'Order Date', value: 'orderDate' },
+                    { label: 'Quantity', value: 'quantity' },
+                ],
+            }],
         ]);
     }
 

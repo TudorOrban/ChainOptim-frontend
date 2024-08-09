@@ -18,9 +18,9 @@ export class FactoryService {
         private cachingService: CachingService<PaginatedResults<Factory>>
     ) {}
 
-    getFactoriesByOrganizationId(organizationId: number): Observable<Factory[]> {
+    getFactoriesByOrganizationId(organizationId: number, small: boolean): Observable<Factory[]> {
         return this.http
-            .get<Factory[]>(`${this.apiUrl}/organization/${organizationId}`)
+            .get<Factory[]>(`${this.apiUrl}/organization/${organizationId}${small ? '/small' : ''}`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)
