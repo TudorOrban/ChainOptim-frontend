@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PaginatedResults } from '../../../../shared/search/models/PaginatedResults';
+import { PaginatedResults } from "../../../../shared/search/models/searchTypes";
 import { CreateSupplierOrderDTO, OrderStatus, SupplierOrder, UpdateSupplierOrderDTO } from '../../models/SupplierOrder';
 import { SupplierOrderService } from '../../services/supplierorder.service';
 import { UserService } from '../../../../core/auth/services/user.service';
-import { SearchParams } from '../../../../shared/search/models/Search';
+import { FilterOption, SearchParams, UIItem } from '../../../../shared/search/models/searchTypes';
 import { Feature, SearchMode } from '../../../../shared/enums/commonEnums';
 import { TableToolbarComponent } from '../../../../shared/table/table-toolbar/table-toolbar.component';
 import { User } from '../../../../core/user/model/user';
@@ -17,7 +17,6 @@ import { SupplierService } from '../../services/supplier.service';
 import { Supplier } from '../../models/Supplier';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
-import { FilterOption, FilterType, UIItem } from '../../../../shared/common/models/reusableTypes';
 import { SearchOptionsService } from '../../../../shared/search/services/searchoptions.service';
 
 @Component({
@@ -30,6 +29,7 @@ import { SearchOptionsService } from '../../../../shared/search/services/searcho
 export class SupplierOrdersComponent implements OnInit {
     @Input() searchMode: SearchMode = SearchMode.ORGANIZATION;
     @Input() supplierId: number | undefined = undefined;
+    @Input() dontPadHorizontally: boolean = false;
 
     currentUser: User | undefined = undefined;
     supplierOrders: PaginatedResults<SupplierOrder> | undefined = undefined;
@@ -95,20 +95,17 @@ export class SupplierOrdersComponent implements OnInit {
             .getSupplierOrdersByOrganizationIdAdvanced(this.searchMode == SearchMode.SECONDARY ? (this.supplierId || 0) : (this.currentUser?.organization?.id || 0), this.searchParams, this.searchMode)
             .subscribe((supplierOrders) => {
                 this.supplierOrders = supplierOrders;
-                console.log("Supplier orders:", supplierOrders);
             });
     }
 
     private loadSuppliers(): void {
         this.supplierService.getSuppliersByOrganizationId(this.currentUser?.organization?.id || 0).subscribe((suppliers) => {
-            console.log("Suppliers:", suppliers);
             this.suppliers = suppliers;
         });
     }
 
     private loadComponents(): void {
         this.componentService.getComponentsByOrganizationId(this.currentUser?.organization?.id || 0, true).subscribe((components) => {
-            console.log("Components:", components);
             this.components = components;
         });
     }
@@ -132,7 +129,6 @@ export class SupplierOrdersComponent implements OnInit {
     }
 
     handleFilterChange(filterChange: { key: string, value: string }): void {
-        console.log('Filter change in orders', filterChange);
         if (!filterChange?.value) {
             this.searchParams.filters = {};
         } else {
@@ -203,7 +199,6 @@ export class SupplierOrdersComponent implements OnInit {
     }
 
     handleCreateOrders(): void {
-        console.log('Creating order:', this.newRawOrders);
         const newOrderDTOs: CreateSupplierOrderDTO[] = [];
 
         for (const rawOrder of this.newRawOrders) {
@@ -215,11 +210,8 @@ export class SupplierOrdersComponent implements OnInit {
             newOrderDTOs.push(newOrder);
         }
 
-        console.log('Creating orders:', newOrderDTOs);
-
         this.supplierOrderService.createSupplierOrdersInBulk(newOrderDTOs).subscribe({
             next: (orders) => {
-                console.log('Created orders:', orders);
                 this.newRawOrders = [];
                 this.loadSupplierOrders();
                 this.toastService.addToast({ id: 123, title: 'Success', message: 'Supplier Order created successfully.', outcome: OperationOutcome.SUCCESS });

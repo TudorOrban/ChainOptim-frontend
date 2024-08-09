@@ -11,7 +11,7 @@ import {
     FallbackManagerState,
 } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
-import { SortOption } from '../../../../shared/search/models/Search';
+import { SortOption } from '../../../../shared/search/models/searchTypes';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { Client } from '../../models/Client';

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { SearchParams } from "../models/Search";
-import { CacheEntry } from "../models/PaginatedResults";
+import { SearchParams } from "../models/searchTypes";
+import { CacheEntry } from "../models/searchTypes";
 
 /**
  * Service for caching search query results for the pages Products, Factories etc.

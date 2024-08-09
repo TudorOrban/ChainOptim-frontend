@@ -1,6 +1,7 @@
-<div>
+<div >
     <app-table-toolbar
-        [title]="searchMode == SearchMode.ORGANIZATION ? 'Supplier Orders' : ''" [searchPlaceholder]="'Search by company ID'" [sortOptions]="sortOptions" [filterOptions]="filterOptions"
+        [title]="searchMode == SearchMode.ORGANIZATION ? 'Supplier Orders' : ''" [searchPlaceholder]="'Search by company ID'" [dontPadHorizontally]="dontPadHorizontally"
+        [sortOptions]="sortOptions" [filterOptions]="filterOptions"
         [selectedItemIds]="selectedOrderIds" [newRawItems]="newRawOrders" [isEditing]="isEditing"
         (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onFilterChange)="handleFilterChange($event)" (onRefresh)="handleRefresh()"
         (onCancel)="handleCancel()"(onAddItem)="handleAddOrder()" (onCreateItems)="handleCreateOrders()" (onEditItems)="editSelectedOrders()" (onSaveEditedItems)="saveEditedOrders()" (onDeleteItems)="openConfirmDeleteDialog()"

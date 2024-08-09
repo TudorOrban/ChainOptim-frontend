@@ -1,5 +1,5 @@
-<div class="bg-gray-100 py-4 page-standard-horizontal-padding space-y-4 border-b border-gray-300 shadow-sm">
-    <div *ngIf="title !== ''" class="flex items-center page-title">
+<div [ngClass]="{'page-standard-horizontal-padding': !dontPadHorizontally}" class="bg-gray-100 py-4 space-y-4 border-b border-gray-300 shadow-sm">
+    <div *ngIf="title !== ''" class="flex items-center page-title pl-4">
         {{ title }}
     </div>
     <div class="flex items-center flex-wrap space-x-4">

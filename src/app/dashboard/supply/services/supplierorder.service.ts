@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { CreateSupplierOrderDTO, SupplierOrder, UpdateSupplierOrderDTO } from '../models/SupplierOrder';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
-import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
+import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
-import { SearchParams } from '../../../shared/search/models/Search';
+import { SearchParams } from '../../../shared/search/models/searchTypes';
 import { SearchMode } from '../../../shared/enums/commonEnums';
 
 @Injectable({
@@ -41,7 +41,7 @@ export class SupplierOrderService {
             const encodedFilters = encodeURIComponent(filtersJson);
             url += `&filters=${encodedFilters}`;
         }
-        
+
         // Check in cache
         let cacheKey = this.cachingService.createCacheKey('supplier-orders', entityId, searchParams);
         if (this.cachingService.isCached(cacheKey) && !this.cachingService.isStale(cacheKey)) {

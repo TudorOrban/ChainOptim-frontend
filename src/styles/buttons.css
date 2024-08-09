@@ -32,7 +32,6 @@
     white-space: nowrap;
     &:hover {
         background-color: rgb(249, 250, 251);
-        border-color: rgb(156 163 175);
     }
 }
 

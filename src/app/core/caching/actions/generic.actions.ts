@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { QueryParams } from "../models/caching.model";
-import { PaginatedResults } from "../../../shared/search/models/PaginatedResults";
+import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { Product } from "../../../dashboard/goods/models/Product";
 import { Factory } from "../../../dashboard/production/models/Factory";
 

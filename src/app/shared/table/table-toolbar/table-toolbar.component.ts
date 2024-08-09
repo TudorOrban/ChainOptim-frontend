@@ -1,23 +1,20 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
-    IconDefinition,
     faArrowRotateRight,
     faBox,
     faEdit,
     faPlus,
-    faQuestion,
     faSave,
     faTrash,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { RouterModule } from '@angular/router';
-import { SortOption } from '../../search/models/Search';
+import { FilterOption, SortOption } from '../../search/models/searchTypes';
 import { SearchInputComponent } from '../../search/components/search-input/search-input.component';
 import { SortSelectorComponent } from '../../search/components/sort-selector/sort-selector.component';
 import { CommonModule } from '@angular/common';
 import { FilterBarComponent } from '../../search/components/filter-bar/filter-bar.component';
-import { FilterOption } from '../../common/models/reusableTypes';
 
 @Component({
     selector: 'app-table-toolbar',
@@ -36,6 +33,8 @@ import { FilterOption } from '../../common/models/reusableTypes';
 export class TableToolbarComponent {
     @Input() title: string = '';
     @Input() searchPlaceholder: string = 'Search...';
+    @Input() dontPadHorizontally: boolean = false;
+
     @Input() sortOptions: SortOption[] = [
         { label: 'Created At', value: 'createdAt' },
         { label: 'Updated At', value: 'updatedAt' },

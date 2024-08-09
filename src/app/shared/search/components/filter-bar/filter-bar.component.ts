@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FilterOption, FilterType } from '../../../common/models/reusableTypes';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { format, parseISO } from 'date-fns';
+import { FilterOption, FilterType } from '../../models/searchTypes';
 
 @Component({
   selector: 'app-filter-bar',
@@ -22,7 +22,6 @@ export class FilterBarComponent {
     isGreaterThan: boolean = true;
 
     updateFilter(): void {
-        console.log("Filter updated: ", this.selectedDate);
         const filterOption = this.findCurrentFilterType();
         if (!filterOption) return;
 

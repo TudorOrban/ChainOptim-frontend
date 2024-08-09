@@ -1,5 +1,6 @@
 <div class="flex items-center">
     <select [(ngModel)]="selectedKey" (ngModelChange)="updateFilter()" class="custom-select">
+        <option value="undefined" disabled selected>Add Filter</option>
         <option *ngFor="let option of filterOptions" [value]="option.key.value">
             {{ option.key.label }}
         </option>

@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { NotificationUser } from '../types/notificationTypes';
-import { SearchParams } from '../../../shared/search/models/Search';
-import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
+import { SearchParams } from '../../../shared/search/models/searchTypes';
+import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 
 @Injectable({
     providedIn: 'root',

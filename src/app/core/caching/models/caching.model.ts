@@ -1,6 +1,6 @@
 import { Factory } from "../../../dashboard/production/models/Factory";
 import { Product } from "../../../dashboard/goods/models/Product";
-import { PaginatedResults } from "../../../shared/search/models/PaginatedResults";
+import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 
 export interface AppState {
     products: ProductState;

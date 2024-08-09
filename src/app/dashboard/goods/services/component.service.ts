@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
-import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
+import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
 import { Component, CreateComponentDTO, UpdateComponentDTO } from '../models/Component';
 

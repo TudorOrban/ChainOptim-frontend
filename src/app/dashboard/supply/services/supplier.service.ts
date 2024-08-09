@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { CreateSupplierDTO, Supplier, UpdateSupplierDTO } from '../models/Supplier';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
-import { PaginatedResults } from '../../../shared/search/models/PaginatedResults';
+import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
 
 @Injectable({
