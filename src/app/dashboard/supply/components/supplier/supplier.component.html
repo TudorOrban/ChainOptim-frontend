@@ -29,7 +29,7 @@
 
 <app-supplier-overview *ngIf="activeTab === 'Overview'" [supplier]="supplier"></app-supplier-overview>
 <app-supplier-orders *ngIf="activeTab === 'Supplier Orders'" [searchMode]="SearchMode.SECONDARY" [supplierId]="supplier?.id" [dontPadHorizontally]="true"></app-supplier-orders>
-<app-supplier-shipments *ngIf="activeTab === 'Supplier Shipments'" [supplier]="supplier"></app-supplier-shipments>
+<app-supplier-shipments *ngIf="activeTab === 'Supplier Shipments'" [searchMode]="SearchMode.SECONDARY" [supplierId]="supplier?.id" [dontPadHorizontally]="true"></app-supplier-shipments>
 <app-supplier-performance *ngIf="activeTab === 'Performance'" [supplier]="supplier"></app-supplier-performance>
 
 

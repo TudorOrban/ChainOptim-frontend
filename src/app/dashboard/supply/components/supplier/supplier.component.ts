@@ -11,7 +11,7 @@ import { FallbackManagerComponent } from '../../../../shared/fallback/components
 import { Supplier } from '../../models/Supplier';
 import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { NavigationItem } from '../../../../shared/common/models/uiTypes';
-import { SupplierShipmentsComponent } from './supplier-shipments/supplier-shipments.component';
+import { SupplierShipmentsComponent } from '../supplier-shipments/supplier-shipments.component';
 import { SupplierService } from '../../services/supplier.service';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';

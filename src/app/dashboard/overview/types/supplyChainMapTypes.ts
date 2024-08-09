@@ -1,3 +1,5 @@
+import { ShipmentStatus } from "../../supply/models/SupplierShipment";
+
 export interface SupplyChainMap {
     id: number;
     organizationId: number;
@@ -59,13 +61,6 @@ export enum TransportType {
     RAIL = 'RAIL',
     SEA = 'SEA',
     AIR = 'AIR'
-}
-
-export enum ShipmentStatus {
-    PLANNED,
-    IN_TRANSIT,
-    DELIVERED,
-    CANCELLED
 }
 
 export enum EntityType {
