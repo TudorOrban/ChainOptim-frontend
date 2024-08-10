@@ -4,8 +4,9 @@ import { FactoryGraphService } from '../../../../../services/factorygraph.servic
 import { GenericGraph } from './d3/types/dataTypes';
 import { transformFactoryToGenericGraph } from './d3/utils/utils';
 import { AllocationPlan } from '../../../../../models/ResourceAllocation';
-import { FactoryProductionGraph } from '../../../../../models/FactoryGraph';
+import { FactoryEdge, FactoryProductionGraph } from '../../../../../models/FactoryGraph';
 import { Pair } from '../../../../../../overview/types/supplyChainMapTypes';
+import { ElementIdentifier } from './d3/utils/ElementIdentifier';
 
 @Component({
     selector: 'app-factory-graph',
@@ -20,6 +21,7 @@ export class FactoryGraphComponent {
     factoryProductionGraph: FactoryProductionGraph | undefined = undefined;
     
     factoryGraphRenderer: GraphRenderer | null = null;
+    elementIdentifier: ElementIdentifier = new ElementIdentifier();
 
     @Output() onFactoryGraphClicked = new EventEmitter<Pair<string, number>>();
 
@@ -34,7 +36,6 @@ export class FactoryGraphComponent {
         
         if (this.factoryGraphRenderer) {
             this.factoryGraphRenderer.getNodeClickEmitter().subscribe(nodeId => {
-                // Extract from s-5 the s and the 5
                 const splitNodeId = nodeId.split("_");
                 if (splitNodeId.length != 2) {
                     console.error("Error: Node id is not valid: ", nodeId);
@@ -42,6 +43,11 @@ export class FactoryGraphComponent {
                 }
                 console.log("Node clicked: ", splitNodeId);
                 this.onFactoryGraphClicked.emit({ first: splitNodeId[0], second: Number(splitNodeId[1]) });
+            });
+            this.factoryGraphRenderer.getEdgeClickEmitter().subscribe(edgeId => {
+                const edge: FactoryEdge = this.elementIdentifier.getEdgeFromOuterEdgeId(edgeId);
+
+                console.log("Edge clicked: ", edge);
             });
         }
     }

@@ -24,6 +24,7 @@ export class GraphRenderer {
     private svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
 
     private nodeClickEmitter: EventEmitter<string>;
+    private edgeClickEmitter: EventEmitter<string>;
 
     constructor(containerId: string) {
         const { width, height, backgroundColor } = GraphUIConfig.graph;
@@ -39,11 +40,16 @@ export class GraphRenderer {
         this.resourceAllocationRenderer = new ResourceAllocationRenderer(this.svg);
         
         this.nodeClickEmitter = new EventEmitter<string>();
-        this.interactionManager = new InteractionManager(this.svg, this.nodeRenderer, this.nodeClickEmitter);
+        this.edgeClickEmitter = new EventEmitter<string>();
+        this.interactionManager = new InteractionManager(this.svg, this.nodeRenderer, this.edgeRenderer, this.nodeClickEmitter, this.edgeClickEmitter);
     }
 
     getNodeClickEmitter(): EventEmitter<string> {
         return this.nodeClickEmitter;
+    }
+
+    getEdgeClickEmitter(): EventEmitter<string> {
+        return this.edgeClickEmitter;
     }
 
     /*

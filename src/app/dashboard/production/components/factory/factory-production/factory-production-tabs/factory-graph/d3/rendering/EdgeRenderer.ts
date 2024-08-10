@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { GenericEdgeUI, GenericNodeUI } from "../types/uiTypes";
+import { Coordinates, GenericEdgeUI, GenericNodeUI } from "../types/uiTypes";
 import { calculateEdgePoints } from "../utils/geometryUtils";
 import { GraphUIConfig } from "../config/GraphUIConfig";
 import { ElementIdentifier } from "../utils/ElementIdentifier";
@@ -10,7 +10,6 @@ export class EdgeRenderer {
     constructor(private svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>) {
         this.elementIdentifier = new ElementIdentifier();
     }
-
     
     renderEdges = (
         nodeUI: GenericNodeUI,
@@ -43,8 +42,9 @@ export class EdgeRenderer {
                 subnodeRadius,
                 subnodeRadius
             );
-
-            this.svg.append("line")
+             
+            const line = this.svg.append("line")
+                .attr("id", this.elementIdentifier.encodeOuterEdgeId(neighbor.edge.incomingStageId, neighbor.edge.outgoingStageId, neighbor.edge.incomingStageOutputId, neighbor.edge.outgoingStageInputId))
                 .attr("x1", start.x)
                 .attr("y1", start.y)
                 .attr("x2", end.x)
@@ -52,6 +52,51 @@ export class EdgeRenderer {
                 .attr("stroke", color)
                 .attr("stroke-width", width)
                 .attr("marker-end", markerEnd);
+
+            this.addHoverEffect(line, width, start, end);
         });
     };
+    
+    private addHoverEffect(line: d3.Selection<SVGLineElement, unknown, HTMLElement, any>, width: number, start: Coordinates, end: Coordinates) {
+        const interactionLine = this.svg.append("line")
+        .attr("x1", start.x)
+        .attr("y1", start.y)
+        .attr("x2", end.x)
+        .attr("y2", end.y)
+        .attr("stroke", "transparent")
+        .attr("stroke-width", width * 4) 
+        .style("pointer-events", "all");
+
+        // Apply the hover effect to the visible line when the invisible line is hovered
+        interactionLine
+        .on("mouseover", function () {
+            line.transition().duration(100).attr("stroke-width", width * 2);
+        })
+        .on("mouseout", function () {
+            line.transition().duration(100).attr("stroke-width", width);
+        })
+    }
+
+    public highlightEdge = (edge: d3.Selection<SVGLineElement, unknown, null, undefined>) => {
+        const { highlightDuration, highlightColor, highlightWidth } = GraphUIConfig.edge;
+        
+        edge
+            .transition()
+            .duration(highlightDuration)
+            .style("stroke", highlightColor)
+            .style("stroke-width", highlightWidth);
+    };
+
+    
+    public unhighlightAllEdges = () => {
+        const { highlightDuration, color, width } = GraphUIConfig.edge;
+        
+        this.svg.selectAll("line")
+            .transition()
+            .duration(highlightDuration)
+            .style("stroke", color)
+            .style("stroke-width", width)
+            .attr("filter", null);
+    };
+    
 }

@@ -24,13 +24,16 @@ export const GraphUIConfig = {
         subedgeColor: "black",
         subedgeWidth: 1,
         highlightDuration: 200,
-        highlightColor: "#d9e2ef",
+        highlightColor: "blue",
         highlightWidth: 2,
     },
     edge: {
         color: "#111111",
         width: 1.5,
         markerEnd: "url(#arrowhead)",
+        highlightDuration: 200,
+        highlightColor: "blue",
+        highlightWidth: 2,
     },
     info: {
         infoFontSize: 14,
