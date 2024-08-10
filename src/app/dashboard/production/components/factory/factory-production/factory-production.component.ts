@@ -15,6 +15,8 @@ import { isPlatformBrowser } from '@angular/common';
 export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
     @Input() factory: Factory | null = null;
     @ViewChild('resizer') resizer!: ElementRef<HTMLDivElement>;
+    @ViewChild(FactoryProductionTabsComponent) tabsComponent!: FactoryProductionTabsComponent;
+    @ViewChild(FactoryProductionToolbarComponent) toolbarComponent!: FactoryProductionToolbarComponent;
 
     private leftPanel!: HTMLElement;
     private rightPanel!: HTMLElement;
@@ -32,11 +34,35 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
             this.leftPanel = resizer.previousElementSibling as HTMLElement;
             this.rightPanel = resizer.nextElementSibling as HTMLElement;
 
-            resizer.addEventListener('mousedown', this.startResizing);
-            document.addEventListener('mouseup', this.stopResizing);
+            this.setUpToolbarEventListeners();
+            this.setUpResizerEventListeners();
         }
     }
+    
+    private setUpToolbarEventListeners() {
+        this.toolbarComponent.addFactoryStage.subscribe(() => {
+            this.tabsComponent.loadAddStageComponent();
+        });
+        this.toolbarComponent.updateFactoryStage.subscribe(() => {
+            this.tabsComponent.loadUpdateStageComponent();
+        });
+        this.toolbarComponent.displayQuantities.subscribe((display) => {
+            this.tabsComponent.displayQuantities(display);
+        });
+        this.toolbarComponent.displayCapacities.subscribe((display) => {
+            this.tabsComponent.displayCapacities(display);
+        });
+        this.toolbarComponent.displayPriorities.subscribe((display) => {
+            this.tabsComponent.displayPriorities(display);
+        });
+    }
 
+    // Resizing the panels
+    private setUpResizerEventListeners() {
+        this.resizer.nativeElement.addEventListener('mousedown', this.startResizing);
+        document.addEventListener('mouseup', this.stopResizing);
+    }
+    
     private startResizing = (event: MouseEvent) => {
         this.isResizing = true;
         document.addEventListener('mousemove', this.resize);
@@ -64,6 +90,5 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
             document.removeEventListener('mousemove', this.resize);
         }
     }
-
 
 }

@@ -47,4 +47,23 @@ export class FactoryGraphComponent {
                 this.factoryGraphRenderer?.renderGraph(genericGraph);
             });
     }
+
+    // Communication with Tabs Component
+    displayQuantities(display: boolean): void {
+        console.log("Display quantities in factory graph: ", display);
+
+        this.factoryGraphRenderer?.renderInfo("quantities", display);
+    }
+
+    displayCapacities(display: boolean): void {
+        console.log("Display capacities in factory graph: ", display);
+
+        this.factoryGraphRenderer?.renderInfo("capacities", display);
+    }
+
+    displayPriorities(display: boolean): void {
+        console.log("Display priorities in factory graph: ", display);
+
+        this.factoryGraphRenderer?.renderInfo("priorities", display);
+    }
 }

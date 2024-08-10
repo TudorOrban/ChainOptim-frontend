@@ -72,6 +72,10 @@ export class GraphRenderer {
         });
     }
 
+    renderInfo(infoType: string, isVisible: boolean) {
+        this.infoRenderer.renderInfo(infoType, isVisible);
+    }
+
     setupSvgDefinitions() {
         // Define arrowhead marker
         this.svg.append("defs").append("marker")

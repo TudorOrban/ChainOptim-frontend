@@ -7,9 +7,10 @@ import {
     Type,
     ElementRef,
     Input,
+    ComponentRef,
 } from '@angular/core';
 import { TabsService } from '../../../../services/productiontabs.service';
-import { Tab } from '../../../../models/Production';
+import { FactoryProductionTabType, Tab } from '../../../../models/Production';
 import { AddFactoryStageComponent } from './add-factory-stage/add-factory-stage.component';
 import { CommonModule } from '@angular/common';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -36,6 +37,8 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
 
     @ViewChild('dynamicTabContent', { read: ViewContainerRef })
     dynamicTabContent!: ViewContainerRef;
+    private activeComponentRef: ComponentRef<FactoryProductionTabType> | null = null;
+
     @ViewChild('tabsScrollContainer')
     tabsScrollContainer!: ElementRef;
 
@@ -64,18 +67,8 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
             }
         });
     }
-   
-    loadComponent(tab: Tab<any>): void {
-        this.dynamicTabContent.clear();
-        const componentRef = this.dynamicTabContent.createComponent(tab.component);
-        componentRef.instance.inputData = tab.inputData;
-    }
 
-    ngOnDestroy(): void {
-        this.dynamicTabContent.clear();
-        this.tabSubscription.unsubscribe();
-    }
-
+    // Communication with parent component
     loadAddStageComponent(): void {
         const tab: Tab<any> = {
             id: 'add-factory-stage',
@@ -124,8 +117,65 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
         this.loadComponent(tab);
     }
 
+    
+    displayQuantities(display: boolean): void {
+        console.log('Display quantities in tabs', display);
+    
+        if (!this.activeComponentRef) {
+            console.log("No active component reference found.");
+            return;
+        }
+
+        // Check if the active component is of type FactoryGraphComponent
+        if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
+            this.activeComponentRef.instance.displayQuantities(display);
+        }
+    }
+
+    displayCapacities(display: boolean): void {
+        console.log('Display capacities in tabs', display);
+    
+        if (!this.activeComponentRef) {
+            console.log("No active component reference found.");
+            return;
+        }
+        
+        // Check if the active component is of type FactoryGraphComponent
+        if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
+            this.activeComponentRef.instance.displayCapacities(display);
+        }
+    }
+
+    displayPriorities(display: boolean): void {
+        console.log('Display priorities in tabs', display);
+    
+        if (!this.activeComponentRef) {
+            console.log("No active component reference found.");
+            return;
+        }
+        
+        // Check if the active component is of type FactoryGraphComponent
+        if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
+            this.activeComponentRef.instance.displayPriorities(display);
+        }
+    }
+    
+
     setActiveTab(id: string): void {
         this.tabsService.setActiveTab(id);
+    }
+
+    
+    loadComponent(tab: Tab<any>): void {
+        this.dynamicTabContent.clear();
+        const componentRef = this.dynamicTabContent.createComponent(tab.component);
+        componentRef.instance.inputData = tab.inputData;
+        this.activeComponentRef = componentRef;
+    }
+
+    ngOnDestroy(): void {
+        this.dynamicTabContent.clear();
+        this.tabSubscription.unsubscribe();
     }
 
     faTimes = faTimes;
