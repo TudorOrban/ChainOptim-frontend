@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GraphRenderer } from './d3/rendering/GraphRenderer';
 import { FactoryGraphService } from '../../../../../services/factorygraph.service';
 import { GenericGraph } from './d3/types/dataTypes';
 import { transformFactoryToGenericGraph } from './d3/utils/utils';
 import { AllocationPlan } from '../../../../../models/ResourceAllocation';
 import { FactoryProductionGraph } from '../../../../../models/FactoryGraph';
+import { Pair } from '../../../../../../overview/types/supplyChainMapTypes';
 
 @Component({
     selector: 'app-factory-graph',
@@ -17,8 +18,10 @@ export class FactoryGraphComponent {
     @Input() inputData: { factoryId: number } | undefined = undefined;
     
     factoryProductionGraph: FactoryProductionGraph | undefined = undefined;
-
+    
     factoryGraphRenderer: GraphRenderer | null = null;
+
+    @Output() onFactoryGraphClicked = new EventEmitter<Pair<string, number>>();
 
     constructor(
         private factoryGraphService: FactoryGraphService,
@@ -29,6 +32,18 @@ export class FactoryGraphComponent {
         
         this.loadGraphData();
         
+        if (this.factoryGraphRenderer) {
+            this.factoryGraphRenderer.getNodeClickEmitter().subscribe(nodeId => {
+                // Extract from s-5 the s and the 5
+                const splitNodeId = nodeId.split("_");
+                if (splitNodeId.length != 2) {
+                    console.error("Error: Node id is not valid: ", nodeId);
+                    return;
+                }
+                console.log("Node clicked: ", splitNodeId);
+                this.onFactoryGraphClicked.emit({ first: splitNodeId[0], second: Number(splitNodeId[1]) });
+            });
+        }
     }
 
     private initializeGraphRenderers(): void {

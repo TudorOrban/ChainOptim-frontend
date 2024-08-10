@@ -70,10 +70,6 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
         this.setUpScrollListener();
     }
 
-    private setUpTabListeners() {
-        
-    }
-
     private setUpScrollListener() {
         const scrollContainer = this.tabsScrollContainer.nativeElement;
 
@@ -86,12 +82,13 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     }
 
     // Communication with parent component
+    // - Loading Components
     loadAddStageComponent(): void {
         const tab: Tab<any> = {
             id: 'add-factory-stage',
             title: 'Add Stage',
             component: AddFactoryStageComponent,
-            inputData: {},
+            inputData: { factoryId: this.factoryId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
@@ -104,11 +101,12 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
             id: 'update-factory-stage',
             title: 'Update Stage',
             component: UpdateFactoryStageComponent,
-            inputData: { factoryId: factoryId, factoryStageId: 37 },
+            inputData: { factoryId: factoryId, factoryStageId: this.selectedFactoryStageId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
+        this.handleSpecificComponent();
     }
 
     loadFactoryGraphComponent(): void {
@@ -121,6 +119,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
+        this.handleSpecificComponent();
     }
 
     loadAllocationPlanComponent(allocationPlan: AllocationPlan, loadActivePlan: boolean, factoryId: number): void {
@@ -148,6 +147,44 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     }
 
     
+    setActiveTab(id: string): void {
+        this.tabsService.setActiveTab(id);
+    }
+
+    
+    loadComponent(tab: Tab<any>): void {
+        this.dynamicTabContent.clear();
+        const componentRef = this.dynamicTabContent.createComponent(tab.component);
+        componentRef.instance.inputData = tab.inputData;
+        this.activeComponentRef = componentRef;
+    }
+
+    private handleSpecificComponent(): void {
+        if (!this.activeComponentRef) {
+            return;
+        }
+    
+        const instance = this.activeComponentRef.instance;
+    
+        // Subscribe to specific components
+        if (instance instanceof AddFactoryStageComponent) {
+            instance.onFactoryStageAdded.subscribe(() => {
+                this.tabsService.closeAnyTabWithTitle('Add Stage');
+            });
+        }
+        if (instance instanceof UpdateFactoryStageComponent) {
+            instance.onFactoryStageUpdated.subscribe(() => {
+                this.tabsService.closeAnyTabWithTitle('Update Stage');
+            });
+        }
+        if (instance instanceof FactoryGraphComponent) {
+            instance.onFactoryGraphClicked.subscribe(({ first, second }) => {
+                this.selectedFactoryStageId = second;
+            });
+        }
+    }
+
+    // - Displaying Info
     displayQuantities(display: boolean): void {
         if (!this.activeComponentRef) {
             console.log("No active component reference found.");
@@ -159,7 +196,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
             this.activeComponentRef.instance.displayQuantities(display);
         }
     }
-
+    
     displayCapacities(display: boolean): void {
         if (!this.activeComponentRef) {
             console.log("No active component reference found.");
@@ -198,34 +235,6 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
 
     openAllocationPlan(allocationPlan: AllocationPlan, loadActivePlan: boolean, factoryId: number): void {
         this.loadAllocationPlanComponent(allocationPlan, loadActivePlan, factoryId);
-    }
-    
-
-    setActiveTab(id: string): void {
-        this.tabsService.setActiveTab(id);
-    }
-
-    
-    loadComponent(tab: Tab<any>): void {
-        this.dynamicTabContent.clear();
-        const componentRef = this.dynamicTabContent.createComponent(tab.component);
-        componentRef.instance.inputData = tab.inputData;
-        this.activeComponentRef = componentRef;
-    }
-
-    private handleSpecificComponent(): void {
-        if (!this.activeComponentRef) {
-            return;
-        }
-    
-        const instance = this.activeComponentRef.instance;
-    
-        // Check if the active component is AddFactoryStageComponent
-        if (instance instanceof AddFactoryStageComponent) {
-            instance.onFactoryStageAdded.subscribe(() => {
-                this.tabsService.closeTab('add-factory-stage');
-            });
-        }
     }
 
     ngOnDestroy(): void {

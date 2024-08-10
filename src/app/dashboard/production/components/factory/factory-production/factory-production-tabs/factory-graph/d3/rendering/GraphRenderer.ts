@@ -8,6 +8,7 @@ import { GraphPreprocessor } from "./GraphPreprocessor";
 import { InfoRenderer } from "./InfoRenderer";
 import { ResourceAllocationRenderer } from "./ResourceAllocationRenderer";
 import { AllocationPlan } from "../../../../../../../models/ResourceAllocation";
+import { EventEmitter } from "@angular/core";
 
 /*
  * Orchestrator of the typescript modules.
@@ -22,6 +23,7 @@ export class GraphRenderer {
     private interactionManager: InteractionManager;
     private svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
 
+    private nodeClickEmitter: EventEmitter<string>;
 
     constructor(containerId: string) {
         const { width, height, backgroundColor } = GraphUIConfig.graph;
@@ -35,7 +37,13 @@ export class GraphRenderer {
         this.edgeRenderer = new EdgeRenderer(this.svg);
         this.infoRenderer = new InfoRenderer(this.svg);
         this.resourceAllocationRenderer = new ResourceAllocationRenderer(this.svg);
-        this.interactionManager = new InteractionManager(this.svg, this.nodeRenderer);
+        
+        this.nodeClickEmitter = new EventEmitter<string>();
+        this.interactionManager = new InteractionManager(this.svg, this.nodeRenderer, this.nodeClickEmitter);
+    }
+
+    getNodeClickEmitter(): EventEmitter<string> {
+        return this.nodeClickEmitter;
     }
 
     /*
@@ -62,11 +70,7 @@ export class GraphRenderer {
             this.edgeRenderer.renderEdges(node, genericGraphUI.adjList, parseInt(stageNodeId, 10));
         });
 
-        // Set up interactions and connect them to JavaFX via JavaConnector
-        this.interactionManager = new InteractionManager(this.svg, this.nodeRenderer);    
-        this.interactionManager.setupNodeInteractions((nodeId) => {
-            window.javaConnector.handleNodeClick(nodeId);
-        });
+        this.interactionManager.setupNodeInteractions();
     }
 
     renderInfo(infoType: string, isVisible: boolean) {

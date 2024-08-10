@@ -24,6 +24,13 @@ export class TabsService {
         this.setActiveTab(tab.id);
     }
 
+    closeAnyTabWithTitle(title: string): void {
+        console.log("Closing tab with title: ", title);
+        const tabs = this.tabs.filter((t) => t.title === title);
+        console.log("Tabs: ", tabs);
+        tabs.forEach((t) => this.closeTab(t.id));
+    }
+
     closeTab(id: string): void {
         const index = this.tabs.findIndex((t) => t.id === id);
         if (index !== -1) {
