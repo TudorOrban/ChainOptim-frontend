@@ -1,26 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { SelectDurationComponent } from '../../../../../../shared/common/components/select/select-duration/select-duration.component';
+import { ResourceAllocationService } from '../../../../services/resourceallocation.service';
 
 @Component({
   selector: 'app-factory-production-toolbar',
   standalone: true,
-  imports: [FontAwesomeModule, CommonModule],
+  imports: [
+    FontAwesomeModule, 
+    CommonModule,
+    SelectDurationComponent
+],
   templateUrl: './factory-production-toolbar.component.html',
   styleUrl: './factory-production-toolbar.component.css'
 })
 export class FactoryProductionToolbarComponent {
+    @Input() factoryId: number | undefined = undefined;
 
     @Output() addFactoryStage: EventEmitter<void> = new EventEmitter();
     @Output() updateFactoryStage: EventEmitter<void> = new EventEmitter();
     @Output() displayQuantities: EventEmitter<boolean> = new EventEmitter();
     @Output() displayCapacities: EventEmitter<boolean> = new EventEmitter();
     @Output() displayPriorities: EventEmitter<boolean> = new EventEmitter();
+    @Output() viewProductionHistory: EventEmitter<void> = new EventEmitter();
+    
+    computeAllocationPlan: boolean = false;
+    durationHours: number = 0;
 
     faPlus = faPlus;
     faEdit = faEdit;
     faTrash = faTrash;
+
+    constructor(
+        private resourceallocationService: ResourceAllocationService,
+    ) {} 
 
     handleAddFactoryStage() {
         console.log('Add factory stage');
@@ -72,12 +87,32 @@ export class FactoryProductionToolbarComponent {
         console.log('View active plan');
     }
 
-    handleComputeAllocationPlan() {
+    handleOpenAllocationPlanMenu() {
         console.log('Compute allocation plan');
+        this.computeAllocationPlan = !this.computeAllocationPlan;
+    }
+
+    handleDurationChange(durationHours: number) {
+        console.log('Duration changed to', durationHours);
+        this.durationHours = durationHours;
+    }
+
+    handleComputeAllocationPlan() {
+        console.log('Compute allocation plan for', this.durationHours, 'hours');
+
+        if (!this.factoryId || !this.durationHours) {
+            console.error('Error: Factory ID or duration is not valid: ', this.factoryId, this.durationHours);
+            return
+        }
+
+        this.resourceallocationService.computeAllocationPlan(this.factoryId, this.durationHours).subscribe(allocationPlan => {
+            console.log('Allocation plan computed: ', allocationPlan);
+        });
     }
 
     handleViewProductionHistory() {
         console.log('View production history');
+        this.viewProductionHistory.emit();
     }
 
     handleSeekMissingResources() {

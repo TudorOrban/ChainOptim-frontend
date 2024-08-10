@@ -20,6 +20,7 @@ import { UpdateFactoryStageComponent } from './update-factory-stage/update-facto
 import { FactoryGraphComponent } from './factory-graph/factory-graph.component';
 import { AllocationPlanComponent } from './allocation-plan/allocation-plan.component';
 import { Subscription } from 'rxjs';
+import { ProductionHistoryComponent } from './production-history/production-history.component';
 
 @Component({
     selector: 'app-factory-production-tabs',
@@ -111,6 +112,18 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
             title: 'Allocation Plan',
             component: AllocationPlanComponent,
             inputData: {},
+        };
+        this.tabsService.openTab(tab);
+        this.tabsService.setActiveTab(tab.id);
+        this.loadComponent(tab);
+    }
+
+    loadProductionHistoryComponent(): void {
+        const tab: Tab<any> = {
+            id: 'production-history',
+            title: 'Production History',
+            component: ProductionHistoryComponent,
+            inputData: { factoryId: this.factoryId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);

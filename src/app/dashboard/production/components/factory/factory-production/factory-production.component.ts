@@ -55,6 +55,9 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
         this.toolbarComponent.displayPriorities.subscribe((display) => {
             this.tabsComponent.displayPriorities(display);
         });
+        this.toolbarComponent.viewProductionHistory.subscribe(() => {
+            this.tabsComponent.loadProductionHistoryComponent();
+        });
     }
 
     // Resizing the panels

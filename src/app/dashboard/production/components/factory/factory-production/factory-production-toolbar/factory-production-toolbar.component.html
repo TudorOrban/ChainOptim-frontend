@@ -47,9 +47,15 @@
                     View Active Plan
                 </button>
                 
-                <button (click)="handleComputeAllocationPlan()" class="standard-button">
+                <button (click)="handleOpenAllocationPlanMenu()" class="standard-button">
                     Compute Allocation Plan
                 </button>
+
+                <div class="space-y-2">
+                    <p class="font-semibold text-gray-700">Duration</p>
+                    <app-select-duration (durationChange)="handleDurationChange($event)"></app-select-duration>
+                    <button (click)="handleComputeAllocationPlan()" class="standard-button">Allocate Resources</button>
+                </div>
                 
                 <button (click)="handleViewProductionHistory()" class="standard-button">
                     View Production History
