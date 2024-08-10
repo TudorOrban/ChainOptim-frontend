@@ -55,13 +55,13 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
             this.tabsComponent.displayPriorities(display);
         });
         this.toolbarComponent.viewActivePlan.subscribe(() => {
-            this.tabsComponent.loadAllocationPlanComponent({ allocations: [], inventoryBalance: []}, true);
+            this.tabsComponent.loadAllocationPlanComponent({ allocations: [], inventoryBalance: []}, true, this.factory?.id || 0);
         });
         this.toolbarComponent.displayAllocations.subscribe((allocationPlan) => {
             this.tabsComponent.displayAllocations(allocationPlan);
         });
         this.toolbarComponent.openAllocationPlan.subscribe((allocationPlan) => {
-            this.tabsComponent.loadAllocationPlanComponent(allocationPlan, false);
+            this.tabsComponent.loadAllocationPlanComponent(allocationPlan, false, this.factory?.id || 0);
         });
         this.toolbarComponent.viewProductionHistory.subscribe(() => {
             this.tabsComponent.loadProductionHistoryComponent();

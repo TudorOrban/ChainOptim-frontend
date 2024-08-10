@@ -107,12 +107,12 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
         this.loadComponent(tab);
     }
 
-    loadAllocationPlanComponent(allocationPlan: AllocationPlan, loadActivePlan: boolean): void {
+    loadAllocationPlanComponent(allocationPlan: AllocationPlan, loadActivePlan: boolean, factoryId: number): void {
         const tab: Tab<any> = {
             id: 'allocation-plan',
             title: 'Allocation Plan',
             component: AllocationPlanComponent,
-            inputData: { allocationPlan: allocationPlan, loadActivePlan: loadActivePlan },
+            inputData: { allocationPlan: allocationPlan, loadActivePlan: loadActivePlan, factoryId: factoryId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
@@ -180,8 +180,8 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
         }
     }
 
-    openAllocationPlan(allocationPlan: AllocationPlan, loadActivePlan: boolean): void {
-        this.loadAllocationPlanComponent(allocationPlan, loadActivePlan);
+    openAllocationPlan(allocationPlan: AllocationPlan, loadActivePlan: boolean, factoryId: number): void {
+        this.loadAllocationPlanComponent(allocationPlan, loadActivePlan, factoryId);
     }
     
 

@@ -1,1 +1,36 @@
-<p>allocation-plan works!</p>
+<div class="border-t border-gray-300">
+    <div class="flex items-center justify-between w-full px-8 py-4">
+        <h2 class="text-lg font-semibold">
+            {{ inputData?.loadActivePlan ? 'Active Allocation Plan' : 'Allocation Plan' }}
+        </h2>
+
+        <button class="standard-write-button">
+            {{ inputData?.loadActivePlan ? 'Deactivate Plan' : 'Replace Current Plan' }}
+        </button>
+    </div>
+
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th class="stage-name-col">Stage Name</th>
+                    <th class="component-name-col">Component Name</th>
+                    <th class="allocated-amount-col">Allocated Amount</th>
+                    <th class="requested-amount-col">Requested Amount</th>
+                    <th class="deficit-col">Deficit</th>
+                    <th class="deficit-percentages-col">Deficit (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let allocation of currentAllocationPlan?.allocations || []; let i = index">
+                    <td>{{ allocation.stageName }}</td>
+                    <td>{{ allocation.componentName }}</td>
+                    <td>{{ allocation?.allocatedAmount }}</td>
+                    <td>{{ allocation?.requestedAmount }}</td>
+                    <td>{{ (allocation?.requestedAmount ?? 0) - (allocation?.allocatedAmount ?? 0) }}</td>
+                    <td>{{ ((allocation?.requestedAmount ?? 0) - (allocation?.allocatedAmount ?? 0)) / (allocation?.requestedAmount ?? 1) * 100 | number: '1.0-2' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -45,9 +45,9 @@ export interface ResourceAllocation {
     componentId: number;
     componentName: string;
     allocatorInventoryItemId: number;
-    allocatedAmount: number;
-    requestedAmount: number;
-    actualAmount: number;
+    allocatedAmount?: number;
+    requestedAmount?: number;
+    actualAmount?: number;
 }
 
 export interface AllocationResult {
