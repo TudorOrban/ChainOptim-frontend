@@ -1,46 +1,64 @@
-<div class="w-full h-full px-8 py-4 space-y-4 bg-gray-100 border-l border-t border-gray-300 shadow-sm overflow-y-auto relative">
-    <div class="overflow-y-auto h-full">
+<div class="w-full h-full px-8 py-4 bg-gray-100 border-l border-t border-gray-300 shadow-sm overflow-y-auto relative">
+    <div class="overflow-y-auto h-full space-y-4">
         <h2 class="text-xl font-semibold">Toolbar</h2>
-        <div class="">
+        <div class="space-y-2">
             <h1 class="text-lg font-semibold text-gray-800 pb-2">Edit Configuration</h1>
-            <div class="font-semibold">
-                Stages
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Stages</p>
+                <button (click)="handleAddFactoryStage()" class="w-8 h-8 bg-blue-600 rounded-md shadow-sm">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white"></fa-icon>
+                </button>
+                <button (click)="handleUpdateFactoryStage()" class="w-8 h-8 bg-blue-600 rounded-md shadow-sm">
+                    <fa-icon [icon]="faEdit" class="w-4 h-4 text-white"></fa-icon>
+                </button>
+                <button (click)="handleDeleteFactoryStage()" class="w-8 h-8 bg-red-600 rounded-md shadow-sm">
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white"></fa-icon>
+                </button>
             </div>
-            <div class="font-semibold">
-                Connections
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Connections</p>
+                <button (click)="handleAddConnection()" class="w-8 h-8 bg-blue-600 rounded-md shadow-sm">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white"></fa-icon>
+                </button>
+                <button (click)="handleDeleteConnection()" class="w-8 h-8 bg-red-600 rounded-md shadow-sm">
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white"></fa-icon>
+                </button>
             </div>
         </div>
-        <div class="">
+        <div class="space-y-2">
             <h1 class="text-lg font-semibold text-gray-800 pb-2">Display Info</h1>
-            <div class="">
-                Quantities (Q)
+            <div class="flex items-center space-x-2">
+                <input (change)="handleDisplayQuantities($event)" type="checkbox" id="show-quantities" name="show-quantities">
+                <p>Quantities (Q)</p>
             </div>
-            <div class="">
-                Capacities (C)
+            <div class="flex items-center space-x-2">
+                <input (change)="handleDisplayCapacities($event)" type="checkbox" id="show-capacities" name="show-capacities">
+                <p>Capacities (C)</p>
             </div>
-            <div class="">
-                Priorities (P)
+            <div class="flex items-center space-x-2">
+                <input (change)="handleDisplayPriorities($event)" type="checkbox" id="show-priorities" name="show-priorities">
+                <p>Priorities (P)</p>
             </div>
         </div>
         <div class="">
             <h1 class="text-lg font-semibold text-gray-800 pb-2">Allocate Resources</h1>
             <div class="space-y-2">
-                <button class="standard-button">
+                <button (click)="handleViewActivePlan()" class="standard-button">
                     View Active Plan
                 </button>
                 
-                <button class="standard-button">
+                <button (click)="handleComputeAllocationPlan()" class="standard-button">
                     Compute Allocation Plan
                 </button>
                 
-                <button class="standard-button">
+                <button (click)="handleViewProductionHistory()" class="standard-button">
                     View Production History
                 </button>
             </div>
         </div>
         <div class="">
             <h1 class="text-lg font-semibold text-gray-800 pb-2">Seek Resources</h1>
-            <button class="standard-button">
+            <button (click)="handleSeekMissingResources()" class="standard-button">
                 Seek Missing Resources
             </button>
         </div>
