@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, PLATFORM_ID, ViewChild } from '@angular/core';
 import { Factory } from '../../../models/Factory';
-import { FactoryService } from '../../../services/factory.service';
 import { FactoryProductionTabsComponent } from './factory-production-tabs/factory-production-tabs.component';
 import { FactoryProductionToolbarComponent } from './factory-production-toolbar/factory-production-toolbar.component';
 import { isPlatformBrowser } from '@angular/common';
@@ -43,7 +42,9 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
             this.tabsComponent.loadAddStageComponent();
         });
         this.toolbarComponent.updateFactoryStage.subscribe(() => {
-            this.tabsComponent.loadUpdateStageComponent();
+            console.log("Update factory stage: ", this.factory);
+            if (!this.factory?.id) return;
+            this.tabsComponent.loadUpdateStageComponent(this.factory?.id || 0);
         });
         this.toolbarComponent.displayQuantities.subscribe((display) => {
             this.tabsComponent.displayQuantities(display);

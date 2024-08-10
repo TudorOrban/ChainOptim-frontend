@@ -46,6 +46,8 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
 
     private tabSubscription!: Subscription;
 
+    selectedFactoryStageId: number | undefined = undefined;
+
     constructor(public tabsService: TabsService) {}
 
     ngOnInit(): void {
@@ -60,6 +62,19 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
+        this.setUpListeners();
+        
+    }
+
+    private setUpListeners() {
+        this.setUpScrollListener();
+    }
+
+    private setUpTabListeners() {
+        
+    }
+
+    private setUpScrollListener() {
         const scrollContainer = this.tabsScrollContainer.nativeElement;
 
         scrollContainer.addEventListener('wheel', (event: WheelEvent) => {
@@ -81,14 +96,15 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
+        this.handleSpecificComponent();
     }
 
-    loadUpdateStageComponent(): void {
+    loadUpdateStageComponent(factoryId: number): void {
         const tab: Tab<any> = {
             id: 'update-factory-stage',
             title: 'Update Stage',
             component: UpdateFactoryStageComponent,
-            inputData: {},
+            inputData: { factoryId: factoryId, factoryStageId: 37 },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
@@ -195,6 +211,21 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
         const componentRef = this.dynamicTabContent.createComponent(tab.component);
         componentRef.instance.inputData = tab.inputData;
         this.activeComponentRef = componentRef;
+    }
+
+    private handleSpecificComponent(): void {
+        if (!this.activeComponentRef) {
+            return;
+        }
+    
+        const instance = this.activeComponentRef.instance;
+    
+        // Check if the active component is AddFactoryStageComponent
+        if (instance instanceof AddFactoryStageComponent) {
+            instance.onFactoryStageAdded.subscribe(() => {
+                this.tabsService.closeTab('add-factory-stage');
+            });
+        }
     }
 
     ngOnDestroy(): void {

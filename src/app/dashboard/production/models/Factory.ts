@@ -17,10 +17,10 @@ export interface Factory {
 
 export interface FactoryStage {
     id: number;
-    capacity: number;
-    duration: number;
-    priority: number;
-    minimumRequiredCapacity: number;
+    capacity?: number;
+    duration?: number;
+    priority?: number;
+    minimumRequiredCapacity?: number;
     stage: Stage;
 }
 
@@ -39,4 +39,24 @@ export interface UpdateFactoryDTO {
     locationId?: number;
     location?: CreateLocationDTO;
     createLocation?: boolean;
+}
+
+export interface CreateFactoryStageDTO {
+    factoryId: number;
+    stageId: number;
+    organizationId: number;
+    capacity?: number;
+    duration?: number;
+    priority?: number;
+    minimumRequiredCapacity?: number;
+}
+
+export interface UpdateFactoryStageDTO {
+    id: number;
+    factoryId: number;
+    organizationId: number;
+    capacity?: number;
+    duration?: number;
+    priority?: number;
+    minimumRequiredCapacity?: number;
 }
