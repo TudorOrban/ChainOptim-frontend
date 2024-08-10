@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { FactoryEdgeUI, FactoryStageNodeUI, GenericEdgeUI, GenericNodeUI } from "../types/uiTypes";
+import { GenericEdgeUI, GenericNodeUI } from "../types/uiTypes";
 import { calculateEdgePoints } from "../utils/geometryUtils";
 import { GraphUIConfig } from "../config/GraphUIConfig";
 import { ElementIdentifier } from "../utils/ElementIdentifier";

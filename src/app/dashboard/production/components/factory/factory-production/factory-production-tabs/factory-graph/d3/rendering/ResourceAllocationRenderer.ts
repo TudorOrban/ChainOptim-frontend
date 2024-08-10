@@ -1,7 +1,7 @@
-import { AllocationPlan } from "../types/dataTypes";
 import { FactoryGraphUI, GenericGraphUI } from "../types/uiTypes";
 import { ElementIdentifier } from "../utils/ElementIdentifier";
 import { GraphUIConfig } from "../config/GraphUIConfig";
+import { AllocationPlan } from "../../../../../../../models/ResourceAllocation";
 
 export class ResourceAllocationRenderer {
     private genericGraphUI: GenericGraphUI;
@@ -16,11 +16,10 @@ export class ResourceAllocationRenderer {
     }
 
 
-    public renderResourceAllocations(jsonData: string) {
-        const allocationPlan: AllocationPlan = JSON.parse(jsonData);
+    public renderResourceAllocations(allocationPlan: AllocationPlan) {
         this.allocationPlan = allocationPlan;
 
-        Object.entries(this.allocationPlan.factoryGraph.nodes).forEach(([stageNodeId, node]) => {
+        Object.entries(this.allocationPlan.factoryGraph?.nodes || {}).forEach(([stageNodeId, node]) => {
             let hasDeficits = false;
             let isAboveRequiredCapacity = true;
 

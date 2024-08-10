@@ -7,6 +7,7 @@ import { GraphUIConfig } from "../config/GraphUIConfig";
 import { GraphPreprocessor } from "./GraphPreprocessor";
 import { InfoRenderer } from "./InfoRenderer";
 import { ResourceAllocationRenderer } from "./ResourceAllocationRenderer";
+import { AllocationPlan } from "../../../../../../../models/ResourceAllocation";
 
 /*
  * Orchestrator of the typescript modules.
@@ -35,10 +36,6 @@ export class GraphRenderer {
         this.infoRenderer = new InfoRenderer(this.svg);
         this.resourceAllocationRenderer = new ResourceAllocationRenderer(this.svg);
         this.interactionManager = new InteractionManager(this.svg, this.nodeRenderer);
-
-        // Bind functions to window for JavaFX access
-        window.renderInfo = this.infoRenderer.renderInfo.bind(this.infoRenderer);
-        window.renderResourceAllocations = this.resourceAllocationRenderer.renderResourceAllocations.bind(this.resourceAllocationRenderer);
     }
 
     /*
@@ -74,6 +71,10 @@ export class GraphRenderer {
 
     renderInfo(infoType: string, isVisible: boolean) {
         this.infoRenderer.renderInfo(infoType, isVisible);
+    }
+
+    renderResourceAllocations(allocationPlan: AllocationPlan) {
+        this.resourceAllocationRenderer.renderResourceAllocations(allocationPlan);
     }
 
     setupSvgDefinitions() {

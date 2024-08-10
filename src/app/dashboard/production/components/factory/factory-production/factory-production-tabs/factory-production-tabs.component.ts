@@ -21,6 +21,7 @@ import { FactoryGraphComponent } from './factory-graph/factory-graph.component';
 import { AllocationPlanComponent } from './allocation-plan/allocation-plan.component';
 import { Subscription } from 'rxjs';
 import { ProductionHistoryComponent } from './production-history/production-history.component';
+import { AllocationPlan } from '../../../../models/ResourceAllocation';
 
 @Component({
     selector: 'app-factory-production-tabs',
@@ -106,12 +107,12 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
         this.loadComponent(tab);
     }
 
-    loadAllocationPlanComponent(): void {
+    loadAllocationPlanComponent(allocationPlan: AllocationPlan, loadActivePlan: boolean): void {
         const tab: Tab<any> = {
             id: 'allocation-plan',
             title: 'Allocation Plan',
             component: AllocationPlanComponent,
-            inputData: {},
+            inputData: { allocationPlan: allocationPlan, loadActivePlan: loadActivePlan },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
@@ -132,8 +133,6 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
 
     
     displayQuantities(display: boolean): void {
-        console.log('Display quantities in tabs', display);
-    
         if (!this.activeComponentRef) {
             console.log("No active component reference found.");
             return;
@@ -146,8 +145,6 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     }
 
     displayCapacities(display: boolean): void {
-        console.log('Display capacities in tabs', display);
-    
         if (!this.activeComponentRef) {
             console.log("No active component reference found.");
             return;
@@ -160,8 +157,6 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     }
 
     displayPriorities(display: boolean): void {
-        console.log('Display priorities in tabs', display);
-    
         if (!this.activeComponentRef) {
             console.log("No active component reference found.");
             return;
@@ -171,6 +166,22 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
         if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
             this.activeComponentRef.instance.displayPriorities(display);
         }
+    }
+
+    displayAllocations(allocationPlan: AllocationPlan): void {    
+        if (!this.activeComponentRef) {
+            console.log("No active component reference found.");
+            return;
+        }
+        
+        // Check if the active component is of type FactoryGraphComponent
+        if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
+            this.activeComponentRef.instance.displayAllocations(allocationPlan);
+        }
+    }
+
+    openAllocationPlan(allocationPlan: AllocationPlan, loadActivePlan: boolean): void {
+        this.loadAllocationPlanComponent(allocationPlan, loadActivePlan);
     }
     
 

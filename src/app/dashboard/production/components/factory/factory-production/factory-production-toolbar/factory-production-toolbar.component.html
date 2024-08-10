@@ -51,10 +51,11 @@
                     Compute Allocation Plan
                 </button>
 
-                <div class="space-y-2">
+                <div *ngIf="computeAllocationPlan" class="space-y-2">
                     <p class="font-semibold text-gray-700">Duration</p>
                     <app-select-duration (durationChange)="handleDurationChange($event)"></app-select-duration>
                     <button (click)="handleComputeAllocationPlan()" class="standard-button">Allocate Resources</button>
+                    <button *ngIf="computedAllocationPlan != undefined" (click)="handleOpenComputedAllocationPlan()" class="standard-button">View Allocation Plan</button>
                 </div>
                 
                 <button (click)="handleViewProductionHistory()" class="standard-button">

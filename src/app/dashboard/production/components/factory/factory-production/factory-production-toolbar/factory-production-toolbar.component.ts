@@ -4,6 +4,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { SelectDurationComponent } from '../../../../../../shared/common/components/select/select-duration/select-duration.component';
 import { ResourceAllocationService } from '../../../../services/resourceallocation.service';
+import { AllocationPlan } from '../../../../models/ResourceAllocation';
 
 @Component({
   selector: 'app-factory-production-toolbar',
@@ -24,9 +25,13 @@ export class FactoryProductionToolbarComponent {
     @Output() displayQuantities: EventEmitter<boolean> = new EventEmitter();
     @Output() displayCapacities: EventEmitter<boolean> = new EventEmitter();
     @Output() displayPriorities: EventEmitter<boolean> = new EventEmitter();
+    @Output() viewActivePlan: EventEmitter<void> = new EventEmitter();
+    @Output() displayAllocations: EventEmitter<AllocationPlan> = new EventEmitter();
+    @Output() openAllocationPlan: EventEmitter<AllocationPlan> = new EventEmitter();
     @Output() viewProductionHistory: EventEmitter<void> = new EventEmitter();
     
     computeAllocationPlan: boolean = false;
+    computedAllocationPlan: AllocationPlan | undefined = undefined;
     durationHours: number = 0;
 
     faPlus = faPlus;
@@ -34,7 +39,7 @@ export class FactoryProductionToolbarComponent {
     faTrash = faTrash;
 
     constructor(
-        private resourceallocationService: ResourceAllocationService,
+        private resourceAllocationService: ResourceAllocationService,
     ) {} 
 
     handleAddFactoryStage() {
@@ -85,6 +90,7 @@ export class FactoryProductionToolbarComponent {
 
     handleViewActivePlan() {
         console.log('View active plan');
+        this.viewActivePlan.emit();
     }
 
     handleOpenAllocationPlanMenu() {
@@ -105,9 +111,16 @@ export class FactoryProductionToolbarComponent {
             return
         }
 
-        this.resourceallocationService.computeAllocationPlan(this.factoryId, this.durationHours).subscribe(allocationPlan => {
+        this.resourceAllocationService.computeAllocationPlan(this.factoryId, this.durationHours).subscribe(allocationPlan => {
             console.log('Allocation plan computed: ', allocationPlan);
+            this.computedAllocationPlan = allocationPlan
+            this.displayAllocations.emit(allocationPlan);
         });
+    }
+
+    handleOpenComputedAllocationPlan() {
+        console.log('Open computed allocation plan');
+        this.openAllocationPlan.emit(this.computedAllocationPlan);
     }
 
     handleViewProductionHistory() {

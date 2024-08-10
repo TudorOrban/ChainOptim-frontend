@@ -32,7 +32,7 @@ export interface ResourceAllocationPlan {
 }
 
 export interface AllocationPlan {
-    factoryGraph: FactoryGraph;
+    factoryGraph?: FactoryGraph;
     inventoryBalance: Record<number, FactoryInventoryItem>;
     allocations: ResourceAllocation[];
 }

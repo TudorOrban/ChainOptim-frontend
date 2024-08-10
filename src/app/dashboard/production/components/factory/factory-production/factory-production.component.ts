@@ -23,7 +23,6 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
     private isResizing: boolean = false;
 
     constructor(
-        private factoryService: FactoryService,
         @Inject(PLATFORM_ID) private platformId: Object
     ) {}
 
@@ -54,6 +53,15 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
         });
         this.toolbarComponent.displayPriorities.subscribe((display) => {
             this.tabsComponent.displayPriorities(display);
+        });
+        this.toolbarComponent.viewActivePlan.subscribe(() => {
+            this.tabsComponent.loadAllocationPlanComponent({ allocations: [], inventoryBalance: []}, true);
+        });
+        this.toolbarComponent.displayAllocations.subscribe((allocationPlan) => {
+            this.tabsComponent.displayAllocations(allocationPlan);
+        });
+        this.toolbarComponent.openAllocationPlan.subscribe((allocationPlan) => {
+            this.tabsComponent.loadAllocationPlanComponent(allocationPlan, false);
         });
         this.toolbarComponent.viewProductionHistory.subscribe(() => {
             this.tabsComponent.loadProductionHistoryComponent();

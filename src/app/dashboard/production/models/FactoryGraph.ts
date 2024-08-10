@@ -7,12 +7,12 @@ export interface FactoryProductionGraph {
 }
 
 export interface FactoryGraph {
-    nodes: Record<number, StageNode>;
-    adjList: Record<number, Edge[]>;
-    pipelinePriority: number;
+    nodes: Record<number, FactoryStageNode>;
+    adjList: Record<number, FactoryEdge[]>;
+    pipelinePriority?: number;
 }
 
-export interface StageNode {
+export interface FactoryStageNode {
     smallStage: SmallStage;
     numberOfStepsCapacity: number;
     perDuration: number;
@@ -46,7 +46,7 @@ export interface SmallStageOutput {
     outputPerRequest: number;
 }
 
-export interface Edge {
+export interface FactoryEdge {
     incomingFactoryStageId: number;
     incomingStageOutputId: number;
     outgoingFactoryStageId: number;

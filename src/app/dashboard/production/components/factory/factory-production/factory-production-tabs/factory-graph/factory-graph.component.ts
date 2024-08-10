@@ -1,8 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { GraphRenderer } from './d3/rendering/GraphRenderer';
 import { FactoryGraphService } from '../../../../../services/factorygraph.service';
-import { FactoryProductionGraph, GenericGraph } from './d3/types/dataTypes';
+import { GenericGraph } from './d3/types/dataTypes';
 import { transformFactoryToGenericGraph } from './d3/utils/utils';
+import { AllocationPlan } from '../../../../../models/ResourceAllocation';
+import { FactoryProductionGraph } from '../../../../../models/FactoryGraph';
 
 @Component({
     selector: 'app-factory-graph',
@@ -65,5 +67,11 @@ export class FactoryGraphComponent {
         console.log("Display priorities in factory graph: ", display);
 
         this.factoryGraphRenderer?.renderInfo("priorities", display);
+    }
+
+    displayAllocations(allocationPlan: AllocationPlan): void {
+        console.log("Display allocations in factory graph: ", allocationPlan);
+
+        this.factoryGraphRenderer?.renderResourceAllocations(allocationPlan);
     }
 }
