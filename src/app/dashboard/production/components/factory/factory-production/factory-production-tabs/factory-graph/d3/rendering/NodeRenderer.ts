@@ -199,8 +199,17 @@ export class NodeRenderer {
             .style("stroke-width", highlightWidth)
             .attr("filter", "url(#drop-shadow)");
     };
-    
 
+    public highlightSubNode = (subNode: d3.Selection<SVGCircleElement, unknown, null, undefined>) => {
+        const { highlightDuration, highlightColor, highlightWidth } = GraphUIConfig.node;
+        
+        subNode
+            .transition()
+            .duration(highlightDuration)
+            .style("fill", highlightColor)
+            .style("stroke-width", highlightWidth)
+            .attr("filter", "url(#drop-shadow)");
+    }
     
     public unhighlightAllNodes = () => {
         const { highlightDuration, backgroundColor, borderWidth } = GraphUIConfig.node;
@@ -212,4 +221,15 @@ export class NodeRenderer {
             .style("stroke-width", borderWidth)
             .attr("filter", null);
     };
+
+    public unhighlightAllSubNodes = () => {
+        const { highlightDuration, backgroundColor, borderWidth } = GraphUIConfig.node;
+        
+        this.svg.selectAll("circle")
+            .transition()
+            .duration(highlightDuration)
+            .style("fill", backgroundColor)
+            .style("stroke-width", borderWidth)
+            .attr("filter", null);
+    }
 }

@@ -28,6 +28,22 @@ export class InteractionManager {
                     this.nodeClickEmitter.emit(clickedNodeId);
                 }
             });
+
+        this.svg
+            .selectAll('circle')
+            .on('click', (event) => {
+                const clickedSubNode = d3.select<SVGCircleElement, unknown>(
+                    event.currentTarget as SVGCircleElement
+                );
+                const clickedSubNodeId = clickedSubNode.attr('id');
+
+                if (clickedSubNode.node()) {
+                    console.log('Clicked subnode:', clickedSubNodeId);
+                    this.nodeRenderer.unhighlightAllSubNodes();
+                    this.nodeRenderer.highlightSubNode(clickedSubNode);
+                    this.nodeClickEmitter.emit(clickedSubNodeId);
+                }
+            })
         
         this.svg
             .selectAll('line')

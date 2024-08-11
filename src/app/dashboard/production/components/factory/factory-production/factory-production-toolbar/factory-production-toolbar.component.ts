@@ -6,11 +6,15 @@ import { SelectDurationComponent } from '../../../../../../shared/common/compone
 import { ResourceAllocationService } from '../../../../services/resourceallocation.service';
 import { AllocationPlan } from '../../../../models/ResourceAllocation';
 import { Pair } from '../../../../../overview/types/supplyChainMapTypes';
-import { FactoryEdge } from '../../../../models/FactoryGraph';
+import { FactoryEdge, NodeSelection } from '../../../../models/FactoryGraph';
 import { FactoryStageConnectionService } from '../../../../services/factorystageconnection.service';
 import { DeleteConnectionDTO } from '../../../../models/Factory';
 import { User } from '../../../../../../core/user/model/user';
 import { UserService } from '../../../../../../core/auth/services/user.service';
+import { ToastService } from '../../../../../../shared/common/components/toast-system/toast.service';
+import { GenericConfirmDialogComponent } from '../../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
+import { ConfirmDialogInput } from '../../../../../../shared/common/models/confirmDialogTypes';
+import { OperationOutcome, ToastInfo } from '../../../../../../shared/common/components/toast-system/toastTypes';
 
 @Component({
   selector: 'app-factory-production-toolbar',
@@ -18,7 +22,8 @@ import { UserService } from '../../../../../../core/auth/services/user.service';
   imports: [
     FontAwesomeModule, 
     CommonModule,
-    SelectDurationComponent
+    SelectDurationComponent,
+    GenericConfirmDialogComponent
 ],
   templateUrl: './factory-production-toolbar.component.html',
   styleUrl: './factory-production-toolbar.component.css'
@@ -28,6 +33,7 @@ export class FactoryProductionToolbarComponent {
 
     @Output() addFactoryStage: EventEmitter<void> = new EventEmitter();
     @Output() updateFactoryStage: EventEmitter<void> = new EventEmitter();
+    @Output() toggleAddConnectionMode: EventEmitter<void> = new EventEmitter();
     @Output() displayQuantities: EventEmitter<boolean> = new EventEmitter();
     @Output() displayCapacities: EventEmitter<boolean> = new EventEmitter();
     @Output() displayPriorities: EventEmitter<boolean> = new EventEmitter();
@@ -38,13 +44,26 @@ export class FactoryProductionToolbarComponent {
 
     currentUser: User | undefined = undefined;
 
-    selectedNode: Pair<string, number> | undefined = undefined;
+    selectedNode: NodeSelection | undefined = undefined;
     selectedEdge: FactoryEdge | undefined = undefined;
+    isAddConnectionModeOn: boolean = false;
 
     durationHours: number = 0;
     computeAllocationPlan: boolean = false;
     computedAllocationPlan: AllocationPlan | undefined = undefined;
 
+    deleteConnectionDialogInput: ConfirmDialogInput = {
+        dialogTitle: "Delete Connection",
+        dialogMessage: "Are you sure you want to delete this stage connection?",
+    };
+    isDeleteConnectionConfirmDialogOpen = false;
+    toastInfo: ToastInfo = {
+        id: 1,
+        title: "Stage connection deleted",
+        message: "The stage connection has been deleted successfully",
+        outcome: OperationOutcome.SUCCESS
+    };
+    
     faPlus = faPlus;
     faEdit = faEdit;
     faTrash = faTrash;
@@ -53,12 +72,12 @@ export class FactoryProductionToolbarComponent {
         private userService: UserService,
         private connectionService: FactoryStageConnectionService,
         private resourceAllocationService: ResourceAllocationService,
+        private toastService: ToastService,
     ) {} 
 
     ngOnInit() {
         this.userService.getCurrentUser().subscribe(user => {
             if (!user) {
-                console.error('Error: No user found');
                 return;
             }
             this.currentUser = user;
@@ -81,6 +100,13 @@ export class FactoryProductionToolbarComponent {
 
     handleAddConnection() {
         console.log('Add connection');
+        this.isAddConnectionModeOn = !this.isAddConnectionModeOn;
+        this.toggleAddConnectionMode.emit();
+    }
+
+    handleOpenDeleteConnectionDialog() {
+        this.isDeleteConnectionConfirmDialogOpen = true;
+        console.log('Open delete connection dialog');
     }
 
     handleDeleteConnection() {
@@ -99,9 +125,18 @@ export class FactoryProductionToolbarComponent {
             incomingStageOutputId: this.selectedEdge.incomingStageOutputId
         };
 
-        this.connectionService.findAndDeleteConnection(connectionDTO).subscribe(connectionId => {
-            console.log('Deleted connection with ID', connectionId);
+        this.connectionService.findAndDeleteConnection(connectionDTO).subscribe(() => {
+            console.log('Deleted connection with ID');
+
+            this.toastService.addToast(this.toastInfo);
+            this.isDeleteConnectionConfirmDialogOpen = false;
+
         });
+    }
+
+    handleCancelDeleteConnection() {
+        console.log('Cancel delete connection');
+        this.isDeleteConnectionConfirmDialogOpen = false;
     }
 
     handleDisplayQuantities(event: Event): void {
@@ -173,7 +208,7 @@ export class FactoryProductionToolbarComponent {
     }
 
     // Communication with Production parent component
-    handleNodeClicked(node: Pair<string, number>) {
+    handleNodeClicked(node: NodeSelection) {
         console.log('Node clicked in toolbar: ', node);
         this.selectedNode = node;
     }

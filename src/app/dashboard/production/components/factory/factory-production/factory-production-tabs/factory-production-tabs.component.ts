@@ -24,7 +24,7 @@ import { AllocationPlanComponent } from './allocation-plan/allocation-plan.compo
 import { Subscription } from 'rxjs';
 import { ProductionHistoryComponent } from './production-history/production-history.component';
 import { AllocationPlan } from '../../../../models/ResourceAllocation';
-import { FactoryEdge } from '../../../../models/FactoryGraph';
+import { FactoryEdge, NodeSelection, NodeType } from '../../../../models/FactoryGraph';
 import { Pair } from '../../../../../overview/types/supplyChainMapTypes';
 
 @Component({
@@ -41,7 +41,7 @@ import { Pair } from '../../../../../overview/types/supplyChainMapTypes';
 export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     @Input() factoryId: number | undefined = undefined;
 
-    @Output() onNodeClicked = new EventEmitter<Pair<string, number>>();
+    @Output() onNodeClicked = new EventEmitter<NodeSelection>();
     @Output() onEdgeClicked = new EventEmitter<FactoryEdge>();
 
     @ViewChild('dynamicTabContent', { read: ViewContainerRef })
@@ -186,16 +186,30 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
             });
         }
         if (instance instanceof FactoryGraphComponent) {
-            instance.onNodeClicked.subscribe(({ first, second }) => {
-                this.selectedFactoryStageId = second;
-                console.log("Node clicked in tabs: ", first, second);
-                this.onNodeClicked.emit({ first: first, second: second });
+            instance.onNodeClicked.subscribe((nodeSelection) => {
+                if (nodeSelection.nodeType === NodeType.STAGE) {
+                    this.selectedFactoryStageId = nodeSelection.nodeId;                    
+                }
+                console.log("Node clicked in tabs: ", nodeSelection.nodeId, nodeSelection.nodeType);
+                this.onNodeClicked.emit(nodeSelection);
             });
             instance.onEdgeClicked.subscribe(edge => {
                 this.selectedEdge = edge;
                 console.log("Edge clicked in tabs: ", edge);
                 this.onEdgeClicked.emit(edge);
             });
+        }
+    }
+
+    // - CRUD ops
+    toggleAddConnectionMode(): void {
+        if (!this.activeComponentRef) {
+            console.log("No active component reference found.");
+            return;
+        }
+
+        if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
+            this.activeComponentRef.instance.toggleAddConnectionMode();
         }
     }
 

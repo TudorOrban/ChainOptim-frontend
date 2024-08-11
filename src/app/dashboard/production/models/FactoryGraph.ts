@@ -52,3 +52,16 @@ export interface FactoryEdge {
     outgoingFactoryStageId: number;
     outgoingStageInputId: number;
 }
+
+export enum NodeType {
+    STAGE = "STAGE",
+    INPUT = "INPUT",
+    OUTPUT = "OUTPUT",
+}
+
+export interface NodeSelection {
+    nodeId?: number;
+    subNodeId?: number;
+    nodeType?: NodeType;
+    encodedId?: string;
+}

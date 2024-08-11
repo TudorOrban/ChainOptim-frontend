@@ -56,6 +56,9 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
             if (!this.factory?.id) return;
             this.tabsComponent.loadUpdateStageComponent(this.factory?.id || 0);
         });
+        this.toolbarComponent.toggleAddConnectionMode.subscribe(() => {
+            this.tabsComponent.toggleAddConnectionMode();
+        });
         this.toolbarComponent.displayQuantities.subscribe((display) => {
             this.tabsComponent.displayQuantities(display);
         });

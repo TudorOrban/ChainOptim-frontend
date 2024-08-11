@@ -31,7 +31,7 @@
                     <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
                 <button
-                    (click)="handleDeleteConnection()" 
+                    (click)="handleOpenDeleteConnectionDialog()" 
                     [disabled]="!selectedEdge" 
                     [attr.title]="!selectedNode ? 'Select a connection to delete' : null"
                     class="standard-delete-button-small"
@@ -83,6 +83,18 @@
             <button (click)="handleSeekMissingResources()" class="standard-button">
                 Seek Missing Resources
             </button>
+        </div>
+    </div>
+
+    <!-- Confirm dialog -->
+    <div class="overlay" *ngIf="isDeleteConnectionConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteConnectionDialogInput"
+                (confirm)="handleDeleteConnection()"
+                (cancel)="handleCancelDeleteConnection()"
+            >
+            </app-generic-confirm-dialog>
         </div>
     </div>
 </div>  

@@ -41,13 +41,13 @@
 
     <!-- Confirm dialog -->
     <div class="overlay" *ngIf="isConfirmDialogOpen">
-    <div class="dialog-container">
-        <app-generic-confirm-dialog 
-            [dialogInput]="deleteDialogInput"
-            (confirm)="handleDeleteFactory()"
-            (cancel)="handleCancel()"
-        >
-        </app-generic-confirm-dialog>
-    </div>
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteDialogInput"
+                (confirm)="handleDeleteFactory()"
+                (cancel)="handleCancel()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
     </div>
 </div>

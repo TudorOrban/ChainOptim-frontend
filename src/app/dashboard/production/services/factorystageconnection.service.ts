@@ -41,13 +41,13 @@ export class FactoryStageConnectionService {
         return this.http.delete<number>(`${this.apiUrl}/delete/${connectionId}`);
     }
 
-    findAndDeleteConnection(connectionDTO: DeleteConnectionDTO): Observable<number> {
+    findAndDeleteConnection(connectionDTO: DeleteConnectionDTO): Observable<void> {
         const options = {
             body: connectionDTO,
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
             })
         };
-        return this.http.delete<number>(`${this.apiUrl}/find-and-delete`, options);
+        return this.http.delete<void>(`${this.apiUrl}/delete`, options);
     }
 }
