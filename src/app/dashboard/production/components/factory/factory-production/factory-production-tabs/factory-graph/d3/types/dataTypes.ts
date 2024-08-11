@@ -23,23 +23,4 @@ export interface GenericEdge {
     destStageInputId: number;
 }
 
-// Product
-export interface ProductProductionGraph {
-    id: number;
-    productId: number;
-    createdAt: string;
-    updatedAt: string;
-    productGraph: ProductGraph;
-}
 
-export interface ProductGraph {
-    nodes: Record<number, SmallStage>;
-    adjList: Record<number, ProductEdge[]>;
-}
-
-export interface ProductEdge {
-    srcStageId: number;
-    srcStageOutputId: number;
-    destStageId: number;
-    destStageInputId: number;
-}

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Tab } from '../models/Production';
 import { BehaviorSubject } from 'rxjs';
+import { ProductTab } from '../../production/models/Production';
 
 @Injectable({
     providedIn: 'root',
 })
-export class TabsService {
-    private tabs: Tab<any>[] = [];
+export class ProductProductionTabsService {
+    private tabs: ProductTab<any>[] = [];
     private activeTabId = new BehaviorSubject<string | null>(null);
     private idCounter = 0; 
 
-    getTabs(): Tab<any>[] {
+    getTabs(): ProductTab<any>[] {
         return this.tabs;
     }
     
@@ -18,7 +18,7 @@ export class TabsService {
         return this.activeTabId;
     }
     
-    openTab(tab: Tab<any>): void {
+    openTab(tab: ProductTab<any>): void {
         tab.id += `-${this.idCounter++}`;
         this.tabs.push(tab);
         this.setActiveTab(tab.id);

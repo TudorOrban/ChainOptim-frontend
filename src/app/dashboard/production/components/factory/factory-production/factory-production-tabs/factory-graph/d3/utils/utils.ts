@@ -1,6 +1,8 @@
 import { FactoryEdge, FactoryGraph } from "../../../../../../../models/FactoryGraph";
 import { GraphUIConfig } from "../config/GraphUIConfig";
-import { GenericEdge, GenericGraph, ProductEdge, ProductGraph } from "../types/dataTypes";
+import { GenericEdge, GenericGraph } from "../types/dataTypes";
+import { ProductGraph } from "../../../../../../../../goods/models/ProductGraph";
+import { ProductEdge } from "../../../../../../../../goods/models/ProductGraph";
 import { Coordinates } from "../types/uiTypes";
 
 export const findStageInputPosition = (centerX: number, centerY: number, numberOfInputs: number, index: number): Coordinates => {

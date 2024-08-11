@@ -1,4 +1,5 @@
-import { GenericGraph, ProductProductionGraph } from "./types/dataTypes";
+import { GenericGraph } from "./types/dataTypes";
+import { ProductProductionGraph } from "../../../../../../../goods/models/ProductGraph";
 import { GraphRenderer } from "./rendering/GraphRenderer";
 import { transformFactoryToGenericGraph, transformProductToGenericGraph } from "./utils/utils";
 import { SupplyChainMap } from "./maps/types/dataTypes";

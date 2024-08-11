@@ -12,7 +12,7 @@ import {
     EventEmitter,
     AfterViewInit,
 } from '@angular/core';
-import { TabsService } from '../../../../services/productiontabs.service';
+import { FactoryProductionTabsService } from '../../../../services/factoryproductiontabs.service';
 import { FactoryProductionTabType, Tab } from '../../../../models/Production';
 import { AddFactoryStageComponent } from './add-factory-stage/add-factory-stage.component';
 import { CommonModule } from '@angular/common';
@@ -58,7 +58,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterV
     selectedEdge: FactoryEdge | undefined = undefined;
 
     constructor(
-        public tabsService: TabsService
+        public tabsService: FactoryProductionTabsService
     ) {
     }
 
