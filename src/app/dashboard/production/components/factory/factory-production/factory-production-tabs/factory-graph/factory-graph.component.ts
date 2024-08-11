@@ -11,11 +11,12 @@ import { FactoryStageConnectionService } from '../../../../../services/factoryst
 import { CreateConnectionDTO } from '../../../../../models/Factory';
 import { ToastService } from '../../../../../../../shared/common/components/toast-system/toast.service';
 import { OperationOutcome } from '../../../../../../../shared/common/components/toast-system/toastTypes';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-factory-graph',
     standalone: true,
-    imports: [],
+    imports: [CommonModule],
     templateUrl: './factory-graph.component.html',
     styleUrl: './factory-graph.component.css',
 })
@@ -26,6 +27,7 @@ export class FactoryGraphComponent {
 
     isAddConnectionModeOn: boolean = false;
     addConnectionClickedNodes: NodeSelection[] = [];
+    readyForConnectionCreation: boolean = false;
     
     factoryGraphRenderer: GraphRenderer | null = null;
     elementIdentifier: ElementIdentifier = new ElementIdentifier();
@@ -91,7 +93,7 @@ export class FactoryGraphComponent {
     }
 
     private handleAddConnectionMode(nodeSelection: NodeSelection): void {
-        if (!this.isAddConnectionModeOn) {
+        if (!this.isAddConnectionModeOn || !nodeSelection.nodeId || this.addConnectionClickedNodes.map(node => node.nodeId).includes(nodeSelection.nodeId)) {
             return;
         }
         this.addConnectionClickedNodes.push(nodeSelection);
@@ -101,6 +103,12 @@ export class FactoryGraphComponent {
             return;
         }
 
+        this.readyForConnectionCreation = true;
+        this.factoryGraphRenderer?.renderTemporaryEdge(this.addConnectionClickedNodes?.[0], this.addConnectionClickedNodes?.[1]);
+        
+    }
+
+    handleCreateConnection(): void {
         const connectionDTO: CreateConnectionDTO = {
             factoryId: this.inputData?.factoryId as number,
             srcFactoryStageId: this.addConnectionClickedNodes[0]?.nodeId || 0,

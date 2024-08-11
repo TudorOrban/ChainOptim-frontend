@@ -9,6 +9,8 @@ import { InfoRenderer } from "./InfoRenderer";
 import { ResourceAllocationRenderer } from "./ResourceAllocationRenderer";
 import { AllocationPlan } from "../../../../../../../models/ResourceAllocation";
 import { EventEmitter } from "@angular/core";
+import { GenericGraphUI } from "../types/uiTypes";
+import { NodeSelection } from "../../../../../../../models/FactoryGraph";
 
 /*
  * Orchestrator of the typescript modules.
@@ -25,6 +27,8 @@ export class GraphRenderer {
 
     private nodeClickEmitter: EventEmitter<string>;
     private edgeClickEmitter: EventEmitter<string>;
+
+    private genericGraphUI: GenericGraphUI = { nodes: {}, adjList: {}};
 
     constructor(containerId: string) {
         const { width, height, backgroundColor } = GraphUIConfig.graph;
@@ -58,6 +62,7 @@ export class GraphRenderer {
     renderGraph(graphData: GenericGraph) {
         // Preprocess graph: assign position to nodes based on connections
         const genericGraphUI = this.graphPreprocessor.preprocessGraph(graphData);
+        this.genericGraphUI = genericGraphUI;
         
         // Set up definitions for needed elements (arrows, shadows, etc.)
         this.setupSvgDefinitions();
@@ -77,6 +82,11 @@ export class GraphRenderer {
         });
 
         this.interactionManager.setupNodeInteractions();
+    }
+
+    renderTemporaryEdge(srcSelection: NodeSelection, destSelection: NodeSelection) {
+        this.edgeRenderer.renderTemporaryEdge(srcSelection, destSelection);
+
     }
 
     renderInfo(infoType: string, isVisible: boolean) {

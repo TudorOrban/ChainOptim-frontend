@@ -1,8 +1,9 @@
 import * as d3 from "d3";
-import { Coordinates, GenericEdgeUI, GenericNodeUI } from "../types/uiTypes";
+import { Coordinates, EdgeState, GenericEdgeUI, GenericNodeUI } from "../types/uiTypes";
 import { calculateEdgePoints } from "../utils/geometryUtils";
 import { GraphUIConfig } from "../config/GraphUIConfig";
 import { ElementIdentifier } from "../utils/ElementIdentifier";
+import { NodeSelection } from "../../../../../../../models/FactoryGraph";
 
 export class EdgeRenderer {
     private elementIdentifier: ElementIdentifier;
@@ -16,7 +17,7 @@ export class EdgeRenderer {
         adjListUI: Record<number, GenericEdgeUI[]>,
         stageNodeId: number,
     ) => {
-        const { node: { subnodeRadius }, edge: { color, width, markerEnd } } = GraphUIConfig;
+        const { edge: { width } } = GraphUIConfig;
 
         const neighbors = adjListUI[stageNodeId];
         if (!neighbors) {
@@ -24,40 +25,49 @@ export class EdgeRenderer {
         }
 
         neighbors.forEach((neighbor) => {
-            // Find incoming stage output and outgoing stage input
-            const sourceElement = d3.select(
-                `#${this.elementIdentifier.encodeStageOutputId(neighbor.edge.srcStageId, neighbor.edge.srcStageOutputId)}`
-            );
-            const targetElement = d3.select(
-                `#${this.elementIdentifier.encodeStageInputId(neighbor.edge.destStageId, neighbor.edge.destStageInputId)}`
-            );
-
-            if (sourceElement.empty() || targetElement.empty()) {
-                return;
-            }
-
-            const { start, end } = calculateEdgePoints(
-                { x: parseFloat(sourceElement.attr("cx")), y: parseFloat(sourceElement.attr("cy")) },
-                { x: parseFloat(targetElement.attr("cx")), y: parseFloat(targetElement.attr("cy")) },
-                subnodeRadius,
-                subnodeRadius
-            );
-             
-            const edgeId = this.elementIdentifier.encodeOuterEdgeId(neighbor.edge.srcStageId, neighbor.edge.srcStageOutputId, neighbor.edge.destStageId, neighbor.edge.destStageInputId);
-            const line = this.svg.append("line")
-                .attr("id", edgeId)
-                .attr("x1", start.x)
-                .attr("y1", start.y)
-                .attr("x2", end.x)
-                .attr("y2", end.y)
-                .attr("stroke", color)
-                .attr("stroke-width", width)
-                .attr("marker-end", markerEnd);
+            const { line, edgeId } = this.renderEdge(neighbor);
+            if (!line) return;
 
             this.addHoverEffect(line, width, edgeId);
         });
     };
     
+    private renderEdge(neighbor: GenericEdgeUI): { line: d3.Selection<SVGLineElement, unknown, HTMLElement, any> | undefined, edgeId: string } {
+        const { node: { subnodeRadius }, edge: { color, width, markerEnd, temporaryColor, temporaryWidth } } = GraphUIConfig;
+        const edgeColor = neighbor?.state === EdgeState.TEMPORARY ? temporaryColor : color;
+        const edgeWidth = neighbor?.state === EdgeState.TEMPORARY ? temporaryWidth : width;
+
+        const sourceElement = d3.select(
+            `#${this.elementIdentifier.encodeStageOutputId(neighbor.edge.srcStageId, neighbor.edge.srcStageOutputId)}`
+        );
+        const targetElement = d3.select(
+            `#${this.elementIdentifier.encodeStageInputId(neighbor.edge.destStageId, neighbor.edge.destStageInputId)}`
+        );
+
+        if (sourceElement.empty() || targetElement.empty()) {
+            return { line: undefined, edgeId: "" };
+        }
+
+        const { start, end } = calculateEdgePoints(
+            { x: parseFloat(sourceElement.attr("cx")), y: parseFloat(sourceElement.attr("cy")) },
+            { x: parseFloat(targetElement.attr("cx")), y: parseFloat(targetElement.attr("cy")) },
+            subnodeRadius,
+            subnodeRadius
+        );
+        
+        const edgeId = this.elementIdentifier.encodeOuterEdgeId(neighbor.edge.srcStageId, neighbor.edge.srcStageOutputId, neighbor.edge.destStageId, neighbor.edge.destStageInputId);
+        const line = this.svg.append("line")
+            .attr("id", edgeId)
+            .attr("x1", start.x)
+            .attr("y1", start.y)
+            .attr("x2", end.x)
+            .attr("y2", end.y)
+            .attr("stroke", edgeColor)
+            .attr("stroke-width", edgeWidth)
+            .attr("marker-end", markerEnd);
+
+        return { line, edgeId };
+    }
         
     private addHoverEffect(line: d3.Selection<SVGLineElement, unknown, HTMLElement, any>, width: number, edgeId: string) {
         const interactionLine = this.svg.append("line")
@@ -108,5 +118,22 @@ export class EdgeRenderer {
             .style("stroke-width", width);
     };
 
+
+    renderTemporaryEdge(srcSelection: NodeSelection, destSelection: NodeSelection) {
+        const edge: GenericEdgeUI = {
+            edge: {
+                srcStageId: srcSelection.nodeId || 0,
+                srcStageOutputId: srcSelection.subNodeId || 0,
+                destStageId: destSelection.nodeId || 0,
+                destStageInputId: destSelection.subNodeId || 0,
+            },
+            state: EdgeState.TEMPORARY
+        };
+
+        const { line, edgeId } = this.renderEdge(edge);
+        if (!line) return;
+
+        this.addHoverEffect(line, GraphUIConfig.edge.width, edgeId);
+    }
     
 }

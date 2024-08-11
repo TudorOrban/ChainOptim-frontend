@@ -14,7 +14,8 @@ export interface GenericNodeUI {
 
 export interface GenericEdgeUI {
     edge: GenericEdge;
-
+    state?: EdgeState;
+    type?: EdgeType;
 }
 
 export interface FactoryGraphUI {
@@ -31,10 +32,25 @@ export interface FactoryStageNodeUI {
 
 export interface FactoryEdgeUI {
     edge: FactoryEdge;
-
+    state?: EdgeState;
+    type?: EdgeType;
 }
 
+export enum EdgeType {
+    INPUT_STAGE = "INPUT_STAGE",
+    STAGE_OUTPUT = "STAGE_OUTPUT",
+    OUTPUT_INPUT = "OUTPUT_INPUT",
+}
 
+export enum EdgeState {
+    NORMAL = "NORMAL",
+    HIGHLIGHTED = "HIGHLIGHTED",
+    SELECTED = "SELECTED",
+    INVISIBLE = "INVISIBLE",
+    INVISIBLE_HIGHLIGHTED = "INVISIBLE_HIGHLIGHTED",
+    INVISIBLE_SELECTED = "INVISIBLE_SELECTED",
+    TEMPORARY = "TEMPORARY",
+}
 
 
 

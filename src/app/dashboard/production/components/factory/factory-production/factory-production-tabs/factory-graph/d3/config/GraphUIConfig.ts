@@ -35,6 +35,8 @@ export const GraphUIConfig = {
         highlightDuration: 200,
         highlightColor: "rgb(78, 120, 210)",
         highlightWidth: 2,
+        temporaryColor: "green",
+        temporaryWidth: 2,
     },
     info: {
         infoFontSize: 14,

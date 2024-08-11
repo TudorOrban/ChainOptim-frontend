@@ -1,2 +1,12 @@
-
+<div>
     <div id="viz" class="overflow-auto" style="width: 100%; height: 500px"></div>
+
+    <div *ngIf="readyForConnectionCreation" class="flex items-center justify-end w-full">
+        <button class="standard-button">
+            Cancel
+        </button>
+        <button (click)="handleCreateConnection()" class="standard-write-button">
+            Confirm Creation
+        </button>
+    </div>
+</div>
