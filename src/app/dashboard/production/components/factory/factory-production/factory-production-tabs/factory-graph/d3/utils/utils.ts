@@ -1,6 +1,6 @@
 import { FactoryEdge, FactoryGraph } from "../../../../../../../models/FactoryGraph";
 import { GraphUIConfig } from "../config/GraphUIConfig";
-import { GenericEdge, GenericGraph, ProductGraph } from "../types/dataTypes";
+import { GenericEdge, GenericGraph, ProductEdge, ProductGraph } from "../types/dataTypes";
 import { Coordinates } from "../types/uiTypes";
 
 export const findStageInputPosition = (centerX: number, centerY: number, numberOfInputs: number, index: number): Coordinates => {
@@ -33,7 +33,7 @@ export const truncateString = (str: string, maxLength: number): string => {
 export const transformFactoryToGenericGraph = (productionGraph: FactoryGraph): GenericGraph => {
     return {
         nodes: productionGraph.nodes,
-        adjList: adjustBackendEdgeKeys(productionGraph.adjList),
+        adjList: adjustBackendFactoryEdgeKeys(productionGraph.adjList),
         type: "factory",
     };
 } 
@@ -51,23 +51,43 @@ export const transformProductToGenericGraph = (productionGraph: ProductGraph): G
                 ];
             })
         ),
-        adjList: productionGraph.adjList,
+        adjList: adjustBackendProductEdgeKeys(productionGraph.adjList),
         type: "product",
     }
 }
 
-export const adjustBackendEdgeKeys = (adjList: Record<number, FactoryEdge[]>): Record<number, GenericEdge[]> => {
+export const adjustBackendFactoryEdgeKeys = (adjList: Record<number, FactoryEdge[]>): Record<number, GenericEdge[]> => {
     return Object.fromEntries(
         Object.entries(adjList).map(([nodeId, edges]) => {
             return [
                 nodeId,
                 edges.map((edge) => {
-                    return {
-                        incomingStageId: edge.incomingFactoryStageId,
-                        incomingStageOutputId: edge.incomingStageOutputId,
-                        outgoingStageId: edge.outgoingFactoryStageId,
-                        outgoingStageInputId: edge.outgoingStageInputId,
+                    const genericEdge: GenericEdge = {
+                        srcStageId: edge.srcFactoryStageId,
+                        srcStageOutputId: edge.srcStageOutputId,
+                        destStageId: edge.destFactoryStageId,
+                        destStageInputId: edge.destStageInputId,
                     };
+                    return genericEdge;
+                }),
+            ];
+        })
+    );
+}
+
+export const adjustBackendProductEdgeKeys = (adjList: Record<number, ProductEdge[]>): Record<number, GenericEdge[]> => {
+    return Object.fromEntries(
+        Object.entries(adjList).map(([nodeId, edges]) => {
+            return [
+                nodeId,
+                edges.map((edge) => {
+                    const genericEdge: GenericEdge = {
+                        srcStageId: edge.srcStageId,
+                        srcStageOutputId: edge.srcStageOutputId,
+                        destStageId: edge.destStageId,
+                        destStageInputId: edge.destStageInputId,
+                    };
+                    return genericEdge;
                 }),
             ];
         })

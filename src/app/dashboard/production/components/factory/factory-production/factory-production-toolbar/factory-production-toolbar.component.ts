@@ -119,10 +119,10 @@ export class FactoryProductionToolbarComponent {
         const connectionDTO: DeleteConnectionDTO = {
             factoryId: this.factoryId,
             organizationId: this.currentUser?.organization?.id,
-            outgoingFactoryStageId: this.selectedEdge.outgoingFactoryStageId,
-            incomingFactoryStageId: this.selectedEdge.incomingFactoryStageId,
-            outgoingStageInputId: this.selectedEdge.outgoingStageInputId,
-            incomingStageOutputId: this.selectedEdge.incomingStageOutputId
+            srcFactoryStageId: this.selectedEdge.srcFactoryStageId,
+            srcStageOutputId: this.selectedEdge.srcStageOutputId,
+            destFactoryStageId: this.selectedEdge.destFactoryStageId,
+            destStageInputId: this.selectedEdge.destStageInputId
         };
 
         this.connectionService.findAndDeleteConnection(connectionDTO).subscribe(() => {

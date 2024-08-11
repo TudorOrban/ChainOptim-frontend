@@ -64,34 +64,34 @@ export interface UpdateFactoryStageDTO {
 export interface FactoryStageConnection {
     id: number;
     factoryId: number;
-    outgoingFactoryStageId: number;
-    incomingFactoryStageId: number;
-    outgoingStageInputId: number;
-    incomingStageOutputId: number;    
+    srcFactoryStageId: number;
+    srcStageOutputId: number;
+    destFactoryStageId: number;
+    destStageInputId: number; 
 }
 
 export interface CreateConnectionDTO {
     factoryId: number;
-    outgoingFactoryStageId: number;
-    incomingFactoryStageId: number;
-    outgoingStageInputId: number;
-    incomingStageOutputId: number;
+    srcFactoryStageId: number;
+    srcStageOutputId: number;
+    destFactoryStageId: number;
+    destStageInputId: number;
 }
 
 export interface UpdateConnectionDTO {
     id: number;
     factoryId: number;
-    outgoingFactoryStageId: number;
-    incomingFactoryStageId: number;
-    outgoingStageInputId: number;
-    incomingStageOutputId: number;
+    srcFactoryStageId: number;
+    srcStageOutputId: number;
+    destFactoryStageId: number;
+    destStageInputId: number;
 }
 
 export interface DeleteConnectionDTO {
     factoryId: number;
     organizationId: number;
-    outgoingFactoryStageId: number;
-    incomingFactoryStageId: number;
-    outgoingStageInputId: number;
-    incomingStageOutputId: number;
+    srcFactoryStageId: number;
+    srcStageOutputId: number;
+    destFactoryStageId: number;
+    destStageInputId: number;
 }

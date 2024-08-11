@@ -20,7 +20,7 @@ export class GraphPreprocessor {
         const targetNodeIds = new Set<number>();
         Object.values(genericGraph.adjList).forEach((edges) => {
             edges.forEach((edge) => {
-                targetNodeIds.add(edge.outgoingStageId);
+                targetNodeIds.add(edge.srcStageId);
             });
         });
 
@@ -87,6 +87,12 @@ export class GraphPreprocessor {
     ): GenericGraphUI {
         const { spaceBetweenStagesX, spaceBetweenStagesY, paddingX, paddingY } = GraphUIConfig.graph;
 
+        console.log("Is node defined: ", genericGraphUI.nodes[startingNodeId]);
+        console.log("Node ID: ", startingNodeId);
+        if (!genericGraphUI.nodes[startingNodeId]) {
+            console.error("Error: Node is not defined in the graph.");
+            return genericGraphUI;
+        }
         genericGraphUI.nodes[startingNodeId].coordinates = { 
             x: paddingX + startingNodeIndex * spaceBetweenStagesX, 
             y: paddingY + depth * spaceBetweenStagesY 
@@ -96,8 +102,8 @@ export class GraphPreprocessor {
         let adjNodes = genericGraphUI.adjList[startingNodeId];
     
         for (let j = 0; j < adjNodes.length; j++) {
-            const targetNodeId = adjNodes[j].edge.outgoingStageId;
-            if (!genericGraphUI.nodes[targetNodeId].visited) {
+            const targetNodeId = adjNodes[j].edge.srcStageId;
+            if (!genericGraphUI.nodes[targetNodeId]?.visited ?? false) {
                 genericGraphUI = this.assignPositionsRecursively(
                     targetNodeId,
                     startingNodeIndex,

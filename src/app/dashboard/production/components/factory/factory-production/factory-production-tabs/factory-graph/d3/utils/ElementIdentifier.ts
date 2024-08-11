@@ -20,8 +20,8 @@ export class ElementIdentifier {
         return `ie_${nodeId1}_${nodeId2}`;
     }
 
-    encodeOuterEdgeId(nodeId1: number | string, nodeId2: number | string, stageOutputId1: number | string, stageInputId2: number | string) {
-        return `oe_${nodeId1}_${stageOutputId1}_c_${nodeId2}_${stageInputId2}`;
+    encodeOuterEdgeId(srcNodeId: number | string, srcSubNodeId: number | string, destNodeId: number | string, destSubNodeId: number | string) {
+        return `oe_${srcNodeId}_${srcSubNodeId}_c_${destNodeId}_${destSubNodeId}`;
     }
 
     // Info texts
@@ -44,8 +44,8 @@ export class ElementIdentifier {
 
     // Deencoding
     getEdgeFromOuterEdgeId(outerEdgeId: string): FactoryEdge {
-        const [_, nodeId1, stageOutputId1, conn, nodeId2, stageInputId2] = outerEdgeId.split("_");
-        return { incomingFactoryStageId: Number(nodeId1), incomingStageOutputId: Number(stageOutputId1), outgoingFactoryStageId: Number(nodeId2), outgoingStageInputId: Number(stageInputId2) };
+        const [_, srcNodeId, srcSubNodeId, conn, destNodeId, destSubNodeId] = outerEdgeId.split("_");
+        return { srcFactoryStageId: Number(srcNodeId), srcStageOutputId: Number(srcSubNodeId), destFactoryStageId: Number(destNodeId), destStageInputId: Number(destSubNodeId) };
     }
 
     getStageNodeId(stageNodeId: string): NodeSelection {

@@ -103,10 +103,10 @@ export class FactoryGraphComponent {
 
         const connectionDTO: CreateConnectionDTO = {
             factoryId: this.inputData?.factoryId as number,
-            outgoingFactoryStageId: this.addConnectionClickedNodes[0]?.nodeId || 0,
-            outgoingStageInputId: this.addConnectionClickedNodes[0]?.subNodeId || 0,
-            incomingFactoryStageId: this.addConnectionClickedNodes[1]?.nodeId || 0,
-            incomingStageOutputId: this.addConnectionClickedNodes[1]?.subNodeId || 0
+            srcFactoryStageId: this.addConnectionClickedNodes[0]?.nodeId || 0,
+            srcStageOutputId: this.addConnectionClickedNodes[0]?.subNodeId || 0,
+            destFactoryStageId: this.addConnectionClickedNodes[1]?.nodeId || 0,
+            destStageInputId: this.addConnectionClickedNodes[1]?.subNodeId || 0
         };
         console.log("Create connection: ", connectionDTO);
 

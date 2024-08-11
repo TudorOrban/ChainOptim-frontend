@@ -47,10 +47,10 @@ export interface SmallStageOutput {
 }
 
 export interface FactoryEdge {
-    incomingFactoryStageId: number;
-    incomingStageOutputId: number;
-    outgoingFactoryStageId: number;
-    outgoingStageInputId: number;
+    srcFactoryStageId: number;
+    srcStageOutputId: number;
+    destFactoryStageId: number;
+    destStageInputId: number;
 }
 
 export enum NodeType {

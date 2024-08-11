@@ -26,10 +26,10 @@ export class EdgeRenderer {
         neighbors.forEach((neighbor) => {
             // Find incoming stage output and outgoing stage input
             const sourceElement = d3.select(
-                `#${this.elementIdentifier.encodeStageOutputId(neighbor.edge.incomingStageId, neighbor.edge.incomingStageOutputId)}`
+                `#${this.elementIdentifier.encodeStageOutputId(neighbor.edge.srcStageId, neighbor.edge.srcStageOutputId)}`
             );
             const targetElement = d3.select(
-                `#${this.elementIdentifier.encodeStageInputId(neighbor.edge.outgoingStageId, neighbor.edge.outgoingStageInputId)}`
+                `#${this.elementIdentifier.encodeStageInputId(neighbor.edge.destStageId, neighbor.edge.destStageInputId)}`
             );
 
             if (sourceElement.empty() || targetElement.empty()) {
@@ -43,7 +43,7 @@ export class EdgeRenderer {
                 subnodeRadius
             );
              
-            const edgeId = this.elementIdentifier.encodeOuterEdgeId(neighbor.edge.incomingStageId, neighbor.edge.outgoingStageId, neighbor.edge.incomingStageOutputId, neighbor.edge.outgoingStageInputId);
+            const edgeId = this.elementIdentifier.encodeOuterEdgeId(neighbor.edge.srcStageId, neighbor.edge.srcStageOutputId, neighbor.edge.destStageId, neighbor.edge.destStageInputId);
             const line = this.svg.append("line")
                 .attr("id", edgeId)
                 .attr("x1", start.x)

@@ -17,10 +17,10 @@ export interface GenericNode {
 }
 
 export interface GenericEdge {
-    incomingStageId: number;
-    incomingStageOutputId: number;
-    outgoingStageId: number;
-    outgoingStageInputId: number;
+    srcStageId: number;
+    srcStageOutputId: number;
+    destStageId: number;
+    destStageInputId: number;
 }
 
 // Product
@@ -38,8 +38,8 @@ export interface ProductGraph {
 }
 
 export interface ProductEdge {
-    incomingStageId: number;
-    incomingStageOutputId: number;
-    outgoingStageId: number;
-    outgoingStageInputId: number;
+    srcStageId: number;
+    srcStageOutputId: number;
+    destStageId: number;
+    destStageInputId: number;
 }
