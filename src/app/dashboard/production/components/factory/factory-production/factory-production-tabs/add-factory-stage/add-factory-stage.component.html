@@ -3,6 +3,11 @@
         <h2 class="text-2xl font-semibold mb-4 text-center">Add Factory Stage</h2>
 
         <div>
+            <label for="capacity" class="form-label">Stage:</label>
+            <app-select-stage (stageSelected)="handleStageIdChange($event)"></app-select-stage>
+        </div>
+
+        <div>
             <label for="capacity" class="form-label">Capacity per Duration:</label>
             <div class="flex items-center">
                 <div>

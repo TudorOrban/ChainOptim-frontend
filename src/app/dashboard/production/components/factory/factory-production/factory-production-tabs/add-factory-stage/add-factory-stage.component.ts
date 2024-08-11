@@ -17,11 +17,12 @@ import {
 import { OperationOutcome } from '../../../../../../../shared/common/components/toast-system/toastTypes';
 import { CommonModule } from '@angular/common';
 import { SelectDurationComponent } from '../../../../../../../shared/common/components/select/select-duration/select-duration.component';
+import { SelectStageComponent } from '../../../../../../../shared/common/components/select/select-stage/select-stage.component';
 
 @Component({
     selector: 'app-add-factory-stage',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, SelectDurationComponent],
+    imports: [CommonModule, ReactiveFormsModule, SelectDurationComponent, SelectStageComponent],
     templateUrl: './add-factory-stage.component.html',
     styleUrl: './add-factory-stage.component.css',
 })
@@ -31,6 +32,7 @@ export class AddFactoryStageComponent {
     currentUser: User | undefined = undefined;
     factoryStageForm: FormGroup = new FormGroup({});
 
+    selectedStageId: number | undefined = undefined;
     duration: number = 0;
 
     @Output() onFactoryStageAdded = new EventEmitter<FactoryStage>();
@@ -45,7 +47,6 @@ export class AddFactoryStageComponent {
 
     ngOnInit() {
         this.initializeForm();
-
         this.loadCurrentUser();
     }
 
@@ -137,13 +138,13 @@ export class AddFactoryStageComponent {
     }
 
     private getFactoryStageDTO(): CreateFactoryStageDTO {
-        if (!this.inputData?.factoryId) {
-            throw new Error('Missing factory ID');
+        if (!this.inputData?.factoryId || !this.selectedStageId) {
+            throw new Error('Missing factory or stage ID');
         }
 
         const factoryStageDTO: CreateFactoryStageDTO = {
             factoryId: this.inputData?.factoryId,
-            stageId: 1,
+            stageId: this.selectedStageId,
             organizationId: this.currentUser?.organization?.id ?? 0,
             capacity: this.factoryStageForm.value.capacity,
             duration: Number(this.duration),
@@ -153,6 +154,10 @@ export class AddFactoryStageComponent {
         };
 
         return factoryStageDTO;
+    }
+
+    handleStageIdChange(stageId: number) {
+        this.selectedStageId = stageId;
     }
 
     handleDurationChange(duration: number) {

@@ -17,11 +17,13 @@ import {
 import { OperationOutcome } from '../../../../../../../shared/common/components/toast-system/toastTypes';
 import { CommonModule } from '@angular/common';
 import { SelectDurationComponent } from '../../../../../../../shared/common/components/select/select-duration/select-duration.component';
+import { SelectStageComponent } from '../../../../../../../shared/common/components/select/select-stage/select-stage.component';
+import { Stage } from '../../../../../../goods/models/Product';
 
 @Component({
     selector: 'app-update-factory-stage',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, SelectDurationComponent],
+    imports: [CommonModule, ReactiveFormsModule, SelectDurationComponent, SelectStageComponent],
     templateUrl: './update-factory-stage.component.html',
     styleUrl: './update-factory-stage.component.css',
 })
@@ -32,9 +34,11 @@ export class UpdateFactoryStageComponent {
 
     currentUser: User | undefined = undefined;
     factoryStageForm: FormGroup = new FormGroup({});
+    currentStage: Stage | undefined = undefined;
 
     @Output() onFactoryStageUpdated = new EventEmitter<FactoryStage>();
 
+    selectedStageId: number | undefined = undefined;
     duration: number = 0;
 
     constructor(
@@ -104,6 +108,7 @@ export class UpdateFactoryStageComponent {
                     priority: factoryStage.priority,
                     minimumRequired: factoryStage.minimumRequiredCapacity,
                 });
+                this.currentStage = factoryStage.stage;
             });
     }
 
@@ -173,6 +178,10 @@ export class UpdateFactoryStageComponent {
         };
 
         return factoryStageDTO;
+    }
+
+    handleStageIdChange(stageId: number) {
+        this.selectedStageId = stageId;
     }
 
     handleDurationChange(duration: number) {

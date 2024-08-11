@@ -1,1 +1,7 @@
-<p>select-stage works!</p>
+<div>
+    <select id="stageSelect" name="selectedStageId" [(ngModel)]="selectedStageId" (ngModelChange)="selectStage(selectedStageId)" class="custom-select">
+        <option *ngFor="let stage of stages" [ngValue]="stage.id">
+            {{ stage.name }}
+        </option>
+    </select>            
+</div>

@@ -1,11 +1,11 @@
 export const GraphUIConfig = {
     graph: {
-        width: 960,
+        width: 2000,
         height: 640,
         spaceBetweenStagesX: 250,
         spaceBetweenStagesY: 250,
-        paddingX: 300,
-        paddingY: 220,
+        paddingX: 100,
+        paddingY: 100,
         backgroundColor: "#eeeeee",
     },
     node: {
