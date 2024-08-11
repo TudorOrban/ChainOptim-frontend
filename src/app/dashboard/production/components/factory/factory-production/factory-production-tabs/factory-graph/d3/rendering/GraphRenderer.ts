@@ -13,7 +13,7 @@ import { GenericGraphUI } from "../types/uiTypes";
 import { NodeSelection } from "../../../../../../../models/FactoryGraph";
 
 /*
- * Orchestrator of the typescript modules.
+ * Orchestrator of the Graph Rendering modules.
  *
  */
 export class GraphRenderer {
@@ -57,7 +57,7 @@ export class GraphRenderer {
     }
 
     /*
-     * Entry point for the subproject. Called from JavaFX's WebView.
+     * Entry point for the subproject. Called from FactoryGraphComponent
      */
     renderGraph(graphData: GenericGraph) {
         // Preprocess graph: assign position to nodes based on connections
@@ -84,9 +84,13 @@ export class GraphRenderer {
         this.interactionManager.setupNodeInteractions();
     }
 
-    renderTemporaryEdge(srcSelection: NodeSelection, destSelection: NodeSelection) {
-        this.edgeRenderer.renderTemporaryEdge(srcSelection, destSelection);
+    // Communication with Angular
+    renderNewEdge(srcSelection: NodeSelection, destSelection: NodeSelection, isTemporary: boolean) {
+        this.edgeRenderer.renderNewEdge(srcSelection, destSelection, isTemporary);
+    }
 
+    removeTemporaryEdges() {
+        this.edgeRenderer.removeTemporaryEdges();
     }
 
     renderInfo(infoType: string, isVisible: boolean) {

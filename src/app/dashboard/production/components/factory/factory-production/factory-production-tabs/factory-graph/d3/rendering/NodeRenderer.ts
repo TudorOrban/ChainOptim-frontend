@@ -207,8 +207,7 @@ export class NodeRenderer {
             .transition()
             .duration(highlightDuration)
             .style("fill", highlightColor)
-            .style("stroke-width", highlightWidth)
-            .attr("filter", "url(#drop-shadow)");
+            .style("stroke-width", highlightWidth);
     }
     
     public unhighlightAllNodes = () => {

@@ -4,7 +4,7 @@ import { FactoryGraphService } from '../../../../../services/factorygraph.servic
 import { GenericGraph } from './d3/types/dataTypes';
 import { transformFactoryToGenericGraph } from './d3/utils/utils';
 import { AllocationPlan } from '../../../../../models/ResourceAllocation';
-import { FactoryEdge, FactoryProductionGraph, NodeSelection } from '../../../../../models/FactoryGraph';
+import { FactoryEdge, FactoryProductionGraph, NodeSelection, NodeType } from '../../../../../models/FactoryGraph';
 import { Pair } from '../../../../../../overview/types/supplyChainMapTypes';
 import { ElementIdentifier } from './d3/utils/ElementIdentifier';
 import { FactoryStageConnectionService } from '../../../../../services/factorystageconnection.service';
@@ -92,10 +92,13 @@ export class FactoryGraphComponent {
         this.handleAddConnectionMode(nodeSelection);
     }
 
+    // Add connection mode
     private handleAddConnectionMode(nodeSelection: NodeSelection): void {
-        if (!this.isAddConnectionModeOn || !nodeSelection.nodeId || this.addConnectionClickedNodes.map(node => node.nodeId).includes(nodeSelection.nodeId)) {
+        const shouldAddClickedNode = this.shouldAddClickedNode(nodeSelection);
+        if (!shouldAddClickedNode) {
             return;
         }
+
         this.addConnectionClickedNodes.push(nodeSelection);
         console.log("Add connection clicked nodes: ", this.addConnectionClickedNodes);
         const areNodeSelectionsValid = this.areNodeSelectionsValid(this.addConnectionClickedNodes);
@@ -104,25 +107,24 @@ export class FactoryGraphComponent {
         }
 
         this.readyForConnectionCreation = true;
-        this.factoryGraphRenderer?.renderTemporaryEdge(this.addConnectionClickedNodes?.[0], this.addConnectionClickedNodes?.[1]);
+        this.factoryGraphRenderer?.renderNewEdge(this.addConnectionClickedNodes?.[0], this.addConnectionClickedNodes?.[1], true);
         
     }
 
-    handleCreateConnection(): void {
-        const connectionDTO: CreateConnectionDTO = {
-            factoryId: this.inputData?.factoryId as number,
-            srcFactoryStageId: this.addConnectionClickedNodes[0]?.nodeId || 0,
-            srcStageOutputId: this.addConnectionClickedNodes[0]?.subNodeId || 0,
-            destFactoryStageId: this.addConnectionClickedNodes[1]?.nodeId || 0,
-            destStageInputId: this.addConnectionClickedNodes[1]?.subNodeId || 0
-        };
-        console.log("Create connection: ", connectionDTO);
-
-        this.connectionService.createConnection(connectionDTO).subscribe(() => {
-            console.log("Connection created.");
-            this.toastService.addToast({ id: 0, title: "Success", message: "Connection created successfully.", outcome: OperationOutcome.SUCCESS });
-            this.resetAddConnectionMode();
-        });
+    private shouldAddClickedNode(nodeSelection: NodeSelection): boolean {
+        if (!this.isAddConnectionModeOn || !nodeSelection.nodeId || this.addConnectionClickedNodes.map(node => node.nodeId).includes(nodeSelection.nodeId)) {
+            return false;
+        }
+        if (this.addConnectionClickedNodes.length >= 2) {
+            return false;
+        }
+        if (this.addConnectionClickedNodes.length == 1 && nodeSelection.nodeType != NodeType.INPUT) {
+            return false;
+        }
+        if (this.addConnectionClickedNodes.length == 0 && nodeSelection.nodeType != NodeType.OUTPUT) {
+            return false;
+        }
+        return true;
     }
 
     private determineNodeSelection(nodeId: string): NodeSelection {
@@ -155,9 +157,30 @@ export class FactoryGraphComponent {
         return true;
     }
 
-    private resetAddConnectionMode(): void {
+    
+    handleCreateConnection(): void {
+        const connectionDTO: CreateConnectionDTO = {
+            factoryId: this.inputData?.factoryId as number,
+            srcFactoryStageId: this.addConnectionClickedNodes[0]?.nodeId || 0,
+            srcStageOutputId: this.addConnectionClickedNodes[0]?.subNodeId || 0,
+            destFactoryStageId: this.addConnectionClickedNodes[1]?.nodeId || 0,
+            destStageInputId: this.addConnectionClickedNodes[1]?.subNodeId || 0
+        };
+        console.log("Create connection: ", connectionDTO);
+
+        this.connectionService.createConnection(connectionDTO).subscribe(() => {
+            console.log("Connection created.");
+            this.toastService.addToast({ id: 0, title: "Success", message: "Connection created successfully.", outcome: OperationOutcome.SUCCESS });
+            this.factoryGraphRenderer?.renderNewEdge(this.addConnectionClickedNodes[0], this.addConnectionClickedNodes[1], false);
+            this.resetAddConnectionMode();
+        });
+    }
+    
+    resetAddConnectionMode(): void {
         this.isAddConnectionModeOn = false;
         this.addConnectionClickedNodes = [];
+        this.factoryGraphRenderer?.removeTemporaryEdges();
+        this.readyForConnectionCreation = false;
     }
 
     // Communication with Tabs Component

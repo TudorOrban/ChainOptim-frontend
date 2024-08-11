@@ -119,7 +119,7 @@ export class EdgeRenderer {
     };
 
 
-    renderTemporaryEdge(srcSelection: NodeSelection, destSelection: NodeSelection) {
+    renderNewEdge(srcSelection: NodeSelection, destSelection: NodeSelection, isTemporary: boolean): void {
         const edge: GenericEdgeUI = {
             edge: {
                 srcStageId: srcSelection.nodeId || 0,
@@ -127,7 +127,7 @@ export class EdgeRenderer {
                 destStageId: destSelection.nodeId || 0,
                 destStageInputId: destSelection.subNodeId || 0,
             },
-            state: EdgeState.TEMPORARY
+            state: isTemporary ? EdgeState.TEMPORARY : EdgeState.NORMAL,
         };
 
         const { line, edgeId } = this.renderEdge(edge);
@@ -136,4 +136,10 @@ export class EdgeRenderer {
         this.addHoverEffect(line, GraphUIConfig.edge.width, edgeId);
     }
     
+    removeTemporaryEdges(): void {
+        this.svg.selectAll("line").filter((d, i, nodes) => {
+            const line = d3.select(nodes[i]);
+            return line.attr("stroke") === GraphUIConfig.edge.temporaryColor; // TODO: Improve this
+        }).remove();
+    }
 }
