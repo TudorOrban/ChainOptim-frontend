@@ -30,7 +30,7 @@ export class AllocationPlanComponent implements OnInit {
     }
 
     private loadActivePlan(): void {
-
+        console.log("Loading active plan for factory: ", this.inputData?.factoryId);
         this.resourceAllocationService.getActivePlan(this.inputData?.factoryId as number).subscribe(activePlan => {
             console.log("Active plan: ", activePlan);
             this.currentAllocationPlan = activePlan.allocationPlan;

@@ -66,7 +66,6 @@ export class ComponentsComponent implements OnInit {
             .getCurrentUser()
             .subscribe({
                 next: (user) => {
-                    console.log('Current User:', user);
                     this.currentOrganization = user?.organization;
                     if (user && user.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);

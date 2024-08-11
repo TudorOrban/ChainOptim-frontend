@@ -22,7 +22,10 @@ import { CommonModule } from '@angular/common';
 })
 export class FactoryGraphComponent {
     @Input() inputData: { factoryId: number } | undefined = undefined;
-    
+
+    @Output() onNodeClicked = new EventEmitter<NodeSelection>();
+    @Output() onEdgeClicked = new EventEmitter<FactoryEdge>();
+
     factoryProductionGraph: FactoryProductionGraph | undefined = undefined;
 
     isAddConnectionModeOn: boolean = false;
@@ -31,9 +34,6 @@ export class FactoryGraphComponent {
     
     factoryGraphRenderer: GraphRenderer | null = null;
     elementIdentifier: ElementIdentifier = new ElementIdentifier();
-
-    @Output() onNodeClicked = new EventEmitter<NodeSelection>();
-    @Output() onEdgeClicked = new EventEmitter<FactoryEdge>();
 
     constructor(
         private factoryGraphService: FactoryGraphService,
@@ -79,8 +79,6 @@ export class FactoryGraphComponent {
         });
         this.factoryGraphRenderer.getEdgeClickEmitter().subscribe(edgeId => {
             const edge: FactoryEdge = this.elementIdentifier.getEdgeFromOuterEdgeId(edgeId);
-
-            console.log("Edge clicked: ", edge);
             this.onEdgeClicked.emit(edge);
         });
     }
@@ -100,7 +98,6 @@ export class FactoryGraphComponent {
         }
 
         this.addConnectionClickedNodes.push(nodeSelection);
-        console.log("Add connection clicked nodes: ", this.addConnectionClickedNodes);
         const areNodeSelectionsValid = this.areNodeSelectionsValid(this.addConnectionClickedNodes);
         if (!areNodeSelectionsValid) {
             return;
@@ -135,13 +132,10 @@ export class FactoryGraphComponent {
 
         if (isStageInputNode) {
             nodeSelection = this.elementIdentifier.getStageInputId(nodeId);
-            console.log("Stage input clicked in factory graph: ", nodeSelection);
         } else if (isStageOutputNode) {
             nodeSelection = this.elementIdentifier.getStageOutputId(nodeId);
-            console.log("Stage output clicked in factory graph: ", nodeSelection);
         } else {
             nodeSelection = this.elementIdentifier.getStageNodeId(nodeId);
-            console.log("Node clicked in factory graph: ", nodeId);
         }
 
         return nodeSelection;
@@ -166,10 +160,8 @@ export class FactoryGraphComponent {
             destFactoryStageId: this.addConnectionClickedNodes[1]?.nodeId || 0,
             destStageInputId: this.addConnectionClickedNodes[1]?.subNodeId || 0
         };
-        console.log("Create connection: ", connectionDTO);
 
         this.connectionService.createConnection(connectionDTO).subscribe(() => {
-            console.log("Connection created.");
             this.toastService.addToast({ id: 0, title: "Success", message: "Connection created successfully.", outcome: OperationOutcome.SUCCESS });
             this.factoryGraphRenderer?.renderNewEdge(this.addConnectionClickedNodes[0], this.addConnectionClickedNodes[1], false);
             this.resetAddConnectionMode();
@@ -186,32 +178,23 @@ export class FactoryGraphComponent {
     // Communication with Tabs Component
     // - CRUD ops
     toggleAddConnectionMode(): void {
-        console.log("Toggle add connection mode in factory graph.");
         this.isAddConnectionModeOn = !this.isAddConnectionModeOn;
     }
 
     // - Display info
     displayQuantities(display: boolean): void {
-        console.log("Display quantities in factory graph: ", display);
-
         this.factoryGraphRenderer?.renderInfo("quantities", display);
     }
 
     displayCapacities(display: boolean): void {
-        console.log("Display capacities in factory graph: ", display);
-
         this.factoryGraphRenderer?.renderInfo("capacities", display);
     }
 
     displayPriorities(display: boolean): void {
-        console.log("Display priorities in factory graph: ", display);
-
         this.factoryGraphRenderer?.renderInfo("priorities", display);
     }
 
     displayAllocations(allocationPlan: AllocationPlan): void {
-        console.log("Display allocations in factory graph: ", allocationPlan);
-
         this.factoryGraphRenderer?.renderResourceAllocations(allocationPlan);
     }
 }

@@ -57,7 +57,7 @@ export class FactoryComponent implements OnInit {
     ];
     SearchMode = SearchMode;
     
-    activeTab: string = "Production";
+    activeTab: string = "Overview";
     deleteDialogInput: ConfirmDialogInput = {
         dialogTitle: "Delete Factory",
         dialogMessage: "Are you sure you want to delete this factory?",

@@ -10,6 +10,7 @@ import {
     ComponentRef,
     Output,
     EventEmitter,
+    AfterViewInit,
 } from '@angular/core';
 import { TabsService } from '../../../../services/productiontabs.service';
 import { FactoryProductionTabType, Tab } from '../../../../models/Production';
@@ -38,7 +39,7 @@ import { Pair } from '../../../../../overview/types/supplyChainMapTypes';
     ],
     standalone: true,
 })
-export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
+export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() factoryId: number | undefined = undefined;
 
     @Output() onNodeClicked = new EventEmitter<NodeSelection>();
@@ -58,7 +59,8 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
 
     constructor(
         public tabsService: TabsService
-    ) {}
+    ) {
+    }
 
     ngOnInit(): void {
         this.tabSubscription = this.tabsService.getActiveTabId().subscribe(activeTabId => {
@@ -67,13 +69,14 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
                 this.loadComponent(tab);
             }
         });
-
-        // this.loadFactoryGraphComponent();
     }
 
     ngAfterViewInit(): void {
         this.setUpListeners();
         
+        setTimeout(() => {
+            this.loadFactoryGraphComponent();
+        });
     }
 
     private setUpListeners() {
@@ -126,6 +129,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
             component: FactoryGraphComponent,
             inputData: { factoryId: this.factoryId },
         };
+        console.log("FactoryProductionTabsComponent: ngOnInit");
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
@@ -163,7 +167,13 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
 
     
     loadComponent(tab: Tab<any>): void {
+        if (!this.dynamicTabContent) {
+            console.log("No dynamic tab content found: ", tab);
+            return;
+        }
+
         this.dynamicTabContent.clear();
+        console.log("FactoryProductionTabsComponent: loadComponent");
         const componentRef = this.dynamicTabContent.createComponent(tab.component);
         componentRef.instance.inputData = tab.inputData;
         this.activeComponentRef = componentRef;
@@ -192,12 +202,10 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
                 if (nodeSelection.nodeType === NodeType.STAGE) {
                     this.selectedFactoryStageId = nodeSelection.nodeId;                    
                 }
-                console.log("Node clicked in tabs: ", nodeSelection.nodeId, nodeSelection.nodeType);
                 this.onNodeClicked.emit(nodeSelection);
             });
             instance.onEdgeClicked.subscribe(edge => {
                 this.selectedEdge = edge;
-                console.log("Edge clicked in tabs: ", edge);
                 this.onEdgeClicked.emit(edge);
             });
         }

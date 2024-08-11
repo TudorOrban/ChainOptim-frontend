@@ -1,13 +1,4 @@
-<div class="flex flex-col relative">
-    <div class="flex items-center">
-        <button (click)="loadAddStageComponent()">
-            Add Stage
-        </button>
-        <button (click)="loadFactoryGraphComponent()">
-            Factory Graph
-        </button>
-    </div>
-
+<div class="flex flex-col relative pt-0.5">
     <!-- Tab Cards -->
     <div #tabsScrollContainer class="tabs-scroll-container flex items-center overflow-x-auto">
         <button
@@ -33,5 +24,5 @@
     </div>
     
     <!-- Active Tab -->
-    <div #dynamicTabContent class="overflow-x-auto"></div>
+    <div #dynamicTabContent class="overflow-x-auto border-t border-gray-100"></div>
 </div>

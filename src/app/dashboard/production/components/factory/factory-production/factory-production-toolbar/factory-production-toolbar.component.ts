@@ -109,8 +109,6 @@ export class FactoryProductionToolbarComponent {
         }
 
         this.factoryStageService.deleteFactoryStage(this.selectedNode?.nodeId, true).subscribe(() => {
-            console.log('Deleted stage with ID');
-
             this.toastService.addToast({
                 id: 1,
                 title: "Factory stage deleted",
@@ -150,8 +148,6 @@ export class FactoryProductionToolbarComponent {
         };
 
         this.connectionService.findAndDeleteConnection(connectionDTO).subscribe(() => {
-            console.log('Deleted connection with ID');
-
             this.toastService.addToast({
                 id: 1,
                 title: "Stage connection deleted",
@@ -207,7 +203,6 @@ export class FactoryProductionToolbarComponent {
         }
 
         this.resourceAllocationService.computeAllocationPlan(this.factoryId, this.durationHours).subscribe(allocationPlan => {
-            console.log('Allocation plan computed: ', allocationPlan);
             this.computedAllocationPlan = allocationPlan
             this.displayAllocations.emit(allocationPlan);
         });
