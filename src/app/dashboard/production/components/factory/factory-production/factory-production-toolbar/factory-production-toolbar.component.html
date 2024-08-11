@@ -17,7 +17,7 @@
                     <fa-icon [icon]="faEdit" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
                 <button 
-                    (click)="handleDeleteFactoryStage()"
+                    (click)="handleOpenDeleteStageDialog()"
                     [disabled]="!selectedNode"
                     [attr.title]="!selectedNode ? 'Select a stage to delete' : null"
                     class="standard-delete-button-small"
@@ -86,7 +86,18 @@
         </div>
     </div>
 
-    <!-- Confirm dialog -->
+    <!-- Confirm dialogs -->
+    <div class="overlay" *ngIf="isDeleteStageConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteStageDialogInput"
+                (confirm)="handleDeleteFactoryStage()"
+                (cancel)="handleCancelDeleteStage()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+
     <div class="overlay" *ngIf="isDeleteConnectionConfirmDialogOpen">
         <div class="dialog-container">
             <app-generic-confirm-dialog 

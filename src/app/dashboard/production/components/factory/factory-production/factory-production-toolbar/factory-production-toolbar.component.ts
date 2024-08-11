@@ -15,6 +15,7 @@ import { ToastService } from '../../../../../../shared/common/components/toast-s
 import { GenericConfirmDialogComponent } from '../../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { ConfirmDialogInput } from '../../../../../../shared/common/models/confirmDialogTypes';
 import { OperationOutcome, ToastInfo } from '../../../../../../shared/common/components/toast-system/toastTypes';
+import { FactoryStageService } from '../../../../services/factorystage.service';
 
 @Component({
   selector: 'app-factory-production-toolbar',
@@ -29,6 +30,7 @@ import { OperationOutcome, ToastInfo } from '../../../../../../shared/common/com
   styleUrl: './factory-production-toolbar.component.css'
 })
 export class FactoryProductionToolbarComponent {
+    // Inputs & Outputs
     @Input() factoryId: number | undefined = undefined;
 
     @Output() addFactoryStage: EventEmitter<void> = new EventEmitter();
@@ -42,6 +44,7 @@ export class FactoryProductionToolbarComponent {
     @Output() openAllocationPlan: EventEmitter<AllocationPlan> = new EventEmitter();
     @Output() viewProductionHistory: EventEmitter<void> = new EventEmitter();
 
+    // State
     currentUser: User | undefined = undefined;
 
     selectedNode: NodeSelection | undefined = undefined;
@@ -52,24 +55,27 @@ export class FactoryProductionToolbarComponent {
     computeAllocationPlan: boolean = false;
     computedAllocationPlan: AllocationPlan | undefined = undefined;
 
+    // Confirm dialogs
+    deleteStageDialogInput: ConfirmDialogInput = {
+        dialogTitle: "Delete Factory Stage",
+        dialogMessage: "Are you sure you want to delete this factory stage?",
+    };
+    isDeleteStageConfirmDialogOpen = false;
+    
     deleteConnectionDialogInput: ConfirmDialogInput = {
         dialogTitle: "Delete Connection",
         dialogMessage: "Are you sure you want to delete this stage connection?",
     };
     isDeleteConnectionConfirmDialogOpen = false;
-    toastInfo: ToastInfo = {
-        id: 1,
-        title: "Stage connection deleted",
-        message: "The stage connection has been deleted successfully",
-        outcome: OperationOutcome.SUCCESS
-    };
     
+    // Icons
     faPlus = faPlus;
     faEdit = faEdit;
     faTrash = faTrash;
 
     constructor(
         private userService: UserService,
+        private factoryStageService: FactoryStageService,
         private connectionService: FactoryStageConnectionService,
         private resourceAllocationService: ResourceAllocationService,
         private toastService: ToastService,
@@ -85,32 +91,50 @@ export class FactoryProductionToolbarComponent {
     }
 
     handleAddFactoryStage() {
-        console.log('Add factory stage');
         this.addFactoryStage.emit();
     }
 
     handleUpdateFactoryStage() {
-        console.log('Update factory stage');
         this.updateFactoryStage.emit();
     }
-
+    
+    handleOpenDeleteStageDialog() {
+        this.isDeleteStageConfirmDialogOpen = true;
+    }
+    
     handleDeleteFactoryStage() {
-        console.log('Delete factory stage');
+        if (!this.selectedNode?.nodeId) {
+            console.error('Error: No node selected');
+            return
+        }
+
+        this.factoryStageService.deleteFactoryStage(this.selectedNode?.nodeId, true).subscribe(() => {
+            console.log('Deleted stage with ID');
+
+            this.toastService.addToast({
+                id: 1,
+                title: "Factory stage deleted",
+                message: "The factory stage has been deleted successfully",
+                outcome: OperationOutcome.SUCCESS
+            });
+            this.isDeleteStageConfirmDialogOpen = false;
+        });
+    }
+
+    handleCancelDeleteStage() {
+        this.isDeleteStageConfirmDialogOpen = false;
     }
 
     handleAddConnection() {
-        console.log('Add connection');
         this.isAddConnectionModeOn = !this.isAddConnectionModeOn;
         this.toggleAddConnectionMode.emit();
     }
 
     handleOpenDeleteConnectionDialog() {
         this.isDeleteConnectionConfirmDialogOpen = true;
-        console.log('Open delete connection dialog');
     }
 
     handleDeleteConnection() {
-        console.log('Delete connection');
         if (!this.selectedEdge || !this.factoryId || !this.currentUser?.organization?.id) {
             console.error('Error: No edge selected');
             return
@@ -128,14 +152,18 @@ export class FactoryProductionToolbarComponent {
         this.connectionService.findAndDeleteConnection(connectionDTO).subscribe(() => {
             console.log('Deleted connection with ID');
 
-            this.toastService.addToast(this.toastInfo);
+            this.toastService.addToast({
+                id: 1,
+                title: "Stage connection deleted",
+                message: "The stage connection has been deleted successfully",
+                outcome: OperationOutcome.SUCCESS
+            });
             this.isDeleteConnectionConfirmDialogOpen = false;
 
         });
     }
 
     handleCancelDeleteConnection() {
-        console.log('Cancel delete connection');
         this.isDeleteConnectionConfirmDialogOpen = false;
     }
 
@@ -143,7 +171,6 @@ export class FactoryProductionToolbarComponent {
         const checkbox = event.target as HTMLInputElement;
         const isChecked = checkbox.checked;
 
-        console.log('Display quantities', isChecked);
         this.displayQuantities.emit(isChecked);
     }
 
@@ -151,7 +178,6 @@ export class FactoryProductionToolbarComponent {
         const checkbox = event.target as HTMLInputElement;
         const isChecked = checkbox.checked
         
-        console.log('Display capacities', isChecked);
         this.displayCapacities.emit(isChecked);
     }
 
@@ -159,28 +185,22 @@ export class FactoryProductionToolbarComponent {
         const checkbox = event.target as HTMLInputElement;
         const isChecked = checkbox.checked;
 
-        console.log('Display priorities', isChecked);
         this.displayPriorities.emit(isChecked);
     }
 
     handleViewActivePlan() {
-        console.log('View active plan');
         this.viewActivePlan.emit();
     }
 
     handleOpenAllocationPlanMenu() {
-        console.log('Compute allocation plan');
         this.computeAllocationPlan = !this.computeAllocationPlan;
     }
 
     handleDurationChange(durationHours: number) {
-        console.log('Duration changed to', durationHours);
         this.durationHours = durationHours;
     }
 
     handleComputeAllocationPlan() {
-        console.log('Compute allocation plan for', this.durationHours, 'hours');
-
         if (!this.factoryId || !this.durationHours) {
             console.error('Error: Factory ID or duration is not valid: ', this.factoryId, this.durationHours);
             return
@@ -194,12 +214,10 @@ export class FactoryProductionToolbarComponent {
     }
 
     handleOpenComputedAllocationPlan() {
-        console.log('Open computed allocation plan');
         this.openAllocationPlan.emit(this.computedAllocationPlan);
     }
 
     handleViewProductionHistory() {
-        console.log('View production history');
         this.viewProductionHistory.emit();
     }
 
@@ -209,12 +227,10 @@ export class FactoryProductionToolbarComponent {
 
     // Communication with Production parent component
     handleNodeClicked(node: NodeSelection) {
-        console.log('Node clicked in toolbar: ', node);
         this.selectedNode = node;
     }
 
     handleEdgeClicked(edge: FactoryEdge) {
-        console.log('Edge clicked in toolbar: ', edge);
         this.selectedEdge = edge;
     }
 }

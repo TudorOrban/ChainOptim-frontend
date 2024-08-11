@@ -56,7 +56,9 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     selectedFactoryStageId: number | undefined = undefined;
     selectedEdge: FactoryEdge | undefined = undefined;
 
-    constructor(public tabsService: TabsService) {}
+    constructor(
+        public tabsService: TabsService
+    ) {}
 
     ngOnInit(): void {
         this.tabSubscription = this.tabsService.getActiveTabId().subscribe(activeTabId => {

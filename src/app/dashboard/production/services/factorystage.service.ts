@@ -15,9 +15,7 @@ export class FactoryStageService {
     constructor(
         private http: HttpClient,
         private errorHandlerService: ErrorHandlerService,
-        private cachingService: CachingService<PaginatedResults<Factory>>
     ) {}
-
 
     getFactoryStageById(stageId: number): Observable<FactoryStage> {
         return this.http
@@ -37,7 +35,7 @@ export class FactoryStageService {
         return this.http.put<FactoryStage>(`${this.apiUrl}/update/${refreshGraph}`, factoryStageDTO);
     }
 
-    deleteFactoryStage(factoryStageId: number, refreshGraph: boolean): Observable<number> {
-        return this.http.delete<number>(`${this.apiUrl}/delete/${refreshGraph}/${factoryStageId}`);
+    deleteFactoryStage(factoryStageId: number, refreshGraph: boolean): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/delete/${factoryStageId}/${refreshGraph}`);
     }
 }
