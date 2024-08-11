@@ -5,6 +5,12 @@ import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { SelectDurationComponent } from '../../../../../../shared/common/components/select/select-duration/select-duration.component';
 import { ResourceAllocationService } from '../../../../services/resourceallocation.service';
 import { AllocationPlan } from '../../../../models/ResourceAllocation';
+import { Pair } from '../../../../../overview/types/supplyChainMapTypes';
+import { FactoryEdge } from '../../../../models/FactoryGraph';
+import { FactoryStageConnectionService } from '../../../../services/factorystageconnection.service';
+import { DeleteConnectionDTO } from '../../../../models/Factory';
+import { User } from '../../../../../../core/user/model/user';
+import { UserService } from '../../../../../../core/auth/services/user.service';
 
 @Component({
   selector: 'app-factory-production-toolbar',
@@ -29,18 +35,35 @@ export class FactoryProductionToolbarComponent {
     @Output() displayAllocations: EventEmitter<AllocationPlan> = new EventEmitter();
     @Output() openAllocationPlan: EventEmitter<AllocationPlan> = new EventEmitter();
     @Output() viewProductionHistory: EventEmitter<void> = new EventEmitter();
-    
+
+    currentUser: User | undefined = undefined;
+
+    selectedNode: Pair<string, number> | undefined = undefined;
+    selectedEdge: FactoryEdge | undefined = undefined;
+
+    durationHours: number = 0;
     computeAllocationPlan: boolean = false;
     computedAllocationPlan: AllocationPlan | undefined = undefined;
-    durationHours: number = 0;
 
     faPlus = faPlus;
     faEdit = faEdit;
     faTrash = faTrash;
 
     constructor(
+        private userService: UserService,
+        private connectionService: FactoryStageConnectionService,
         private resourceAllocationService: ResourceAllocationService,
     ) {} 
+
+    ngOnInit() {
+        this.userService.getCurrentUser().subscribe(user => {
+            if (!user) {
+                console.error('Error: No user found');
+                return;
+            }
+            this.currentUser = user;
+        });
+    }
 
     handleAddFactoryStage() {
         console.log('Add factory stage');
@@ -62,6 +85,23 @@ export class FactoryProductionToolbarComponent {
 
     handleDeleteConnection() {
         console.log('Delete connection');
+        if (!this.selectedEdge || !this.factoryId || !this.currentUser?.organization?.id) {
+            console.error('Error: No edge selected');
+            return
+        }
+
+        const connectionDTO: DeleteConnectionDTO = {
+            factoryId: this.factoryId,
+            organizationId: this.currentUser?.organization?.id,
+            outgoingFactoryStageId: this.selectedEdge.outgoingFactoryStageId,
+            incomingFactoryStageId: this.selectedEdge.incomingFactoryStageId,
+            outgoingStageInputId: this.selectedEdge.outgoingStageInputId,
+            incomingStageOutputId: this.selectedEdge.incomingStageOutputId
+        };
+
+        this.connectionService.findAndDeleteConnection(connectionDTO).subscribe(connectionId => {
+            console.log('Deleted connection with ID', connectionId);
+        });
     }
 
     handleDisplayQuantities(event: Event): void {
@@ -130,5 +170,16 @@ export class FactoryProductionToolbarComponent {
 
     handleSeekMissingResources() {
         console.log('Seek missing resources');
+    }
+
+    // Communication with Production parent component
+    handleNodeClicked(node: Pair<string, number>) {
+        console.log('Node clicked in toolbar: ', node);
+        this.selectedNode = node;
+    }
+
+    handleEdgeClicked(edge: FactoryEdge) {
+        console.log('Edge clicked in toolbar: ', edge);
+        this.selectedEdge = edge;
     }
 }

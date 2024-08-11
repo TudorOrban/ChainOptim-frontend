@@ -15,15 +15,6 @@ export interface Factory {
     factoryStages: FactoryStage[];
 }
 
-export interface FactoryStage {
-    id: number;
-    capacity?: number;
-    duration?: number;
-    priority?: number;
-    minimumRequiredCapacity?: number;
-    stage: Stage;
-}
-
 export interface CreateFactoryDTO {
     name: string;
     organizationId: number;
@@ -39,6 +30,15 @@ export interface UpdateFactoryDTO {
     locationId?: number;
     location?: CreateLocationDTO;
     createLocation?: boolean;
+}
+
+export interface FactoryStage {
+    id: number;
+    capacity?: number;
+    duration?: number;
+    priority?: number;
+    minimumRequiredCapacity?: number;
+    stage: Stage;
 }
 
 export interface CreateFactoryStageDTO {
@@ -59,4 +59,39 @@ export interface UpdateFactoryStageDTO {
     duration?: number;
     priority?: number;
     minimumRequiredCapacity?: number;
+}
+
+export interface FactoryStageConnection {
+    id: number;
+    factoryId: number;
+    outgoingFactoryStageId: number;
+    incomingFactoryStageId: number;
+    outgoingStageInputId: number;
+    incomingStageOutputId: number;    
+}
+
+export interface CreateConnectionDTO {
+    factoryId: number;
+    outgoingFactoryStageId: number;
+    incomingFactoryStageId: number;
+    outgoingStageInputId: number;
+    incomingStageOutputId: number;
+}
+
+export interface UpdateConnectionDTO {
+    id: number;
+    factoryId: number;
+    outgoingFactoryStageId: number;
+    incomingFactoryStageId: number;
+    outgoingStageInputId: number;
+    incomingStageOutputId: number;
+}
+
+export interface DeleteConnectionDTO {
+    factoryId: number;
+    organizationId: number;
+    outgoingFactoryStageId: number;
+    incomingFactoryStageId: number;
+    outgoingStageInputId: number;
+    incomingStageOutputId: number;
 }

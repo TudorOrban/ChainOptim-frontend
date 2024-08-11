@@ -40,10 +40,10 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
 
     private setUpTabsEventListeners() {
         this.tabsComponent.onNodeClicked.subscribe((node) => {
-            console.log("Node clicked: ", node);
+            this.toolbarComponent.handleNodeClicked(node);
         });
         this.tabsComponent.onEdgeClicked.subscribe((edge) => {
-            console.log("Edge clicked: ", edge);
+            this.toolbarComponent.handleEdgeClicked(edge);
         });
     }
     

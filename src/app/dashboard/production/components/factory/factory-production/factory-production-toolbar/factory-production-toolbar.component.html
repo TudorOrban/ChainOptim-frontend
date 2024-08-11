@@ -5,23 +5,38 @@
             <h1 class="text-lg font-semibold text-gray-800 pb-2">Edit Configuration</h1>
             <div class="flex items-center space-x-2 font-semibold">
                 <p>Stages</p>
-                <button (click)="handleAddFactoryStage()" class="w-8 h-8 bg-blue-600 rounded-md shadow-sm">
-                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white"></fa-icon>
+                <button (click)="handleAddFactoryStage()" class="standard-write-button-small">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
-                <button (click)="handleUpdateFactoryStage()" class="w-8 h-8 bg-blue-600 rounded-md shadow-sm">
-                    <fa-icon [icon]="faEdit" class="w-4 h-4 text-white"></fa-icon>
+                <button 
+                    (click)="handleUpdateFactoryStage()" 
+                    [disabled]="!selectedNode" 
+                    [attr.title]="!selectedNode ? 'Select a stage to update' : null"
+                    class="standard-write-button-small"
+                >
+                    <fa-icon [icon]="faEdit" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
-                <button (click)="handleDeleteFactoryStage()" class="w-8 h-8 bg-red-600 rounded-md shadow-sm">
-                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white"></fa-icon>
+                <button 
+                    (click)="handleDeleteFactoryStage()"
+                    [disabled]="!selectedNode"
+                    [attr.title]="!selectedNode ? 'Select a stage to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
             </div>
             <div class="flex items-center space-x-2 font-semibold">
                 <p>Connections</p>
-                <button (click)="handleAddConnection()" class="w-8 h-8 bg-blue-600 rounded-md shadow-sm">
-                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white"></fa-icon>
+                <button (click)="handleAddConnection()" class="standard-write-button-small">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
-                <button (click)="handleDeleteConnection()" class="w-8 h-8 bg-red-600 rounded-md shadow-sm">
-                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white"></fa-icon>
+                <button
+                    (click)="handleDeleteConnection()" 
+                    [disabled]="!selectedEdge" 
+                    [attr.title]="!selectedNode ? 'Select a connection to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
             </div>
         </div>

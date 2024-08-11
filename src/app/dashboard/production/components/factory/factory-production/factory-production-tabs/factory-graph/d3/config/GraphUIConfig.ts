@@ -24,7 +24,8 @@ export const GraphUIConfig = {
         subedgeColor: "black",
         subedgeWidth: 1,
         highlightDuration: 200,
-        highlightColor: "blue",
+        highlightColor: "rgb(78, 120, 210)",
+        highlightFontColour: "white",
         highlightWidth: 2,
     },
     edge: {
@@ -32,7 +33,7 @@ export const GraphUIConfig = {
         width: 1.5,
         markerEnd: "url(#arrowhead)",
         highlightDuration: 200,
-        highlightColor: "blue",
+        highlightColor: "rgb(78, 120, 210)",
         highlightWidth: 2,
     },
     info: {
