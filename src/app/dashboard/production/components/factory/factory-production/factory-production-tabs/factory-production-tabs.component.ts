@@ -8,6 +8,8 @@ import {
     ElementRef,
     Input,
     ComponentRef,
+    Output,
+    EventEmitter,
 } from '@angular/core';
 import { TabsService } from '../../../../services/productiontabs.service';
 import { FactoryProductionTabType, Tab } from '../../../../models/Production';
@@ -22,6 +24,8 @@ import { AllocationPlanComponent } from './allocation-plan/allocation-plan.compo
 import { Subscription } from 'rxjs';
 import { ProductionHistoryComponent } from './production-history/production-history.component';
 import { AllocationPlan } from '../../../../models/ResourceAllocation';
+import { FactoryEdge } from '../../../../models/FactoryGraph';
+import { Pair } from '../../../../../overview/types/supplyChainMapTypes';
 
 @Component({
     selector: 'app-factory-production-tabs',
@@ -37,6 +41,9 @@ import { AllocationPlan } from '../../../../models/ResourceAllocation';
 export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     @Input() factoryId: number | undefined = undefined;
 
+    @Output() onNodeClicked = new EventEmitter<Pair<string, number>>();
+    @Output() onEdgeClicked = new EventEmitter<FactoryEdge>();
+
     @ViewChild('dynamicTabContent', { read: ViewContainerRef })
     dynamicTabContent!: ViewContainerRef;
     private activeComponentRef: ComponentRef<FactoryProductionTabType> | null = null;
@@ -47,6 +54,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
     private tabSubscription!: Subscription;
 
     selectedFactoryStageId: number | undefined = undefined;
+    selectedEdge: FactoryEdge | undefined = undefined;
 
     constructor(public tabsService: TabsService) {}
 
@@ -178,8 +186,15 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy {
             });
         }
         if (instance instanceof FactoryGraphComponent) {
-            instance.onFactoryGraphClicked.subscribe(({ first, second }) => {
+            instance.onNodeClicked.subscribe(({ first, second }) => {
                 this.selectedFactoryStageId = second;
+                console.log("Node clicked in tabs: ", first, second);
+                this.onNodeClicked.emit({ first: first, second: second });
+            });
+            instance.onEdgeClicked.subscribe(edge => {
+                this.selectedEdge = edge;
+                console.log("Edge clicked in tabs: ", edge);
+                this.onEdgeClicked.emit(edge);
             });
         }
     }

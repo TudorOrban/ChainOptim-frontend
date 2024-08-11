@@ -32,9 +32,19 @@ export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
             this.leftPanel = resizer.previousElementSibling as HTMLElement;
             this.rightPanel = resizer.nextElementSibling as HTMLElement;
 
+            this.setUpTabsEventListeners();
             this.setUpToolbarEventListeners();
             this.setUpResizerEventListeners();
         }
+    }
+
+    private setUpTabsEventListeners() {
+        this.tabsComponent.onNodeClicked.subscribe((node) => {
+            console.log("Node clicked: ", node);
+        });
+        this.tabsComponent.onEdgeClicked.subscribe((edge) => {
+            console.log("Edge clicked: ", edge);
+        });
     }
     
     private setUpToolbarEventListeners() {

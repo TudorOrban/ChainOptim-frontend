@@ -36,7 +36,7 @@ export class InteractionManager {
                     event.currentTarget as SVGLineElement
                 );
                 const clickedEdgeId = clickedEdge.attr('id');
-
+                
                 if (clickedEdge.node()) {
                     console.log('Clicked edge:', clickedEdgeId);
                     this.edgeRenderer.unhighlightAllEdges();

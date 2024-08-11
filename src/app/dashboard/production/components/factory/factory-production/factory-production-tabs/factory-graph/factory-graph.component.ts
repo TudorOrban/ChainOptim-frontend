@@ -23,7 +23,8 @@ export class FactoryGraphComponent {
     factoryGraphRenderer: GraphRenderer | null = null;
     elementIdentifier: ElementIdentifier = new ElementIdentifier();
 
-    @Output() onFactoryGraphClicked = new EventEmitter<Pair<string, number>>();
+    @Output() onNodeClicked = new EventEmitter<Pair<string, number>>();
+    @Output() onEdgeClicked = new EventEmitter<FactoryEdge>();
 
     constructor(
         private factoryGraphService: FactoryGraphService,
@@ -42,12 +43,13 @@ export class FactoryGraphComponent {
                     return;
                 }
                 console.log("Node clicked: ", splitNodeId);
-                this.onFactoryGraphClicked.emit({ first: splitNodeId[0], second: Number(splitNodeId[1]) });
+                this.onNodeClicked.emit({ first: splitNodeId[0], second: Number(splitNodeId[1]) });
             });
             this.factoryGraphRenderer.getEdgeClickEmitter().subscribe(edgeId => {
                 const edge: FactoryEdge = this.elementIdentifier.getEdgeFromOuterEdgeId(edgeId);
 
                 console.log("Edge clicked: ", edge);
+                this.onEdgeClicked.emit(edge);
             });
         }
     }
