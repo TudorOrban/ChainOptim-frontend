@@ -130,7 +130,7 @@ export class UpdateFactoryStageComponent {
 
         const factoryStageDTO = this.getFactoryStageDTO();
 
-        this.factoryStageService.updateFactoryStage(factoryStageDTO).subscribe(
+        this.factoryStageService.updateFactoryStage(factoryStageDTO, true).subscribe(
             (factoryStage) => {
                 this.toastService.addToast({
                     id: 123,

@@ -10,6 +10,26 @@ export interface Product {
     stages?: Stage[];
 }
 
+export interface CreateProductDTO {
+    name: string;
+    description: string;
+    organizationId: number;
+    newUnit: UnitOfMeasurement;    
+}
+
+export interface UpdateProductDTO {
+    id: number;
+    name: string;
+    description: string;
+    organizationId: number;
+    newUnit: UnitOfMeasurement;    
+}
+
+export interface ProductSearchDTO {
+    id: number;
+    name: string;
+}
+
 export interface Stage {
     id: number;
     name: string;
@@ -37,23 +57,17 @@ export interface StageOutput {
     component?: Component;
 }
 
-
-export interface CreateProductDTO {
-    name: string;
-    description: string;
+export interface CreateStageDTO {
+    productId: number;
     organizationId: number;
-    newUnit: UnitOfMeasurement;    
+    name: string;
+    description?: string;
 }
 
-export interface UpdateProductDTO {
+export interface UpdateStageDTO {
     id: number;
-    name: string;
-    description: string;
+    productId: number;
     organizationId: number;
-    newUnit: UnitOfMeasurement;    
-}
-
-export interface ProductSearchDTO {
-    id: number;
     name: string;
+    description?: string;
 }

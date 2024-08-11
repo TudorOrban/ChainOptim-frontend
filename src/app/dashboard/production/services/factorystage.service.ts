@@ -30,14 +30,14 @@ export class FactoryStageService {
     }
 
     createFactoryStage(factoryStageDTO: CreateFactoryStageDTO, refreshGraph: boolean): Observable<FactoryStage> {
-        return this.http.post<FactoryStage>(`${this.apiUrl}/create${refreshGraph ? "/true" : ""}`, factoryStageDTO);
+        return this.http.post<FactoryStage>(`${this.apiUrl}/create/${refreshGraph}`, factoryStageDTO);
     }
         
-    updateFactoryStage(factoryStageDTO: UpdateFactoryStageDTO): Observable<FactoryStage> {
-        return this.http.put<FactoryStage>(`${this.apiUrl}/update`, factoryStageDTO);
+    updateFactoryStage(factoryStageDTO: UpdateFactoryStageDTO, refreshGraph: boolean): Observable<FactoryStage> {
+        return this.http.put<FactoryStage>(`${this.apiUrl}/update/${refreshGraph}`, factoryStageDTO);
     }
 
-    deleteFactoryStage(factoryStageId: number): Observable<number> {
-        return this.http.delete<number>(`${this.apiUrl}/delete/${factoryStageId}`);
+    deleteFactoryStage(factoryStageId: number, refreshGraph: boolean): Observable<number> {
+        return this.http.delete<number>(`${this.apiUrl}/delete/${refreshGraph}/${factoryStageId}`);
     }
 }

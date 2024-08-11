@@ -24,7 +24,8 @@ export const findStageOutputPosition = (centerX: number, centerY: number, number
 }
 
 // Random utils
-export const truncateString = (str: string, maxLength: number): string => {
+export const truncateString = (str: string | undefined, maxLength: number): string => {
+    if (!str) return "";
     return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
 }
 

@@ -4,8 +4,8 @@ export const GraphUIConfig = {
         height: 640,
         spaceBetweenStagesX: 250,
         spaceBetweenStagesY: 250,
-        paddingX: 100,
-        paddingY: 120,
+        paddingX: 300,
+        paddingY: 220,
         backgroundColor: "#eeeeee",
     },
     node: {
