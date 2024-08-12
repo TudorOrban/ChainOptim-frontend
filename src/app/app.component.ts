@@ -7,7 +7,7 @@ import {
     RouterModule,
     RouterOutlet,
 } from '@angular/router';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './core/auth/services/jwt-interceptor.service';
 import { AuthenticationService } from './core/auth/services/authentication.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -26,7 +26,6 @@ import { User } from './core/user/model/user';
     imports: [
         CommonModule,
         RouterOutlet,
-        HttpClientModule,
         FontAwesomeModule,
         RouterModule,
         SidebarComponent,

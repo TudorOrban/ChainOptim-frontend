@@ -1,8 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-    HttpClientTestingModule,
-    HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { ProductsComponent } from './products.component';
@@ -11,6 +8,7 @@ import { ProductService } from '../../services/product.service';
 import { OrganizationService } from '../../../organization/services/organization.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { By } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ProductsComponent', () => {
     let component: ProductsComponent;
@@ -54,19 +52,21 @@ describe('ProductsComponent', () => {
         fallbackManagerServiceMock.fallbackManagerState$ = of({});
 
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, ProductsComponent, RouterTestingModule],
-            providers: [
-                { provide: ProductService, useValue: productServiceMock },
-                {
-                    provide: OrganizationService,
-                    useValue: organizationServiceMock,
-                },
-                {
-                    provide: FallbackManagerService,
-                    useValue: fallbackManagerServiceMock,
-                },
-            ],
-        }).compileComponents();
+    imports: [ProductsComponent, RouterTestingModule],
+    providers: [
+        { provide: ProductService, useValue: productServiceMock },
+        {
+            provide: OrganizationService,
+            useValue: organizationServiceMock,
+        },
+        {
+            provide: FallbackManagerService,
+            useValue: fallbackManagerServiceMock,
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
         fixture = TestBed.createComponent(ProductsComponent);
         component = fixture.componentInstance;
