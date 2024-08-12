@@ -78,14 +78,7 @@ export class ProductGraphComponent {
             this.handleNodeClicked(nodeId);
         });
         this.productGraphRenderer.getEdgeClickEmitter().subscribe(edgeId => {
-            const factoryEdge: FactoryEdge = this.elementIdentifier.getEdgeFromOuterEdgeId(edgeId);
-            const productEdge: ProductEdge = {
-                srcStageId: factoryEdge.srcFactoryStageId,
-                srcStageOutputId: factoryEdge.srcStageOutputId,
-                destStageId: factoryEdge.destFactoryStageId,
-                destStageInputId: factoryEdge.destStageInputId,
-            };                
-            this.onEdgeClicked.emit(productEdge);
+            this.handleEdgeClicked(edgeId); 
         });
     }
 
@@ -94,6 +87,18 @@ export class ProductGraphComponent {
         this.onNodeClicked.emit(nodeSelection);
 
         this.handleAddConnectionMode(nodeSelection);
+    }
+
+    private handleEdgeClicked(edgeId: string): void {
+        const factoryEdge: FactoryEdge = this.elementIdentifier.getEdgeFromOuterEdgeId(edgeId);
+        const productEdge: ProductEdge = {
+            srcStageId: factoryEdge.srcFactoryStageId,
+            srcStageOutputId: factoryEdge.srcStageOutputId,
+            destStageId: factoryEdge.destFactoryStageId,
+            destStageInputId: factoryEdge.destStageInputId,
+        };                
+        console.log("Product edge clicked: ", productEdge);
+        this.onEdgeClicked.emit(productEdge);
     }
 
     // Add connection mode
@@ -156,7 +161,6 @@ export class ProductGraphComponent {
         }
         return true;
     }
-
     
     handleCreateConnection(): void {
         const connectionDTO: CreateConnectionDTO = {

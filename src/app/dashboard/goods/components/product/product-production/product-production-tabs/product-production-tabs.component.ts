@@ -131,36 +131,10 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         this.loadComponent(tab);
         this.handleSpecificComponent();
     }
-
-    // loadAllocationPlanComponent(allocationPlan: AllocationPlan, loadActivePlan: boolean, factoryId: number): void {
-    //     const tab: Tab<any> = {
-    //         id: 'allocation-plan',
-    //         title: 'Allocation Plan',
-    //         component: AllocationPlanComponent,
-    //         inputData: { allocationPlan: allocationPlan, loadActivePlan: loadActivePlan, factoryId: factoryId },
-    //     };
-    //     this.tabsService.openTab(tab);
-    //     this.tabsService.setActiveTab(tab.id);
-    //     this.loadComponent(tab);
-    // }
-
-    // loadProductionHistoryComponent(): void {
-    //     const tab: Tab<any> = {
-    //         id: 'production-history',
-    //         title: 'Production History',
-    //         component: ProductionHistoryComponent,
-    //         inputData: { factoryId: this.factoryId },
-    //     };
-    //     this.tabsService.openTab(tab);
-    //     this.tabsService.setActiveTab(tab.id);
-    //     this.loadComponent(tab);
-    // }
-
     
-    // setActiveTab(id: string): void {
-    //     this.tabsService.setActiveTab(id);
-    // }
-
+    setActiveTab(id: string): void {
+        this.tabsService.setActiveTab(id);
+    }
     
     loadComponent(tab: ProductTab<any>): void {
         if (!this.dynamicTabContent) {
@@ -208,16 +182,16 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
     }
 
     // - CRUD ops
-    // toggleAddConnectionMode(): void {
-    //     if (!this.activeComponentRef) {
-    //         console.log("No active component reference found.");
-    //         return;
-    //     }
+    toggleAddConnectionMode(): void {
+        if (!this.activeComponentRef) {
+            console.log("No active component reference found.");
+            return;
+        }
 
-    //     if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
-    //         this.activeComponentRef.instance.toggleAddConnectionMode();
-    //     }
-    // }
+        if (this.activeComponentRef.instance instanceof ProductGraphComponent) {
+            this.activeComponentRef.instance.toggleAddConnectionMode();
+        }
+    }
 
     // - Displaying Info
     // displayQuantities(display: boolean): void {

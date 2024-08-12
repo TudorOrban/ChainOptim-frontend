@@ -56,9 +56,9 @@ export class ProductProductionComponent implements AfterViewInit, OnDestroy {
             if (!this.product?.id) return;
             this.tabsComponent.loadUpdateStageComponent(this.product?.id || 0);
         });
-        // this.toolbarComponent.toggleAddConnectionMode.subscribe(() => {
-        //     this.tabsComponent.toggleAddConnectionMode();
-        // });
+        this.toolbarComponent.toggleAddConnectionMode.subscribe(() => {
+            this.tabsComponent.toggleAddConnectionMode();
+        });
         // this.toolbarComponent.displayQuantities.subscribe((display) => {
         //     this.tabsComponent.displayQuantities(display);
         // });
@@ -67,18 +67,6 @@ export class ProductProductionComponent implements AfterViewInit, OnDestroy {
         // });
         // this.toolbarComponent.displayPriorities.subscribe((display) => {
         //     this.tabsComponent.displayPriorities(display);
-        // });
-        // this.toolbarComponent.viewActivePlan.subscribe(() => {
-        //     this.tabsComponent.loadAllocationPlanComponent({ allocations: [], inventoryBalance: []}, true, this.factory?.id || 0);
-        // });
-        // this.toolbarComponent.displayAllocations.subscribe((allocationPlan) => {
-        //     this.tabsComponent.displayAllocations(allocationPlan);
-        // });
-        // this.toolbarComponent.openAllocationPlan.subscribe((allocationPlan) => {
-        //     this.tabsComponent.loadAllocationPlanComponent(allocationPlan, false, this.factory?.id || 0);
-        // });
-        // this.toolbarComponent.viewProductionHistory.subscribe(() => {
-        //     this.tabsComponent.loadProductionHistoryComponent();
         // });
     }
 

@@ -46,8 +46,8 @@ export class ProductProductionToolbarComponent {
 
     // Confirm dialogs
     deleteStageDialogInput: ConfirmDialogInput = {
-        dialogTitle: "Delete Factory Stage",
-        dialogMessage: "Are you sure you want to delete this factory stage?",
+        dialogTitle: "Delete Stage",
+        dialogMessage: "Are you sure you want to delete this stage?",
     };
     isDeleteStageConfirmDialogOpen = false;
     
@@ -90,7 +90,7 @@ export class ProductProductionToolbarComponent {
         this.isDeleteStageConfirmDialogOpen = true;
     }
     
-    handleDeleteFactoryStage() {
+    handleDeleteStage() {
         if (!this.selectedNode?.nodeId) {
             console.error('Error: No node selected');
             return
@@ -99,8 +99,8 @@ export class ProductProductionToolbarComponent {
         this.stageService.deleteStage(this.selectedNode?.nodeId, true).subscribe(() => {
             this.toastService.addToast({
                 id: 1,
-                title: "Factory stage deleted",
-                message: "The factory stage has been deleted successfully",
+                title: "Stage deleted",
+                message: "The Stage has been deleted successfully",
                 outcome: OperationOutcome.SUCCESS
             });
             this.isDeleteStageConfirmDialogOpen = false;
