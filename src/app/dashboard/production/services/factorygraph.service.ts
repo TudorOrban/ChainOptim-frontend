@@ -24,5 +24,15 @@ export class FactoryGraphService {
                 )
             );
     }
+
+    refreshFactoryProductionGraphByFactoryId(factoryId: number): Observable<FactoryProductionGraph> {
+        return this.http
+            .get<FactoryProductionGraph>(`${this.apiUrl}/update/${factoryId}/refresh`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
     
 }

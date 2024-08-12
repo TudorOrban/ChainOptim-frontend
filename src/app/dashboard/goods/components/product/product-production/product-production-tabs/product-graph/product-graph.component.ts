@@ -11,11 +11,13 @@ import { GraphRenderer } from '../../../../../../production/components/factory/f
 import { ElementIdentifier } from '../../../../../../production/components/factory/factory-production/factory-production-tabs/factory-graph/d3/utils/ElementIdentifier';
 import { GenericGraph } from '../../../../../../production/components/factory/factory-production/factory-production-tabs/factory-graph/d3/types/dataTypes';
 import { transformProductToGenericGraph } from '../../../../../../production/components/factory/factory-production/factory-production-tabs/factory-graph/d3/utils/utils';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faArrowRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-product-graph',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FontAwesomeModule],
     templateUrl: './product-graph.component.html',
     styleUrl: './product-graph.component.css',
 })
@@ -27,12 +29,16 @@ export class ProductGraphComponent {
 
     productProductionGraph: ProductProductionGraph | undefined = undefined;
 
+    isLoading: boolean = false;
     isAddConnectionModeOn: boolean = false;
     addConnectionClickedNodes: NodeSelection[] = [];
     readyForConnectionCreation: boolean = false;
     
     productGraphRenderer: GraphRenderer | null = null;
     elementIdentifier: ElementIdentifier = new ElementIdentifier();
+
+    faArrowRotateRight = faArrowRotateRight;
+    faSpinner = faSpinner;
 
     constructor(
         private productGraphService: ProductGraphService,
@@ -53,19 +59,37 @@ export class ProductGraphComponent {
     }
 
     private loadGraphData(): void {
-        this.productGraphService.refreshProductProductionGraphByProductId(this.inputData?.productId as number)
+        this.isLoading = true;
+        this.productGraphService.getProductProductionGraphByProductId(this.inputData?.productId as number)
             .subscribe(graphData => {
-                console.log("Product graph data: ", graphData);
-                if (!graphData) {
+                this.isLoading = false;
+                if (graphData?.length != 1) {
                     console.error("Error: Product graph data is not valid.: ", graphData);
                     return;
                 }
-                this.productProductionGraph = graphData;
-
-                const genericGraph: GenericGraph = transformProductToGenericGraph(this.productProductionGraph.productGraph);
-    
-                this.productGraphRenderer?.renderGraph(genericGraph);
+                this.handleGraphDataResponse(graphData[0]);
             });
+    }
+
+    handleRefreshGraph(): void {
+        this.isLoading = true;
+        this.productGraphService.refreshProductProductionGraphByProductId(this.inputData?.productId as number)
+            .subscribe(graphData => {
+                this.isLoading = false;
+                this.handleGraphDataResponse(graphData);
+            });
+    }
+
+    private handleGraphDataResponse(graphData: ProductProductionGraph): void {
+        if (!graphData) {
+            console.error("Error: Product graph data is not valid.: ", graphData);
+            return;
+        }
+        this.productProductionGraph = graphData;
+
+        const genericGraph: GenericGraph = transformProductToGenericGraph(this.productProductionGraph.productGraph);
+
+        this.productGraphRenderer?.renderGraph(genericGraph);
     }
 
     private listenToClickEvents(): void {

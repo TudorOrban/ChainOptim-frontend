@@ -11,11 +11,13 @@ import { CreateConnectionDTO } from '../../../../../models/Factory';
 import { ToastService } from '../../../../../../../shared/common/components/toast-system/toast.service';
 import { OperationOutcome } from '../../../../../../../shared/common/components/toast-system/toastTypes';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faArrowRotateRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-factory-graph',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FontAwesomeModule],
     templateUrl: './factory-graph.component.html',
     styleUrl: './factory-graph.component.css',
 })
@@ -27,6 +29,7 @@ export class FactoryGraphComponent {
 
     factoryProductionGraph: FactoryProductionGraph | undefined = undefined;
 
+    isLoading: boolean = false;
     isAddConnectionModeOn: boolean = false;
     addConnectionClickedNodes: NodeSelection[] = [];
     readyForConnectionCreation: boolean = false;
@@ -39,6 +42,9 @@ export class FactoryGraphComponent {
         private connectionService: FactoryStageConnectionService,
         private toastService: ToastService,
     ) {}
+
+    faArrowRotateRight = faArrowRotateRight;
+    faSpinner = faSpinner;
 
     ngOnInit(): void {
         this.initializeGraphRenderers();
@@ -53,18 +59,39 @@ export class FactoryGraphComponent {
     }
 
     private loadGraphData(): void {
+        this.isLoading = true;
         this.factoryGraphService.getFactoryProductionGraphByFactoryId(this.inputData?.factoryId as number)
             .subscribe(graphData => {
+                this.isLoading = false;
                 if (graphData?.length == 0) {
                     console.error("Error: Factory graph data is not valid.: ", graphData);
                     return;
                 }
-                this.factoryProductionGraph = graphData[0];
 
-                const genericGraph: GenericGraph = transformFactoryToGenericGraph(this.factoryProductionGraph.factoryGraph);
-    
-                this.factoryGraphRenderer?.renderGraph(genericGraph);
+                this.handleGraphDataResponse(graphData[0]);
             });
+    }
+
+    handleRefreshGraph(): void {
+        this.isLoading = true;
+        this.factoryGraphService.refreshFactoryProductionGraphByFactoryId(this.inputData?.factoryId as number)
+            .subscribe(graphData => {
+                this.isLoading = false;
+                this.handleGraphDataResponse(graphData);
+            });
+    }
+
+    private handleGraphDataResponse(graphData: FactoryProductionGraph): void {
+        if (!graphData) {
+            console.error("Error: Factory graph data is not valid.: ", graphData);
+            return;
+        }
+
+        this.factoryProductionGraph = graphData;
+
+        const genericGraph: GenericGraph = transformFactoryToGenericGraph(this.factoryProductionGraph.factoryGraph);
+
+        this.factoryGraphRenderer?.renderGraph(genericGraph);
     }
 
     private listenToClickEvents(): void {
