@@ -190,4 +190,8 @@ export class ProductGraphComponent {
     toggleAddConnectionMode(): void {
         this.isAddConnectionModeOn = !this.isAddConnectionModeOn;
     }
+    
+    displayQuantities(display: boolean): void {
+        this.productGraphRenderer?.renderInfo("quantities", display);
+    }
 }

@@ -72,6 +72,51 @@ export interface UpdateStageDTO {
     description?: string;
 }
 
+export interface CreateStageInputDTO {
+    productId: number;
+    organizationId: number;
+    stageId: number;
+    componentId: number;
+    quantity: number;
+}
+
+export interface UpdateStageInputDTO {
+    id: number;
+    productId: number;
+    organizationId: number;
+    stageId: number;
+    componentId: number;
+    quantity: number;
+}
+
+export interface DeleteStageInputDTO {
+    stageInputId: number;
+    productId: number;
+    organizationId: number;
+}
+
+export interface CreateStageOutputDTO {
+    productId: number;
+    organizationId: number;
+    stageId: number;
+    componentId: number;
+    quantity: number;
+}
+
+export interface UpdateStageOutputDTO {
+    id: number;
+    productId: number;
+    organizationId: number;
+    stageId: number;
+    componentId: number;
+    quantity: number;
+}
+
+export interface DeleteStageOutputDTO {
+    stageOutputId: number;
+    productId: number;
+    organizationId: number;
+}
 
 export interface ProductStageConnection {
     id: number;

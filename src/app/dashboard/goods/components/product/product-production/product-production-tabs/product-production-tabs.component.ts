@@ -194,17 +194,17 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
     }
 
     // - Displaying Info
-    // displayQuantities(display: boolean): void {
-    //     if (!this.activeComponentRef) {
-    //         console.log("No active component reference found.");
-    //         return;
-    //     }
+    displayQuantities(display: boolean): void {
+        if (!this.activeComponentRef) {
+            console.log("No active component reference found.");
+            return;
+        }
 
-    //     // Check if the active component is of type FactoryGraphComponent
-    //     if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
-    //         this.activeComponentRef.instance.displayQuantities(display);
-    //     }
-    // }
+        // Check if the active component is of type FactoryGraphComponent
+        if (this.activeComponentRef.instance instanceof ProductGraphComponent) {
+            this.activeComponentRef.instance.displayQuantities(display);
+        }
+    }
     
     // displayCapacities(display: boolean): void {
     //     if (!this.activeComponentRef) {

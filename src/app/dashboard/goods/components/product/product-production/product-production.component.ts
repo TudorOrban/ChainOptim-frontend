@@ -59,9 +59,9 @@ export class ProductProductionComponent implements AfterViewInit, OnDestroy {
         this.toolbarComponent.toggleAddConnectionMode.subscribe(() => {
             this.tabsComponent.toggleAddConnectionMode();
         });
-        // this.toolbarComponent.displayQuantities.subscribe((display) => {
-        //     this.tabsComponent.displayQuantities(display);
-        // });
+        this.toolbarComponent.displayQuantities.subscribe((display) => {
+            this.tabsComponent.displayQuantities(display);
+        });
         // this.toolbarComponent.displayCapacities.subscribe((display) => {
         //     this.tabsComponent.displayCapacities(display);
         // });

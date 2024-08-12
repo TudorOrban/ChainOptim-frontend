@@ -10,16 +10,60 @@
                 </button>
                 <button 
                     (click)="handleUpdateStage()" 
-                    [disabled]="!selectedNode" 
-                    [attr.title]="!selectedNode ? 'Select a stage to update' : null"
+                    [disabled]="!isStageSelected()" 
+                    [attr.title]="!isStageSelected() ? 'Select a stage to update' : null"
                     class="standard-write-button-small"
                 >
                     <fa-icon [icon]="faEdit" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
                 <button 
                     (click)="handleOpenDeleteStageDialog()"
-                    [disabled]="!selectedNode"
-                    [attr.title]="!selectedNode ? 'Select a stage to delete' : null"
+                    [disabled]="!isStageSelected()"
+                    [attr.title]="!isStageSelected() ? 'Select a stage to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+            </div>
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Stage Inputs</p>
+                <button (click)="handleAddStageInput()" class="standard-write-button-small">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleUpdateStageInput()" 
+                    [disabled]="!isInputSelected()" 
+                    [attr.title]="!isInputSelected() ? 'Select a stage input to update' : null"
+                    class="standard-write-button-small"
+                >
+                    <fa-icon [icon]="faEdit" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleOpenDeleteStageInputDialog()"
+                    [disabled]="!isInputSelected()"
+                    [attr.title]="!isInputSelected() ? 'Select a stage input to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+            </div>
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Stage Outputs</p>
+                <button (click)="handleAddStageOutput()" class="standard-write-button-small">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleUpdateStageOutput()" 
+                    [disabled]="!isOutputSelected()" 
+                    [attr.title]="!isOutputSelected() ? 'Select a stage output to update' : null"
+                    class="standard-write-button-small"
+                >
+                    <fa-icon [icon]="faEdit" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleOpenDeleteStageOutputDialog()"
+                    [disabled]="!isOutputSelected()"
+                    [attr.title]="!isOutputSelected() ? 'Select a stage output to delete' : null"
                     class="standard-delete-button-small"
                 >
                     <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
@@ -32,8 +76,8 @@
                 </button>
                 <button
                     (click)="handleOpenDeleteConnectionDialog()" 
-                    [disabled]="!selectedEdge" 
-                    [attr.title]="!selectedNode ? 'Select a connection to delete' : null"
+                    [disabled]="!isEdgeSelected()" 
+                    [attr.title]="!isEdgeSelected() ? 'Select a connection to delete' : null"
                     class="standard-delete-button-small"
                 >
                     <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
