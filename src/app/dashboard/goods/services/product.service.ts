@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CreateProductDTO, Product, UpdateProductDTO } from '../models/Product';
+import { CreateProductDTO, Product, ProductOverviewDTO, UpdateProductDTO } from '../models/Product';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -69,6 +69,16 @@ export class ProductService {
     getProductById(id: number): Observable<Product> {
         return this.http
             .get<Product>(`${this.apiUrl}/${id}/stages`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
+
+    getProductOverview(id: number): Observable<ProductOverviewDTO> {
+        return this.http
+            .get<ProductOverviewDTO>(`${this.apiUrl}/${id}/overview`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

@@ -12,7 +12,7 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrl: './product-production.component.css'
 })
 export class ProductProductionComponent implements AfterViewInit, OnDestroy {
-    @Input() product: Product | null = null;
+    @Input() product: Product | undefined = undefined;
     @ViewChild('resizer') resizer!: ElementRef<HTMLDivElement>;
     @ViewChild(ProductProductionTabsComponent) tabsComponent!: ProductProductionTabsComponent;
     @ViewChild(ProductProductionToolbarComponent) toolbarComponent!: ProductProductionToolbarComponent;

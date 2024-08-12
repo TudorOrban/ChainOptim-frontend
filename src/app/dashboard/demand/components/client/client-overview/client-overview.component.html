@@ -7,38 +7,27 @@
         <h2 class="label-medium-large">Last Modified: </h2>
         <p class="value-medium">{{ client?.updatedAt | date: 'medium' }}</p>
     </div>
-    
-    <div class="flex items-center space-x-2">
-        <h2 class="label-medium-large">Supplied Products: </h2>
-        <div *ngFor="let product of clientOverview?.suppliedProducts" class="flex items-center flex-wrap">
-            <a [routerLink]="'/dashboard/products/' + product.id" class="pseudo-link">{{ product.name }}</a>
-            <p *ngIf="product.id !== clientOverview?.suppliedProducts?.[(clientOverview?.suppliedProducts?.length ?? 0) - 1]?.id" class="text-gray-700">,</p>
-        </div>
-        <div *ngIf="(clientOverview?.suppliedProducts?.length ?? 0) === 0" class="value-medium">
-            None
-        </div>
-    </div>
 
-    <div class="flex items-center space-x-2">
-        <h2 class="label-medium-large">Delivered from Factories: </h2>
-        <div *ngFor="let product of clientOverview?.deliveredFromFactories" class="flex items-center flex-wrap">
-            <a [routerLink]="'/dashboard/products/' + product.id" class="pseudo-link">{{ product.name }}</a>
-            <p *ngIf="product.id !== clientOverview?.deliveredFromFactories?.[(clientOverview?.deliveredFromFactories?.length ?? 0) - 1]?.id" class="text-gray-700">,</p>
-        </div>
-        <div *ngIf="(clientOverview?.deliveredFromFactories?.length ?? 0) === 0" class="value-medium">
-            None
-        </div>
+    <div>
+        <app-overview-section
+            [label]="'Supplied Products: '"
+            [feature]="'products'"
+            [entities]="clientOverview?.suppliedProducts"
+        ></app-overview-section>
     </div>
-
-    <div class="flex items-center space-x-2">
-        <h2 class="label-medium-large">Delivered from Warehouses: </h2>
-        <div *ngFor="let product of clientOverview?.deliveredFromWarehouses" class="flex items-center flex-wrap">
-            <a [routerLink]="'/dashboard/products/' + product.id" class="pseudo-link">{{ product.name }}</a>
-            <p *ngIf="product.id !== clientOverview?.deliveredFromWarehouses?.[(clientOverview?.deliveredFromWarehouses?.length ?? 0) - 1]?.id" class="text-gray-700">,</p>
-        </div>
-        <div *ngIf="(clientOverview?.deliveredFromWarehouses?.length ?? 0) === 0" class="value-medium">
-            None
-        </div>
+    <div>
+        <app-overview-section
+            [label]="'Delivered from Factories: '"
+            [feature]="'factories'"
+            [entities]="clientOverview?.deliveredFromFactories"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Delivered from Warehouses: '"
+            [feature]="'warehouses'"
+            [entities]="clientOverview?.deliveredFromWarehouses"
+        ></app-overview-section>
     </div>
 
     <div class="space-y-4">

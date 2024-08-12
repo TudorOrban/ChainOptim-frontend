@@ -3,11 +3,12 @@ import { Client, ClientOverviewDTO } from '../../../models/Client';
 import { ClientService } from '../../../services/client.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { OverviewSectionComponent } from '../../../../../shared/common/components/overview-section/overview-section.component';
 
 @Component({
   selector: 'app-client-overview',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, OverviewSectionComponent],
   templateUrl: './client-overview.component.html',
   styleUrl: './client-overview.component.css'
 })
