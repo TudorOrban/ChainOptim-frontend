@@ -21,6 +21,7 @@ import { ProductEdge } from '../../../../models/ProductGraph';
 import { FactoryProductionTabsService } from '../../../../../production/services/factoryproductiontabs.service';
 import { ProductProductionTabType, ProductTab } from '../../../../../production/models/Production';
 import { ProductProductionTabsService } from '../../../../services/productproductiontabs.service';
+import { ProductGraphComponent } from './product-graph/product-graph.component';
 
 @Component({
     selector: 'app-product-production-tabs',
@@ -116,19 +117,19 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
     //     this.handleSpecificComponent();
     // }
 
-    // loadFactoryGraphComponent(): void {
-    //     const tab: Tab<any> = {
-    //         id: 'factory-graph',
-    //         title: 'Factory Graph',
-    //         component: FactoryGraphComponent,
-    //         inputData: { factoryId: this.factoryId },
-    //     };
-    //     console.log("FactoryProductionTabsComponent: ngOnInit");
-    //     this.tabsService.openTab(tab);
-    //     this.tabsService.setActiveTab(tab.id);
-    //     this.loadComponent(tab);
-    //     this.handleSpecificComponent();
-    // }
+    loadFactoryGraphComponent(): void {
+        const tab: ProductTab<any> = {
+            id: 'factory-graph',
+            title: 'Factory Graph',
+            component: ProductGraphComponent,
+            inputData: { productId: this.productId },
+        };
+        console.log("FactoryProductionTabsComponent: ngOnInit");
+        this.tabsService.openTab(tab);
+        this.tabsService.setActiveTab(tab.id);
+        this.loadComponent(tab);
+        // this.handleSpecificComponent();
+    }
 
     // loadAllocationPlanComponent(allocationPlan: AllocationPlan, loadActivePlan: boolean, factoryId: number): void {
     //     const tab: Tab<any> = {

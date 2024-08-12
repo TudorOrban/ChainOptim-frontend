@@ -71,3 +71,39 @@ export interface UpdateStageDTO {
     name: string;
     description?: string;
 }
+
+
+export interface ProductStageConnection {
+    id: number;
+    productId: number;
+    srcProductStageId: number;
+    srcStageOutputId: number;
+    destProductStageId: number;
+    destStageInputId: number; 
+}
+
+export interface CreateConnectionDTO {
+    productId: number;
+    srcProductStageId: number;
+    srcStageOutputId: number;
+    destProductStageId: number;
+    destStageInputId: number;
+}
+
+export interface UpdateConnectionDTO {
+    id: number;
+    productId: number;
+    srcProductStageId: number;
+    srcStageOutputId: number;
+    destProductStageId: number;
+    destStageInputId: number;
+}
+
+export interface DeleteConnectionDTO {
+    productId: number;
+    organizationId: number;
+    srcProductStageId: number;
+    srcStageOutputId: number;
+    destProductStageId: number;
+    destStageInputId: number;
+}
