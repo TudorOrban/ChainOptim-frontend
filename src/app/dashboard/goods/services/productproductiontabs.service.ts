@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { ComponentRef, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ProductTab } from '../../production/models/Production';
+import { ProductProductionTabType, ProductTab } from '../../production/models/Production';
 
 @Injectable({
     providedIn: 'root',
@@ -9,6 +9,7 @@ export class ProductProductionTabsService {
     private tabs: ProductTab<any>[] = [];
     private activeTabId = new BehaviorSubject<string | null>(null);
     private idCounter = 0; 
+    private componentRefs = new Map<string, ComponentRef<ProductProductionTabType>>();
 
     getTabs(): ProductTab<any>[] {
         return this.tabs;
@@ -44,5 +45,13 @@ export class ProductProductionTabsService {
         if (exists) {
             this.activeTabId.next(id);
         }
+    }
+    
+    getComponentRef(id: string): ComponentRef<ProductProductionTabType> | undefined {
+        return this.componentRefs.get(id);
+    }
+
+    saveComponentRef(id: string, ref: ComponentRef<ProductProductionTabType>): void {
+        this.componentRefs.set(id, ref);
     }
 }

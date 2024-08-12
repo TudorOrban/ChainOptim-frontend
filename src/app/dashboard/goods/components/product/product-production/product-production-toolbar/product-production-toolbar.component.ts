@@ -211,7 +211,7 @@ export class ProductProductionToolbarComponent {
     }
 
     handleCancelDeleteStageOutput() {
-        this.isDeleteStageConfirmDialogOpen = false;
+        this.isDeleteStageOutputConfirmDialogOpen = false;
     }
 
     // - Connections

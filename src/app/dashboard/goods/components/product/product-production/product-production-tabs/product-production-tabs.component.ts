@@ -108,10 +108,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: AddStageComponent,
             inputData: { productId: this.productId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
-        this.handleSpecificComponent();
+        this.loadTab(tab);
     }
 
     loadUpdateStageComponent(productId: number): void {
@@ -121,10 +118,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: UpdateStageComponent,
             inputData: { productId: productId, stageId: this.selectedProductStageId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
-        this.handleSpecificComponent();
+        this.loadTab(tab);
     }
 
     // -- Stage Inputs
@@ -135,10 +129,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: AddStageInputComponent,
             inputData: { productId: this.productId, initialStageId: this.selectedProductStageId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
-        this.handleSpecificComponent();
+        this.loadTab(tab);
     }
 
     loadUpdateStageInputComponent(productId: number): void {
@@ -148,10 +139,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: UpdateStageInputComponent,
             inputData: { productId: productId, initialStageId: this.selectedStageInputStageId, initialStageInputId: this.selectedStageInputId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
-        this.handleSpecificComponent();
+        this.loadTab(tab);
     }
 
     // -- Stage Outputs
@@ -162,10 +150,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: AddStageOutputComponent,
             inputData: { productId: this.productId, initialStageId: this.selectedProductStageId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
-        this.handleSpecificComponent();
+        this.loadTab(tab);
     }
 
     loadUpdateStageOutputComponent(productId: number): void {
@@ -175,10 +160,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: UpdateStageOutputComponent,
             inputData: { productId: productId, initialStageId: this.selectedStageOutputStageId, initialStageOutputId: this.selectedStageOutputId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
-        this.handleSpecificComponent();
+        this.loadTab(tab);
     }
 
     // -- Graph
@@ -189,6 +171,10 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: ProductGraphComponent,
             inputData: { productId: this.productId },
         };
+        this.loadTab(tab);
+    }
+
+    loadTab(tab: ProductTab<any>): void {
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
@@ -201,9 +187,17 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             return;
         }
 
-        this.dynamicTabContent.clear();
-        const componentRef = this.dynamicTabContent.createComponent(tab.component);
-        componentRef.instance.inputData = tab.inputData;
+        this.dynamicTabContent.detach();
+        let componentRef = this.tabsService.getComponentRef(tab.id);
+
+        if (!componentRef) {
+            componentRef = this.dynamicTabContent.createComponent(tab.component);
+            componentRef.instance.inputData = tab.inputData;
+            this.tabsService.saveComponentRef(tab.id, componentRef);
+        } else {
+            this.dynamicTabContent.insert(componentRef.hostView);
+        }
+
         this.activeComponentRef = componentRef;
     }
 

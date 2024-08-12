@@ -103,10 +103,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: AddFactoryStageComponent,
             inputData: { factoryId: this.factoryId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
-        this.handleSpecificComponent();
+        this.loadTab(tab);
     }
 
     loadUpdateStageComponent(factoryId: number): void {
@@ -116,10 +113,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: UpdateFactoryStageComponent,
             inputData: { factoryId: factoryId, factoryStageId: this.selectedFactoryStageId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
-        this.handleSpecificComponent();
+        this.loadTab(tab);
     }
 
     loadFactoryGraphComponent(): void {
@@ -129,10 +123,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: FactoryGraphComponent,
             inputData: { factoryId: this.factoryId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
-        this.handleSpecificComponent();
+        this.loadTab(tab);
     }
 
     loadAllocationPlanComponent(allocationPlan: AllocationPlan, loadActivePlan: boolean, factoryId: number): void {
@@ -142,9 +133,7 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: AllocationPlanComponent,
             inputData: { allocationPlan: allocationPlan, loadActivePlan: loadActivePlan, factoryId: factoryId },
         };
-        this.tabsService.openTab(tab);
-        this.tabsService.setActiveTab(tab.id);
-        this.loadComponent(tab);
+        this.loadTab(tab);
     }
 
     loadProductionHistoryComponent(): void {
@@ -154,16 +143,15 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: ProductionHistoryComponent,
             inputData: { factoryId: this.factoryId },
         };
+        this.loadTab(tab);
+    }
+
+    loadTab(tab: Tab<any>): void {
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
+        this.handleSpecificComponent();
     }
-
-    
-    setActiveTab(id: string): void {
-        this.tabsService.setActiveTab(id);
-    }
-
     
     loadComponent(tab: Tab<any>): void {
         if (!this.dynamicTabContent) {
@@ -171,9 +159,17 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterV
             return;
         }
 
-        this.dynamicTabContent.clear();
-        const componentRef = this.dynamicTabContent.createComponent(tab.component);
-        componentRef.instance.inputData = tab.inputData;
+        this.dynamicTabContent.detach();
+        let componentRef = this.tabsService.getComponentRef(tab.id);
+
+        if (!componentRef) {
+            componentRef = this.dynamicTabContent.createComponent(tab.component);
+            componentRef.instance.inputData = tab.inputData;
+            this.tabsService.saveComponentRef(tab.id, componentRef);
+        } else {
+            this.dynamicTabContent.insert(componentRef.hostView);
+        }
+
         this.activeComponentRef = componentRef;
     }
 

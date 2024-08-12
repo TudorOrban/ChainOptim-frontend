@@ -115,6 +115,28 @@
         </div>
     </div>
 
+    <div class="overlay" *ngIf="isDeleteStageInputConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteStageInputDialogInput"
+                (confirm)="handleDeleteStageInput()"
+                (cancel)="handleCancelDeleteStageInput()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+    
+    <div class="overlay" *ngIf="isDeleteStageOutputConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteStageOutputDialogInput"
+                (confirm)="handleDeleteStageOutput()"
+                (cancel)="handleCancelDeleteStageOutput()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+
     <div class="overlay" *ngIf="isDeleteConnectionConfirmDialogOpen">
         <div class="dialog-container">
             <app-generic-confirm-dialog 
