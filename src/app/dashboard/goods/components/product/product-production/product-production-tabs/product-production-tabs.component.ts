@@ -18,7 +18,6 @@ import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NodeSelection, NodeType } from '../../../../../production/models/FactoryGraph';
 import { ProductEdge } from '../../../../models/ProductGraph';
-import { FactoryProductionTabsService } from '../../../../../production/services/factoryproductiontabs.service';
 import { ProductProductionTabType, ProductTab } from '../../../../../production/models/Production';
 import { ProductProductionTabsService } from '../../../../services/productproductiontabs.service';
 import { ProductGraphComponent } from './product-graph/product-graph.component';
@@ -72,7 +71,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         this.setUpListeners();
         
         setTimeout(() => {
-            this.loadFactoryGraphComponent();
+            this.loadProductGraphComponent();
         });
     }
 
@@ -111,7 +110,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             id: 'update-product-stage',
             title: 'Update Stage',
             component: UpdateStageComponent,
-            inputData: { productId: productId, productStageId: this.selectedProductStageId },
+            inputData: { productId: productId, stageId: this.selectedProductStageId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
@@ -119,14 +118,14 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         this.handleSpecificComponent();
     }
 
-    loadFactoryGraphComponent(): void {
+    loadProductGraphComponent(): void {
         const tab: ProductTab<any> = {
-            id: 'factory-graph',
-            title: 'Factory Graph',
+            id: 'product-graph',
+            title: 'Product Graph',
             component: ProductGraphComponent,
             inputData: { productId: this.productId },
         };
-        console.log("FactoryProductionTabsComponent: ngOnInit");
+        console.log("ProductProductionTabsComponent: ngOnInit");
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
@@ -189,11 +188,11 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
                 this.tabsService.closeAnyTabWithTitle('Add Stage');
             });
         }
-        // if (instance instanceof UpdateStageComponent) {
-        //     instance.onStageUpdated.subscribe(() => {
-        //         this.tabsService.closeAnyTabWithTitle('Update Stage');
-        //     });
-        // }
+        if (instance instanceof UpdateStageComponent) {
+            instance.onStageUpdated.subscribe(() => {
+                this.tabsService.closeAnyTabWithTitle('Update Stage');
+            });
+        }
         if (instance instanceof ProductGraphComponent) {
             instance.onNodeClicked.subscribe((nodeSelection) => {
                 if (nodeSelection.nodeType === NodeType.STAGE) {

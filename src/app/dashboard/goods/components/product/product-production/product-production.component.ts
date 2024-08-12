@@ -32,7 +32,7 @@ export class ProductProductionComponent implements AfterViewInit, OnDestroy {
             this.leftPanel = resizer.previousElementSibling as HTMLElement;
             this.rightPanel = resizer.nextElementSibling as HTMLElement;
 
-            // this.setUpTabsEventListeners();
+            this.setUpTabsEventListeners();
             this.setUpToolbarEventListeners();
             this.setUpResizerEventListeners();
         }
