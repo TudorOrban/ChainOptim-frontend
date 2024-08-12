@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CreateClientDTO, Client, UpdateClientDTO } from '../models/Client';
+import { CreateClientDTO, Client, UpdateClientDTO, ClientOverviewDTO } from '../models/Client';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -68,6 +68,16 @@ export class ClientService {
     getClientById(id: number): Observable<Client> {
         return this.http
             .get<Client>(`${this.apiUrl}/${id}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
+
+    getClientOverview(id: number): Observable<ClientOverviewDTO> {
+        return this.http
+            .get<ClientOverviewDTO>(`${this.apiUrl}/${id}/overview`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

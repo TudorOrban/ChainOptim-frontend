@@ -33,3 +33,8 @@ export interface UpdateLocationDTO {
     longitude: number;
     organizationId: number;
 }
+
+export interface SmallEntityDTO {
+    id: number;
+    name: string;
+}

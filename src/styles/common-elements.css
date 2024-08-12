@@ -37,7 +37,7 @@
 
 
 .active-tab {
-    border-bottom: 2px solid rgb(37 99 235);
+    border-bottom: 2px solid rgb(20, 120, 230);;
 }
 
 .custom-select {
@@ -81,13 +81,41 @@
     border-radius: 8px; 
 }
 
-.toast-container {
-    
-}
-
 .toast-manager-wrapper {
     position: fixed;
     right: 2rem;
     bottom: 1rem;
     z-index: 1050;
+}
+
+.label-large {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.label-medium-large {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.label-medium {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.value-medium {
+    font-size: 1rem;
+    color: rgb(31 41 55); 
+}
+
+.pseudo-link {
+    color: rgb(37 99 235);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.pseudo-link:hover {
+    color: rgb(29 78 216);
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }

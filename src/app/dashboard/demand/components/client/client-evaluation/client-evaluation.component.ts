@@ -10,5 +10,5 @@ import { Client } from '../../../models/Client';
 })
 export class ClientEvaluationComponent {
 
-    @Input() client: Client | null = null;
+    @Input() client: Client | undefined = undefined;
 }

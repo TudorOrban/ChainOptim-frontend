@@ -1,1 +1,75 @@
-<p>client-overview works!</p>
+<div class="px-8 py-4 space-y-4">
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Created At: </h2>
+        <p class="value-medium">{{ client?.createdAt | date: 'medium' }}</p>
+    </div>
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Last Modified: </h2>
+        <p class="value-medium">{{ client?.updatedAt | date: 'medium' }}</p>
+    </div>
+    
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Supplied Products: </h2>
+        <div *ngFor="let product of clientOverview?.suppliedProducts" class="flex items-center flex-wrap">
+            <a [routerLink]="'/dashboard/products/' + product.id" class="pseudo-link">{{ product.name }}</a>
+            <p *ngIf="product.id !== clientOverview?.suppliedProducts?.[(clientOverview?.suppliedProducts?.length ?? 0) - 1]?.id" class="text-gray-700">,</p>
+        </div>
+        <div *ngIf="(clientOverview?.suppliedProducts?.length ?? 0) === 0" class="value-medium">
+            None
+        </div>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Delivered from Factories: </h2>
+        <div *ngFor="let product of clientOverview?.deliveredFromFactories" class="flex items-center flex-wrap">
+            <a [routerLink]="'/dashboard/products/' + product.id" class="pseudo-link">{{ product.name }}</a>
+            <p *ngIf="product.id !== clientOverview?.deliveredFromFactories?.[(clientOverview?.deliveredFromFactories?.length ?? 0) - 1]?.id" class="text-gray-700">,</p>
+        </div>
+        <div *ngIf="(clientOverview?.deliveredFromFactories?.length ?? 0) === 0" class="value-medium">
+            None
+        </div>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Delivered from Warehouses: </h2>
+        <div *ngFor="let product of clientOverview?.deliveredFromWarehouses" class="flex items-center flex-wrap">
+            <a [routerLink]="'/dashboard/products/' + product.id" class="pseudo-link">{{ product.name }}</a>
+            <p *ngIf="product.id !== clientOverview?.deliveredFromWarehouses?.[(clientOverview?.deliveredFromWarehouses?.length ?? 0) - 1]?.id" class="text-gray-700">,</p>
+        </div>
+        <div *ngIf="(clientOverview?.deliveredFromWarehouses?.length ?? 0) === 0" class="value-medium">
+            None
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        <h2 class="label-large">Location</h2>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Address: </h2>
+            <p class="value-medium">{{ client?.location?.address }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">City: </h2>
+            <p class="value-medium">{{ client?.location?.city }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">State: </h2>
+            <p class="value-medium">{{ client?.location?.state }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Country: </h2>
+            <p class="value-medium">{{ client?.location?.country }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Zip Code: </h2>
+            <p class="value-medium">{{ client?.location?.zipCode }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Latitude: </h2>
+            <p class="value-medium">{{ client?.location?.latitude }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Longitude: </h2>
+            <p class="value-medium">{{ client?.location?.longitude }}</p>
+        </div>
+    </div>
+</div>

@@ -19,5 +19,5 @@ export class TabsComponent {
 
     selectTab(label: string) {
         this.tabSelected.emit(label);
-      }      
+    }      
 }

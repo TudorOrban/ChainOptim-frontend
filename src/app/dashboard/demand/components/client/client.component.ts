@@ -38,8 +38,8 @@ import { SearchMode } from '../../../../shared/enums/commonEnums';
     styleUrl: './client.component.css',
 })
 export class ClientComponent implements OnInit {
-    clientId: number | null = null;
-    client: Client | null = null;
+    clientId: number | undefined = undefined;
+    client: Client | undefined = undefined;
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
         {
