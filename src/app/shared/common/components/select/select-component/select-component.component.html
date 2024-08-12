@@ -1,0 +1,7 @@
+<div>
+    <select id="componentSelect" name="selectedComponentId" [(ngModel)]="selectedComponentId" (ngModelChange)="selectComponent(selectedComponentId)" class="custom-select">
+        <option *ngFor="let component of components" [ngValue]="component.id">
+            {{ component.name }}
+        </option>
+    </select>            
+</div>

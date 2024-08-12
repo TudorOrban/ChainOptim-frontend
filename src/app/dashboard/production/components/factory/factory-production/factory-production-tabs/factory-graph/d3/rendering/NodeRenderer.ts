@@ -166,7 +166,7 @@ export class NodeRenderer {
                 .attr("y", stageOutputY)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "central")
-                .text(output.componentId)
+                .text(output?.componentId ?? output?.productId ?? 0)
                 .style("fill", fontColor)
                 .style("font-family", "Arial, sans-serif")
                 .style("font-size", subnodeFontSize);

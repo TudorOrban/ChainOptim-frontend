@@ -1,6 +1,6 @@
 export const GraphUIConfig = {
     graph: {
-        width: 1200,
+        width: 3000,
         height: 900,
         spaceBetweenStagesX: 250,
         spaceBetweenStagesY: 250,

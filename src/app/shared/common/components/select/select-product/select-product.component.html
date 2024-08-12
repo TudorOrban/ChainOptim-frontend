@@ -1,0 +1,7 @@
+<div>
+    <select id="productSelect" name="selectedProductId" [(ngModel)]="selectedProductId" (ngModelChange)="selectProduct(selectedProductId)" class="custom-select">
+        <option *ngFor="let product of products" [ngValue]="product.id">
+            {{ product.name }}
+        </option>
+    </select>            
+</div>

@@ -1,1 +1,37 @@
-<p>add-stage-output works!</p>
+<div class="std-form-container space-x-4">
+    <form [formGroup]="stageOutputForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">
+        <h2 class="text-2xl font-semibold mb-4 text-center">Add Stage Output</h2>
+
+        <div>
+            <label for="stage" class="form-label">Stage:</label>
+            <app-select-stage [initialData]="{ stageId: inputData?.initialStageId }" (stageSelected)="handleStageIdChange($event)"></app-select-stage>
+        </div>
+
+        <div>
+            <label for="component" class="form-label">Component:</label>
+            <app-select-component (componentSelected)="handleComponentIdChange($event)"></app-select-component>
+        </div>
+        
+        <div>
+            <label for="product" class="form-label">Product:</label>
+            <app-select-product (productSelected)="handleProductIdChange($event)"></app-select-product>
+        </div>
+
+        <div>
+            <label for="quantity" class="form-label">Quantity:</label>
+            <input type="number" id="quantity" formControlName="quantity" class="form-input">
+            <div *ngIf="stageOutputForm.get('quantity')?.touched && stageOutputForm.get('quantity')?.errors">
+                <p *ngIf="stageOutputForm.get('quantity')?.errors?.['pattern']" class="form-error">
+                    Invalid quantity format. Quantity must be a number bigger than 0.
+                </p>
+            </div>
+        </div>
+
+        
+        <div class="flex items-center w-full justify-end">
+            <button type="submit" class="standard-write-button">
+                Add Stage Output
+            </button>
+        </div>
+    </form>
+</div>

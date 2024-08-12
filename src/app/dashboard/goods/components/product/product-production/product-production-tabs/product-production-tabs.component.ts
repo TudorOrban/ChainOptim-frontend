@@ -131,7 +131,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             id: 'add-product-stage-input',
             title: 'Add Stage Input',
             component: AddStageInputComponent,
-            inputData: { productId: this.productId },
+            inputData: { productId: this.productId, initialStageId: this.selectedProductStageId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
@@ -158,7 +158,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             id: 'add-product-stage-output',
             title: 'Add Stage Output',
             component: AddStageOutputComponent,
-            inputData: { productId: this.productId },
+            inputData: { productId: this.productId, initialStageId: this.selectedProductStageId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
@@ -187,7 +187,6 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: ProductGraphComponent,
             inputData: { productId: this.productId },
         };
-        console.log("ProductProductionTabsComponent: ngOnInit");
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
@@ -201,7 +200,6 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         }
 
         this.dynamicTabContent.clear();
-        console.log("FactoryProductionTabsComponent: loadComponent");
         const componentRef = this.dynamicTabContent.createComponent(tab.component);
         componentRef.instance.inputData = tab.inputData;
         this.activeComponentRef = componentRef;
@@ -227,6 +225,16 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         if (instance instanceof UpdateStageComponent) {
             instance.onStageUpdated.subscribe(() => {
                 this.tabsService.closeAnyTabWithTitle('Update Stage');
+            });
+        }
+        if (instance instanceof AddStageInputComponent) {
+            instance.onStageInputAdded.subscribe(() => {
+                this.tabsService.closeAnyTabWithTitle('Add Stage Input');
+            });
+        }
+        if (instance instanceof AddStageOutputComponent) {
+            instance.onStageOutputAdded.subscribe(() => {
+                this.tabsService.closeAnyTabWithTitle('Add Stage Output');
             });
         }
         if (instance instanceof ProductGraphComponent) {

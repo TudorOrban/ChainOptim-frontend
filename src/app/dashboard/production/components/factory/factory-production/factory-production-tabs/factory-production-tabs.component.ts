@@ -129,7 +129,6 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterV
             component: FactoryGraphComponent,
             inputData: { factoryId: this.factoryId },
         };
-        console.log("FactoryProductionTabsComponent: ngOnInit");
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
@@ -173,7 +172,6 @@ export class FactoryProductionTabsComponent implements OnInit, OnDestroy, AfterV
         }
 
         this.dynamicTabContent.clear();
-        console.log("FactoryProductionTabsComponent: loadComponent");
         const componentRef = this.dynamicTabContent.createComponent(tab.component);
         componentRef.instance.inputData = tab.inputData;
         this.activeComponentRef = componentRef;

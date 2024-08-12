@@ -4,7 +4,7 @@
 
         <div>
             <label for="capacity" class="form-label">Stage:</label>
-            <app-select-stage [initialData]="currentStage" (stageSelected)="handleStageIdChange($event)"></app-select-stage>
+            <app-select-stage [initialData]="{ stage: currentStage }" (stageSelected)="handleStageIdChange($event)"></app-select-stage>
         </div>
 
         <div>

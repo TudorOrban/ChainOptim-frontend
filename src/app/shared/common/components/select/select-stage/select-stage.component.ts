@@ -13,7 +13,7 @@ import { Stage } from '../../../../../dashboard/goods/models/Product';
   styleUrl: './select-stage.component.css'
 })
 export class SelectStageComponent implements OnChanges {    
-    @Input() initialData?: Stage | undefined = undefined;
+    @Input() initialData?: { stage?: Stage, stageId?: number } | undefined = undefined;
 
     stages: Stage[] = [];
     selectedStageId: number | undefined = undefined;
@@ -31,7 +31,11 @@ export class SelectStageComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['initialData'] && this.initialData && this.stages.length > 0) {
-            this.selectStage(this.initialData.id);
+            if (this.initialData?.stage) {
+                this.selectStage(this.initialData.stage.id);
+            } else if (this.initialData?.stageId) {
+                this.selectStage(this.initialData.stageId);
+            }
         }
     }
     
@@ -60,8 +64,8 @@ export class SelectStageComponent implements OnChanges {
                 console.log("Stages: ", stages);
                 this.stages = stages;
 
-                if (this.initialData) {
-                    this.selectStage(this.initialData.id);
+                if (this.initialData && this.initialData.stageId) {
+                    this.selectStage(this.initialData.stageId);
                 }
             });
     }

@@ -27,7 +27,12 @@
             </div>
             <div class="flex items-center space-x-2 font-semibold">
                 <p>Stage Inputs</p>
-                <button (click)="handleAddStageInput()" class="standard-write-button-small">
+                <button
+                    (click)="handleAddStageInput()" 
+                    [disabled]="!isStageSelected()"
+                    [attr.title]="!isStageSelected() ? 'Select a stage to add an input' : null"
+                    class="standard-write-button-small"
+                >
                     <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
                 <button 
@@ -49,7 +54,12 @@
             </div>
             <div class="flex items-center space-x-2 font-semibold">
                 <p>Stage Outputs</p>
-                <button (click)="handleAddStageOutput()" class="standard-write-button-small">
+                <button
+                    (click)="handleAddStageOutput()" 
+                    [disabled]="!isStageSelected()"
+                    [attr.title]="!isStageSelected() ? 'Select a stage to add an output' : null"
+                    class="standard-write-button-small"
+                >
                     <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
                 </button>
                 <button 

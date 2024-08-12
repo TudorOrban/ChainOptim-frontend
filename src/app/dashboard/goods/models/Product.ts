@@ -99,7 +99,8 @@ export interface CreateStageOutputDTO {
     productId: number;
     organizationId: number;
     stageId: number;
-    componentId: number;
+    componentId?: number;
+    outputProductId?: number;
     quantity: number;
 }
 
@@ -108,7 +109,8 @@ export interface UpdateStageOutputDTO {
     productId: number;
     organizationId: number;
     stageId: number;
-    componentId: number;
+    componentId?: number;
+    outputProductId?: number;
     quantity: number;
 }
 

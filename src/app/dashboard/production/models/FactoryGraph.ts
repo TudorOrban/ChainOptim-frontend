@@ -39,8 +39,10 @@ export interface SmallStageInput {
 
 export interface SmallStageOutput {
     id: number;
-    componentId: number;
-    componentName: string;
+    componentId?: number;
+    componentName?: string;
+    productId?: number;
+    productName?: string;
     quantityPerStage: number;
     expectedOutputPerAllocation: number;
     outputPerRequest: number;
