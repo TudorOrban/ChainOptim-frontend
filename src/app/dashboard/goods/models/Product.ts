@@ -45,7 +45,6 @@ export interface Stage {
 export interface StageInput {
     id: number;
     quantity: number;
-    materialId: number;
     componentId: number;
     component?: Component;
 }

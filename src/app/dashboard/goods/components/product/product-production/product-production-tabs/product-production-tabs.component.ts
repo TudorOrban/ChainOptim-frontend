@@ -57,6 +57,8 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
     selectedProductStageId: number | undefined = undefined;
     selectedStageInputId: number | undefined = undefined;
     selectedStageOutputId: number | undefined = undefined;
+    selectedStageInputStageId: number | undefined = undefined;
+    selectedStageOutputStageId: number | undefined = undefined;
     selectedEdge: ProductEdge | undefined = undefined;
 
     constructor(
@@ -128,7 +130,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
     // -- Stage Inputs
     loadAddStageInputComponent(): void {
         const tab: ProductTab<any> = {
-            id: 'add-product-stage-input',
+            id: 'add-stage-input',
             title: 'Add Stage Input',
             component: AddStageInputComponent,
             inputData: { productId: this.productId, initialStageId: this.selectedProductStageId },
@@ -141,10 +143,10 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
 
     loadUpdateStageInputComponent(productId: number): void {
         const tab: ProductTab<any> = {
-            id: 'update-product-stage-input',
+            id: 'update-stage-input',
             title: 'Update Stage Input',
             component: UpdateStageInputComponent,
-            inputData: { productId: productId, stageInputId: this.selectedStageInputId },
+            inputData: { productId: productId, initialStageId: this.selectedStageInputStageId, initialStageInputId: this.selectedStageInputId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
@@ -155,7 +157,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
     // -- Stage Outputs
     loadAddStageOutputComponent(): void {
         const tab: ProductTab<any> = {
-            id: 'add-product-stage-output',
+            id: 'add-stage-output',
             title: 'Add Stage Output',
             component: AddStageOutputComponent,
             inputData: { productId: this.productId, initialStageId: this.selectedProductStageId },
@@ -168,10 +170,10 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
 
     loadUpdateStageOutputComponent(productId: number): void {
         const tab: ProductTab<any> = {
-            id: 'update-product-stage-output',
+            id: 'update-stage-output',
             title: 'Update Stage Output',
             component: UpdateStageOutputComponent,
-            inputData: { productId: productId, stageOutputId: this.selectedStageOutputId },
+            inputData: { productId: productId, initialStageId: this.selectedStageOutputStageId, initialStageOutputId: this.selectedStageOutputId },
         };
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
@@ -232,23 +234,45 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
                 this.tabsService.closeAnyTabWithTitle('Add Stage Input');
             });
         }
+        if (instance instanceof UpdateStageInputComponent) {
+            instance.onStageInputUpdated.subscribe(() => {
+                this.tabsService.closeAnyTabWithTitle('Update Stage Input');
+            });
+        }
         if (instance instanceof AddStageOutputComponent) {
             instance.onStageOutputAdded.subscribe(() => {
                 this.tabsService.closeAnyTabWithTitle('Add Stage Output');
             });
         }
-        if (instance instanceof ProductGraphComponent) {
-            instance.onNodeClicked.subscribe((nodeSelection) => {
-                if (nodeSelection.nodeType === NodeType.STAGE) {
-                    this.selectedProductStageId = nodeSelection.nodeId;                    
-                }
-                this.onNodeClicked.emit(nodeSelection);
-            });
-            instance.onEdgeClicked.subscribe(edge => {
-                this.selectedEdge = edge;
-                this.onEdgeClicked.emit(edge);
+        if (instance instanceof UpdateStageOutputComponent) {
+            instance.onStageOutputUpdated.subscribe(() => {
+                this.tabsService.closeAnyTabWithTitle('Update Stage Output');
             });
         }
+        if (instance instanceof ProductGraphComponent) {
+            this.handleGraphClicks(instance);
+        }
+    }
+
+    handleGraphClicks(instance: ProductGraphComponent) {
+        instance.onNodeClicked.subscribe((nodeSelection) => {
+            if (nodeSelection.nodeType === NodeType.STAGE) {
+                this.selectedProductStageId = nodeSelection.nodeId;                    
+            }
+            if (nodeSelection.nodeType === NodeType.INPUT) {
+                this.selectedStageInputId = nodeSelection.subNodeId;
+                this.selectedStageInputStageId = nodeSelection.nodeId;
+            }
+            if (nodeSelection.nodeType === NodeType.OUTPUT) {
+                this.selectedStageOutputId = nodeSelection.subNodeId;
+                this.selectedStageOutputStageId = nodeSelection.nodeId;
+            }
+            this.onNodeClicked.emit(nodeSelection);
+        });
+        instance.onEdgeClicked.subscribe(edge => {
+            this.selectedEdge = edge;
+            this.onEdgeClicked.emit(edge);
+        });
     }
 
     // - CRUD ops

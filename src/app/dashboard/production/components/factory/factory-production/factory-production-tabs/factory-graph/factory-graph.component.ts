@@ -5,7 +5,6 @@ import { GenericGraph } from './d3/types/dataTypes';
 import { transformFactoryToGenericGraph } from './d3/utils/utils';
 import { AllocationPlan } from '../../../../../models/ResourceAllocation';
 import { FactoryEdge, FactoryProductionGraph, NodeSelection, NodeType } from '../../../../../models/FactoryGraph';
-import { Pair } from '../../../../../../overview/types/supplyChainMapTypes';
 import { ElementIdentifier } from './d3/utils/ElementIdentifier';
 import { FactoryStageConnectionService } from '../../../../../services/factorystageconnection.service';
 import { CreateConnectionDTO } from '../../../../../models/Factory';
@@ -155,10 +154,10 @@ export class FactoryGraphComponent {
     handleCreateConnection(): void {
         const connectionDTO: CreateConnectionDTO = {
             factoryId: this.inputData?.factoryId as number,
-            srcFactoryStageId: this.addConnectionClickedNodes[0]?.nodeId || 0,
-            srcStageOutputId: this.addConnectionClickedNodes[0]?.subNodeId || 0,
-            destFactoryStageId: this.addConnectionClickedNodes[1]?.nodeId || 0,
-            destStageInputId: this.addConnectionClickedNodes[1]?.subNodeId || 0
+            srcFactoryStageId: this.addConnectionClickedNodes[0]?.nodeId ?? 0,
+            srcStageOutputId: this.addConnectionClickedNodes[0]?.subNodeId ?? 0,
+            destFactoryStageId: this.addConnectionClickedNodes[1]?.nodeId ?? 0,
+            destStageInputId: this.addConnectionClickedNodes[1]?.subNodeId ?? 0
         };
 
         this.connectionService.createConnection(connectionDTO).subscribe(() => {

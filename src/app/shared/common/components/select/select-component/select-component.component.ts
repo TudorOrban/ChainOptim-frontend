@@ -27,9 +27,16 @@ export class SelectComponentComponent implements OnChanges {
 
     ngOnInit(): void {
         this.loadComponents();
+        this.handleInputData(undefined);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        this.handleInputData(changes);
+    }
+
+    private handleInputData(changes?: SimpleChanges): void {
+        console.log("Initial data: ", this.initialData);
+        if (!changes) return;
         if (changes['initialData'] && this.initialData && this.components.length > 0) {
             if (this.initialData?.component) {
                 this.selectComponent(this.initialData.component.id);

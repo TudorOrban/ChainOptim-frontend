@@ -57,19 +57,19 @@ export class ElementIdentifier {
         return { nodeId: Number(splitNodeId[1]), nodeType: NodeType.STAGE };
     }
 
-    getStageInputId(stageInputId: string): NodeSelection {
-        const splitNodeId = stageInputId.split("_");
+    getStageInputId(encodedStageInputId: string): NodeSelection {
+        const splitNodeId = encodedStageInputId.split("_");
         if (splitNodeId.length != 4) {
-            console.error("Error: Node id is not valid: ", stageInputId);
+            console.error("Error: Node id is not valid: ", encodedStageInputId);
             throw new Error("Node id is not valid.");
         }
         return { nodeId: Number(splitNodeId[1]), subNodeId: Number(splitNodeId[3]), nodeType: NodeType.INPUT };
     }
 
-    getStageOutputId(stageOutputId: string): NodeSelection {
-        const splitNodeId = stageOutputId.split("_");
+    getStageOutputId(encodedStageOutputId: string): NodeSelection {
+        const splitNodeId = encodedStageOutputId.split("_");
         if (splitNodeId.length != 4) {
-            console.error("Error: Node id is not valid: ", stageOutputId);
+            console.error("Error: Node id is not valid: ", encodedStageOutputId);
             throw new Error("Node id is not valid.");
         }
         return { nodeId: Number(splitNodeId[1]), subNodeId: Number(splitNodeId[3]), nodeType: NodeType.OUTPUT };
