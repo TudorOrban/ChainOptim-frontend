@@ -9,6 +9,6 @@ import { Warehouse } from '../../../models/Warehouse';
   styleUrl: './warehouse-inventory.component.css'
 })
 export class WarehouseInventoryComponent {
-    @Input() warehouse: Warehouse | null = null;
+    @Input() warehouse: Warehouse | undefined = undefined;
 
 }

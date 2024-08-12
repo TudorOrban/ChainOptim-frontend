@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CreateFactoryDTO, Factory, UpdateFactoryDTO } from '../models/Factory';
+import { CreateFactoryDTO, Factory, FactoryOverviewDTO, UpdateFactoryDTO } from '../models/Factory';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -68,6 +68,16 @@ export class FactoryService {
     getFactoryById(id: number): Observable<Factory> {
         return this.http
             .get<Factory>(`${this.apiUrl}/${id}/stages`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
+
+    getFactoryOverview(id: number): Observable<FactoryOverviewDTO> {
+        return this.http
+            .get<FactoryOverviewDTO>(`${this.apiUrl}/${id}/overview`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

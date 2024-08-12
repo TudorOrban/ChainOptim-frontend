@@ -6,11 +6,11 @@ import { RouterModule } from '@angular/router';
 import { OverviewSectionComponent } from '../../../../../shared/common/components/overview-section/overview-section.component';
 
 @Component({
-  selector: 'app-client-overview',
-  standalone: true,
-  imports: [CommonModule, RouterModule, OverviewSectionComponent],
-  templateUrl: './client-overview.component.html',
-  styleUrl: './client-overview.component.css'
+    selector: 'app-client-overview',
+    standalone: true,
+    imports: [CommonModule, RouterModule, OverviewSectionComponent],
+    templateUrl: './client-overview.component.html',
+    styleUrl: './client-overview.component.css'
 })
 export class ClientOverviewComponent implements OnInit, OnChanges {
     @Input() client: Client | undefined = undefined;

@@ -1,4 +1,4 @@
-import { CreateLocationDTO, Location } from "../../../shared/common/models/reusableTypes";
+import { CreateLocationDTO, Location, SmallEntityDTO } from "../../../shared/common/models/reusableTypes";
 
 export interface Supplier {
     id: number;
@@ -31,4 +31,10 @@ export interface UpdateSupplierDTO {
     locationId?: number;
     location?: CreateLocationDTO;
     createLocation?: boolean;
+}
+
+export interface SupplierOverviewDTO {
+    suppliedComponents: SmallEntityDTO[];
+    deliveredToFactories: SmallEntityDTO[];
+    deliveredToWarehouses: SmallEntityDTO[];
 }

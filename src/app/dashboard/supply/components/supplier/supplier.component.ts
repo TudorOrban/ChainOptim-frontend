@@ -38,8 +38,8 @@ import { SearchMode } from '../../../../shared/enums/commonEnums';
     styleUrl: './supplier.component.css',
 })
 export class SupplierComponent implements OnInit {
-    supplierId: number | null = null;
-    supplier: Supplier | null = null;
+    supplierId: number | undefined = undefined;
+    supplier: Supplier | undefined = undefined;
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
         {

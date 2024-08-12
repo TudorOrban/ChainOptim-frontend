@@ -9,6 +9,6 @@ import { Factory } from '../../../models/Factory';
   styleUrl: './factory-performance.component.css'
 })
 export class FactoryPerformanceComponent {
-    @Input() factory: Factory | null = null;
+    @Input() factory: Factory | undefined = undefined;
 
 }

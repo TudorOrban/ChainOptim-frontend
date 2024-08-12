@@ -9,6 +9,6 @@ import { Supplier } from '../../../models/Supplier';
   styleUrl: './supplier-performance.component.css'
 })
 export class SupplierPerformanceComponent {
-    @Input() supplier: Supplier | null = null;
+    @Input() supplier: Supplier | undefined = undefined;
 
 }

@@ -38,8 +38,8 @@ import { SearchMode } from '../../../../shared/enums/commonEnums';
     styleUrl: './factory.component.css',
 })
 export class FactoryComponent implements OnInit {
-    factoryId: string | null = null;
-    factory: Factory | null = null;
+    factoryId: number | undefined = undefined;
+    factory: Factory | undefined = undefined;
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
         {
@@ -86,7 +86,7 @@ export class FactoryComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         this.route.paramMap.subscribe((params) => {
-            this.factoryId = params.get('factoryId');
+            this.factoryId = Number(params.get('factoryId'));
             
             this.factoryService
                 .getFactoryById(Number(this.factoryId))

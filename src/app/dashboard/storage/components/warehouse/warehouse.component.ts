@@ -36,8 +36,8 @@ import { SearchMode } from '../../../../shared/enums/commonEnums';
     styleUrl: './warehouse.component.css',
 })
 export class WarehouseComponent implements OnInit {
-    warehouseId: string | null = null;
-    warehouse: Warehouse | null = null;
+    warehouseId: number | undefined = undefined;
+    warehouse: Warehouse | undefined = undefined;
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
         {
@@ -81,7 +81,7 @@ export class WarehouseComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         this.route.paramMap.subscribe((params) => {
-            this.warehouseId = params.get('warehouseId');
+            this.warehouseId = Number(params.get('warehouseId'));
             
             this.warehouseService
                 .getWarehouseById(Number(this.warehouseId))

@@ -1,4 +1,4 @@
-import { CreateLocationDTO, Location } from "../../../shared/common/models/reusableTypes";
+import { CreateLocationDTO, Location, SmallEntityDTO } from "../../../shared/common/models/reusableTypes";
 import { Stage } from "../../goods/models/Product";
 
 export interface Factory {
@@ -94,4 +94,12 @@ export interface DeleteConnectionDTO {
     srcStageOutputId: number;
     destFactoryStageId: number;
     destStageInputId: number;
+}
+
+export interface FactoryOverviewDTO {
+    factoryStages: SmallEntityDTO[];
+    manufacturedComponents: SmallEntityDTO[];
+    manufacturedProducts: SmallEntityDTO[];
+    deliveredFromSuppliers: SmallEntityDTO[];
+    deliveredToClients: SmallEntityDTO[];
 }
