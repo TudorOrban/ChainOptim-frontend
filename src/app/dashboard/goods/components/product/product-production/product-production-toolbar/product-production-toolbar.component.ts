@@ -3,15 +3,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { SelectDurationComponent } from '../../../../../../shared/common/components/select/select-duration/select-duration.component';
-import { DeleteConnectionDTO } from '../../../../models/ProductGraph';
+import { DeleteConnectionDTO, ProductEdge } from '../../../../models/ProductGraph';
 import { User } from '../../../../../../core/user/model/user';
 import { UserService } from '../../../../../../core/auth/services/user.service';
 import { ToastService } from '../../../../../../shared/common/components/toast-system/toast.service';
 import { GenericConfirmDialogComponent } from '../../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { ConfirmDialogInput } from '../../../../../../shared/common/models/confirmDialogTypes';
-import { OperationOutcome, ToastInfo } from '../../../../../../shared/common/components/toast-system/toastTypes';
+import { OperationOutcome } from '../../../../../../shared/common/components/toast-system/toastTypes';
 import { NodeSelection } from '../../../../../production/models/FactoryGraph';
-import { ProductEdge } from '../../../../models/ProductGraph';
 import { StageService } from '../../../../services/stage.service';
 import { ProductStageConnectionService } from '../../../../services/productstageconnection.service';
 
@@ -31,8 +30,8 @@ export class ProductProductionToolbarComponent {
     // Inputs & Outputs
     @Input() productId: number | undefined = undefined;
 
-    @Output() addFactoryStage: EventEmitter<void> = new EventEmitter();
-    @Output() updateFactoryStage: EventEmitter<void> = new EventEmitter();
+    @Output() addStage: EventEmitter<void> = new EventEmitter();
+    @Output() updateStage: EventEmitter<void> = new EventEmitter();
     @Output() toggleAddConnectionMode: EventEmitter<void> = new EventEmitter();
     @Output() displayQuantities: EventEmitter<boolean> = new EventEmitter();
     @Output() displayCapacities: EventEmitter<boolean> = new EventEmitter();
@@ -80,11 +79,11 @@ export class ProductProductionToolbarComponent {
     }
 
     handleAddStage() {
-        this.addFactoryStage.emit();
+        this.addStage.emit();
     }
 
     handleUpdateStage() {
-        this.updateFactoryStage.emit();
+        this.updateStage.emit();
     }
     
     handleOpenDeleteStageDialog() {

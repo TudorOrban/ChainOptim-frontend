@@ -16,12 +16,14 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NodeSelection } from '../../../../../production/models/FactoryGraph';
+import { NodeSelection, NodeType } from '../../../../../production/models/FactoryGraph';
 import { ProductEdge } from '../../../../models/ProductGraph';
 import { FactoryProductionTabsService } from '../../../../../production/services/factoryproductiontabs.service';
 import { ProductProductionTabType, ProductTab } from '../../../../../production/models/Production';
 import { ProductProductionTabsService } from '../../../../services/productproductiontabs.service';
 import { ProductGraphComponent } from './product-graph/product-graph.component';
+import { AddStageComponent } from './add-stage/add-stage.component';
+import { UpdateStageComponent } from './update-stage/update-stage.component';
 
 @Component({
     selector: 'app-product-production-tabs',
@@ -69,9 +71,9 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
     ngAfterViewInit(): void {
         this.setUpListeners();
         
-        // setTimeout(() => {
-        //     this.loadFactoryGraphComponent();
-        // });
+        setTimeout(() => {
+            this.loadFactoryGraphComponent();
+        });
     }
 
     private setUpListeners() {
@@ -91,31 +93,31 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
 
     // Communication with parent component
     // - Loading Components
-    // loadAddStageComponent(): void {
-    //     const tab: ProductTab<any> = {
-    //         id: 'add-product-stage',
-    //         title: 'Add Stage',
-    //         component: AddFactorStageComponent,
-    //         inputData: { factoryId: this.factoryId },
-    //     };
-    //     this.tabsService.openTab(tab);
-    //     this.tabsService.setActiveTab(tab.id);
-    //     this.loadComponent(tab);
-    //     this.handleSpecificComponent();
-    // }
+    loadAddStageComponent(): void {
+        const tab: ProductTab<any> = {
+            id: 'add-product-stage',
+            title: 'Add Stage',
+            component: AddStageComponent,
+            inputData: { productId: this.productId },
+        };
+        this.tabsService.openTab(tab);
+        this.tabsService.setActiveTab(tab.id);
+        this.loadComponent(tab);
+        this.handleSpecificComponent();
+    }
 
-    // loadUpdateStageComponent(factoryId: number): void {
-    //     const tab: Tab<any> = {
-    //         id: 'update-factory-stage',
-    //         title: 'Update Stage',
-    //         component: UpdateFactoryStageComponent,
-    //         inputData: { factoryId: factoryId, factoryStageId: this.selectedFactoryStageId },
-    //     };
-    //     this.tabsService.openTab(tab);
-    //     this.tabsService.setActiveTab(tab.id);
-    //     this.loadComponent(tab);
-    //     this.handleSpecificComponent();
-    // }
+    loadUpdateStageComponent(productId: number): void {
+        const tab: ProductTab<any> = {
+            id: 'update-product-stage',
+            title: 'Update Stage',
+            component: UpdateStageComponent,
+            inputData: { productId: productId, productStageId: this.selectedProductStageId },
+        };
+        this.tabsService.openTab(tab);
+        this.tabsService.setActiveTab(tab.id);
+        this.loadComponent(tab);
+        this.handleSpecificComponent();
+    }
 
     loadFactoryGraphComponent(): void {
         const tab: ProductTab<any> = {
@@ -128,7 +130,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         this.tabsService.openTab(tab);
         this.tabsService.setActiveTab(tab.id);
         this.loadComponent(tab);
-        // this.handleSpecificComponent();
+        this.handleSpecificComponent();
     }
 
     // loadAllocationPlanComponent(allocationPlan: AllocationPlan, loadActivePlan: boolean, factoryId: number): void {
@@ -174,37 +176,37 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         this.activeComponentRef = componentRef;
     }
 
-    // private handleSpecificComponent(): void {
-    //     if (!this.activeComponentRef) {
-    //         return;
-    //     }
+    private handleSpecificComponent(): void {
+        if (!this.activeComponentRef) {
+            return;
+        }
     
-    //     const instance = this.activeComponentRef.instance;
+        const instance = this.activeComponentRef.instance;
     
-    //     // Subscribe to specific components
-    //     if (instance instanceof AddFactoryStageComponent) {
-    //         instance.onFactoryStageAdded.subscribe(() => {
-    //             this.tabsService.closeAnyTabWithTitle('Add Stage');
-    //         });
-    //     }
-    //     if (instance instanceof UpdateFactoryStageComponent) {
-    //         instance.onFactoryStageUpdated.subscribe(() => {
-    //             this.tabsService.closeAnyTabWithTitle('Update Stage');
-    //         });
-    //     }
-    //     if (instance instanceof FactoryGraphComponent) {
-    //         instance.onNodeClicked.subscribe((nodeSelection) => {
-    //             if (nodeSelection.nodeType === NodeType.STAGE) {
-    //                 this.selectedFactoryStageId = nodeSelection.nodeId;                    
-    //             }
-    //             this.onNodeClicked.emit(nodeSelection);
-    //         });
-    //         instance.onEdgeClicked.subscribe(edge => {
-    //             this.selectedEdge = edge;
-    //             this.onEdgeClicked.emit(edge);
-    //         });
-    //     }
-    // }
+        // Subscribe to specific components
+        if (instance instanceof AddStageComponent) {
+            instance.onStageAdded.subscribe(() => {
+                this.tabsService.closeAnyTabWithTitle('Add Stage');
+            });
+        }
+        // if (instance instanceof UpdateStageComponent) {
+        //     instance.onStageUpdated.subscribe(() => {
+        //         this.tabsService.closeAnyTabWithTitle('Update Stage');
+        //     });
+        // }
+        if (instance instanceof ProductGraphComponent) {
+            instance.onNodeClicked.subscribe((nodeSelection) => {
+                if (nodeSelection.nodeType === NodeType.STAGE) {
+                    this.selectedProductStageId = nodeSelection.nodeId;                    
+                }
+                this.onNodeClicked.emit(nodeSelection);
+            });
+            instance.onEdgeClicked.subscribe(edge => {
+                this.selectedEdge = edge;
+                this.onEdgeClicked.emit(edge);
+            });
+        }
+    }
 
     // - CRUD ops
     // toggleAddConnectionMode(): void {

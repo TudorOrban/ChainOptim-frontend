@@ -46,14 +46,14 @@ export class StageService {
     }
 
     createStage(stageDTO: CreateStageDTO, refreshGraph: boolean): Observable<Stage> {
-        return this.http.post<Stage>(`${this.apiUrl}/create/${refreshGraph}`, stageDTO);
+        return this.http.post<Stage>(`${this.apiUrl}/create`, stageDTO);
     }
         
     updateStage(stageDTO: UpdateStageDTO, refreshGraph: boolean): Observable<Stage> {
-        return this.http.put<Stage>(`${this.apiUrl}/update/${refreshGraph}`, stageDTO);
+        return this.http.put<Stage>(`${this.apiUrl}/update`, stageDTO);
     }
 
     deleteStage(stageId: number, refreshGraph: boolean): Observable<number> {
-        return this.http.delete<number>(`${this.apiUrl}/delete/${refreshGraph}/${stageId}`);
+        return this.http.delete<number>(`${this.apiUrl}/delete/${stageId}`);
     }
 }

@@ -5,6 +5,8 @@ import { AddFactoryStageComponent } from "../components/factory/factory-producti
 import { UpdateFactoryStageComponent } from "../components/factory/factory-production/factory-production-tabs/update-factory-stage/update-factory-stage.component";
 import { ProductionHistoryComponent } from "../components/factory/factory-production/factory-production-tabs/production-history/production-history.component";
 import { ProductGraphComponent } from "../../goods/components/product/product-production/product-production-tabs/product-graph/product-graph.component";
+import { AddStageComponent } from "../../goods/components/product/product-production/product-production-tabs/add-stage/add-stage.component";
+import { UpdateStageComponent } from "../../goods/components/product/product-production/product-production-tabs/update-stage/update-stage.component";
 
 export type FactoryProductionTabType = FactoryGraphComponent | AllocationPlanComponent | AddFactoryStageComponent | UpdateFactoryStageComponent | ProductionHistoryComponent;
 
@@ -15,7 +17,7 @@ export interface Tab<T> {
     inputData: T;
 }
 
-export type ProductProductionTabType = ProductGraphComponent;
+export type ProductProductionTabType = ProductGraphComponent | AddStageComponent | UpdateStageComponent;
 
 export interface ProductTab<T> {
     id: string;

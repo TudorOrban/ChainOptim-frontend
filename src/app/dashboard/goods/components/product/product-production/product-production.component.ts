@@ -38,24 +38,24 @@ export class ProductProductionComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    // private setUpTabsEventListeners() {
-    //     this.tabsComponent.onNodeClicked.subscribe((node) => {
-    //         this.toolbarComponent.handleNodeClicked(node);
-    //     });
-    //     this.tabsComponent.onEdgeClicked.subscribe((edge) => {
-    //         this.toolbarComponent.handleEdgeClicked(edge);
-    //     });
-    // }
+    private setUpTabsEventListeners() {
+        this.tabsComponent.onNodeClicked.subscribe((node) => {
+            this.toolbarComponent.handleNodeClicked(node);
+        });
+        this.tabsComponent.onEdgeClicked.subscribe((edge) => {
+            this.toolbarComponent.handleEdgeClicked(edge);
+        });
+    }
     
     private setUpToolbarEventListeners() {
-        // this.toolbarComponent.addFactoryStage.subscribe(() => {
-        //     this.tabsComponent.loadAddStageComponent();
-        // });
-        // this.toolbarComponent.updateFactoryStage.subscribe(() => {
-        //     console.log("Update factory stage: ", this.factory);
-        //     if (!this.factory?.id) return;
-        //     this.tabsComponent.loadUpdateStageComponent(this.factory?.id || 0);
-        // });
+        this.toolbarComponent.addStage.subscribe(() => {
+            this.tabsComponent.loadAddStageComponent();
+        });
+        this.toolbarComponent.updateStage.subscribe(() => {
+            console.log("Update factory stage: ", this.product);
+            if (!this.product?.id) return;
+            this.tabsComponent.loadUpdateStageComponent(this.product?.id || 0);
+        });
         // this.toolbarComponent.toggleAddConnectionMode.subscribe(() => {
         //     this.tabsComponent.toggleAddConnectionMode();
         // });
