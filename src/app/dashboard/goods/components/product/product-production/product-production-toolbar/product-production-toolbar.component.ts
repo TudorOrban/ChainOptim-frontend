@@ -41,8 +41,6 @@ export class ProductProductionToolbarComponent {
     @Output() updateStageOutput: EventEmitter<void> = new EventEmitter();
     @Output() toggleAddConnectionMode: EventEmitter<void> = new EventEmitter();
     @Output() displayQuantities: EventEmitter<boolean> = new EventEmitter();
-    @Output() displayCapacities: EventEmitter<boolean> = new EventEmitter();
-    @Output() displayPriorities: EventEmitter<boolean> = new EventEmitter();
 
     // State
     currentUser: User | undefined = undefined;
@@ -264,23 +262,10 @@ export class ProductProductionToolbarComponent {
         this.displayQuantities.emit(isChecked);
     }
 
-    handleDisplayCapacities(event: Event) {
-        const checkbox = event.target as HTMLInputElement;
-        const isChecked = checkbox.checked
-        
-        this.displayCapacities.emit(isChecked);
-    }
-
-    handleDisplayPriorities(event: Event) {
-        const checkbox = event.target as HTMLInputElement;
-        const isChecked = checkbox.checked;
-
-        this.displayPriorities.emit(isChecked);
-    }
-
     // Communication with Production parent component
     handleNodeClicked(node: NodeSelection) {
         this.selectedNode = node;
+        console.log('Selected node:', this.selectedNode);
     }
 
     handleEdgeClicked(edge: ProductEdge) {

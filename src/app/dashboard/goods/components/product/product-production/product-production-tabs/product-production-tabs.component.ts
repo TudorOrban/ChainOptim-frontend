@@ -23,6 +23,10 @@ import { ProductProductionTabsService } from '../../../../services/productproduc
 import { ProductGraphComponent } from './product-graph/product-graph.component';
 import { AddStageComponent } from './add-stage/add-stage.component';
 import { UpdateStageComponent } from './update-stage/update-stage.component';
+import { AddStageInputComponent } from './add-stage-input/add-stage-input.component';
+import { UpdateStageInputComponent } from './update-stage-input/update-stage-input.component';
+import { AddStageOutputComponent } from './add-stage-output/add-stage-output.component';
+import { UpdateStageOutputComponent } from './update-stage-output/update-stage-output.component';
 
 @Component({
     selector: 'app-product-production-tabs',
@@ -51,6 +55,8 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
     private tabSubscription!: Subscription;
 
     selectedProductStageId: number | undefined = undefined;
+    selectedStageInputId: number | undefined = undefined;
+    selectedStageOutputId: number | undefined = undefined;
     selectedEdge: ProductEdge | undefined = undefined;
 
     constructor(
@@ -92,6 +98,7 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
 
     // Communication with parent component
     // - Loading Components
+    // -- Stages
     loadAddStageComponent(): void {
         const tab: ProductTab<any> = {
             id: 'add-product-stage',
@@ -118,6 +125,61 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         this.handleSpecificComponent();
     }
 
+    // -- Stage Inputs
+    loadAddStageInputComponent(): void {
+        const tab: ProductTab<any> = {
+            id: 'add-product-stage-input',
+            title: 'Add Stage Input',
+            component: AddStageInputComponent,
+            inputData: { productId: this.productId },
+        };
+        this.tabsService.openTab(tab);
+        this.tabsService.setActiveTab(tab.id);
+        this.loadComponent(tab);
+        this.handleSpecificComponent();
+    }
+
+    loadUpdateStageInputComponent(productId: number): void {
+        const tab: ProductTab<any> = {
+            id: 'update-product-stage-input',
+            title: 'Update Stage Input',
+            component: UpdateStageInputComponent,
+            inputData: { productId: productId, stageInputId: this.selectedStageInputId },
+        };
+        this.tabsService.openTab(tab);
+        this.tabsService.setActiveTab(tab.id);
+        this.loadComponent(tab);
+        this.handleSpecificComponent();
+    }
+
+    // -- Stage Outputs
+    loadAddStageOutputComponent(): void {
+        const tab: ProductTab<any> = {
+            id: 'add-product-stage-output',
+            title: 'Add Stage Output',
+            component: AddStageOutputComponent,
+            inputData: { productId: this.productId },
+        };
+        this.tabsService.openTab(tab);
+        this.tabsService.setActiveTab(tab.id);
+        this.loadComponent(tab);
+        this.handleSpecificComponent();
+    }
+
+    loadUpdateStageOutputComponent(productId: number): void {
+        const tab: ProductTab<any> = {
+            id: 'update-product-stage-output',
+            title: 'Update Stage Output',
+            component: UpdateStageOutputComponent,
+            inputData: { productId: productId, stageOutputId: this.selectedStageOutputId },
+        };
+        this.tabsService.openTab(tab);
+        this.tabsService.setActiveTab(tab.id);
+        this.loadComponent(tab);
+        this.handleSpecificComponent();
+    }
+
+    // -- Graph
     loadProductGraphComponent(): void {
         const tab: ProductTab<any> = {
             id: 'product-graph',
@@ -132,10 +194,6 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         this.handleSpecificComponent();
     }
     
-    setActiveTab(id: string): void {
-        this.tabsService.setActiveTab(id);
-    }
-    
     loadComponent(tab: ProductTab<any>): void {
         if (!this.dynamicTabContent) {
             console.log("No dynamic tab content found: ", tab);
@@ -147,6 +205,10 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
         const componentRef = this.dynamicTabContent.createComponent(tab.component);
         componentRef.instance.inputData = tab.inputData;
         this.activeComponentRef = componentRef;
+    }
+
+    setActiveTab(id: string): void {
+        this.tabsService.setActiveTab(id);
     }
 
     private handleSpecificComponent(): void {
@@ -205,30 +267,6 @@ export class ProductProductionTabsComponent implements OnInit, OnDestroy, AfterV
             this.activeComponentRef.instance.displayQuantities(display);
         }
     }
-    
-    // displayCapacities(display: boolean): void {
-    //     if (!this.activeComponentRef) {
-    //         console.log("No active component reference found.");
-    //         return;
-    //     }
-        
-    //     // Check if the active component is of type FactoryGraphComponent
-    //     if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
-    //         this.activeComponentRef.instance.displayCapacities(display);
-    //     }
-    // }
-
-    // displayPriorities(display: boolean): void {
-    //     if (!this.activeComponentRef) {
-    //         console.log("No active component reference found.");
-    //         return;
-    //     }
-        
-    //     // Check if the active component is of type FactoryGraphComponent
-    //     if (this.activeComponentRef.instance instanceof FactoryGraphComponent) {
-    //         this.activeComponentRef.instance.displayPriorities(display);
-    //     }
-    // }
 
     ngOnDestroy(): void {
         this.dynamicTabContent.clear();

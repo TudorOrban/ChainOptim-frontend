@@ -56,18 +56,24 @@ export class ProductProductionComponent implements AfterViewInit, OnDestroy {
             if (!this.product?.id) return;
             this.tabsComponent.loadUpdateStageComponent(this.product?.id || 0);
         });
+        this.toolbarComponent.addStageInput.subscribe(() => {
+            this.tabsComponent.loadAddStageInputComponent();
+        });
+        this.toolbarComponent.updateStageInput.subscribe(() => {
+            this.tabsComponent.loadUpdateStageInputComponent(this.product?.id || 0);
+        });
+        this.toolbarComponent.addStageOutput.subscribe(() => {
+            this.tabsComponent.loadAddStageOutputComponent();
+        });
+        this.toolbarComponent.updateStageOutput.subscribe(() => {
+            this.tabsComponent.loadUpdateStageOutputComponent(this.product?.id || 0);
+        });
         this.toolbarComponent.toggleAddConnectionMode.subscribe(() => {
             this.tabsComponent.toggleAddConnectionMode();
         });
         this.toolbarComponent.displayQuantities.subscribe((display) => {
             this.tabsComponent.displayQuantities(display);
         });
-        // this.toolbarComponent.displayCapacities.subscribe((display) => {
-        //     this.tabsComponent.displayCapacities(display);
-        // });
-        // this.toolbarComponent.displayPriorities.subscribe((display) => {
-        //     this.tabsComponent.displayPriorities(display);
-        // });
     }
 
     // Resizing the panels
