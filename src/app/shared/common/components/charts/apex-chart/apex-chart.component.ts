@@ -36,7 +36,7 @@ export class ApexChartComponent implements OnInit {
         }],
         chart: {
             type: 'line',
-            height: 450,
+            height: 300,
         },
         xaxis: {
             type: 'category',

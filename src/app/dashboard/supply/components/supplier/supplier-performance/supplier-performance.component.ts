@@ -8,11 +8,13 @@ import { ComponentService } from '../../../../goods/services/component.service';
 import { ComponentSearchDTO } from '../../../../goods/models/Component';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { SelectComponentComponent } from '../../../../../shared/common/components/select/select-component/select-component.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-supplier-performance',
     standalone: true,
-    imports: [CommonModule, SelectComponentComponent],
+    imports: [CommonModule, FontAwesomeModule, SelectComponentComponent],
     templateUrl: './supplier-performance.component.html',
     styleUrl: './supplier-performance.component.css',
 })
@@ -28,6 +30,8 @@ export class SupplierPerformanceComponent implements OnInit {
     componentIds: number[] = [];
     orgComponents: Record<number, ComponentSearchDTO> = {};
     selectedComponentId: number = 0;
+
+    faArrowRotateRight = faArrowRotateRight;
 
     constructor(
         @Inject(PLATFORM_ID) platformId: Object,
@@ -70,7 +74,6 @@ export class SupplierPerformanceComponent implements OnInit {
         }
 
         this.performanceService.getSupplierPerformanceBySupplierId(this.supplier.id, false).subscribe((performance) => {
-            console.log("Performance data loaded", performance);
             this.componentIds = Object.keys(performance.report.componentPerformances).map(key => Number(key));
             this.selectedComponentId = this.componentIds.length > 0 ? this.componentIds[0] : 0;
             this.loadMapComponent(performance);
@@ -88,38 +91,65 @@ export class SupplierPerformanceComponent implements OnInit {
                 return;
             }
             this.componentRef.instance.performanceReport = performance.report;
-
-            if (!this.performance?.report?.componentPerformances) {
-                return;
-            }
-            this.componentIds = Object.keys(this.performance?.report.componentPerformances).map(key => Number(key));
-            if (this.componentIds.length == 0) {
-                return;
-            }
-
-            if (!this.performance?.report.componentPerformances || !this.performance?.report.componentPerformances[this.selectedComponentId]) {
-                return;
-            }
-            const componentData = this.performance?.report.componentPerformances[this.selectedComponentId];
-            this.componentRef.instance.data = componentData.deliveredQuantityOverTime;
-            this.componentRef.instance.startingDate = new Date(componentData.firstDeliveryDate);
-            this.componentRef.instance.updateChartData();
+            
+            this.handleComponentIdChange(this.selectedComponentId);
         })
     }
 
     getAvailableComponents(): ComponentSearchDTO[] {
         return this.componentIds.map(id => this.orgComponents[id]).filter(component => !!component);
     }
-    
+ 
     handleComponentIdChange(componentId: number) {
-        this.selectedComponentId = componentId;
-        if (!this.performance?.report.componentPerformances || !this.performance?.report.componentPerformances[this.selectedComponentId] || !this.componentRef) {
+        if (!this.performance?.report?.componentPerformances) {
             return;
         }
+
+        this.componentIds = Object.keys(this.performance?.report.componentPerformances).map(key => Number(key));
+        if (this.componentIds.length == 0) {
+            return;
+        }
+        this.selectedComponentId = componentId;
+        if (!this.performance?.report.componentPerformances[this.selectedComponentId] || !this.componentRef) {
+            return;
+        }
+
         const componentData = this.performance?.report.componentPerformances[this.selectedComponentId];
-        console.log("Component data: ", componentData);
         this.componentRef.instance.data = {...componentData.deliveredQuantityOverTime};
         this.componentRef.instance.startingDate = new Date(componentData.firstDeliveryDate);
         this.componentRef.instance.updateChartData();
+    }
+
+    handleRefreshReport() {
+        if (!this.supplier?.id) {
+            console.error("Supplier ID not set");
+            return;
+        }
+        this.performanceService.getSupplierPerformanceBySupplierId(this.supplier.id, true).subscribe((performance) => {
+            console.log("Performance data refreshed", performance);
+            this.componentIds = Object.keys(performance.report.componentPerformances).map(key => Number(key));
+            this.selectedComponentId = this.componentIds.length > 0 ? this.componentIds[0] : 0;
+            this.loadMapComponent(performance);
+        });
+    }
+
+    formatTimePeriod(days: number | undefined): string {
+        if (!days) {
+            return '0 days';
+        }
+        if (days >= 30) {
+            const months = Math.floor(days / 30);
+            return `${months} month${months > 1 ? 's' : ''}`;
+        } else if (days >= 7) {
+            const weeks = Math.floor(days / 7);
+            return `${weeks} week${weeks > 1 ? 's' : ''}`;
+        } else {
+            return `${Math.floor(days)} day${days > 1 ? 's' : ''}`;
+        }
+    }
+    
+    formatPercentage(value: number | undefined): string {
+        if (value === undefined) return '0%';
+        return `${(value * 100).toFixed(2)}%`;
     }
 }

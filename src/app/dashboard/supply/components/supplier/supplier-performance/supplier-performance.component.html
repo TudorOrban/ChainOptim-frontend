@@ -1,5 +1,74 @@
-<div>
+<div class="px-8 py-4 space-y-4">
+    <div class="flex items-center justify-between">
+        <div class="page-title">
+            Performance Report
+        </div>
+        <div class="pt-4">
+            <button (click)="handleRefreshReport()" class="standard-button">
+                <fa-icon [icon]="faArrowRotateRight" class="mr-2"></fa-icon>
+                Refresh Report
+            </button>
+        </div>
+    </div>
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium">Total Delivered Orders:</h2> 
+        <p class="value-medium">{{ performance?.report?.totalDeliveredOrders }}</p>
+    </div>
+
+    <div class="label-large pt-2">Timeliness</div>
+    <div class="space-y-2">
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium">Total Delay Time:</h2> 
+            <p class="value-medium">{{ formatTimePeriod(performance?.report?.totalDelays) }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium">Average Delay Time per Order:</h2> 
+            <p class="value-medium">{{ formatTimePeriod(performance?.report?.averageDelayPerOrder) }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium">Average Time to Ship Order:</h2> 
+            <p class="value-medium">{{ formatTimePeriod(performance?.report?.averageTimeToShipOrder) }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium">Orders Delivered On Time::</h2> 
+            <p class="value-medium">{{ formatPercentage(performance?.report?.ratioOfOnTimeOrderDeliveries) }}</p>
+        </div>
+    </div>
+
+    <div class="label-large pt-2 pb-4">Component Statistics</div>
+
     <app-select-component [initialData]="{ componentId: selectedComponentId, initialComponents: getAvailableComponents(), preventComponentLoading: true }" (componentSelected)="handleComponentIdChange($event)"></app-select-component>
     
-    <ng-container #chartContainer></ng-container>
+    <div class="flex items-start justify-between w-full">
+        <div class="space-y-2">
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Total Delivered Component Orders:</h2> 
+                <p class="value-medium">{{ performance?.report?.componentPerformances?.[selectedComponentId]?.totalDeliveredOrders }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Total Delivered Quantity:</h2> 
+                <p class="value-medium">{{ performance?.report?.componentPerformances?.[selectedComponentId]?.totalDeliveredQuantity }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Average Delivered Quantity:</h2> 
+                <p class="value-medium">{{ performance?.report?.componentPerformances?.[selectedComponentId]?.averageDeliveredQuantity }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Average Order Quantity:</h2> 
+                <p class="value-medium">{{ performance?.report?.componentPerformances?.[selectedComponentId]?.averageOrderQuantity }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Average Shipment Quantity:</h2> 
+                <p class="value-medium">{{ performance?.report?.componentPerformances?.[selectedComponentId]?.averageShipmentQuantity }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Delivered Vs Ordered Percentage:</h2> 
+                <p class="value-medium">{{ performance?.report?.componentPerformances?.[selectedComponentId]?.deliveredPerOrderedRatio }}</p>
+            </div>
+        </div>
+
+        <div style="min-width: 450px; max-height: 300px;">
+            <ng-container #chartContainer></ng-container>
+        </div>
+    </div>
 </div>
