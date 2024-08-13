@@ -21,19 +21,20 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-apex-chart',
-  standalone: true,
-  imports: [CommonModule, NgApexchartsModule, FontAwesomeModule],
-  templateUrl: './apex-chart.component.html',
-  styleUrl: './apex-chart.component.css'
+    selector: 'app-apex-chart',
+    standalone: true,
+    imports: [CommonModule, NgApexchartsModule, FontAwesomeModule],
+    templateUrl: './apex-chart.component.html',
+    styleUrl: './apex-chart.component.css',
 })
 export class ApexChartComponent implements OnInit {
-
     @Input() chartOptions: ChartOptions = {
-        series: [{
-            name: 'Initial',
-            data: [15, 60, 50, 70, 80, 90, 100, 110, 120],
-        }],
+        series: [
+            {
+                name: 'Initial',
+                data: [15, 60, 50, 70, 80, 90, 100, 110, 120],
+            },
+        ],
         chart: {
             type: 'line',
             height: 300,
@@ -46,12 +47,12 @@ export class ApexChartComponent implements OnInit {
                 rotateAlways: true,
                 hideOverlappingLabels: false,
                 trim: false,
-                minHeight: 200
+                minHeight: 200,
             },
             tickPlacement: 'on',
         },
-        tooltip: {}, 
-        dataLabels: {} 
+        tooltip: {},
+        dataLabels: {},
     };
     @Input() data: Record<number, number> = {};
     @Input() startingDate: Date | undefined = undefined;
@@ -61,7 +62,6 @@ export class ApexChartComponent implements OnInit {
     numOfSegments = 20;
 
     faSpinner = faSpinner;
-
 
     ngOnInit(): void {
         this.updateChartData();
@@ -74,72 +74,87 @@ export class ApexChartComponent implements OnInit {
         }
 
         this.isLoading = true;
-        this.chartOptions.series = [{
-            name: "",
-            data: this.prepareSeriesData(this.data)
-        }];
+        this.chartOptions.series = [
+            {
+                name: '',
+                data: this.prepareSeriesData(this.data),
+            },
+        ];
 
         const categories = this.prepareXAxisCategories(this.data);
         this.chartOptions.xaxis = {
             categories: categories,
         };
-        
+
         this.isLoading = false;
     }
-        
-    prepareSeriesData(deliveredQuantityOverTime: Record<number, number>): { x: number, y: number }[] {
+
+    prepareSeriesData(
+        deliveredQuantityOverTime: Record<number, number>
+    ): { x: number; y: number }[] {
         const dayKeys = Object.keys(deliveredQuantityOverTime).map(Number); // Convert keys to numbers
         const maxDay = Math.max(...dayKeys);
         const minDay = Math.min(...dayKeys);
         const totalInterval = maxDay - minDay;
         const segmentSize = totalInterval / this.numOfSegments;
-    
+
         // Create a new map to ensure float keys are handled correctly
-        const flooredDeliveredQuantityOverTime = Object.entries(deliveredQuantityOverTime).reduce((acc, [key, value]) => {
+        const flooredDeliveredQuantityOverTime = Object.entries(
+            deliveredQuantityOverTime
+        ).reduce((acc, [key, value]) => {
             const flooredKey = Math.floor(parseFloat(key));
             acc[flooredKey] = value;
             return acc;
         }, {} as Record<number, number>);
-    
+
         let seriesData = [];
         for (let i = 0; i < this.numOfSegments; i++) {
             const segmentStart = minDay + i * segmentSize;
             const segmentEnd = segmentStart + segmentSize;
-    
-            const segmentPoints = dayKeys.filter(day => day >= segmentStart && day < segmentEnd);
-            
+
+            const segmentPoints = dayKeys.filter(
+                (day) => day >= segmentStart && day < segmentEnd
+            );
+
             const sum = segmentPoints.reduce((acc, day) => {
                 const value = flooredDeliveredQuantityOverTime[day];
                 return acc + (value !== undefined ? value : 0);
             }, 0);
-    
+
             seriesData.push({
                 x: i,
-                y: segmentPoints.length > 0 ? sum / segmentPoints.length : 0 // Average, or sum if you prefer
+                y: segmentPoints.length > 0 ? sum / segmentPoints.length : 0, // Average, or sum if you prefer
             });
         }
-    
+
         return seriesData;
     }
-    
-    prepareXAxisCategories(deliveredQuantityOverTime: Record<number, number>): string[] {
+
+    prepareXAxisCategories(
+        deliveredQuantityOverTime: Record<number, number>
+    ): string[] {
         if (!this.startingDate) {
             console.error('Starting date not provided');
             return [];
         }
-    
-        const totalDays = Object.keys(deliveredQuantityOverTime).map(day => parseFloat(day));
+
+        const totalDays = Object.keys(deliveredQuantityOverTime).map((day) =>
+            parseFloat(day)
+        );
         const maxDay = Math.max(...totalDays);
         const minDay = Math.min(...totalDays);
         const totalInterval = maxDay - minDay;
 
         let categories = [];
         for (let i = 0; i < this.numOfSegments; i++) {
-            const segmentDay = minDay + i * (totalInterval / this.numOfSegments);
-            const date = new Date(this.startingDate.getTime() + segmentDay * 86400000);
+            const segmentDay =
+                minDay + i * (totalInterval / this.numOfSegments);
+            const date = new Date(
+                this.startingDate.getTime() + segmentDay * 86400000
+            );
             categories.push(formatDate(date, 'MMM d, yyyy', 'en-US'));
         }
-    
+
         return categories;
     }
 

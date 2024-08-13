@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
-import { ProductionHistory } from '../../../../../dashboard/production/models/ResourceAllocation';
+import { Component, Input, OnInit } from '@angular/core';
+import { HistoryChartData, ProductionHistory } from '../../../../../dashboard/production/models/ResourceAllocation';
 import { CommonModule } from '@angular/common';
 import { NgApexchartsModule, ChartType } from 'ng-apexcharts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-bar-chart',
@@ -11,25 +12,25 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     templateUrl: './bar-chart.component.html',
     styleUrl: './bar-chart.component.css',
 })
-export class BarChartComponent {
+export class BarChartComponent implements OnInit{
     @Input() chartOptions = {
         series: [
             {
-                name: 'Net Profit',
+                name: 'Requested Amount',
                 data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
             },
             {
-                name: 'Revenue',
+                name: 'Allocated Amount',
                 data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
             },
             {
-                name: 'Free Cash Flow',
+                name: 'Actual Amount',
                 data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
             },
         ],
         chart: {
             type: "bar" as ChartType,
-            height: 350,
+            height: 400,
         },
         plotOptions: {
             bar: {
@@ -61,7 +62,7 @@ export class BarChartComponent {
         },
         yaxis: {
             title: {
-                text: '$ (thousands)',
+                text: '',
             },
         },
         fill: {
@@ -70,12 +71,52 @@ export class BarChartComponent {
         tooltip: {
             y: {
                 formatter: function (val: number) {
-                    return '$ ' + val + ' thousands';
+                    return `${val}`;
                 },
             },
         },
     };
 
-    @Input() history: ProductionHistory | undefined = undefined;
+    @Input() data: HistoryChartData | undefined = undefined;
 
+    isLoading: boolean = false;
+    
+    faSpinner = faSpinner;
+    
+    ngOnInit(): void {
+        this.updateChartData();
+    }
+
+    
+    updateChartData(): void {
+        console.log('Data: ', this.data);
+        if (!this.data) {
+            console.error('No data provided');
+        }
+
+        this.isLoading = true;
+        this.chartOptions.series = [
+            {
+                name: this.data?.datasets?.[0]?.name ?? '',
+                data: this.data?.datasets?.[0]?.data ?? [],
+            },
+            {
+                name: this.data?.datasets?.[1]?.name ?? '',
+                data: this.data?.datasets?.[1]?.data ?? [],
+            },
+            {
+                name: this.data?.datasets?.[2]?.name ?? '',
+                data: this.data?.datasets?.[2]?.data ?? [],
+            },
+        ];
+
+        this.isLoading = false;
+
+        if (!this.data?.categories) {
+            return;
+        }
+        this.chartOptions.xaxis = {
+            categories: this.data?.categories,
+        };
+    }
 }

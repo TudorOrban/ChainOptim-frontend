@@ -11,7 +11,7 @@ export interface FactoryProductionHistory {
 }
 
 export interface ProductionHistory {
-    startDate: string;
+    startDate: Date;
     dailyProductionRecords: Record<number, DailyProductionRecord>;
 }
 
@@ -26,7 +26,7 @@ export interface ResourceAllocationPlan {
     factoryId: number;
     createdAt: string;
     updatedAt: string;
-    activationDate: string;
+    activationDate: Date;
     isActive: boolean;
     allocationPlan: AllocationPlan;
 }
@@ -59,4 +59,15 @@ export interface AllocationResult {
     resultedAmount: number;
     fullAmount: number;
     actualAmount: number;
+}
+
+// UI
+export interface HistoryChartData {
+    datasets: HistoryChartDataset[];
+    categories?: string[];
+}
+
+export interface HistoryChartDataset {
+    name: string;
+    data: number[];
 }
