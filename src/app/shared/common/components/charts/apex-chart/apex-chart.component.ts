@@ -53,7 +53,6 @@ export class ApexChartComponent implements OnInit {
         tooltip: {}, 
         dataLabels: {} 
     };
-    @Input() performanceReport: SupplierPerformanceReport | undefined = undefined;
     @Input() data: Record<number, number> = {};
     @Input() startingDate: Date | undefined = undefined;
 

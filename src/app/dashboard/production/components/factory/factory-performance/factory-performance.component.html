@@ -13,30 +13,38 @@
 
     <div>
         <div class="flex items-center space-x-2">
-            <h2 class="label-medium pb-4">Overall Score:</h2> 
+            <h2 class="label-medium whitespace-nowrap pb-2">Overall Score:</h2> 
             <app-score
                 [score]="factory?.overallScore ?? 0"
             ></app-score>
         </div>
         <div class="flex items-center space-x-4">
-            <h2 class="label-medium pb-4 whitespace-nowrap">Resource Readiness Score:</h2> 
-            <app-score
-                [score]="factory?.resourceReadinessScore ?? 0"
-            ></app-score>    
-            <h2 class="label-medium pb-4 whitespace-nowrap">Resource Utilization Score:</h2> 
-            <app-score
-                [score]="factory?.resourceUtilizationScore ?? 0"
-            ></app-score>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium whitespace-nowrap pb-2">Resource Readiness Score:</h2> 
+                <app-score
+                    [score]="factory?.resourceReadinessScore ?? 0"
+                ></app-score>  
+            </div>  
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium whitespace-nowrap pb-2">Resource Utilization Score:</h2> 
+                <app-score
+                    [score]="factory?.resourceUtilizationScore ?? 0"
+                ></app-score>
+            </div>
         </div>
         <div class="flex items-center space-x-4">
-            <h2 class="label-medium pb-4 whitespace-nowrap">Resource Distribution Score:</h2> 
-            <app-score
-                [score]="factory?.resourceDistributionScore ?? 0"
-            ></app-score>
-            <h2 class="label-medium pb-4 whitespace-nowrap">Resource Efficiency Score:</h2> 
-            <app-score
-                [score]="factory?.resourceEfficiencyScore ?? 0"
-            ></app-score>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium whitespace-nowrap pb-2">Resource Distribution Score:</h2> 
+                <app-score
+                    [score]="factory?.resourceDistributionScore ?? 0"
+                ></app-score>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium whitespace-nowrap pb-2">Resource Efficiency Score:</h2> 
+                <app-score
+                    [score]="factory?.resourceEfficiencyScore ?? 0"
+                ></app-score>
+            </div>
         </div>
     </div>
 

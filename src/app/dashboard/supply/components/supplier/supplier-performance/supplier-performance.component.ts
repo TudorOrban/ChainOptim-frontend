@@ -96,8 +96,6 @@ export class SupplierPerformanceComponent implements OnInit {
             if (!this.componentRef) {
                 return;
             }
-            this.componentRef.instance.performanceReport = performance.report;
-            
             this.handleComponentIdChange(this.selectedComponentId);
         })
     }
