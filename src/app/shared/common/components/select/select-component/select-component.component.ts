@@ -3,7 +3,7 @@ import { ComponentService } from '../../../../../dashboard/goods/services/compon
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component as ProdComponent } from '../../../../../dashboard/goods/models/Component';
+import { ComponentSearchDTO, Component as ProdComponent } from '../../../../../dashboard/goods/models/Component';
 
 @Component({
   selector: 'app-select-component',
@@ -13,9 +13,9 @@ import { Component as ProdComponent } from '../../../../../dashboard/goods/model
   styleUrl: './select-component.component.css'
 })
 export class SelectComponentComponent implements OnChanges {    
-    @Input() initialData?: { component?: ProdComponent, componentId?: number } | undefined = undefined;
+    @Input() initialData?: { component?: ProdComponent, componentId?: number, initialComponents?: ProdComponent[] | ComponentSearchDTO[], preventComponentLoading?: boolean } | undefined = undefined;
 
-    components: ProdComponent[] = [];
+    components: ProdComponent[] | ComponentSearchDTO[] = [];
     selectedComponentId: number | undefined = undefined;
 
     @Output() componentSelected = new EventEmitter<number>();
@@ -26,16 +26,24 @@ export class SelectComponentComponent implements OnChanges {
     ) {}
 
     ngOnInit(): void {
-        this.loadComponents();
-        this.handleInputData(undefined);
+        this.handleInitialData(undefined);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.handleInputData(changes);
+        this.handleInitialData(changes);
     }
-
+    
+    private handleInitialData(changes?: SimpleChanges): void {
+        if (this.initialData?.preventComponentLoading) {
+            this.components = this.initialData?.initialComponents ?? [];
+            this.selectedComponentId = this.initialData?.componentId;
+        } else {
+            this.loadComponents();
+            this.handleInputData(changes);
+        }
+    }
+    
     private handleInputData(changes?: SimpleChanges): void {
-        console.log("Initial data: ", this.initialData);
         if (!changes) return;
         if (changes['initialData'] && this.initialData && this.components.length > 0) {
             if (this.initialData?.component) {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import {
     ApexAxisChartSeries,
     ApexChart,
@@ -24,7 +24,7 @@ export type ChartOptions = {
   templateUrl: './apex-chart.component.html',
   styleUrl: './apex-chart.component.css'
 })
-export class ApexChartComponent implements OnInit {
+export class ApexChartComponent implements OnInit, OnChanges {
 
     @Input() chartOptions: ChartOptions = {
         series: [{
@@ -42,38 +42,29 @@ export class ApexChartComponent implements OnInit {
         dataLabels: {} // Define a sensible default or an empty object
     };
     @Input() performanceReport: SupplierPerformanceReport | undefined = undefined;
+    @Input() data: Record<number, number> = {};
 
     ngOnInit(): void {
-        console.log("Performance report", this.performanceReport);
-        
-        if (this.performanceReport) {
-            this.updateChartData();
-        }
+        this.updateChartData();
+    }
+
+    ngOnChanges(): void {
+        // this.updateChartData();
     }
 
     updateChartData(): void {
-        console.log("Performance report components", this.performanceReport?.componentPerformances);
-        if (this.performanceReport?.componentPerformances) {
-            const componentIds = Object.keys(this.performanceReport.componentPerformances).map(key => Number(key));
-            if (componentIds.length > 0) {
-                // Assuming you're interested in the first component for demonstration
-                const firstComponentId = componentIds[0];
-                const componentData = this.performanceReport.componentPerformances[firstComponentId];
-    
-                console.log("Component data", componentData);
-    
-                // Transform the data into the series format expected by ApexCharts
-                this.chartOptions.series = [{
-                    name: componentData.componentName,
-                    data: this.prepareSeriesData(componentData.deliveredQuantityOverTime)
-                }];
-    
-                // Optionally update the x-axis categories if appropriate
-                this.chartOptions.xaxis = {
-                    categories: this.prepareXAxisCategories(componentData.deliveredQuantityOverTime)
-                };
-            }
+        console.log('Data: ', this.data);
+        if (!this.data) {
+            console.error('No data provided');
         }
+        this.chartOptions.series = [{
+            name: "",
+            data: this.prepareSeriesData(this.data)
+        }];
+
+        this.chartOptions.xaxis = {
+            categories: this.prepareXAxisCategories(this.data)
+        };
     }
         
     prepareSeriesData(deliveredQuantityOverTime: Record<number, number>): { x: number, y: number }[] {
@@ -86,11 +77,4 @@ export class ApexChartComponent implements OnInit {
     prepareXAxisCategories(deliveredQuantityOverTime: Record<number, number>): string[] {
         return Object.keys(deliveredQuantityOverTime).map(day => `Day ${day}`);
     }
-    // mapToChartData(deliveredQuantityOverTime: Map<number, number>): { x: number, y: number }[] {
-    //     return Array.from(deliveredQuantityOverTime, ([days, quantity]) => ({ x: days, y: quantity }));
-    // }
-
-    // getCategories(deliveredQuantityOverTime: Map<number, number>): string[] {
-    //     return Array.from(deliveredQuantityOverTime.keys()).map(day => `Day ${day}`);
-    // }
 }

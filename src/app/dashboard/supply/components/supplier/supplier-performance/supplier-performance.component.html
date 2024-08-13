@@ -1,4 +1,5 @@
 <div>
+    <app-select-component [initialData]="{ componentId: selectedComponentId, initialComponents: getAvailableComponents(), preventComponentLoading: true }" (componentSelected)="handleComponentIdChange($event)"></app-select-component>
     
     <ng-container #chartContainer></ng-container>
 </div>
