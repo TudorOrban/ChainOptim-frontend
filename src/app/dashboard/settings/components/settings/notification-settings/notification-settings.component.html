@@ -1,1 +1,58 @@
-<p>notification-settings works!</p>
+<div *ngIf="settings && settings.notificationSettings" class="px-8 py-4">
+    <div class="page-title py-4">
+        Notifications
+    </div>
+    
+    <div class="flex items-center justify-between w-full px-8 space-y-4">
+        <h2 class="label-medium-large">Supplier Orders</h2>
+        <div class="toggle-switch">
+            <label>
+                <input
+                    type="checkbox"
+                    [(ngModel)]="settings.notificationSettings.supplierOrdersOn"
+                    (ngModelChange)="onSupplierOrdersChange()"
+                />
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+    
+    <div class="flex items-center justify-between w-full px-8 space-y-4">
+        <h2 class="label-medium-large">Supplier Shipments</h2>
+        <div class="toggle-switch">
+            <label>
+                <input
+                    type="checkbox"
+                    [(ngModel)]="settings.notificationSettings.supplierShipmentsOn"
+                />
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between w-full px-8 space-y-4">
+        <h2 class="label-medium-large">Client Orders</h2>
+        <div class="toggle-switch">
+            <label>
+                <input
+                    type="checkbox"
+                    [(ngModel)]="settings.notificationSettings.clientOrdersOn"
+                />
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between w-full px-8 space-y-4">
+        <h2 class="label-medium-large">Client Shipments</h2>
+        <div class="toggle-switch">
+            <label>
+                <input
+                    type="checkbox"
+                    [(ngModel)]="settings.notificationSettings.clientShipmentsOn"
+                />
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>

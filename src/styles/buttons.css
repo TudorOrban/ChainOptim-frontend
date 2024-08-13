@@ -175,3 +175,7 @@
     background-color: rgb(215, 100, 100);
     color: rgb(156 163 175);
 }
+
+.hidden {
+    display: none;
+}

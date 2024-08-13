@@ -6,6 +6,7 @@
 @import "./styles/specific/map.css";
 @import "./styles/specific/table.css";
 @import "./styles/specific/factoryproduction.css";
+@import "./styles/specific/switch.css";
 
 @tailwind base;
 @tailwind components;

@@ -57,6 +57,10 @@ export class SettingsComponent implements OnInit {
         });
         this.fallbackManagerService.updateLoading(true);
 
+        this.loadUserSettings();
+    }
+    
+    private loadUserSettings(): void {
         this.userService.getCurrentUser().subscribe((currentUser) => {
             if (!currentUser?.id) {
                 return;
@@ -73,5 +77,9 @@ export class SettingsComponent implements OnInit {
 
     onTabSelected(selectedTabLabel: string) {
         this.activeTab = selectedTabLabel;
+    }
+
+    onNotificationSettingsChanged(settings: UserSettings) {
+        console.log('Notification settings changed:', settings);
     }
 }
