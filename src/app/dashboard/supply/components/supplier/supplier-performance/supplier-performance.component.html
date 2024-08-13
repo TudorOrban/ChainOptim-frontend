@@ -42,19 +42,19 @@
         </div>
         <div class="flex items-center space-x-2">
             <h2 class="label-medium">Total Delay Time:</h2> 
-            <p class="value-medium">{{ formatTimePeriod(performance?.report?.totalDelays) }}</p>
+            <p class="value-medium">{{ uiUtilService.formatTimePeriod(performance?.report?.totalDelays) }}</p>
         </div>
         <div class="flex items-center space-x-2">
             <h2 class="label-medium">Average Delay Time per Order:</h2> 
-            <p class="value-medium">{{ formatTimePeriod(performance?.report?.averageDelayPerOrder) }}</p>
+            <p class="value-medium">{{ uiUtilService.formatTimePeriod(performance?.report?.averageDelayPerOrder) }}</p>
         </div>
         <div class="flex items-center space-x-2">
             <h2 class="label-medium">Average Time to Ship Order:</h2> 
-            <p class="value-medium">{{ formatTimePeriod(performance?.report?.averageTimeToShipOrder) }}</p>
+            <p class="value-medium">{{ uiUtilService.formatTimePeriod(performance?.report?.averageTimeToShipOrder) }}</p>
         </div>
         <div class="flex items-center space-x-2">
             <h2 class="label-medium">Orders Delivered On Time::</h2> 
-            <p class="value-medium">{{ formatPercentage(performance?.report?.ratioOfOnTimeOrderDeliveries) }}</p>
+            <p class="value-medium">{{ uiUtilService.formatPercentage(performance?.report?.ratioOfOnTimeOrderDeliveries) }}</p>
         </div>
     </div>
 

@@ -9,9 +9,10 @@ export interface Factory {
     updatedAt: Date;
     location: Location;
     overallScore: number;
-    resourceDistributionScore: number;
-    resourceReadinessScore: number;
-    resourceUtilizationScore: number;
+    resourceDistributionScore?: number;
+    resourceReadinessScore?: number;
+    resourceUtilizationScore?: number;
+    resourceEfficiencyScore?: number;
     factoryStages: FactoryStage[];
 }
 
@@ -59,6 +60,13 @@ export interface UpdateFactoryStageDTO {
     duration?: number;
     priority?: number;
     minimumRequiredCapacity?: number;
+}
+
+export interface FactoryStageSearchDTO {
+    id: number;
+    factoryId: number;
+    stageId: number;
+    stageName: string;
 }
 
 export interface FactoryStageConnection {

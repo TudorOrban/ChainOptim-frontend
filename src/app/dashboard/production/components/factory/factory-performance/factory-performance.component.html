@@ -1,1 +1,75 @@
-<p>factory-performance works!</p>
+<div class="px-8 py-4 space-y-4">
+    <div class="flex items-center justify-between">
+        <div class="page-title">
+            Performance Report
+        </div>
+        <div class="pt-4">
+            <button (click)="handleRefreshReport()" class="standard-button">
+                <fa-icon [icon]="faArrowRotateRight" class="mr-2"></fa-icon>
+                Refresh Report
+            </button>
+        </div>
+    </div>
+
+    <div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium pb-4">Overall Score:</h2> 
+            <app-score
+                [score]="factory?.overallScore ?? 0"
+            ></app-score>
+        </div>
+        <div class="flex items-center space-x-4">
+            <h2 class="label-medium pb-4 whitespace-nowrap">Resource Readiness Score:</h2> 
+            <app-score
+                [score]="factory?.resourceReadinessScore ?? 0"
+            ></app-score>    
+            <h2 class="label-medium pb-4 whitespace-nowrap">Resource Utilization Score:</h2> 
+            <app-score
+                [score]="factory?.resourceUtilizationScore ?? 0"
+            ></app-score>
+        </div>
+        <div class="flex items-center space-x-4">
+            <h2 class="label-medium pb-4 whitespace-nowrap">Resource Distribution Score:</h2> 
+            <app-score
+                [score]="factory?.resourceDistributionScore ?? 0"
+            ></app-score>
+            <h2 class="label-medium pb-4 whitespace-nowrap">Resource Efficiency Score:</h2> 
+            <app-score
+                [score]="factory?.resourceEfficiencyScore ?? 0"
+            ></app-score>
+        </div>
+    </div>
+
+    <div class="label-large pt-2 pb-4">Stage Statistics</div>
+
+    <app-select-factory-stage [initialData]="{ stageId: selectedStageId, initialStages: getAvailableStages(), preventStageLoading: true }" (stageSelected)="handleStageIdChange($event)"></app-select-factory-stage>
+    
+    <div class="flex items-start justify-between w-full">
+        <div class="space-y-2">
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Total Executed Stages:</h2> 
+                <p class="value-medium">{{ uiUtilService.formatNumber(currentStageReport?.totalExecutedStages) }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Total Time:</h2> 
+                <p class="value-medium">{{ uiUtilService.formatTimePeriod(currentStageReport?.totalTimeDays) }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Average Executed Stages per Day:</h2> 
+                <p class="value-medium">{{ uiUtilService.formatNumber(currentStageReport?.averageExecutedStagesPerDay) }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Minimum Executed Capacity per Day:</h2> 
+                <p class="value-medium">{{ uiUtilService.formatNumber(currentStageReport?.minimumExecutedCapacityPerDay) }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <h2 class="label-medium">Days Under Capacity Percentage:</h2> 
+                <p class="value-medium">{{ uiUtilService.formatPercentage(currentStageReport?.daysUnderCapacityPercentage) }}</p>
+            </div>
+        </div>
+
+        <div style="min-width: 450px; max-height: 300px;">
+            <ng-container #chartContainer></ng-container>
+        </div>
+    </div>
+</div>

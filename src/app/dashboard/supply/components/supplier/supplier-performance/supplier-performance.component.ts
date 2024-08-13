@@ -11,6 +11,7 @@ import { SelectComponentComponent } from '../../../../../shared/common/component
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { ScoreComponent } from '../../../../../shared/common/components/score/score.component';
+import { UIUtilService } from '../../../../../shared/common/services/uiutil.service';
 
 @Component({
     selector: 'app-supplier-performance',
@@ -34,12 +35,16 @@ export class SupplierPerformanceComponent implements OnInit {
 
     faArrowRotateRight = faArrowRotateRight;
 
+    uiUtilService: UIUtilService;
+
     constructor(
         @Inject(PLATFORM_ID) platformId: Object,
         private userService: UserService,
         private performanceService: SupplierPerformanceService,
         private componentService: ComponentService,
+        uiUtilService: UIUtilService,
     ) {
+        this.uiUtilService = uiUtilService;
         this.isBrowser = isPlatformBrowser(platformId);
     }
 
@@ -132,25 +137,5 @@ export class SupplierPerformanceComponent implements OnInit {
             this.selectedComponentId = this.componentIds.length > 0 ? this.componentIds[0] : 0;
             this.loadMapComponent(performance);
         });
-    }
-
-    formatTimePeriod(days: number | undefined): string {
-        if (!days) {
-            return '0 days';
-        }
-        if (days >= 30) {
-            const months = Math.floor(days / 30);
-            return `${months} month${months > 1 ? 's' : ''}`;
-        } else if (days >= 7) {
-            const weeks = Math.floor(days / 7);
-            return `${weeks} week${weeks > 1 ? 's' : ''}`;
-        } else {
-            return `${Math.floor(days)} day${days > 1 ? 's' : ''}`;
-        }
-    }
-    
-    formatPercentage(value: number | undefined): string {
-        if (value === undefined) return '0%';
-        return `${(value * 100).toFixed(2)}%`;
     }
 }
