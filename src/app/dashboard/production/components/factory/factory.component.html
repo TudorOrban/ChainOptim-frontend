@@ -32,7 +32,6 @@
     <app-factory-production *ngIf="activeTab === 'Production'" [factory]="factory"></app-factory-production>
     <app-factory-inventory *ngIf="activeTab === 'Inventory'" [searchMode]="SearchMode.SECONDARY" [factoryId]="factory?.id" [dontPadHorizontally]="true"></app-factory-inventory>
     <app-factory-performance *ngIf="activeTab === 'Performance'" [factory]="factory"></app-factory-performance>
-    <app-production-history *ngIf="activeTab === 'History'" [inputData]="{ factoryId: factory?.id || 0 }"></app-production-history>
 
 
     <!-- Fallback manager -->

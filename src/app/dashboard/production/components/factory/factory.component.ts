@@ -56,9 +56,6 @@ export class FactoryComponent implements OnInit {
         {
             label: "Performance",
         },
-        {
-            label: "History",
-        }
     ];
     SearchMode = SearchMode;
     

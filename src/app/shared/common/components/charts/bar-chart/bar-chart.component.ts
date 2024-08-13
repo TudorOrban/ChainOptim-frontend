@@ -78,6 +78,7 @@ export class BarChartComponent implements OnInit{
     };
 
     @Input() data: HistoryChartData | undefined = undefined;
+    @Input() startingDate: Date | undefined = undefined;
 
     isLoading: boolean = false;
     
