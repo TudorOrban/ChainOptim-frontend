@@ -1,27 +1,51 @@
 <div
     *ngIf="isSidebarOpen"
-    class="sidebar flex flex-col justify-between w-64 h-full text-white border-r border-gray-300 rounded-r-md"
+    class="sidebar flex flex-col justify-between w-64 h-full text-white border-r border-gray-300 rounded-r-md overflow-y-auto"
 >
     <div>
         <div class="flex items-center justify-between px-6 py-4">
-            <span class="font-semibold text-xl ml-10 mt-2">Dashboard</span>
+            <span class="font-semibold text-xl ml-12 mt-2">Dashboard</span>
             <fa-icon
                 [icon]="faBars"
                 class="w-4 h-4 hover:text-gray-200 cursor-pointer"
                 (click)="toggleSidebar()"
             ></fa-icon>
         </div>
+
+        <!-- Sidebar items -->
         <div class="flex flex-col px-6 py-4 space-y-8">
-            <div *ngFor="let item of sidebarItems" class="flex items-center">
-                <fa-icon [icon]="item.icon" class="w-4 h-4 mr-4 mb-2"></fa-icon>
-                <a *ngIf="item.link" [routerLink]="item.link">{{
-                    item.label
-                }}</a>
-                <div *ngIf="!item.link">{{ item.label }}</div>
+            <div *ngFor="let item of sidebarItems">
+                <div class="flex items-center justify-between">
+                    <button (click)="expandItem(item)" class="flex items-center">
+                        <fa-icon [icon]="item.icon || faQuestion" class="w-4 h-4 mr-6 mb-2"></fa-icon>
+                        <a *ngIf="item.link" [routerLink]="item.link">{{
+                            item.label
+                        }}</a>
+                        <div *ngIf="!item.link">{{ item.label }}</div>
+                    </button>
+                    <div *ngIf="(item?.subItems?.length ?? 0) > 0">
+                        <button (click)="expandItem(item)">
+                            <fa-icon [icon]="item?.isExpanded ? faCaretUp : faCaretDown" class="w-4 h-4"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sidebar subitems -->
+                <div *ngIf="item.isExpanded && (item?.subItems?.length ?? 0) > 0" class="px-8 space-y-4 pt-6 font-normal whitespace-nowrap">
+                    <div *ngFor="let subItem of item?.subItems">
+                        <button (click)="selectItem(subItem)" [class.font-semibold]="subItem.isSelected">
+                            <a *ngIf="subItem.link" [routerLink]="subItem.link" class="">{{
+                                subItem.label
+                            }}</a>
+                            <div *ngIf="!subItem.link">{{ subItem.label }}</div>
+                        </button>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
-    <div class="flex items-center justify-between pl-6 pr-8 pb-6">
+    <div class="flex items-center justify-between pl-6 pr-8 py-6">
         <a [routerLink]="['/']">
             <fa-icon
                 [icon]="faHouse"
@@ -39,11 +63,12 @@
         </div>
     </div>
 </div>
+
+<!-- Closed Sidebar (only navItems' icons) -->
 <div
     *ngIf="!isSidebarOpen"
     class="sidebar w-12 h-full text-white border-r border-gray-300 rounded-r-md flex flex-col justify-between items-center pr-1"
 >
-    <!-- Top icons -->
     <div class="flex flex-col items-center space-y-6 py-4">
         <fa-icon
             [icon]="faBars"
@@ -54,13 +79,13 @@
         <ng-container *ngFor="let item of sidebarItems">
             <a *ngIf="item.link" [routerLink]="item.link">
                 <fa-icon
-                    [icon]="item.icon"
+                    [icon]="item.icon || faQuestion"
                     class="w-4 h-4 hover:text-gray-200"
                 ></fa-icon>
             </a>
             <fa-icon
                 *ngIf="!item.link"
-                [icon]="item.icon"
+                [icon]="item.icon || faQuestion"
                 class="w-4 h-4 hover:text-gray-200"
             ></fa-icon>
         </ng-container>

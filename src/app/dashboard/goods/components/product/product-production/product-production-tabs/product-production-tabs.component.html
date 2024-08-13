@@ -1,0 +1,28 @@
+<div class="flex flex-col relative pt-0.5">
+    <!-- Tab Cards -->
+    <div #tabsScrollContainer class="tabs-scroll-container flex items-center overflow-x-auto">
+        <button
+            *ngFor="let tab of tabsService.getTabs()"
+            (click)="tabsService.setActiveTab(tab.id)"
+            [ngClass]="{
+                'active': tab.id === tabsService.getActiveTabId().value,
+                'bg-gray-100': tab.id === tabsService.getActiveTabId().value,
+                'bg-white border-b': tab.id !== tabsService.getActiveTabId().value
+            }"
+            class="flex items-center px-4 py-2 space-x-2 border-t border-x border-gray-300 rounded-t-md"
+        >
+            <div class="font-semibold whitespace-nowrap">
+                {{ tab.title }}
+            </div>
+            <button
+                (click)="tabsService.closeTab(tab.id); $event.stopPropagation()"
+                class="text-gray-700 hover:text-red-700 pb-2"
+            >
+                <fa-icon [icon]="faTimes"></fa-icon>
+            </button>
+        </button>
+    </div>
+    
+    <!-- Active Tab -->
+    <div #dynamicTabContent class="overflow-x-auto border-t border-gray-100"></div>
+</div>

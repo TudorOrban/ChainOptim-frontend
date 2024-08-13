@@ -9,20 +9,31 @@
     margin-top: 2rem;
 }
 
-.form-field {
-    margin-bottom: 1rem;
+.std-form-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    padding: 2rem 0rem;
 }
 
-.form-field label {
+.form-label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
+    color: rgb(55 65 81);
 }
 
-.form-field input {
-    width: 100%;
-    padding: 0.5rem;
+.form-input {
+    appearance: none;
     border: 1px solid #d3d3d3;
     border-radius: 4px;
-    box-sizing: border-box;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    line-height: 1.25;
+    color: rgb(55 65 81);
+}
+
+.form-error {
+    color: rgb(185 28 28);
 }

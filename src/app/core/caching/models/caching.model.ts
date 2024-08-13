@@ -1,8 +1,6 @@
-import { Factory } from "../../../dashboard/factories/models/Factory";
-import { Product } from "../../../dashboard/products/models/Product";
-import { Supplier } from "../../../dashboard/suppliers/models/Supplier";
-import { Warehouse } from "../../../dashboard/warehouses/models/Warehouse";
-import { PaginatedResults } from "../../../shared/search/models/PaginatedResults";
+import { Factory } from "../../../dashboard/production/models/Factory";
+import { Product } from "../../../dashboard/goods/models/Product";
+import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 
 export interface AppState {
     products: ProductState;
@@ -42,14 +40,3 @@ export interface QueryParams {
     page: number;
     itemsPerPage: number;
 }
-
-// export type EntityType = 'products' | 'factories' | 'warehouses' | 'suppliers';
-
-// export type EntityData = PaginatedResults<Product> | PaginatedResults<Factory> | PaginatedResults<Warehouse> | PaginatedResults<Supplier>;
-
-// export interface AppState {
-//     products: ListState<Product>;
-//     factories: ListState<Factory>;
-//     warehouses: ListState<Warehouse>;
-//     suppliers: ListState<Supplier>;
-// }

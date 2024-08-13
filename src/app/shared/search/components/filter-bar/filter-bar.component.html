@@ -1,0 +1,29 @@
+<div class="flex items-center">
+    <select [(ngModel)]="selectedKey" (ngModelChange)="updateFilter()" class="custom-select">
+        <option value="undefined" disabled selected>Add Filter</option>
+        <option *ngFor="let option of filterOptions" [value]="option.key.value">
+            {{ option.key.label }}
+        </option>
+    </select>
+    
+    <div *ngIf="shouldShowInput()" class="flex items-center">
+        <button (click)="toggleGreaterThan()" class="standard-button flex items-center justify-center">
+            {{ isGreaterThan ? ">" : "<" }}
+        </button>
+        <input type="number" [(ngModel)]="selectedNumberValue" class="form-input" placeholder="Enter quantity" class="form-input min-w-20">
+        <button (click)="updateFilter()" class="standard-button flex items-center justify-center">Apply</button>
+    </div>
+
+    <select *ngIf="shouldShowSelect()" [(ngModel)]="selectedEnumValue" (ngModelChange)="updateFilter()" class="custom-select">
+        <option *ngFor="let option of getValueOptions()" [value]="option.value">
+            {{ option.label }}
+        </option>
+    </select>
+
+    <div *ngIf="shouldShowDate()" class="flex items-center">
+        <button (click)="toggleGreaterThan()" class="standard-button flex items-center justify-center">
+            {{ isGreaterThan ? ">" : "<" }}
+        </button>
+        <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="updateFilter()" class="form-input">
+    </div>
+</div>

@@ -1,0 +1,150 @@
+<div class="w-full h-full pl-8 py-4 bg-gray-100 border-l border-t border-gray-300 shadow-sm overflow-y-auto relative max-h-full min-h-full">
+    <div class="overflow-y-auto h-full space-y-4">
+        <h2 class="text-xl font-semibold">Toolbar</h2>
+        <div class="space-y-2">
+            <h1 class="text-lg font-semibold text-gray-800 pb-2">Edit Configuration</h1>
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Stages</p>
+                <button (click)="handleAddStage()" class="standard-write-button-small">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleUpdateStage()" 
+                    [disabled]="!isStageSelected()" 
+                    [attr.title]="!isStageSelected() ? 'Select a stage to update' : null"
+                    class="standard-write-button-small"
+                >
+                    <fa-icon [icon]="faEdit" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleOpenDeleteStageDialog()"
+                    [disabled]="!isStageSelected()"
+                    [attr.title]="!isStageSelected() ? 'Select a stage to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+            </div>
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Stage Inputs</p>
+                <button
+                    (click)="handleAddStageInput()" 
+                    [disabled]="!isStageSelected()"
+                    [attr.title]="!isStageSelected() ? 'Select a stage to add an input' : null"
+                    class="standard-write-button-small"
+                >
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleUpdateStageInput()" 
+                    [disabled]="!isInputSelected()" 
+                    [attr.title]="!isInputSelected() ? 'Select a stage input to update' : null"
+                    class="standard-write-button-small"
+                >
+                    <fa-icon [icon]="faEdit" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleOpenDeleteStageInputDialog()"
+                    [disabled]="!isInputSelected()"
+                    [attr.title]="!isInputSelected() ? 'Select a stage input to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+            </div>
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Stage Outputs</p>
+                <button
+                    (click)="handleAddStageOutput()" 
+                    [disabled]="!isStageSelected()"
+                    [attr.title]="!isStageSelected() ? 'Select a stage to add an output' : null"
+                    class="standard-write-button-small"
+                >
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleUpdateStageOutput()" 
+                    [disabled]="!isOutputSelected()" 
+                    [attr.title]="!isOutputSelected() ? 'Select a stage output to update' : null"
+                    class="standard-write-button-small"
+                >
+                    <fa-icon [icon]="faEdit" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleOpenDeleteStageOutputDialog()"
+                    [disabled]="!isOutputSelected()"
+                    [attr.title]="!isOutputSelected() ? 'Select a stage output to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+            </div>
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Connections</p>
+                <button (click)="handleAddConnection()" class="standard-write-button-small">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button
+                    (click)="handleOpenDeleteConnectionDialog()" 
+                    [disabled]="!isEdgeSelected()" 
+                    [attr.title]="!isEdgeSelected() ? 'Select a connection to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <h1 class="text-lg font-semibold text-gray-800 pb-2">Display Info</h1>
+            <div class="flex items-center space-x-2">
+                <input (change)="handleDisplayQuantities($event)" type="checkbox" id="show-quantities" name="show-quantities">
+                <p>Quantities (Q)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm dialogs -->
+    <div class="overlay" *ngIf="isDeleteStageConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteStageDialogInput"
+                (confirm)="handleDeleteStage()"
+                (cancel)="handleCancelDeleteStage()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+
+    <div class="overlay" *ngIf="isDeleteStageInputConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteStageInputDialogInput"
+                (confirm)="handleDeleteStageInput()"
+                (cancel)="handleCancelDeleteStageInput()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+    
+    <div class="overlay" *ngIf="isDeleteStageOutputConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteStageOutputDialogInput"
+                (confirm)="handleDeleteStageOutput()"
+                (cancel)="handleCancelDeleteStageOutput()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+
+    <div class="overlay" *ngIf="isDeleteConnectionConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteConnectionDialogInput"
+                (confirm)="handleDeleteConnection()"
+                (cancel)="handleCancelDeleteConnection()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+</div>  

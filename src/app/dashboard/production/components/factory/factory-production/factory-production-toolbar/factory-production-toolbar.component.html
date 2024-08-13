@@ -1,0 +1,111 @@
+<div class="w-full h-full pl-8 py-4 bg-gray-100 border-l border-t border-gray-300 shadow-sm overflow-y-auto relative max-h-full min-h-full">
+    <div class="overflow-y-auto h-full space-y-4">
+        <h2 class="text-xl font-semibold">Toolbar</h2>
+        <div class="space-y-2">
+            <h1 class="text-lg font-semibold text-gray-800 pb-2">Edit Configuration</h1>
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Stages</p>
+                <button (click)="handleAddFactoryStage()" class="standard-write-button-small">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleUpdateFactoryStage()" 
+                    [disabled]="!selectedNode" 
+                    [attr.title]="!selectedNode ? 'Select a stage to update' : null"
+                    class="standard-write-button-small"
+                >
+                    <fa-icon [icon]="faEdit" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button 
+                    (click)="handleOpenDeleteStageDialog()"
+                    [disabled]="!selectedNode"
+                    [attr.title]="!selectedNode ? 'Select a stage to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+            </div>
+            <div class="flex items-center space-x-2 font-semibold">
+                <p>Connections</p>
+                <button (click)="handleAddConnection()" class="standard-write-button-small">
+                    <fa-icon [icon]="faPlus" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+                <button
+                    (click)="handleOpenDeleteConnectionDialog()" 
+                    [disabled]="!selectedEdge" 
+                    [attr.title]="!selectedNode ? 'Select a connection to delete' : null"
+                    class="standard-delete-button-small"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 text-white mb-1"></fa-icon>
+                </button>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <h1 class="text-lg font-semibold text-gray-800 pb-2">Display Info</h1>
+            <div class="flex items-center space-x-2">
+                <input (change)="handleDisplayQuantities($event)" type="checkbox" id="show-quantities" name="show-quantities">
+                <p>Quantities (Q)</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input (change)="handleDisplayCapacities($event)" type="checkbox" id="show-capacities" name="show-capacities">
+                <p>Capacities (C)</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input (change)="handleDisplayPriorities($event)" type="checkbox" id="show-priorities" name="show-priorities">
+                <p>Priorities (P)</p>
+            </div>
+        </div>
+        <div class="">
+            <h1 class="text-lg font-semibold text-gray-800 pb-2">Allocate Resources</h1>
+            <div class="space-y-2">
+                <button (click)="handleViewActivePlan()" class="standard-button">
+                    View Active Plan
+                </button>
+                
+                <button (click)="handleOpenAllocationPlanMenu()" class="standard-button">
+                    Compute Allocation Plan
+                </button>
+
+                <div *ngIf="computeAllocationPlan" class="space-y-2">
+                    <p class="font-semibold text-gray-700">Duration</p>
+                    <app-select-duration (durationChange)="handleDurationChange($event)"></app-select-duration>
+                    <button (click)="handleComputeAllocationPlan()" class="standard-button">Allocate Resources</button>
+                    <button *ngIf="computedAllocationPlan != undefined" (click)="handleOpenComputedAllocationPlan()" class="standard-button">View Allocation Plan</button>
+                </div>
+                
+                <button (click)="handleViewProductionHistory()" class="standard-button">
+                    View Production History
+                </button>
+            </div>
+        </div>
+        <div class="">
+            <h1 class="text-lg font-semibold text-gray-800 pb-2">Seek Resources</h1>
+            <button (click)="handleSeekMissingResources()" class="standard-button">
+                Seek Missing Resources
+            </button>
+        </div>
+    </div>
+
+    <!-- Confirm dialogs -->
+    <div class="overlay" *ngIf="isDeleteStageConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteStageDialogInput"
+                (confirm)="handleDeleteFactoryStage()"
+                (cancel)="handleCancelDeleteStage()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+
+    <div class="overlay" *ngIf="isDeleteConnectionConfirmDialogOpen">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog 
+                [dialogInput]="deleteConnectionDialogInput"
+                (confirm)="handleDeleteConnection()"
+                (cancel)="handleCancelDeleteConnection()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+</div>  

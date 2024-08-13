@@ -1,0 +1,8 @@
+<div class="flex items-center space-x-2">
+    <input [(ngModel)]="inputValue" (ngModelChange)="onInputValueChange()" type="number" class="form-input">
+    <select [(ngModel)]="selectedOption" (ngModelChange)="onOptionChange()" class="custom-select">
+        <option *ngFor="let option of options">
+            {{ option }}
+        </option>
+    </select>
+</div>

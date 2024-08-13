@@ -1,4 +1,4 @@
-<div class="page-standard-horizontal-padding overflow-x-hidden">
+<div class="page-standard-horizontal-padding overflow-x-hidden space-y-8 overflow-y-auto h-full py-4">
     <div class="flex items-center">
         <fa-icon
             [icon]="faGlobe"
@@ -6,16 +6,105 @@
         ></fa-icon>
         <h2 class="page-title">Overview</h2>
     </div>
-    <div class="py-6">
+
+    <!-- SC Snapshot -->
+    <div class="flex items-center justify-between px-10 space-x-10">
+        <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
+                Products
+            </div>
+            <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
+                {{ scSnapshot?.snapshot?.productsCount }}
+            </div>
+        </div>
+        <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
+                Factories
+            </div>
+            <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
+                {{ scSnapshot?.snapshot?.factoriesCount }}
+            </div>
+        </div>
+        <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
+                Warehouses
+            </div>
+            <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
+                {{ scSnapshot?.snapshot?.warehousesCount }}
+            </div>
+        </div>
+        <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
+                Suppliers
+            </div>
+            <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
+                {{ scSnapshot?.snapshot?.suppliersCount }}
+            </div>
+        </div>
+        <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
+            <div class="pl-4 pr-3 py-1.5 bg-gray-200 border-r border-gray-300 rounded-l-md">
+                Clients
+            </div>
+            <div class="pl-3 pr-4 py-1.5 text-gray-800 rounded-r-md">
+                {{ scSnapshot?.snapshot?.clientsCount }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="border border-gray-300 rounded-md shadow-sm overflow-y-auto max-h-80">
+        <div class="px-4 py-2 flex items-center bg-gray-200 border-b border-gray-300">
+            <h2 class="text-lg font-semibold">Notifications ({{ results?.results?.length }})</h2>
+        </div>
+        <div *ngFor="let notification of results?.results" class="px-4 py-2 border-y border-gray-200">
+            <div class="font-semibold">{{ notification?.notification?.title }}</div>
+            <div class="text-sm">{{ notification?.notification?.message }}</div>
+        </div>
+
+        <button *ngIf="isNextPage" (click)="loadNextPage()" class="px-4 py-2 text-blue-700">
+            Load More
+        </button>
+    </div>
+
+    <!-- Map -->
+    <div>
         <div class="flex items-center">
             <fa-icon
                 [icon]="faMap"
-                class="small-icon text-gray-700 mr-2 mb-1"
+                class="small-icon text-gray-700 mr-2 mb-1.5"
             ></fa-icon>
             <h2 class="text-lg font-semibold">Map</h2>
         </div>
 
-        <!-- Map -->
         <app-map></app-map>
+    </div>
+
+    <!-- Upcoming Events -->
+    <div class="pb-4">
+        <div class="flex items-center justify-between py-2">
+            <h2 class="text-lg font-semibold">Upcoming Events ({{ events?.length }})</h2>
+            <div class="flex items-center space-x-4">
+                <span class="font-semibold">Entity Type</span>
+                <select [(ngModel)]="selectedEntityType" (change)="onEntityTypeChange()" class="border border-gray-300 rounded-md shadow-sm p-1 cursor-pointer font-semibold text-sm">
+                    <option *ngFor="let type of entityTypes" [value]="type">{{ type }}</option>
+                </select>
+                <span class="font-semibold">Period</span>
+                <select [(ngModel)]="selectedPeriod" (change)="onPeriodChange()" class="border border-gray-300 rounded-md shadow-sm p-1 cursor-pointer font-semibold text-sm">
+                    <option *ngFor="let period of periods" [value]="period">{{ period }}</option>
+                </select>
+                <button (click)="refreshEvents()" class="bg-white border border-gray-300 rounded-md shadow-sm px-2 py-1 cursor-pointer font-semibold text-sm">
+                    <fa-icon [icon]="faArrowRotateRight" class="text-gray-500"></fa-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex items-center border border-gray-300 rounded-md w-full overflow-x-auto">
+            <div *ngFor="let event of events" class="bg-gray-200 max-w-48 p-1 text-sm text-center">
+                <div class="w-44 h-2.5 bg-blue-500 rounded-full mb-2 justify-center"></div>
+                <div class="text-ellipsis overflow-hidden whitespace-nowrap font-semibold">{{ event.title }}</div>
+                <div class="text-ellipsis overflow-hidden whitespace-nowrap">{{ event.message }}</div>
+                <div class="text-ellipsis overflow-hidden whitespace-nowrap text-gray-600">{{ formatFriendlyDate(event.dateTime.toString())}}</div>
+            </div>
+        </div>
     </div>
 </div>

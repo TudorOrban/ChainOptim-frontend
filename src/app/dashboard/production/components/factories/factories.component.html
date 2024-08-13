@@ -1,0 +1,35 @@
+<!-- Header -->
+<app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    [title]="'Factories'" [icon]="faIndustry" [searchPlaceholder]="'Search Factories'" [sortOptions]="sortOptions" [createName]="'Factory'" [createLink]="'create-factory'"
+    (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
+></app-list-header>
+
+<!-- Page content-->
+<div *ngIf="!fallbackManagerState.fallBack" class="page-standard-horizontal-padding">
+    <ul *ngFor="let factory of factories">
+        <li
+            key="factory.id"
+            class="px-4 py-2 my-4 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-md shadow-sm"
+        >
+            <a
+                [routerLink]="'/dashboard/factories/' + factory.id"
+                class="font-semibold text-lg hover:text-blue-700 hover:text-underline"
+                >{{ factory.name }}</a
+            >
+            <p class="text-gray-900">{{ factory.location?.address }}</p>
+        </li>
+    </ul>
+    <div class="flex items-center justify-end py-4">
+        <app-page-selector
+            [page]="page"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="totalCount"
+            (pageChange)="changePage($event)"
+        ></app-page-selector>
+    </div>
+</div>
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>

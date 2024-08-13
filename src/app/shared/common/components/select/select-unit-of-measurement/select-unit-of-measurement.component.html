@@ -1,0 +1,11 @@
+<!-- select-unit-of-measurement.component.html -->
+<div class="flex items-center space-x-4">
+    <select [(ngModel)]="selectedStandardUnit" (change)="onSelectionChange()" class="custom-select">
+      <option *ngFor="let unit of standardUnits" [ngValue]="unit">{{unit}}</option>
+    </select>
+  
+    <select [(ngModel)]="selectedUnitMagnitude" (change)="onSelectionChange()" class="custom-select">
+      <option *ngFor="let magnitude of unitMagnitudes" [ngValue]="magnitude">{{magnitude}}</option>
+    </select>
+  </div>
+  

@@ -1,0 +1,51 @@
+<!-- Header -->
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    class="page-standard-horizontal-padding entity-page-header">
+    <div class="flex items-center justify-between w-full">
+        <div>
+            <h2 class="page-title">{{ supplier?.name }}</h2>
+            <p class="text-gray-900 pt-1">{{ supplier?.location?.address || "" }}</p>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button (click)="openConfirmDialog()" class="standard-delete-button">
+                <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
+            </button>
+            <button
+                class="standard-write-button"
+                [routerLink]="'/dashboard/suppliers/' + supplier?.id + '/update'"
+            >
+                Edit Supplier    
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<app-tabs
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+    (tabSelected)="onTabSelected($event)"
+></app-tabs>
+
+<app-supplier-overview *ngIf="activeTab === 'Overview'" [supplier]="supplier"></app-supplier-overview>
+<app-supplier-orders *ngIf="activeTab === 'Supplier Orders'" [searchMode]="SearchMode.SECONDARY" [supplierId]="supplier?.id" [dontPadHorizontally]="true"></app-supplier-orders>
+<app-supplier-shipments *ngIf="activeTab === 'Supplier Shipments'" [searchMode]="SearchMode.SECONDARY" [supplierId]="supplier?.id" [dontPadHorizontally]="true"></app-supplier-shipments>
+<app-supplier-performance *ngIf="activeTab === 'Performance'" [supplier]="supplier"></app-supplier-performance>
+
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteSupplier()"
+            (cancel)="handleCancel()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>

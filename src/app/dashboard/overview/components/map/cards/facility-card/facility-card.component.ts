@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { Facility, FacilityType } from '../../../../types/supplyChainMapTypes';
+import { Facility, FacilityType, Pair } from '../../../../types/supplyChainMapTypes';
 
 @Component({
   selector: 'app-facility-card',
@@ -13,6 +13,7 @@ import { Facility, FacilityType } from '../../../../types/supplyChainMapTypes';
 })
 export class FacilityCardComponent {
     @Input() facility!: Facility;
+    @Output() onToggle = new EventEmitter<Pair<number, FacilityType>>();
 
     isCardOpen: boolean = false;
     imageUrl: string = "";
@@ -40,13 +41,14 @@ export class FacilityCardComponent {
                 break;
             default:
                 console.error("Facility type not recognized:", this.facility.type);
-                this.imageUrl = ""; // Default or fallback image
+                this.imageUrl = ""; 
         }
         
     }
 
     toggleCard(): void {
         this.isCardOpen = !this.isCardOpen;
+        this.onToggle.emit({ first: this.facility.id, second: this.facility.type }); 
     }
 
     faXmark = faXmark;

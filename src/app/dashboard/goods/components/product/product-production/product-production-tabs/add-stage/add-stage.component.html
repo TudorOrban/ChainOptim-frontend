@@ -1,0 +1,29 @@
+<div class="std-form-container space-x-4">
+    <form [formGroup]="stageForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">
+        <h2 class="text-2xl font-semibold mb-4 text-center">Add Stage</h2>
+        
+        <div>
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" formControlName="name" class="form-input">
+            <div *ngIf="stageForm.get('name')?.touched && stageForm.get('name')?.errors">
+                <p *ngIf="stageForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
+                <p *ngIf="stageForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
+            </div>
+        </div>
+
+        <div>
+            <label for="description" class="form-label">Description:</label>
+            <textarea id="description" formControlName="description" class="form-input"></textarea>
+            <div *ngIf="stageForm.get('description')?.touched">
+                <p *ngIf="stageForm.get('description')?.errors?.['maxlength']" class="form-error">Description must not exceed 200 characters.</p>
+            </div>
+        </div>
+
+
+        <div class="flex items-center w-full justify-end">
+            <button type="submit" class="standard-write-button">
+                Add Stage
+            </button>
+        </div>
+    </form>
+</div>

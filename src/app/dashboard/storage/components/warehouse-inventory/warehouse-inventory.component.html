@@ -1,0 +1,128 @@
+<div >
+    <app-table-toolbar
+        [title]="searchMode == SearchMode.ORGANIZATION ? 'Warehouse Items' : ''" [searchPlaceholder]="'Search by company ID'" [dontPadHorizontally]="dontPadHorizontally"
+        [sortOptions]="sortOptions" [filterOptions]="filterOptions"
+        [selectedItemIds]="selectedItemIds" [newRawItems]="newRawItems" [isEditing]="isEditing"
+        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onFilterChange)="handleFilterChange($event)" (onRefresh)="handleRefresh()"
+        (onCancel)="handleCancel()"(onAddItem)="handleAddItem()" (onCreateItems)="handleCreateItems()" (onEditItems)="editSelectedItems()" (onSaveEditedItems)="saveEditedItems()" (onDeleteItems)="openConfirmDeleteDialog()"
+    ></app-table-toolbar>
+</div>
+
+<div class="table-container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th class="select-col"><input type="checkbox" (change)="toggleAllSelections($event)"/></th>
+                <th class="id-col">ID</th>
+                <th class="company-id-col">Company ID</th>
+                <th class="warehouse-id-col px-2">Warehouse</th>
+                <th class="component-col">Component</th>
+                <th class="product-col">Product</th>
+                <th class="quantity-col">Quantity</th>
+                <th class="minimum-required-quantity-col">Minimum Required Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let newItem of newRawItems; let i = index">
+                <td><input type="checkbox" [(ngModel)]="newItem.selected"></td>
+                <td>{{ i + 1 }}</td>
+                <td><input type="text" [(ngModel)]="newItem.companyId" class="form-input"></td>
+                <td>
+                    <!-- Dropdown for selecting warehouse -->
+                    <select [(ngModel)]="newItem.warehouseId" name="warehouseId-{{ i }}" class="custom-select">
+                        <option *ngFor="let warehouse of warehouses" [value]="warehouse.id">
+                            {{ warehouse.name }}
+                        </option>
+                    </select>
+                </td>
+                <td>
+                    <!-- Dropdown for selecting component -->
+                    <select [(ngModel)]="newItem.componentId" name="componentId-{{ i }}" class="custom-select">
+                        <option *ngFor="let component of components" [value]="component.id">
+                            {{ component.name }}
+                        </option>
+                    </select>
+                </td>
+                <td>
+                    <!-- Dropdown for selecting product -->
+                    <select [(ngModel)]="newItem.productId" name="productId-{{ i }}" class="custom-select">
+                        <option *ngFor="let product of products" [value]="product.id">
+                            {{ product.name }}
+                        </option>
+                    </select>
+                </td>
+                <td><input type="number" [(ngModel)]="newItem.quantity" class="form-input"></td>
+                <td><input type="number" [(ngModel)]="newItem.minimuRequiredQuantity" class="form-input"></td>
+            </tr>
+            <ng-container *ngFor="let item of warehouseInventoryItems?.results; let i = index">
+                <tr *ngIf="!item.isEditing">
+                    <td><input type="checkbox" [checked]="item?.selected" (change)="toggleSelection(item)" /></td> <!-- Row-specific Checkbox -->
+                    <td>{{ item.id }}</td>
+                    <td>{{ item?.companyId }}</td>
+                    <td>{{ getWarehouseName(item.warehouseId) }}</td>
+                    <td>{{ item?.component?.name }}</td>
+                    <td>{{ item?.product?.name }}</td>
+                    <td>{{ item?.quantity }}</td>
+                    <td>{{ item?.minimumRequiredQuantity }}</td>
+                </tr>
+                <tr *ngIf="item.isEditing">
+                    <td><input type="checkbox" [(ngModel)]="item.selected"></td>
+                    <td>{{ item.id }}</td>
+                    <td><input type="text" [(ngModel)]="item.companyId" class="form-input"></td>
+                    <td>
+                        <!-- Dropdown for selecting warehouse -->
+                        <select [(ngModel)]="item.warehouseId" name="warehouseId-{{ i }}" class="custom-select">
+                            <option *ngFor="let warehouse of warehouses" [value]="warehouse.id">
+                                {{ warehouse.name }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <!-- Dropdown for selecting component -->
+                        <select [(ngModel)]="selectedComponentId[item.id]" (ngModelChange)="setComponentId(item, $event)" name="componentId-{{ i }}" class="custom-select">
+                            <option [value]="null">Select a component</option>
+                            <option *ngFor="let component of components" [value]="component.id">
+                                {{ component.name }}
+                            </option>
+                        </select>                        
+                    </td>
+                    <td>
+                        <!-- Dropdown for selecting product -->
+                        <select [(ngModel)]="selectedProductId[item.id]" (ngModelChange)="setProductId(item, $event)" name="productId-{{ i }}" class="custom-select">
+                            <option [value]="null">Select a product</option>
+                            <option *ngFor="let product of products" [value]="product.id">
+                                {{ product.name }}
+                            </option>
+                        </select>                        
+                    </td>
+                    <td><input type="number" [(ngModel)]="item.quantity" class="form-input"></td>
+                    <td><input type="number" [(ngModel)]="item.minimumRequiredQuantity" class="form-input"></td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Page Selector -->
+<div class="flex items-center justify-end py-4">
+    <app-page-selector
+        [page]="searchParams.page"
+        [itemsPerPage]="searchParams.itemsPerPage"
+        [totalItems]="warehouseInventoryItems?.totalCount || warehouseInventoryItems?.results?.length || 0"
+        (pageChange)="changePage($event)"
+    ></app-page-selector>
+</div>
+
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteWarehouseInventoryItems()"
+            (cancel)="handleCancelDeletion()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>

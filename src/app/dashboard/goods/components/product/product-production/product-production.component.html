@@ -1,0 +1,9 @@
+<div class="flex w-full h-full relative">
+    <div class="flex-initial w-2/3 h-full overflow-y-auto">
+        <app-product-production-tabs [productId]="product?.id || 0"></app-product-production-tabs>
+    </div>
+    <div class="resize-handle cursor-col-resize bg-gray-300" style="width: 5px;" #resizer></div>
+    <div class="flex-initial w-1/3 overflow-y-auto h-full">
+        <app-product-production-toolbar [productId]="product?.id || 0"></app-product-production-toolbar>
+    </div>
+</div>

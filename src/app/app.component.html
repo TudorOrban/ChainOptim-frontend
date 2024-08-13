@@ -67,13 +67,18 @@
         </div>
     </nav>
 </header>
-<main>
-    <div class="flex h-full">
+<main class="flex overflow-hidden">
+    <div class="flex w-full">
         <app-sidebar
             *ngIf="hideHeader"
+            class="h-full max-w-64 bg-white shadow-md overflow-auto"
         ></app-sidebar>
-        <div class="w-full">
+        <div class="flex-1 overflow-y-auto bg-white">
             <router-outlet></router-outlet>
         </div>
     </div>
 </main>
+
+<div class="toast-manager-wrapper">
+    <app-toast-manager></app-toast-manager>
+</div>

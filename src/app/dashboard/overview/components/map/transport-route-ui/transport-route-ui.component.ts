@@ -1,23 +1,29 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TransportRoute, TransportType } from '../../../types/supplyChainMapTypes';
+import { EntityType, FacilityType, Pair, TransportRoute, TransportType } from '../../../types/supplyChainMapTypes';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-transport-route-ui',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FontAwesomeModule],
     templateUrl: './transport-route-ui.component.html',
     styleUrls: ['./transport-route-ui.component.css']
 })
 export class TransportRouteUIComponent {
     @Input() route!: TransportRoute;
-    @Output() onRouteSelected = new EventEmitter<TransportRoute>();
+    @Output() onToggle = new EventEmitter<Pair<number, EntityType>>();
 
-    isSelected: boolean = false;
+    isCardOpen: boolean = false;
     imageUrl: string = "";
+    estimatedProgress: number = 0;
+    timeToArrivalSeconds: number = 0;
+    etaString: string = "";
 
     public initializeData(): void {
         this.updateImageUrl();
+        this.computeMetrics();
     }
     
     updateImageUrl(): void {
@@ -37,13 +43,43 @@ export class TransportRouteUIComponent {
                 this.imageUrl = "assets/images/black-plane.png";
                 break;
             default:
-                this.imageUrl = ""; 
+                this.imageUrl = "assets/images/circle-solid.png"; 
+        }        
+    }
+
+    toggleCard(): void {
+        this.isCardOpen = !this.isCardOpen;
+        this.onToggle.emit({ first: this.route.entityId, second: this.route.entityType });
+    }
+
+    computeMetrics(): void {
+        if (!this.route) return;
+
+        if (this.route.departureDateTime && this.route.estimatedArrivalDateTime) {
+            const totalDuration = this.route.estimatedArrivalDateTime.getTime() - this.route.departureDateTime.getTime();
+            const elapsedDuration = new Date().getTime() - this.route.departureDateTime.getTime();
+            this.estimatedProgress = elapsedDuration / totalDuration;
         }
-        
+
+        if (this.route.estimatedArrivalDateTime) {
+            const estimatedArrivalDateTime = new Date(this.route.estimatedArrivalDateTime);
+            this.timeToArrivalSeconds = (estimatedArrivalDateTime.getTime() - new Date().getTime()) / 1000;
+            this.updateETAString();
+        }
     }
 
-    toggleSelection(): void {
-        this.isSelected = !this.isSelected;
+    updateETAString(): void {
+        if (this.timeToArrivalSeconds <= 0) {
+            this.etaString = "Arrived";
+            return;
+        }
+
+        const hours = Math.floor(this.timeToArrivalSeconds / 3600);
+        const minutes = Math.floor((this.timeToArrivalSeconds % 3600) / 60);
+        const seconds = Math.floor(this.timeToArrivalSeconds % 60);
+
+        this.etaString = `${hours}h ${minutes}m ${seconds}s`;
     }
 
+    faXmark = faXmark;
 }

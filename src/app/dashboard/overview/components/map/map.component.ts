@@ -1,6 +1,6 @@
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-    AfterViewInit,
+    ChangeDetectorRef,
     Component,
     ComponentRef,
     EmbeddedViewRef,
@@ -8,24 +8,30 @@ import {
     PLATFORM_ID,
     ViewContainerRef,
 } from '@angular/core';
-import { Facility, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
+import { EntityType, Facility, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
 import { SupplyChainMapService } from '../../services/supplychainmap.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { Organization } from '../../../organization/models/organization';
 import { FacilityCardComponent } from './cards/facility-card/facility-card.component';
 import { TransportRouteUIComponent } from './transport-route-ui/transport-route-ui.component';
+import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-map',
     standalone: true,
-    imports: [],
+    imports: [FontAwesomeModule, CommonModule],
     templateUrl: './map.component.html',
     styleUrl: './map.component.css',
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent {
     private map: any;
     private L: any;
+
+    isMapInitialized: boolean = false;
+    private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent | TransportRouteUIComponent>> = new Map();
+    private routePolylines: Map<string, L.Polyline> = new Map();
 
     private supplyChainMap: SupplyChainMap | undefined;
     private currentOrganization: Organization | undefined;
@@ -35,25 +41,28 @@ export class MapComponent implements AfterViewInit {
         private viewContainerRef: ViewContainerRef,
         private supplyChainMapService: SupplyChainMapService,
         private fallbackManagerService: FallbackManagerService,
-        private userService: UserService
+        private userService: UserService,
+        private changeDetectorRef: ChangeDetectorRef
     ) {}
 
-    
-    ngAfterViewInit(): void {
-        this.loadData();
+    loadMap(): void {
+        this.loadData(false);
     }
 
-    private async loadData(): Promise<void> {
+    refreshMap(): void {
+        this.loadData(true);
+    }
+
+    private async loadData(refresh: boolean): Promise<void> {
         this.userService
             .getCurrentUser()
             .subscribe({
                 next: (user) => {
-                    console.log('Current User:', user);
                     this.currentOrganization = user?.organization;
                     if (user && user.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
-                        this.loadSupplyChainMap(this.currentOrganization?.id ?? 0);
+                        this.loadSupplyChainMap(this.currentOrganization?.id ?? 0, refresh);
                     } else {
                         this.fallbackManagerService.updateNoOrganization(true);
                         this.fallbackManagerService.updateLoading(false);
@@ -68,17 +77,21 @@ export class MapComponent implements AfterViewInit {
             });
     }
 
-    private loadSupplyChainMap(organizationId: number) {
+    private async loadSupplyChainMap(organizationId: number, refresh: boolean): Promise<void> {
         this.fallbackManagerService.updateLoading(true);
 
         this.supplyChainMapService
-            .getSupplyChainMapByOrganizationId(organizationId)
+            .getSupplyChainMapByOrganizationId(organizationId, refresh)
             .subscribe({
-                next: (supplyChainMap) => {
+                next: async (supplyChainMap) => {
                     this.supplyChainMap = supplyChainMap;
                     this.fallbackManagerService.updateLoading(false);
                     
-                    this.initMap();
+                    if (!this.isMapInitialized) {
+                        this.isMapInitialized = true;
+                        await this.initMap();
+                    }
+                    this.createMapElements();
                 },
                 error: (err: Error) => {
                     this.fallbackManagerService.updateError(err.message ?? '');
@@ -88,54 +101,55 @@ export class MapComponent implements AfterViewInit {
     }
 
     private async initMap(): Promise<void> {
-        if (isPlatformBrowser(this.platformId)) {
-            // Import leaflet and load map
-            this.L = await import('leaflet');
-
-            this.map = this.L.map('map', {
-                center: [39.8282, -98.5795],
-                zoom: 5,
-                worldCopyJump: true,
-            });
-
-            // Load tiles
-            const tiles = this.L.tileLayer(
-                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                {
-                    maxZoom: 18,
-                    minZoom: 3,
-                    attribution:
-                        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                }
-            );
-
-            tiles.addTo(this.map);
-
-            // Create map elements
-            this.createMapElements();
-
-            this.map.on('click', (e: L.LeafletMouseEvent) => {
-                const clickedLat = e.latlng.lat;
-                const clickedLng = e.latlng.lng;
-                console.log(
-                    `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
-                );
-            });
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
         }
+
+        // Import leaflet and load map
+        this.L = await import('leaflet');
+
+        this.map = this.L.map('map', {
+            center: [39.8282, -98.5795],
+            zoom: 5,
+            worldCopyJump: true,
+        });
+
+        // Load tiles
+        const tiles = this.L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                maxZoom: 18,
+                minZoom: 3,
+                attribution:
+                    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            }
+        );
+
+        tiles.addTo(this.map);
+
+        this.map.on('click', (e: L.LeafletMouseEvent) => {
+            const clickedLat = e.latlng.lat;
+            const clickedLng = e.latlng.lng;
+            console.log(
+                `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
+            );
+        });
     }
 
     private createMapElements(): void {
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+
         if (!this.supplyChainMap || !this.supplyChainMap.mapData) {
             console.error('Supply Chain Map data is not available.');
             return;
         }
     
-        // Create markers for each facility
         this.supplyChainMap.mapData.facilities.forEach((facility) => {
             this.createFacilityComponent(facility);
         });
-        console.log("Transport routes:", this.supplyChainMap.mapData.transportRoutes);
-        // Create a simple direct line for each transport route
+
         this.supplyChainMap.mapData.transportRoutes.forEach(route => {
             this.createRouteComponent(route);
           });
@@ -146,32 +160,39 @@ export class MapComponent implements AfterViewInit {
             console.error('Leaflet (L) is not available.');
             return;
         }
-
-        // Dynamically create the FactoryCardComponent
-        const componentRef =
-            this.viewContainerRef.createComponent(FacilityCardComponent);
-            
-        // Set the facility input on the component instance
+    
+        const componentRef = this.viewContainerRef.createComponent(FacilityCardComponent);
         componentRef.instance.facility = facilityData;
         componentRef.instance.initializeData(); 
+    
+        const domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+    
+        const marker = this.L.marker([facilityData.latitude, facilityData.longitude], {
+            icon: this.L.divIcon({
+                html: domElem,
+                className: 'flex justify-center',
+                iconSize: [30, 30],
+            }),
+        });
+    
+        componentRef.instance.onToggle.subscribe(({ first, second }) => {
+            const facilityKey = `${first}-${second}`;
 
-        // Access the DOM element of the component
-        const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
-            .rootNodes[0] as HTMLElement;
+            // Manage other cards
+            this.openCardComponentRef.forEach((value, key) => {
+                if (key !== facilityKey && value.instance.isCardOpen) {
+                    value.instance.toggleCard(); 
+                }
+            });
 
-        // Create a Leaflet marker with the component's element
-        const marker = this.L.marker(
-            [facilityData.latitude, facilityData.longitude],
-            {
-                icon: this.L.divIcon({
-                    html: domElem,
-                    className: 'flex justify-center',
-                    iconSize: [30, 30],
-                }),
+            // Update the reference map
+            if (componentRef.instance.isCardOpen) {
+                this.openCardComponentRef.set(facilityKey, componentRef);
+            } else {
+                this.openCardComponentRef.delete(facilityKey);
             }
-        );
+        });
 
-        // Add the marker to the map
         marker.addTo(this.map);
     }
 
@@ -182,61 +203,106 @@ export class MapComponent implements AfterViewInit {
             
             componentRef.instance.route = route;
             componentRef.instance.initializeData();
-            this.drawRoute(route, componentRef);
-
             
+            this.drawRoute(route, componentRef);
         } else {
             console.warn('Missing location data for route:', route);
         }
     }
     
     private drawRoute(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+        this.createRoutePolyline(route, (componentRef));
+        
+        this.createRouteMarker(route, (componentRef));
+
+        this.addArrowheads(route, 5);
+    }
+    
+    private createRoutePolyline(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
         const srcLatLng: [number, number] = [route.srcLocation.first, route.srcLocation.second];
         const destLatLng: [number, number] = [route.destLocation.first, route.destLocation.second];
 
         const polyline = this.L.polyline([srcLatLng, destLatLng], {
-            color: 'blue', 
+            color: route.entityType === EntityType.SUPPLIER_SHIPMENT ? 'blue' : 'green', 
             weight: 3
         }).addTo(this.map);
 
-        this.createRouteMarker(route, (componentRef.hostView as EmbeddedViewRef<any>));
+        const routeKey = `${route.entityId}-${route.entityType}`;
+        this.routePolylines.set(routeKey, polyline);
 
-        this.addArrowheads(srcLatLng, destLatLng, 5);
+        componentRef.instance.onToggle.subscribe(event => {
+            if (componentRef.instance.isCardOpen) {
+                polyline.setStyle({ weight: 6 });
+            } else {
+                polyline.setStyle({ weight: 3 });
+            }
+        });
     }
-    
-    private createRouteMarker(route: TransportRoute, hostView: EmbeddedViewRef<any>): void {
-        const domElem = hostView
+
+    private createRouteMarker(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+        const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
             .rootNodes[0] as HTMLElement;
 
-            // Create a Leaflet marker with the component's element
-            const midPointLat = (route.srcLocation.first + route.destLocation.first) / 2;
-            const midPointLng = (route.srcLocation.second + route.destLocation.second) / 2;
-            const marker = this.L.marker(
-                [midPointLat, midPointLng],
-                {
-                    icon: this.L.divIcon({
-                        html: domElem,
-                        className: 'flex justify-center',
-                        iconSize: [25, 25],
-                    }),
-                }
-            );
+        // Create a Leaflet marker with the component's element
+        let lat = 0;
+        let lng = 0;
+        const midPointLat = (route.srcLocation.first + route.destLocation.first) / 2;
+        const midPointLng = (route.srcLocation.second + route.destLocation.second) / 2;
+        if (route.liveLocation && route.liveLocation.first && route.liveLocation.second) {
+            lat = route.liveLocation.first;
+            lng = route.liveLocation.second;
+        } else {
+            lat = midPointLat;
+            lng = midPointLng;
+        }
 
-            // Add the marker to the map
-            marker.addTo(this.map);
+        const marker = this.L.marker(
+            [lat, lng],
+            {
+                icon: this.L.divIcon({
+                    html: domElem,
+                    className: 'flex justify-center',
+                    iconSize: [25, 25],
+                }),
+            }
+        );
+
+        componentRef.instance.onToggle.subscribe(({ first, second }) => {
+            const routeKey = `${first}-${second}`;
+
+            // Manage other cards
+            this.openCardComponentRef.forEach((value, key) => {
+                if (key !== routeKey && value.instance.isCardOpen) {
+                    value.instance.toggleCard(); 
+                }
+            });
+
+            // Update the reference map
+            if (componentRef.instance.isCardOpen) {
+                this.openCardComponentRef.set(routeKey, componentRef);
+            } else {
+                this.openCardComponentRef.delete(routeKey);
+            }
+        });
+
+        // Add the marker to the map
+        marker.addTo(this.map);
     }
     
-    private addArrowheads(start: [number, number], end: [number, number], n: number): void {
+    private addArrowheads(route: TransportRoute, n: number): void {
         // Calculate the geographical midpoints for arrows
+        const start: [number, number] = [route.srcLocation.first, route.srcLocation.second];
+        const end: [number, number] = [route.destLocation.first, route.destLocation.second];
+
         const arrowPoints = this.calculateIntermediatePoints(start, end, n);
         
         // Calculate the bearing for each segment
         arrowPoints.forEach((point, index) => {
             const angle = this.calculateBearing(
-                index === 0 ? start : arrowPoints[index - 1], // Previous point
+                index === 0 ? start : arrowPoints[index - 1],
                 point
             );
-            const offset = 36;
+            const offset = 38;
             const adjustedAngle = (angle + offset) % 360;
 
             // Create an arrow marker
@@ -289,4 +355,6 @@ export class MapComponent implements AfterViewInit {
     private rad2deg(rad: number): number {
         return rad * (180 / Math.PI);
     }
+
+    faArrowRotateRight = faArrowRotateRight;
 }

@@ -1,8 +1,8 @@
 import { createAction, props } from "@ngrx/store";
 import { QueryParams } from "../models/caching.model";
-import { PaginatedResults } from "../../../shared/search/models/PaginatedResults";
-import { Product } from "../../../dashboard/products/models/Product";
-import { Factory } from "../../../dashboard/factories/models/Factory";
+import { PaginatedResults } from "../../../shared/search/models/searchTypes";
+import { Product } from "../../../dashboard/goods/models/Product";
+import { Factory } from "../../../dashboard/production/models/Factory";
 
 export const loadProducts = createAction(
     '[Products] Load', 

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { SearchOptions } from "../models/Search";
-import { CacheEntry } from "../models/PaginatedResults";
+import { SearchParams } from "../models/searchTypes";
+import { CacheEntry } from "../models/searchTypes";
 
 /**
  * Service for caching search query results for the pages Products, Factories etc.
@@ -35,6 +35,10 @@ export class CachingService<T> {
         }
     }
 
+    invalidateAllCache(): void {
+        this.cache.clear();
+    }
+
     getFromCache(key: string): T | undefined {
         if (this.isCached(key)) {
             return this.cache.get(key)?.data;
@@ -52,7 +56,15 @@ export class CachingService<T> {
         }
     }
 
-    createCacheKey(feature: string, organizationId: number, searchParams: SearchOptions): string {
-        return `${feature}/organization/advanced/${organizationId}?searchQuery=${encodeURIComponent(searchParams.searchQuery)}&sortBy=${encodeURIComponent(searchParams.sortOption)}&ascending=${searchParams.ascending}&page=${searchParams.page}&itemsPerPage=${searchParams.itemsPerPage}`;
+    createCacheKey(feature: string, organizationId: number, searchParams: SearchParams): string {
+        let url = `${feature}/organization/advanced/${organizationId}?searchQuery=${encodeURIComponent(searchParams.searchQuery)}&sortBy=${encodeURIComponent(searchParams.sortOption)}&ascending=${searchParams.ascending}&page=${searchParams.page}&itemsPerPage=${searchParams.itemsPerPage}`;
+        
+        if (searchParams.filters && Object.keys(searchParams.filters).length > 0) {
+            const filtersJson = JSON.stringify(searchParams.filters);
+            const encodedFilters = encodeURIComponent(filtersJson);
+            url += `&filters=${encodedFilters}`;
+        }
+        
+        return url;
     }
 }

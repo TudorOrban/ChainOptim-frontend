@@ -1,0 +1,30 @@
+<div class="std-form-container space-x-4">
+    <form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">
+        <h2 class="text-2xl font-semibold mb-4 text-center">Update Warehouse</h2>
+
+        <div>
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" formControlName="name" class="form-input">
+            <div *ngIf="warehouseForm.get('name')?.touched && warehouseForm.get('name')?.errors">
+                <p *ngIf="warehouseForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
+                <p *ngIf="warehouseForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
+            </div>
+        </div>
+
+        <div>
+            <app-select-or-create-location
+                [initialLocationData]="warehouse?.location"
+                (locationChoiceChange)="handleLocationChoice($event)"
+                (selectedLocationChange)="handleLocationSelection($event)"
+                (newLocationData)="handleNewLocationData($event)"
+                (isFormValid)="handleLocationFormValidity($event)"
+            ></app-select-or-create-location>
+        </div>
+
+        <div class="flex items-center w-full justify-end">
+            <button type="submit" class="standard-write-button">
+                Update Warehouse
+            </button>
+        </div>
+    </form>
+</div>

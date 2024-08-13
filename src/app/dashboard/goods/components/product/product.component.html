@@ -1,0 +1,49 @@
+<!-- Header -->
+<div *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
+    class="page-standard-horizontal-padding entity-page-header">
+    <div class="flex items-center justify-between w-full">
+        <div>
+            <h2 class="page-title">{{ product?.name }}</h2>
+            <p class="text-gray-900 pt-1 h-6">{{ product?.description || "" }}</p>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button (click)="openConfirmDialog()" class="standard-delete-button">
+                <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
+            </button>
+            <button
+                class="standard-write-button"
+                [routerLink]="'/dashboard/products/' + product?.id + '/update'"
+            >
+                Edit Product    
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<app-tabs
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+    (tabSelected)="onTabSelected($event)"
+></app-tabs>
+
+<app-product-overview *ngIf="activeTab === 'Overview'" [product]="product"></app-product-overview>
+<app-product-production *ngIf="activeTab === 'Production'" [product]="product"></app-product-production>
+<app-product-evaluation *ngIf="activeTab === 'Evaluation'" [product]="product"></app-product-evaluation>
+
+<!-- Fallback manager -->
+<app-fallback-manager
+    [fallbackManagerState]="fallbackManagerState"
+></app-fallback-manager>
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteProduct()"
+            (cancel)="handleCancel()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>
