@@ -10,11 +10,12 @@ import { UserService } from '../../../../../core/auth/services/user.service';
 import { SelectComponentComponent } from '../../../../../shared/common/components/select/select-component/select-component.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { ScoreComponent } from '../../../../../shared/common/components/score/score.component';
 
 @Component({
     selector: 'app-supplier-performance',
     standalone: true,
-    imports: [CommonModule, FontAwesomeModule, SelectComponentComponent],
+    imports: [CommonModule, FontAwesomeModule, SelectComponentComponent, ScoreComponent],
     templateUrl: './supplier-performance.component.html',
     styleUrl: './supplier-performance.component.css',
 })
@@ -75,7 +76,7 @@ export class SupplierPerformanceComponent implements OnInit {
 
         this.performanceService.getSupplierPerformanceBySupplierId(this.supplier.id, false).subscribe((performance) => {
             this.componentIds = Object.keys(performance.report.componentPerformances).map(key => Number(key));
-            this.selectedComponentId = this.componentIds.length > 0 ? this.componentIds[0] : 0;
+            this.selectedComponentId = this.componentIds.length > 2 ? this.componentIds[2] : 0;
             this.loadMapComponent(performance);
         });
     }

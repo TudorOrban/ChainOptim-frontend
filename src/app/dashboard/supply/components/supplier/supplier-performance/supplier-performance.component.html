@@ -10,13 +10,36 @@
             </button>
         </div>
     </div>
-    <div class="flex items-center space-x-2">
-        <h2 class="label-medium">Total Delivered Orders:</h2> 
-        <p class="value-medium">{{ performance?.report?.totalDeliveredOrders }}</p>
+
+    <div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium pb-4">Overall Score:</h2> 
+            <app-score
+                [score]="supplier?.overallScore || 0"
+            ></app-score>
+        </div>
+        <div class="flex items-center space-x-4">
+            <h2 class="label-medium pb-4">Timeliness Score:</h2> 
+            <app-score
+                [score]="supplier?.timelinessScore || 0"
+            ></app-score>
+            <h2 class="label-medium pb-4">Quantity Per Time Score:</h2> 
+            <app-score
+                [score]="supplier?.quantityPerTimeScore || 0"
+            ></app-score>
+            <h2 class="label-medium pb-4">Availability Score:</h2> 
+            <app-score
+                [score]="supplier?.availabilityScore || 0"
+            ></app-score>
+        </div>
     </div>
 
-    <div class="label-large pt-2">Timeliness</div>
+    <div class="label-large">Timeliness</div>
     <div class="space-y-2">
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium">Total Delivered Orders:</h2> 
+            <p class="value-medium">{{ performance?.report?.totalDeliveredOrders }}</p>
+        </div>
         <div class="flex items-center space-x-2">
             <h2 class="label-medium">Total Delay Time:</h2> 
             <p class="value-medium">{{ formatTimePeriod(performance?.report?.totalDelays) }}</p>
