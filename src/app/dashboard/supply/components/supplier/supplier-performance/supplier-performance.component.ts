@@ -102,6 +102,8 @@ export class SupplierPerformanceComponent implements OnInit {
             }
             const componentData = this.performance?.report.componentPerformances[this.selectedComponentId];
             this.componentRef.instance.data = componentData.deliveredQuantityOverTime;
+            this.componentRef.instance.startingDate = new Date(componentData.firstDeliveryDate);
+            this.componentRef.instance.updateChartData();
         })
     }
 
@@ -117,6 +119,7 @@ export class SupplierPerformanceComponent implements OnInit {
         const componentData = this.performance?.report.componentPerformances[this.selectedComponentId];
         console.log("Component data: ", componentData);
         this.componentRef.instance.data = {...componentData.deliveredQuantityOverTime};
+        this.componentRef.instance.startingDate = new Date(componentData.firstDeliveryDate);
         this.componentRef.instance.updateChartData();
     }
 }
