@@ -7,10 +7,11 @@ export interface ResourceTransportRoute {
     createdAt?: string;
     updatedAt?: string;
     companyId?: number;
-    transportRoute?: TransportRoute;
+    transportRoute: TransportRoute;
 
     // UI Utils
     selected?: boolean;
+    isEditing?: boolean;
 }
 
 export interface TransportRoute {
@@ -30,9 +31,22 @@ export interface TransportRoute {
     liveLocation?: Pair<number, number>;
 
     transportType?: TransportType;
-    shipmentStatus: ShipmentStatus;
+    status: ShipmentStatus;
 
-    departureDateTime?: string;
-    estimatedArrivalDateTime?: string;
-    arrivalDateTime?: string;
+    departureDateTime: Date;
+    estimatedArrivalDateTime: Date;
+    arrivalDateTime: Date;
+}
+
+export interface CreateRouteDTO {
+    organizationId: number;
+    companyId?: number;
+    transportRoute?: TransportRoute;
+}
+
+export interface UpdateRouteDTO {
+    id: number;
+    organizationId: number;
+    companyId?: number;
+    transportRoute?: TransportRoute;
 }

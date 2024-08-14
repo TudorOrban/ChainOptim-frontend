@@ -69,7 +69,7 @@ export class SidebarComponent {
             subItems: [
                 { label: 'Products', link: '/dashboard/products' },
                 { label: 'Components', link: '/dashboard/components' },
-                { label: 'Stages', link: '/dashboard/stages' },
+                { label: 'Transport Routes', link: '/dashboard/transport-routes' },
             ]
         },
         { label: 'Supply', icon: this.faTruckArrowRight, link: '/dashboard/suppliers',

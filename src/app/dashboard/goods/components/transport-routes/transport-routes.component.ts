@@ -19,12 +19,12 @@ import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDial
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { SearchOptionsService } from '../../../../shared/search/services/searchoptions.service';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
-import { ResourceTransportRoute } from '../../models/TransportRoute';
-import { RouteStatus } from '../../../supply/models/SupplierRoute';
+import { CreateRouteDTO, ResourceTransportRoute, UpdateRouteDTO } from '../../models/TransportRoute';
 import { TransportRouteService } from '../../services/transportroute.service';
+import { ShipmentStatus } from '../../../supply/models/SupplierShipment';
 
 @Component({
-    selector: 'app-supplier-routes',
+    selector: 'app-transport-routes',
     standalone: true,
     imports: [
         CommonModule,
@@ -34,10 +34,10 @@ import { TransportRouteService } from '../../services/transportroute.service';
         PageSelectorComponent,
         GenericConfirmDialogComponent,
     ],
-    templateUrl: './supplier-routes.component.html',
-    styleUrl: './supplier-routes.component.css',
+    templateUrl: './transport-routes.component.html',
+    styleUrl: './transport-routes.component.css',
 })
-export class ResourceTransportRoutesComponent implements OnInit {
+export class TransportRoutesComponent implements OnInit {
     @Input() searchMode: SearchMode = SearchMode.ORGANIZATION;
     @Input() supplierId: number | undefined = undefined;
     @Input() dontPadHorizontally: boolean = false;
@@ -54,7 +54,7 @@ export class ResourceTransportRoutesComponent implements OnInit {
         itemsPerPage: 20,
     };
     SearchMode = SearchMode;
-    RouteStatus = RouteStatus;
+    ShipmentStatus = ShipmentStatus;
 
     selectedRouteIds = new Set<number>();
     newRawRoutes: any[] = [];
@@ -62,8 +62,8 @@ export class ResourceTransportRoutesComponent implements OnInit {
     selectedComponentId: { [routeId: number]: number | null } = {};
 
     deleteDialogInput: ConfirmDialogInput = {
-        dialogTitle: 'Delete Supplier',
-        dialogMessage: 'Are you sure you want to delete this supplier?',
+        dialogTitle: 'Delete Transport Route',
+        dialogMessage: 'Are you sure you want to delete this transport route?',
     };
     isConfirmDialogOpen = false;
 
@@ -78,10 +78,10 @@ export class ResourceTransportRoutesComponent implements OnInit {
         private searchOptionsService: SearchOptionsService
     ) {
         this.filterOptions =
-            this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_ROUTE)
+            this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_SHIPMENT)
                 ?.filterOptions || [];
         this.sortOptions =
-            this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_ROUTE)
+            this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_SHIPMENT)
                 ?.sortOptions || [];
     }
 
@@ -197,8 +197,8 @@ export class ResourceTransportRoutesComponent implements OnInit {
         this.newRawRoutes = [];
         this.selectedRouteIds.clear();
         this.isEditing = false;
-        if (this.resourceTransportRoutes && this.resourceTransportRoutes.results) {
-            this.resourceTransportRoutes.results = this.resourceTransportRoutes.results.map(
+        if (this.routes && this.routes.results) {
+            this.routes.results = this.routes.results.map(
                 (route) => {
                     return { ...route, selected: false, isEditing: false };
                 }
@@ -222,7 +222,7 @@ export class ResourceTransportRoutesComponent implements OnInit {
     }
 
     handleCreateRoutes(): void {
-        const newRouteDTOs: CreateResourceTransportRouteDTO[] = [];
+        const newRouteDTOs: CreateRouteDTO[] = [];
 
         for (const rawRoute of this.newRawRoutes) {
             const newRoute = this.getValidRouteDTO(rawRoute);
@@ -232,33 +232,33 @@ export class ResourceTransportRoutesComponent implements OnInit {
             }
             newRouteDTOs.push(newRoute);
         }
-
-        this.resourceTransportRouteService
-            .createResourceTransportRoutesInBulk(newRouteDTOs)
-            .subscribe({
-                next: (routes) => {
-                    this.newRawRoutes = [];
-                    this.loadResourceTransportRoutes();
-                    this.toastService.addToast({
-                        id: 123,
-                        title: 'Success',
-                        message: 'Supplier Route created successfully.',
-                        outcome: OperationOutcome.SUCCESS,
-                    });
-                },
-                error: (err) => {
-                    this.toastService.addToast({
-                        id: 123,
-                        title: 'Error',
-                        message: 'Supplier Route creation failed.',
-                        outcome: OperationOutcome.ERROR,
-                    });
-                    console.error('Failed to create routes', err);
-                },
-            });
+        console.log('Creating routes:', newRouteDTOs);
+        // this.resourceTransportRouteService
+        //     .createResourceTransportRoutesInBulk(newRouteDTOs)
+        //     .subscribe({
+        //         next: (routes) => {
+        //             this.newRawRoutes = [];
+        //             this.loadResourceTransportRoutes();
+        //             this.toastService.addToast({
+        //                 id: 123,
+        //                 title: 'Success',
+        //                 message: 'Supplier Route created successfully.',
+        //                 outcome: OperationOutcome.SUCCESS,
+        //             });
+        //         },
+        //         error: (err) => {
+        //             this.toastService.addToast({
+        //                 id: 123,
+        //                 title: 'Error',
+        //                 message: 'Supplier Route creation failed.',
+        //                 outcome: OperationOutcome.ERROR,
+        //             });
+        //             console.error('Failed to create routes', err);
+        //         },
+        //     });
     }
 
-    private getValidRouteDTO(route: any): CreateResourceTransportRouteDTO | null {
+    private getValidRouteDTO(route: any): CreateRouteDTO | null {
         // Check for required fields and basic validation
         if (!route.supplierId) {
             console.error('Validation failed, missing required route fields.');
@@ -282,16 +282,16 @@ export class ResourceTransportRoutesComponent implements OnInit {
         }
 
         // Construct DTO
-        const dto: CreateResourceTransportRouteDTO = {
+        const dto: CreateRouteDTO = {
             organizationId: this.currentUser?.organization?.id ?? 0,
-            supplierOrderId: Number(route.supplierOrderId),
-            supplierId: Number(route.supplierId),
-            quantity: Number(route.quantity),
-            arrivalDate: arrivalDate,
-            estimatedArrivalDate: estimatedArrivalDate,
-            // routeStartingDate: routeStartingDate,
             companyId: route.companyId,
-            status: route.status || RouteStatus.IN_TRANSIT,
+            transportRoute: {
+                departureDateTime: new Date(),
+                arrivalDateTime: arrivalDate,
+                estimatedArrivalDateTime: estimatedArrivalDate,
+                status: route.status || ShipmentStatus.IN_TRANSIT,
+
+            }
         };
 
         return dto;
@@ -305,7 +305,7 @@ export class ResourceTransportRoutesComponent implements OnInit {
 
     // Update
     editSelectedRoutes(): void {
-        this.resourceTransportRoutes?.results.forEach((route) => {
+        this.routes?.results.forEach((route) => {
             if (this.selectedRouteIds.has(route.id)) {
                 route.isEditing = !route.isEditing;
             }
@@ -314,54 +314,53 @@ export class ResourceTransportRoutesComponent implements OnInit {
     }
 
     saveEditedRoutes(): void {
-        const editedRoutes = this.resourceTransportRoutes?.results.filter(
+        const editedRoutes = this.routes?.results.filter(
             (route) => route.isEditing
         );
 
         const editedRouteDTOs = this.getValidUpdateDTO(editedRoutes || []);
-
-        this.resourceTransportRouteService
-            .updateResourceTransportRoutesInBulk(editedRouteDTOs)
-            .subscribe({
-                next: (routes) => {
-                    this.loadResourceTransportRoutes();
-                    this.handleCancel();
-                    this.toastService.addToast({
-                        id: 123,
-                        title: 'Success',
-                        message: 'Supplier Route updated successfully.',
-                        outcome: OperationOutcome.SUCCESS,
-                    });
-                },
-                error: (err) => {
-                    this.toastService.addToast({
-                        id: 123,
-                        title: 'Error',
-                        message: 'Supplier Route update failed.',
-                        outcome: OperationOutcome.ERROR,
-                    });
-                    console.error('Failed to update routes', err);
-                },
-            });
+        console.log('Updating routes:', editedRouteDTOs);
+        // this.resourceTransportRouteService
+        //     .updateResourceTransportRoutesInBulk(editedRouteDTOs)
+        //     .subscribe({
+        //         next: (routes) => {
+        //             this.loadResourceTransportRoutes();
+        //             this.handleCancel();
+        //             this.toastService.addToast({
+        //                 id: 123,
+        //                 title: 'Success',
+        //                 message: 'Supplier Route updated successfully.',
+        //                 outcome: OperationOutcome.SUCCESS,
+        //             });
+        //         },
+        //         error: (err) => {
+        //             this.toastService.addToast({
+        //                 id: 123,
+        //                 title: 'Error',
+        //                 message: 'Supplier Route update failed.',
+        //                 outcome: OperationOutcome.ERROR,
+        //             });
+        //             console.error('Failed to update routes', err);
+        //         },
+        //     });
     }
 
     private getValidUpdateDTO(
         editedRoutes: ResourceTransportRoute[]
-    ): UpdateResourceTransportRouteDTO[] {
-        const routeDTOs: UpdateResourceTransportRouteDTO[] = [];
+    ): UpdateRouteDTO[] {
+        const routeDTOs: UpdateRouteDTO[] = [];
 
         for (const route of editedRoutes || []) {
-            const routeDTO: UpdateResourceTransportRouteDTO = {
+            const routeDTO: UpdateRouteDTO = {
                 id: route.id,
-                supplierOrderId: route.supplierOrderId,
-                supplierId: route.supplierId,
-                organizationId: route.organizationId,
-                quantity: route.quantity,
-                arrivalDate: route.arrivalDate,
-                estimatedArrivalDate: route.estimatedArrivalDate,
-                routeStartingDate: route.routeStartingDate,
+                organizationId: this.currentUser?.organization?.id ?? 0,
                 companyId: route.companyId,
-                status: route.status,
+                transportRoute: {
+                    departureDateTime: route.transportRoute.departureDateTime,
+                    arrivalDateTime: route.transportRoute.arrivalDateTime,
+                    estimatedArrivalDateTime: route.transportRoute.estimatedArrivalDateTime,
+                    status: route.transportRoute?.status || ShipmentStatus.IN_TRANSIT,
+                }
             };
 
             routeDTOs.push(routeDTO);
@@ -375,31 +374,31 @@ export class ResourceTransportRoutesComponent implements OnInit {
         this.isConfirmDialogOpen = true;
     }
 
-    handleDeleteResourceTransportRoutes() {
-        this.resourceTransportRouteService
-            .deleteResourceTransportRoutesInBulk(Array.from(this.selectedRouteIds))
-            .subscribe({
-                next: (success) => {
-                    this.toastService.addToast({
-                        id: 123,
-                        title: 'Success',
-                        message: 'Supplier deleted successfully.',
-                        outcome: OperationOutcome.SUCCESS,
-                    });
-                    this.isConfirmDialogOpen = false;
-                    this.selectedRouteIds.clear();
-                    this.loadResourceTransportRoutes();
-                },
-                error: (error: Error) => {
-                    this.toastService.addToast({
-                        id: 123,
-                        title: 'Error',
-                        message: 'Supplier deletion failed.',
-                        outcome: OperationOutcome.ERROR,
-                    });
-                    console.error('Error deleting supplier:', error);
-                },
-            });
+    handleDeleteRoutes() {
+        // this.resourceTransportRouteService
+        //     .deleteResourceTransportRoutesInBulk(Array.from(this.selectedRouteIds))
+        //     .subscribe({
+        //         next: (success) => {
+        //             this.toastService.addToast({
+        //                 id: 123,
+        //                 title: 'Success',
+        //                 message: 'Supplier deleted successfully.',
+        //                 outcome: OperationOutcome.SUCCESS,
+        //             });
+        //             this.isConfirmDialogOpen = false;
+        //             this.selectedRouteIds.clear();
+        //             this.loadResourceTransportRoutes();
+        //         },
+        //         error: (error: Error) => {
+        //             this.toastService.addToast({
+        //                 id: 123,
+        //                 title: 'Error',
+        //                 message: 'Supplier deletion failed.',
+        //                 outcome: OperationOutcome.ERROR,
+        //             });
+        //             console.error('Error deleting supplier:', error);
+        //         },
+        //     });
     }
 
     handleCancelDeletion() {
@@ -410,10 +409,5 @@ export class ResourceTransportRoutesComponent implements OnInit {
     decapitalize(word?: string) {
         if (!word) return '';
         return word.charAt(0) + word.slice(1).toLowerCase();
-    }
-
-    getSupplierName(supplierId: number): string {
-        const supplier = this.suppliers.find((s) => s.id === supplierId);
-        return supplier ? supplier.name : 'Unknown Supplier';
     }
 }

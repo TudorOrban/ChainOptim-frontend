@@ -1,1 +1,98 @@
-<p>transport-routes works!</p>
+<div >
+    <app-table-toolbar
+        [title]="'Supplier Routes'" [searchPlaceholder]="'Search by company ID'" [dontPadHorizontally]="dontPadHorizontally"
+        [sortOptions]="sortOptions" [filterOptions]="filterOptions"
+        [selectedItemIds]="selectedRouteIds" [newRawItems]="newRawRoutes" [isEditing]="isEditing"
+        (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onFilterChange)="handleFilterChange($event)" (onRefresh)="handleRefresh()"
+        (onCancel)="handleCancel()"(onAddItem)="handleAddRoute()" (onCreateItems)="handleCreateRoutes()" (onEditItems)="editSelectedRoutes()" (onSaveEditedItems)="saveEditedRoutes()" (onDeleteItems)="openConfirmDeleteDialog()"
+    ></app-table-toolbar>
+</div>
+
+<div class="table-container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th class="select-col"><input type="checkbox" (change)="toggleAllSelections($event)"/></th>
+                <th class="id-col">ID</th>
+                <th class="company-id-col">Company ID</th>
+                <!-- <th class="quantity-col">Quantity</th> -->
+                <th class="route-date-col">Departure Date</th>
+                <th class="est-delivery-col">Estimated Delivery Date</th>
+                <th class="delivery-date-col">Delivery Date</th>
+                <th class="status-col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let newRoute of newRawRoutes; let i = index">
+                <td><input type="checkbox" [(ngModel)]="newRoute.selected"></td>
+                <td>{{ i + 1 }}</td>
+                <td><input type="text" [(ngModel)]="newRoute.companyId" class="form-input"></td>
+                <!-- <td><input type="number" [(ngModel)]="newRoute.quantity" class="form-input"></td> -->
+                <td><input type="date" [(ngModel)]="newRoute.transportRoute.departureDateTime" class="form-input"></td>
+                <td><input type="date" [(ngModel)]="newRoute.transportRoute.estimatedArrivalDateTime" class="form-input"></td>
+                <td><input type="date" [(ngModel)]="newRoute.transportRoute.arrivalDateTime" class="form-input"></td>
+                <td>
+                    <!-- Dropdown for selecting route status -->
+                    <select [(ngModel)]="newRoute.transportRoute.status" name="status-{{ i }}" class="custom-select">
+                        <option *ngFor="let status of ShipmentStatus | keyvalue" [value]="status.value">
+                            {{ status.value }}
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <ng-container *ngFor="let route of routes?.results; let i = index">
+                <tr *ngIf="!route.isEditing">
+                    <td><input type="checkbox" [checked]="route?.selected" (change)="toggleSelection(route)" /></td> <!-- Row-specific Checkbox -->
+                    <td>{{ route.id }}</td>
+                    <td>{{ route?.companyId }}</td>
+                    <!-- <td>{{ route?.quantity }}</td> -->
+                    <td>{{ route.transportRoute.departureDateTime | date:'shortDate' }}</td>
+                    <td>{{ route.transportRoute.estimatedArrivalDateTime | date:'shortDate' }}</td>
+                    <td>{{ route.transportRoute.arrivalDateTime | date:'shortDate' }}</td>
+                    <td>{{ decapitalize(route.transportRoute.status?.toString()) }}</td>
+                </tr>
+                <tr *ngIf="route.isEditing">
+                    <td><input type="checkbox" [(ngModel)]="route.selected"></td>
+                    <td>{{ route.id }}</td>
+                    <td><input type="text" [(ngModel)]="route.companyId" class="form-input"></td>
+                    <!-- <td><input type="number" [(ngModel)]="route.quantity" class="form-input"></td> -->
+                    <td><input type="date" [(ngModel)]="route.transportRoute.departureDateTime" class="form-input"></td>
+                    <td><input type="date" [(ngModel)]="route.transportRoute.estimatedArrivalDateTime" class="form-input"></td>
+                    <td><input type="date" [(ngModel)]="route.transportRoute.arrivalDateTime" class="form-input"></td>
+                    <td>
+                        <!-- Dropdown for selecting route status -->
+                        <select [(ngModel)]="route.transportRoute.status" name="status-{{ i }}" class="custom-select">
+                            <option *ngFor="let status of ShipmentStatus | keyvalue" [value]="status.value">
+                                {{ status.value }}
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Page Selector -->
+<div class="flex items-center justify-end py-4">
+    <app-page-selector
+        [page]="searchParams.page"
+        [itemsPerPage]="searchParams.itemsPerPage"
+        [totalItems]="routes?.totalCount || routes?.results?.length || 0"
+        (pageChange)="changePage($event)"
+    ></app-page-selector>
+</div>
+
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteRoutes()"
+            (cancel)="handleCancelDeletion()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>
