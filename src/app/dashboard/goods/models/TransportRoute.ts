@@ -36,6 +36,21 @@ export interface TransportRoute {
     departureDateTime: Date;
     estimatedArrivalDateTime: Date;
     arrivalDateTime: Date;
+
+    transportedEntities?: TransportedEntity[];
+}
+
+export interface TransportedEntity {
+    entityId: number;
+    entityType: TransportedEntityType;
+    entityName: string;
+    quantity: number;
+    deliveredQuantity: number;
+}
+
+export enum TransportedEntityType {
+    PRODUCT,
+    COMPONENT
 }
 
 export interface CreateRouteDTO {
