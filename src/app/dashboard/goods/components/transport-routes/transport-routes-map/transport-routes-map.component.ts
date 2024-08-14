@@ -1,4 +1,4 @@
-import { Component, ComponentRef, EmbeddedViewRef, Inject, OnInit, PLATFORM_ID, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, EmbeddedViewRef, Inject, OnInit, PLATFORM_ID, ViewChild, ViewContainerRef } from '@angular/core';
 import { FacilityCardComponent } from '../../../../overview/components/map/cards/facility-card/facility-card.component';
 import { TransportRouteUIComponent } from '../../../../overview/components/map/transport-route-ui/transport-route-ui.component';
 import { SupplyChainMapService } from '../../../../overview/services/supplychainmap.service';
@@ -10,16 +10,19 @@ import { TransportRouteService } from '../../../services/transportroute.service'
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Facility, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowRotateRight, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateRight, faLocationPin, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { AddTransportRouteComponent } from '../add-transport-route/add-transport-route.component';
 
 @Component({
   selector: 'app-transport-routes-map',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule, AddTransportRouteComponent],
   templateUrl: './transport-routes-map.component.html',
   styleUrl: './transport-routes-map.component.css'
 })
 export class TransportRoutesMapComponent implements OnInit {
+    @ViewChild(AddTransportRouteComponent) addRouteComponent!: AddTransportRouteComponent;
+
     private map: any;
     private L: any;
 
@@ -30,6 +33,7 @@ export class TransportRoutesMapComponent implements OnInit {
     private supplyChainMap: SupplyChainMap | undefined;
     private routes: ResourceTransportRoute[] = [];
     private currentOrganization: Organization | undefined;
+    isAddRouteModeOn: boolean = false;
     
     faArrowRotateRight = faArrowRotateRight;
     faPlus = faPlus;
@@ -141,14 +145,41 @@ export class TransportRoutesMapComponent implements OnInit {
 
         tiles.addTo(this.map);
 
-        this.map.on('click', (e: L.LeafletMouseEvent) => {
-            const clickedLat = e.latlng.lat;
-            const clickedLng = e.latlng.lng;
-            console.log(
-                `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
-            );
-        });
+        this.map.on('click', (e: L.LeafletMouseEvent) => this.handleMapClick(e));
     }
+
+    private handleMapClick(e: L.LeafletMouseEvent): void {
+        const clickedLat = e.latlng.lat;
+        const clickedLng = e.latlng.lng;
+        console.log(
+            `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
+        );
+
+        if (!this.isAddRouteModeOn) {
+            console.log('Add route mode is off.');
+            return;
+        }
+        if (!this.addRouteComponent) {
+            console.error('Add route component is not available.');
+            return;
+        }
+
+        this.addRouteComponent.onLocationClicked({ first: clickedLat, second: clickedLng });
+           
+        // Add pin
+        const iconHtml = `<i class="fas fa-map-pin" style="color: red; font-size: 24px;"></i>`;
+
+        const customIcon = this.L.divIcon({
+            html: iconHtml,
+            iconSize: this.L.point(30, 30),
+            iconAnchor: this.L.point(15, 30)
+        });
+        console.log('Custom icon:', customIcon);
+
+        this.L.marker([clickedLat, clickedLng], { icon: customIcon }).addTo(this.map);
+    }
+
+    faLocationPin = faLocationPin;
     
     private createMapElements(): void {
         if (!isPlatformBrowser(this.platformId)) {
@@ -209,7 +240,6 @@ export class TransportRoutesMapComponent implements OnInit {
 
         marker.addTo(this.map);
     }
-
     
     private createRouteComponent(route: TransportRoute): void {
         if (route.srcLocation && route.destLocation) {
@@ -371,7 +401,7 @@ export class TransportRoutesMapComponent implements OnInit {
         return rad * (180 / Math.PI);
     }
 
-    handleCreateRoute(): void {
-        console.log('Create Route');
+    handleToggleAddRouteMode(): void {
+        this.isAddRouteModeOn = !this.isAddRouteModeOn;
     }
 }

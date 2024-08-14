@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between w-full">
         <h1 class="page-title">Map</h1>
         <button
-            (click)="handleCreateRoute()"
+            (click)="handleToggleAddRouteMode()"
             class="standard-write-button"
         >   
             <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
@@ -13,4 +13,11 @@
     <div class="map-frame" *ngIf="isMapInitialized">
         <div id="map"></div>
     </div>
+</div>
+
+<div *ngIf="isAddRouteModeOn" class="mx-60 p-10 border border-gray-300 rounded-b-sm shadow-sm">
+    <app-add-transport-route
+        #addRouteComponent
+    >
+    </app-add-transport-route>
 </div>
