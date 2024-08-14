@@ -12,7 +12,6 @@ import { User } from '../../../../core/user/model/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
-import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ComponentService } from '../../../goods/services/component.service';
 import { ComponentSearchDTO } from '../../../goods/models/Component';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
@@ -45,7 +44,7 @@ export class TransportRoutesComponent implements OnInit {
     currentUser: User | undefined = undefined;
     routes: PaginatedResults<ResourceTransportRoute> | undefined = undefined;
     components: ComponentSearchDTO[] = [];
-
+    
     searchParams: SearchParams = {
         searchQuery: '',
         sortOption: 'createdAt',
@@ -55,7 +54,8 @@ export class TransportRoutesComponent implements OnInit {
     };
     SearchMode = SearchMode;
     ShipmentStatus = ShipmentStatus;
-
+    
+    selectedTab = 'Table';
     selectedRouteIds = new Set<number>();
     newRawRoutes: any[] = [];
     isEditing: boolean = false;
@@ -409,5 +409,9 @@ export class TransportRoutesComponent implements OnInit {
     decapitalize(word?: string) {
         if (!word) return '';
         return word.charAt(0) + word.slice(1).toLowerCase();
+    }
+
+    handleSelectTab(tab: string) {
+        this.selectedTab = tab;
     }
 }
