@@ -1,5 +1,5 @@
-import { FacilityType, Pair } from "../../overview/types/supplyChainMapTypes";
-import { ShipmentStatus, TransportType } from "../../supply/models/SupplierShipment";
+import { FacilityType } from "../../overview/types/supplyChainMapTypes";
+import { ShipmentStatus } from "../../supply/models/SupplierShipment";
 
 export interface ResourceTransportRoute {
     id: number;
@@ -15,6 +15,9 @@ export interface ResourceTransportRoute {
 }
 
 export interface TransportRoute {
+    entityId?: number;
+    entityType?: EntityType;
+
     srcLocation?: Pair<number, number>;
     srcLocationId?: number;
     srcFacilityId?: number;
@@ -40,6 +43,20 @@ export interface TransportRoute {
     transportedEntities?: TransportedEntity[];
 }
 
+
+export enum TransportType {
+    ROAD = 'ROAD',
+    RAIL = 'RAIL',
+    SEA = 'SEA',
+    AIR = 'AIR'
+}
+
+export enum EntityType {
+    SUPPLIER_SHIPMENT = 'SUPPLIER_SHIPMENT',
+    CLIENT_SHIPMENT = 'CLIENT_SHIPMENT',
+    TRANSPORT = 'TRANSPORT'
+}
+
 export interface TransportedEntity {
     entityId: number;
     entityType: TransportedEntityType;
@@ -51,6 +68,11 @@ export interface TransportedEntity {
 export enum TransportedEntityType {
     PRODUCT,
     COMPONENT
+}
+
+export interface Pair<S, T> {
+    first: S;
+    second: T;
 }
 
 export interface CreateRouteDTO {

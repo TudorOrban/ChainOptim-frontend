@@ -1,1 +1,16 @@
-<p>transport-routes-map works!</p>
+<div class="map-container space-y-4 px-8 pr-16">
+    <div class="flex items-center justify-between w-full">
+        <h1 class="page-title">Map</h1>
+        <button
+            (click)="handleCreateRoute()"
+            class="standard-write-button"
+        >   
+            <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
+            Add Route
+        </button>
+    </div>
+    
+    <div class="map-frame" *ngIf="isMapInitialized">
+        <div id="map"></div>
+    </div>
+</div>

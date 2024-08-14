@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProductGraphService } from '../../../../../services/productgraph.service';
 import { CreateConnectionDTO, ProductEdge, ProductProductionGraph } from '../../../../../models/ProductGraph';
-import { Pair } from '../../../../../../overview/types/supplyChainMapTypes';
 import { ProductStageConnectionService } from '../../../../../services/productstageconnection.service';
 import { ToastService } from '../../../../../../../shared/common/components/toast-system/toast.service';
 import { OperationOutcome } from '../../../../../../../shared/common/components/toast-system/toastTypes';

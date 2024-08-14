@@ -26,7 +26,6 @@ import { Subscription } from 'rxjs';
 import { ProductionHistoryComponent } from './production-history/production-history.component';
 import { AllocationPlan } from '../../../../models/ResourceAllocation';
 import { FactoryEdge, NodeSelection, NodeType } from '../../../../models/FactoryGraph';
-import { Pair } from '../../../../../overview/types/supplyChainMapTypes';
 
 @Component({
     selector: 'app-factory-production-tabs',

@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
-import { ProductProductionGraph } from '../models/ProductGraph';
 import { ResourceTransportRoute } from '../models/TransportRoute';
 import { PaginatedResults, SearchParams } from '../../../shared/search/models/searchTypes';
 import { CachingService } from '../../../shared/search/services/caching.service';

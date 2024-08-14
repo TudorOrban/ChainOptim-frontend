@@ -5,7 +5,6 @@ import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { SelectDurationComponent } from '../../../../../../shared/common/components/select/select-duration/select-duration.component';
 import { ResourceAllocationService } from '../../../../services/resourceallocation.service';
 import { AllocationPlan } from '../../../../models/ResourceAllocation';
-import { Pair } from '../../../../../overview/types/supplyChainMapTypes';
 import { FactoryEdge, NodeSelection } from '../../../../models/FactoryGraph';
 import { FactoryStageConnectionService } from '../../../../services/factorystageconnection.service';
 import { DeleteConnectionDTO } from '../../../../models/Factory';
