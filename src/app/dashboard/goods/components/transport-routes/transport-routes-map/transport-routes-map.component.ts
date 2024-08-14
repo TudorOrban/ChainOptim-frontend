@@ -1,14 +1,14 @@
-import { Component, ComponentRef, Inject, OnInit, PLATFORM_ID, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, EmbeddedViewRef, Inject, OnInit, PLATFORM_ID, ViewContainerRef } from '@angular/core';
 import { FacilityCardComponent } from '../../../../overview/components/map/cards/facility-card/facility-card.component';
 import { TransportRouteUIComponent } from '../../../../overview/components/map/transport-route-ui/transport-route-ui.component';
 import { SupplyChainMapService } from '../../../../overview/services/supplychainmap.service';
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { Organization } from '../../../../organization/models/organization';
-import { ResourceTransportRoute, TransportRoute } from '../../../models/TransportRoute';
+import { EntityType, ResourceTransportRoute, TransportRoute } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
+import { Facility, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRotateRight, faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -155,18 +155,220 @@ export class TransportRoutesMapComponent implements OnInit {
             return;
         }
 
-        if (!this.routes || !this.routes) {
+        if (!this.routes || !this.routes || !this.supplyChainMap) {
             console.error('Supply Chain Map data is not available.');
             return;
         }
     
-        // this.routes.facilities.forEach((facility) => {
-        //     this.createFacilityComponent(facility);
-        // });
+        this.supplyChainMap.mapData.facilities.forEach((facility) => {
+            this.createFacilityComponent(facility);
+        });
 
-        // this.routes.transportRoutes.forEach(route => {
-        //     this.createRouteComponent(route);
-        //   });
+        this.routes.forEach(route => {
+            this.createRouteComponent(route.transportRoute);
+          });
+    }
+    
+    private createFacilityComponent(facilityData: Facility): void {
+        if (!this.L) {
+            console.error('Leaflet (L) is not available.');
+            return;
+        }
+    
+        const componentRef = this.viewContainerRef.createComponent(FacilityCardComponent);
+        componentRef.instance.facility = facilityData;
+        componentRef.instance.initializeData(); 
+    
+        const domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+    
+        const marker = this.L.marker([facilityData.latitude, facilityData.longitude], {
+            icon: this.L.divIcon({
+                html: domElem,
+                className: 'flex justify-center',
+                iconSize: [30, 30],
+            }),
+        });
+    
+        componentRef.instance.onToggle.subscribe(({ first, second }) => {
+            const facilityKey = `${first}-${second}`;
+
+            // Manage other cards
+            this.openCardComponentRef.forEach((value, key) => {
+                if (key !== facilityKey && value.instance.isCardOpen) {
+                    value.instance.toggleCard(); 
+                }
+            });
+
+            // Update the reference map
+            if (componentRef.instance.isCardOpen) {
+                this.openCardComponentRef.set(facilityKey, componentRef);
+            } else {
+                this.openCardComponentRef.delete(facilityKey);
+            }
+        });
+
+        marker.addTo(this.map);
+    }
+
+    
+    private createRouteComponent(route: TransportRoute): void {
+        if (route.srcLocation && route.destLocation) {
+            const componentRef =
+            this.viewContainerRef.createComponent(TransportRouteUIComponent);
+            
+            componentRef.instance.route = route;
+            componentRef.instance.initializeData();
+            
+            this.drawRoute(route, componentRef);
+        } else {
+            console.warn('Missing location data for route:', route);
+        }
+    }
+    
+    private drawRoute(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+        this.createRoutePolyline(route, (componentRef));
+        
+        this.createRouteMarker(route, (componentRef));
+
+        this.addArrowheads(route, 5);
+    }
+    
+    private createRoutePolyline(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+        const srcLatLng: [number, number] = [route.srcLocation?.first ?? 0, route?.srcLocation?.second ?? 0];
+        const destLatLng: [number, number] = [route.destLocation?.first ?? 0, route?.destLocation?.second ?? 0];
+
+        const polyline = this.L.polyline([srcLatLng, destLatLng], {
+            color: route.entityType === EntityType.SUPPLIER_SHIPMENT ? 'blue' : 'green', 
+            weight: 3
+        }).addTo(this.map);
+
+        const routeKey = `${route.entityId}-${route.entityType}`;
+        this.routePolylines.set(routeKey, polyline);
+
+        componentRef.instance.onToggle.subscribe(event => {
+            if (componentRef.instance.isCardOpen) {
+                polyline.setStyle({ weight: 6 });
+            } else {
+                polyline.setStyle({ weight: 3 });
+            }
+        });
+    }
+
+    private createRouteMarker(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+        const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
+            .rootNodes[0] as HTMLElement;
+
+        // Create a Leaflet marker with the component's element
+        let lat = 0;
+        let lng = 0;
+        const midPointLat = ((route.srcLocation?.first ?? 0) + (route.destLocation?.first ?? 0)) / 2;
+        const midPointLng = ((route.srcLocation?.second ?? 0) + (route.destLocation?.second ?? 0)) / 2;
+        if (route.liveLocation && route.liveLocation.first && route.liveLocation.second) {
+            lat = route.liveLocation.first;
+            lng = route.liveLocation.second;
+        } else {
+            lat = midPointLat;
+            lng = midPointLng;
+        }
+
+        const marker = this.L.marker(
+            [lat, lng],
+            {
+                icon: this.L.divIcon({
+                    html: domElem,
+                    className: 'flex justify-center',
+                    iconSize: [25, 25],
+                }),
+            }
+        );
+
+        componentRef.instance.onToggle.subscribe(({ first, second }) => {
+            const routeKey = `${first}-${second}`;
+
+            // Manage other cards
+            this.openCardComponentRef.forEach((value, key) => {
+                if (key !== routeKey && value.instance.isCardOpen) {
+                    value.instance.toggleCard(); 
+                }
+            });
+
+            // Update the reference map
+            if (componentRef.instance.isCardOpen) {
+                this.openCardComponentRef.set(routeKey, componentRef);
+            } else {
+                this.openCardComponentRef.delete(routeKey);
+            }
+        });
+
+        // Add the marker to the map
+        marker.addTo(this.map);
+    }
+    
+    private addArrowheads(route: TransportRoute, n: number): void {
+        // Calculate the geographical midpoints for arrows
+        const start: [number, number] = [route.srcLocation?.first ?? 0, route?.srcLocation?.second ?? 0];
+        const end: [number, number] = [route.destLocation?.first ?? 0, route?.destLocation?.second ?? 0];
+
+        const arrowPoints = this.calculateIntermediatePoints(start, end, n);
+        
+        // Calculate the bearing for each segment
+        arrowPoints.forEach((point, index) => {
+            const angle = this.calculateBearing(
+                index === 0 ? start : arrowPoints[index - 1],
+                point
+            );
+            const offset = 38;
+            const adjustedAngle = (angle + offset) % 360;
+
+            // Create an arrow marker
+            const arrowIcon = this.L.divIcon({
+                className: 'arrow-icon',
+                html: `<div style="transform: rotate(${adjustedAngle}deg); width: 8px; height: 8px; border-left: 3px solid black; border-top: 3px solid black;"></div>`,
+                iconSize: [10, 10]
+            });
+
+            // Add the marker at the calculated point
+            this.L.marker(point, { icon: arrowIcon }).addTo(this.map);
+        });
+    }
+
+    private calculateIntermediatePoints(start: [number, number], end: [number, number], n: number): [number, number][] {
+        const points: [number, number][] = [];
+
+        // Calculate step increments
+        const stepLat = (end[0] - start[0]) / (n + 1);
+        const stepLng = (end[1] - start[1]) / (n + 1);
+
+        // Calculate intermediate points
+        for (let i = 1; i <= n; i++) {
+            const lat = start[0] + stepLat * i;
+            const lng = start[1] + stepLng * i;
+            points.push([lat, lng]);
+        }
+
+        return points;
+    }
+
+    private calculateBearing(start: [number, number], end: [number, number]): number {
+        const startLat = this.deg2rad(start[0]);
+        const startLng = this.deg2rad(start[1]);
+        const endLat = this.deg2rad(end[0]);
+        const endLng = this.deg2rad(end[1]);
+    
+        const y = Math.sin(endLng - startLng) * Math.cos(endLat);
+        const x = Math.cos(startLat) * Math.sin(endLat) -
+                  Math.sin(startLat) * Math.cos(endLat) * Math.cos(endLng - startLng);
+    
+        const brng = Math.atan2(y, x);
+        return (this.rad2deg(brng) + 360) % 360;  // Convert to degrees and ensure it's positive
+    }
+    
+    private deg2rad(deg: number): number {
+        return deg * (Math.PI / 180);
+    }
+    
+    private rad2deg(rad: number): number {
+        return rad * (180 / Math.PI);
     }
 
     handleCreateRoute(): void {
