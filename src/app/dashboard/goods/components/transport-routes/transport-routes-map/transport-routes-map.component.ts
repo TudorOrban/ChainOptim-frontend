@@ -33,9 +33,11 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     private supplyChainMap: SupplyChainMap | undefined;
     private routes: ResourceTransportRoute[] = [];
     private currentOrganization: Organization | undefined;
+    
     isAddRouteModeOn: boolean = false;
     selectLocationModeType: SelectLocationModeType | undefined = undefined; // Undefined means select location mode is off
     private listenersSetUp = false;
+    private temporaryRoutes: any[] = [];
 
     faArrowRotateRight = faArrowRotateRight;
     faPlus = faPlus;
@@ -75,6 +77,15 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             console.log("On drawing routes in map: ", locations);
             this.handleDrawRoute(locations, true);
         });
+        
+        this.addRouteComponent.onCancelSelectedLocations.subscribe((locations) => {
+            console.log("On cancel in map");
+            this.handleRemoveTemporaryRoutes();
+        })
+    }
+
+    private handleRemoveTemporaryRoutes(): void {
+        
     }
 
     private handleDrawRoute(locations: Pair<number, number>[], isTemporary: boolean): void {
@@ -85,6 +96,8 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             color: 'blue', 
             weight: 3
         }).addTo(this.map);
+
+        this.temporaryRoutes.push(polyline);
 
 
     }

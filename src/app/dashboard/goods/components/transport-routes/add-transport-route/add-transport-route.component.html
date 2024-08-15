@@ -16,18 +16,29 @@
         </div>
     </div>
 
-    <div>
-        <div class="form-label">Source Location</div>
+    <div class="space-y-4">
+        <div class="flex items-center justify-between space-x-4">
+            <div class="form-label whitespace-nowrap">Source Location</div>
+    
+            <div class="form-label whitespace-nowrap">Destination Location</div>
+        </div>
+
         <button type="button" (click)="handleToggleSelectLocationMode(SelectLocationModeType.SOURCE)" class="standard-button">
             Select on Map
         </button>
+
+        <div *ngIf="areLocationsSelected" class="flex items-center space-x-2">  
+            <button (click)="handleCancelRouteLocations()" type="button" class="standard-button">
+                Cancel
+            </button>
+            <button (click)="handleConfirmRouteLocations()" type="button" class="standard-write-button">
+                Confirm
+            </button>
+        </div>
     </div>
 
     <div>
-        <div class="form-label">Destination Location</div>
-        <button type="button" (click)="handleToggleSelectLocationMode(SelectLocationModeType.DESTINATION)" class="standard-button">
-            Select on Map
-        </button>
+        
     </div>
 
     <div>

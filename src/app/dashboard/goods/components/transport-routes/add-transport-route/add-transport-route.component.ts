@@ -27,11 +27,14 @@ export class AddTransportRouteComponent {
     @Output() onRouteAdded = new EventEmitter<ResourceTransportRoute>();
     @Output() onSelectLocationModeChanged = new EventEmitter<SelectLocationModeType>;
     @Output() onDrawRoute = new EventEmitter<Pair<number, number>[]>();
+    @Output() onCancelSelectedLocations = new EventEmitter<Pair<number, number>[]>();
 
     currentUser: User | undefined = undefined;
     routeForm: FormGroup = new FormGroup({});
     clickedLocations: Pair<number, number>[] = [];
     selectLocationModeType: SelectLocationModeType | undefined = undefined; // Undefined means select location mode is off
+    areLocationsSelected: boolean = false;
+    confirmedLocations: Pair<number, number>[] = [];
 
     SelectLocationModeType = SelectLocationModeType;
 
@@ -86,6 +89,7 @@ export class AddTransportRouteComponent {
                     this.clickedLocations[selectedLocations - 2],
                     this.clickedLocations[selectedLocations - 1]
                 ]);
+                this.areLocationsSelected = true;
             }
             
         }
@@ -94,6 +98,22 @@ export class AddTransportRouteComponent {
     handleToggleSelectLocationMode(type: SelectLocationModeType): void {
         this.selectLocationModeType = type;
         this.onSelectLocationModeChanged.emit(type);
+    }
+
+    // Internal handlers
+    handleConfirmRouteLocations(): void {
+        const selectedLocations = this.clickedLocations.length;
+        this.confirmedLocations.push(
+            this.clickedLocations[selectedLocations - 2],
+            this.clickedLocations[selectedLocations - 1]
+        );
+
+        console.log("Confirm: ", this.confirmedLocations);
+    }
+
+    handleCancelRouteLocations(): void {
+        console.log("Cancel");
+        this.onCancelSelectedLocations.emit();
     }
 
     // Form
