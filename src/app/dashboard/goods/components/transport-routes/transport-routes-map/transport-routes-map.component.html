@@ -15,9 +15,12 @@
     </div>
 </div>
 
-<div *ngIf="isAddRouteModeOn" class="mx-60 p-10 border border-gray-300 rounded-b-sm shadow-sm">
-    <app-add-transport-route
-        #addRouteComponent
-    >
-    </app-add-transport-route>
-</div>
+<ng-container *ngIf="isAddRouteModeOn">
+    <ng-container *ngTemplateOutlet="routeTemplate"></ng-container>
+</ng-container>
+
+<ng-template #routeTemplate>
+    <div class="mx-60 p-10 border border-gray-300 rounded-b-sm shadow-sm">
+        <app-add-transport-route #addRouteComponent></app-add-transport-route>
+    </div>
+</ng-template>

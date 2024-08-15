@@ -1,4 +1,4 @@
-import { Component, ComponentRef, EmbeddedViewRef, Inject, OnInit, PLATFORM_ID, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ComponentRef, EmbeddedViewRef, Inject, OnInit, PLATFORM_ID, ViewChild, ViewContainerRef } from '@angular/core';
 import { FacilityCardComponent } from '../../../../overview/components/map/cards/facility-card/facility-card.component';
 import { TransportRouteUIComponent } from '../../../../overview/components/map/transport-route-ui/transport-route-ui.component';
 import { SupplyChainMapService } from '../../../../overview/services/supplychainmap.service';
@@ -20,7 +20,7 @@ import { AddTransportRouteComponent } from '../add-transport-route/add-transport
   templateUrl: './transport-routes-map.component.html',
   styleUrl: './transport-routes-map.component.css'
 })
-export class TransportRoutesMapComponent implements OnInit {
+export class TransportRoutesMapComponent implements OnInit, AfterViewInit, AfterViewChecked {
     @ViewChild(AddTransportRouteComponent) addRouteComponent!: AddTransportRouteComponent;
 
     private map: any;
@@ -35,7 +35,8 @@ export class TransportRoutesMapComponent implements OnInit {
     private currentOrganization: Organization | undefined;
     isAddRouteModeOn: boolean = false;
     selectLocationModeType: SelectLocationModeType | undefined = undefined; // Undefined means select location mode is off
-    
+    private listenersSetUp = false;
+
     faArrowRotateRight = faArrowRotateRight;
     faPlus = faPlus;
 
@@ -50,18 +51,35 @@ export class TransportRoutesMapComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadData(false);
-        
-        this.setUpListeners();
     }
 
+    ngAfterViewInit(): void {
+        console.log('ViewChild in ngAfterViewInit:', this.addRouteComponent);
+        if (this.addRouteComponent) {
+            this.setUpListeners();
+        } else {
+            console.error('AddTransportRouteComponent is not available in ngAfterViewInit.');
+        }
+    }
+
+        
+    ngAfterViewChecked(): void {
+        if (this.addRouteComponent && !this.listenersSetUp) {
+            this.setUpListeners();
+            this.listenersSetUp = true;  // Ensure listeners are set up only once
+        }
+    }
+
+
     private setUpListeners(): void {
+        console.log("Setting up listeners...: ", this.addRouteComponent);
         if (!this.addRouteComponent) {
             return;
         }
 
         this.addRouteComponent.onSelectLocationModeChanged.subscribe((selectLocationModeType) => {
-            this.selectLocationModeType = selectLocationModeType;
             console.log("On select location mode changed: ", this.selectLocationModeType);
+            this.selectLocationModeType = selectLocationModeType;
         });
     }
 
@@ -212,7 +230,11 @@ export class TransportRoutesMapComponent implements OnInit {
 
         this.routes.forEach(route => {
             this.createRouteComponent(route.transportRoute);
-          });
+        });
+
+        if (isPlatformBrowser(this.platformId)) {
+            this.setUpListeners();
+        }
     }
     
     private createFacilityComponent(facilityData: Facility): void {
