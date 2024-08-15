@@ -87,3 +87,9 @@ export interface UpdateRouteDTO {
     companyId?: number;
     transportRoute?: TransportRoute;
 }
+
+// UI util
+export enum SelectLocationModeType {
+    SOURCE = "SOURCE",
+    DESTINATION = "DESTINATION"
+}

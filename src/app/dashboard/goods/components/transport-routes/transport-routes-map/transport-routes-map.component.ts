@@ -5,7 +5,7 @@ import { SupplyChainMapService } from '../../../../overview/services/supplychain
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { Organization } from '../../../../organization/models/organization';
-import { EntityType, ResourceTransportRoute, TransportRoute } from '../../../models/TransportRoute';
+import { EntityType, ResourceTransportRoute, SelectLocationModeType, TransportRoute } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Facility, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
@@ -34,6 +34,7 @@ export class TransportRoutesMapComponent implements OnInit {
     private routes: ResourceTransportRoute[] = [];
     private currentOrganization: Organization | undefined;
     isAddRouteModeOn: boolean = false;
+    selectLocationModeType: SelectLocationModeType | undefined = undefined; // Undefined means select location mode is off
     
     faArrowRotateRight = faArrowRotateRight;
     faPlus = faPlus;
@@ -49,7 +50,21 @@ export class TransportRoutesMapComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadData(false);
+        
+        this.setUpListeners();
     }
+
+    private setUpListeners(): void {
+        if (!this.addRouteComponent) {
+            return;
+        }
+
+        this.addRouteComponent.onSelectLocationModeChanged.subscribe((selectLocationModeType) => {
+            this.selectLocationModeType = selectLocationModeType;
+            console.log("On select location mode changed: ", this.selectLocationModeType);
+        });
+    }
+
 
     private async loadData(refresh: boolean): Promise<void> {
         this.fallbackManagerService.updateLoading(true);

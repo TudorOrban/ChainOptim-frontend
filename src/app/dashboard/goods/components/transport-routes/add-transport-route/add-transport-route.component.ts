@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../../core/user/model/user';
-import { CreateRouteDTO, Pair, ResourceTransportRoute } from '../../../models/TransportRoute';
+import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
@@ -25,10 +25,13 @@ export class AddTransportRouteComponent {
     @Input() inputData: { productId: number } | undefined = undefined;
 
     @Output() onRouteAdded = new EventEmitter<ResourceTransportRoute>();
-
+    @Output() onSelectLocationModeChanged = new EventEmitter<SelectLocationModeType>;
     currentUser: User | undefined = undefined;
     routeForm: FormGroup = new FormGroup({});
     clickedLocations: Pair<number, number>[] = [];
+    selectLocationModeType: SelectLocationModeType | undefined = undefined; // Undefined means select location mode is off
+
+    SelectLocationModeType = SelectLocationModeType;
 
     constructor(
         private fb: FormBuilder,
@@ -67,9 +70,13 @@ export class AddTransportRouteComponent {
 
 
     // Communication with parent component
-    onLocationClicked(location: Pair<number, number>) {
+    onLocationClicked(location: Pair<number, number>): void {
         this.clickedLocations.push(location);
         console.log('Clicked locations:', this.clickedLocations);
+    }
+
+    handleToggleSelectLocationMode(type: SelectLocationModeType): void {
+        this.onSelectLocationModeChanged.emit(type);
     }
 
     // Form
