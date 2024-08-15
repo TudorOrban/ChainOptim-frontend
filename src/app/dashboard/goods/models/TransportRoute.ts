@@ -91,5 +91,6 @@ export interface UpdateRouteDTO {
 // UI util
 export enum SelectLocationModeType {
     SOURCE = "SOURCE",
-    DESTINATION = "DESTINATION"
+    DESTINATION = "DESTINATION",
+    CURRENT = "CURRENT",
 }

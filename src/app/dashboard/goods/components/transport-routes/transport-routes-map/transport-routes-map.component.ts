@@ -5,7 +5,7 @@ import { SupplyChainMapService } from '../../../../overview/services/supplychain
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { Organization } from '../../../../organization/models/organization';
-import { EntityType, ResourceTransportRoute, SelectLocationModeType, TransportRoute } from '../../../models/TransportRoute';
+import { EntityType, Pair, ResourceTransportRoute, SelectLocationModeType, TransportRoute } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Facility, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
@@ -20,7 +20,7 @@ import { AddTransportRouteComponent } from '../add-transport-route/add-transport
   templateUrl: './transport-routes-map.component.html',
   styleUrl: './transport-routes-map.component.css'
 })
-export class TransportRoutesMapComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     @ViewChild(AddTransportRouteComponent) addRouteComponent!: AddTransportRouteComponent;
 
     private map: any;
@@ -52,24 +52,13 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewInit, After
     ngOnInit(): void {
         this.loadData(false);
     }
-
-    ngAfterViewInit(): void {
-        console.log('ViewChild in ngAfterViewInit:', this.addRouteComponent);
-        if (this.addRouteComponent) {
-            this.setUpListeners();
-        } else {
-            console.error('AddTransportRouteComponent is not available in ngAfterViewInit.');
-        }
-    }
-
         
     ngAfterViewChecked(): void {
         if (this.addRouteComponent && !this.listenersSetUp) {
             this.setUpListeners();
-            this.listenersSetUp = true;  // Ensure listeners are set up only once
+            this.listenersSetUp = true;  
         }
     }
-
 
     private setUpListeners(): void {
         console.log("Setting up listeners...: ", this.addRouteComponent);
@@ -81,8 +70,24 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewInit, After
             console.log("On select location mode changed: ", this.selectLocationModeType);
             this.selectLocationModeType = selectLocationModeType;
         });
+
+        this.addRouteComponent.onDrawRoute.subscribe((locations) => {
+            console.log("On drawing routes in map: ", locations);
+            this.handleDrawRoute(locations, true);
+        });
     }
 
+    private handleDrawRoute(locations: Pair<number, number>[], isTemporary: boolean): void {
+        const srcLatLng: [number, number] = [locations[0]?.first ?? 0, locations[0]?.second ?? 0];
+        const destLatLng: [number, number] = [locations[1]?.first ?? 0, locations[1]?.second ?? 0];
+
+        const polyline = this.L.polyline([srcLatLng, destLatLng], {
+            color: 'blue', 
+            weight: 3
+        }).addTo(this.map);
+
+
+    }
 
     private async loadData(refresh: boolean): Promise<void> {
         this.fallbackManagerService.updateLoading(true);
@@ -281,7 +286,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewInit, After
     private createRouteComponent(route: TransportRoute): void {
         if (route.srcLocation && route.destLocation) {
             const componentRef =
-            this.viewContainerRef.createComponent(TransportRouteUIComponent);
+                this.viewContainerRef.createComponent(TransportRouteUIComponent);
             
             componentRef.instance.route = route;
             componentRef.instance.initializeData();

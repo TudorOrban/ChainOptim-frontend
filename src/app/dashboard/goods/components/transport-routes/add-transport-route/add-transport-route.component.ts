@@ -26,6 +26,8 @@ export class AddTransportRouteComponent {
 
     @Output() onRouteAdded = new EventEmitter<ResourceTransportRoute>();
     @Output() onSelectLocationModeChanged = new EventEmitter<SelectLocationModeType>;
+    @Output() onDrawRoute = new EventEmitter<Pair<number, number>[]>();
+
     currentUser: User | undefined = undefined;
     routeForm: FormGroup = new FormGroup({});
     clickedLocations: Pair<number, number>[] = [];
@@ -73,9 +75,24 @@ export class AddTransportRouteComponent {
     onLocationClicked(location: Pair<number, number>): void {
         this.clickedLocations.push(location);
         console.log('Clicked locations:', this.clickedLocations);
+        console.log('Selection type: ', this.selectLocationModeType);
+
+        if (this.selectLocationModeType === SelectLocationModeType.SOURCE) {
+            console.log("Handling source selection");
+            const selectedLocations = this.clickedLocations.length;
+            if (selectedLocations >= 2) {
+                console.log("Handling draw route");
+                this.onDrawRoute.emit([
+                    this.clickedLocations[selectedLocations - 2],
+                    this.clickedLocations[selectedLocations - 1]
+                ]);
+            }
+            
+        }
     }
 
     handleToggleSelectLocationMode(type: SelectLocationModeType): void {
+        this.selectLocationModeType = type;
         this.onSelectLocationModeChanged.emit(type);
     }
 

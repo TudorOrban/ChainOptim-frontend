@@ -23,6 +23,19 @@
         </button>
     </div>
 
+    <div>
+        <div class="form-label">Destination Location</div>
+        <button type="button" (click)="handleToggleSelectLocationMode(SelectLocationModeType.DESTINATION)" class="standard-button">
+            Select on Map
+        </button>
+    </div>
+
+    <div>
+        <div class="form-label">Current Location</div>
+        <button type="button" (click)="handleToggleSelectLocationMode(SelectLocationModeType.CURRENT)" class="standard-button">
+            Select on Map
+        </button>
+    </div>
 
     <div class="flex items-center w-full justify-end">
         <button type="submit" class="standard-write-button">
