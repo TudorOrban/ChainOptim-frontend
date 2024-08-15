@@ -17,10 +17,18 @@
     </div>
 
     <div class="space-y-4">
-        <div class="flex items-center justify-between space-x-4">
-            <div class="form-label whitespace-nowrap">Source Location</div>
-    
-            <div class="form-label whitespace-nowrap">Destination Location</div>
+        <div class="flex items-start justify-between space-x-4">
+            <div>
+                <div class="form-label whitespace-nowrap">Source Location</div>
+                <input id="sourceLocationLatitude" type="number" class="form-input"/>
+                <input id="sourceLocationLongitude" type="number" class="form-input"/>
+            </div>
+            
+            <div>
+                <div class="form-label whitespace-nowrap">Destination Location</div>
+                <input id="destLocationLatitude" type="number" class="form-input"/>
+                <input id="destLocationLongitude" type="number" class="form-input"/>
+            </div>
         </div>
 
         <button type="button" (click)="handleToggleSelectLocationMode(SelectLocationModeType.SOURCE)" class="standard-button">

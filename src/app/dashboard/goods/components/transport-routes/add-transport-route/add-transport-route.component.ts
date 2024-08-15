@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
+    FormsModule,
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
@@ -18,7 +19,7 @@ import { ShipmentStatus } from '../../../../supply/models/SupplierShipment';
 @Component({
     selector: 'app-add-transport-route',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule],
     templateUrl: './add-transport-route.component.html',
     styleUrl: './add-transport-route.component.css',
 })
@@ -34,7 +35,8 @@ export class AddTransportRouteComponent {
     selectLocationModeType: SelectLocationModeType | undefined = undefined; // Undefined means select location mode is off
     areLocationsSelected: boolean = false;
     confirmedLocations: Pair<number, number>[] = [];
-
+    sourceLocationLatitude: number | undefined = undefined;
+    sourceLocationLongitude: number | undefined = undefined;
     SelectLocationModeType = SelectLocationModeType;
 
     constructor(
@@ -53,7 +55,7 @@ export class AddTransportRouteComponent {
     private initializeForm() {
         this.routeForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
-            companyId: ['', [Validators.maxLength(200)]]
+            companyId: ['', [Validators.maxLength(200)]],
         });
     }
 
@@ -76,14 +78,15 @@ export class AddTransportRouteComponent {
     // Communication with parent component
     onLocationClicked(location: Pair<number, number>): void {
         this.clickedLocations.push(location);
-        console.log('Clicked locations:', this.clickedLocations);
-        console.log('Selection type: ', this.selectLocationModeType);
 
         if (this.selectLocationModeType === SelectLocationModeType.SOURCE) {
-            console.log("Handling source selection");
             const selectedLocations = this.clickedLocations.length;
+
+            if (selectedLocations >= 1) {
+                this.sourceLocationLatitude = this.clickedLocations[selectedLocations - 1].first;
+                this.sourceLocationLongitude = this.clickedLocations[selectedLocations - 1].second; 
+            }
             if (selectedLocations >= 2) {
-                console.log("Handling draw route");
                 this.onDrawRoute.emit([
                     this.clickedLocations[selectedLocations - 2],
                     this.clickedLocations[selectedLocations - 1]
