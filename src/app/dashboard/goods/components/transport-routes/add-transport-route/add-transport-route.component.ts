@@ -13,6 +13,7 @@ import { UserService } from '../../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
 import { OperationOutcome } from '../../../../../shared/common/components/toast-system/toastTypes';
+import { ShipmentStatus } from '../../../../supply/models/SupplierShipment';
 
 @Component({
     selector: 'app-add-transport-route',
@@ -22,8 +23,6 @@ import { OperationOutcome } from '../../../../../shared/common/components/toast-
     styleUrl: './add-transport-route.component.css',
 })
 export class AddTransportRouteComponent {
-    @Input() inputData: { productId: number } | undefined = undefined;
-
     @Output() onRouteAdded = new EventEmitter<ResourceTransportRoute>();
     @Output() onSelectLocationModeChanged = new EventEmitter<SelectLocationModeType>;
     @Output() onDrawRoute = new EventEmitter<Pair<number, number>[]>();
@@ -169,16 +168,32 @@ export class AddTransportRouteComponent {
     }
 
     private getRouteDTO(): CreateRouteDTO {
-        if (!this.inputData?.productId) {
-            throw new Error('Missing product ID');
+        if (!this.isRouteDTOValid()) {
+            console.log("Route invalid");
+            throw new Error('Route DTO is not valid');
         }
 
+        console.log("Route valid");
         const routeDTO: CreateRouteDTO = {
             organizationId: this.currentUser?.organization?.id ?? 0,
-            transportRoute: this.routeForm.get('name')?.value,
+            transportRoute: {
+                status: ShipmentStatus.CANCELLED,
+                departureDateTime: new Date(),
+                arrivalDateTime: new Date(),
+                estimatedArrivalDateTime: new Date(),
+                srcLocation: this.confirmedLocations[0],
+                destLocation: this.confirmedLocations[1]
+            },
             companyId: this.routeForm.get('companyId')?.value,
         };
 
         return routeDTO;
+    }
+
+    private isRouteDTOValid(): boolean {
+        if (this.confirmedLocations?.length != 2 || !this.confirmedLocations[0].first || !this.confirmedLocations[0].second || !this.confirmedLocations[1].first || !this.confirmedLocations[1].second) {
+            return false;
+        }
+        return true;
     }
 }

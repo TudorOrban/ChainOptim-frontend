@@ -62,46 +62,6 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    private setUpListeners(): void {
-        console.log("Setting up listeners...: ", this.addRouteComponent);
-        if (!this.addRouteComponent) {
-            return;
-        }
-
-        this.addRouteComponent.onSelectLocationModeChanged.subscribe((selectLocationModeType) => {
-            console.log("On select location mode changed: ", this.selectLocationModeType);
-            this.selectLocationModeType = selectLocationModeType;
-        });
-
-        this.addRouteComponent.onDrawRoute.subscribe((locations) => {
-            console.log("On drawing routes in map: ", locations);
-            this.handleDrawRoute(locations, true);
-        });
-        
-        this.addRouteComponent.onCancelSelectedLocations.subscribe((locations) => {
-            console.log("On cancel in map");
-            this.handleRemoveTemporaryRoutes();
-        })
-    }
-
-    private handleRemoveTemporaryRoutes(): void {
-        
-    }
-
-    private handleDrawRoute(locations: Pair<number, number>[], isTemporary: boolean): void {
-        const srcLatLng: [number, number] = [locations[0]?.first ?? 0, locations[0]?.second ?? 0];
-        const destLatLng: [number, number] = [locations[1]?.first ?? 0, locations[1]?.second ?? 0];
-
-        const polyline = this.L.polyline([srcLatLng, destLatLng], {
-            color: 'blue', 
-            weight: 3
-        }).addTo(this.map);
-
-        this.temporaryRoutes.push(polyline);
-
-
-    }
-
     private async loadData(refresh: boolean): Promise<void> {
         this.fallbackManagerService.updateLoading(true);
 
@@ -168,7 +128,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
                 },
             });
     }
-
+    
     private async initMap(): Promise<void> {
         if (!isPlatformBrowser(this.platformId)) {
             return;
@@ -456,7 +416,52 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         return rad * (180 / Math.PI);
     }
 
+    // Add Route handlers and listeners
     handleToggleAddRouteMode(): void {
         this.isAddRouteModeOn = !this.isAddRouteModeOn;
+    }
+
+    
+    private setUpListeners(): void {
+        console.log("Setting up listeners...: ", this.addRouteComponent);
+        if (!this.addRouteComponent) {
+            return;
+        }
+
+        this.addRouteComponent.onSelectLocationModeChanged.subscribe((selectLocationModeType) => {
+            console.log("On select location mode changed: ", this.selectLocationModeType);
+            this.selectLocationModeType = selectLocationModeType;
+        });
+
+        this.addRouteComponent.onDrawRoute.subscribe((locations) => {
+            console.log("On drawing routes in map: ", locations);
+            this.handleDrawRoute(locations, true);
+        });
+        
+        this.addRouteComponent.onCancelSelectedLocations.subscribe((locations) => {
+            console.log("On cancel in map");
+            this.handleRemoveTemporaryRoutes();
+        })
+    }
+
+    private handleDrawRoute(locations: Pair<number, number>[], isTemporary: boolean): void {
+        const srcLatLng: [number, number] = [locations[0]?.first ?? 0, locations[0]?.second ?? 0];
+        const destLatLng: [number, number] = [locations[1]?.first ?? 0, locations[1]?.second ?? 0];
+
+        const polyline = this.L.polyline([srcLatLng, destLatLng], {
+            color: 'blue', 
+            weight: 3
+        }).addTo(this.map);
+
+        this.temporaryRoutes.push(polyline);
+    }
+    
+    private handleRemoveTemporaryRoutes(): void {
+        this.temporaryRoutes.forEach(polyline => {
+            // Remove the polyline from the map
+            polyline.remove();
+        });
+    
+        this.temporaryRoutes = [];
     }
 }
