@@ -37,10 +37,12 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     isAddRouteModeOn: boolean = false;
     private listenersSetUp: boolean = false;
     private selectLocationModeOn: boolean = false;
+    private temporaryPins: any[] = [];
     private temporaryRoutes: any[] = [];
 
     faArrowRotateRight = faArrowRotateRight;
     faPlus = faPlus;
+    faLocationPin = faLocationPin;
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -177,7 +179,10 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         this.addRouteComponent.onLocationClicked({ first: clickedLat, second: clickedLng });
            
-        // Add pin
+        this.addLocationPin(clickedLat, clickedLat, true);
+    }
+
+    private addLocationPin(clickedLat: number, clickedLng: number, temporary: true): void {
         const iconHtml = `<i class="fas fa-map-pin" style="color: red; font-size: 24px;"></i>`;
 
         const customIcon = this.L.divIcon({
@@ -185,12 +190,14 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             iconSize: this.L.point(30, 30),
             iconAnchor: this.L.point(15, 30)
         });
-        console.log('Custom icon:', customIcon);
 
-        this.L.marker([clickedLat, clickedLng], { icon: customIcon }).addTo(this.map);
+        const marker = this.L.marker([clickedLat, clickedLng], { icon: customIcon });
+        marker.addTo(this.map);
+        if (temporary) {
+            this.temporaryPins.push(marker);
+        }
     }
 
-    faLocationPin = faLocationPin;
     
     private createMapElements(): void {
         if (!isPlatformBrowser(this.platformId)) {
@@ -416,11 +423,10 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         return rad * (180 / Math.PI);
     }
 
-    // Add Route handlers and listeners
+    // Communication with Add Route component
     handleToggleAddRouteMode(): void {
         this.isAddRouteModeOn = !this.isAddRouteModeOn;
     }
-
     
     private setUpListeners(): void {
         console.log("Setting up listeners...: ", this.addRouteComponent);
@@ -435,11 +441,14 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         this.addRouteComponent.onDrawRoute.subscribe((locations) => {
             console.log("On drawing routes in map: ", locations);
+            this.handleRemoveTemporaryPins();
+            this.handleRemoveTemporaryRoutes();
             this.handleDrawRoute(locations, true);
         });
         
         this.addRouteComponent.onCancelSelectedLocations.subscribe((locations) => {
             console.log("On cancel in map");
+            this.handleRemoveTemporaryPins();
             this.handleRemoveTemporaryRoutes();
         })
     }
@@ -454,7 +463,17 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             weight: 3
         }).addTo(this.map);
 
-        this.temporaryRoutes.push(polyline);
+        if (isTemporary) {
+            this.temporaryRoutes.push(polyline);
+        }
+    }
+
+    private handleRemoveTemporaryPins(): void {
+        this.temporaryPins.forEach(pin => {
+            pin.remove();
+        });
+
+        this.temporaryPins = [];
     }
     
     private handleRemoveTemporaryRoutes(): void {

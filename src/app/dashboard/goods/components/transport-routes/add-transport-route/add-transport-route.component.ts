@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
     FormBuilder,
+    FormControl,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
@@ -37,6 +38,8 @@ export class AddTransportRouteComponent {
     confirmedLocations: Pair<number, number>[] = [];
     sourceLocationLatitude: number | undefined = undefined;
     sourceLocationLongitude: number | undefined = undefined;
+    destLocationLatitude: number | undefined = undefined;
+    destLocationLongitude: number | undefined = undefined;
     SelectLocationModeType = SelectLocationModeType;
 
     constructor(
@@ -56,6 +59,10 @@ export class AddTransportRouteComponent {
         this.routeForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
             companyId: ['', [Validators.maxLength(200)]],
+            sourceLocationLatitude: new FormControl(null),
+            sourceLocationLongitude: new FormControl(null),
+            destLocationLatitude: new FormControl(null),
+            destLocationLongitude: new FormControl(null),
         });
     }
 
@@ -82,11 +89,16 @@ export class AddTransportRouteComponent {
         if (this.isSelectLocationModeOn) {
             const selectedLocations = this.clickedLocations.length;
 
-            if (selectedLocations >= 1) {
-                this.sourceLocationLatitude = this.clickedLocations[selectedLocations - 1].first;
-                this.sourceLocationLongitude = this.clickedLocations[selectedLocations - 1].second; 
+            if (selectedLocations == 1) {
+                this.routeForm.controls['sourceLocationLatitude'].setValue(this.clickedLocations[0].first);
+                this.routeForm.controls['sourceLocationLongitude'].setValue(this.clickedLocations[0].second);
             }
             if (selectedLocations >= 2) {
+                this.routeForm.controls['sourceLocationLatitude'].setValue(this.clickedLocations[selectedLocations - 2].first);
+                this.routeForm.controls['sourceLocationLongitude'].setValue(this.clickedLocations[selectedLocations - 2].second);
+                this.routeForm.controls['destLocationLatitude'].setValue(this.clickedLocations[selectedLocations - 1].first);
+                this.routeForm.controls['destLocationLongitude'].setValue(this.clickedLocations[selectedLocations - 1].second);
+    
                 this.onDrawRoute.emit([
                     this.clickedLocations[selectedLocations - 2],
                     this.clickedLocations[selectedLocations - 1]
