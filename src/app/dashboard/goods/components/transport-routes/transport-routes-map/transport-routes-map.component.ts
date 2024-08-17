@@ -35,8 +35,8 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     private currentOrganization: Organization | undefined;
     
     isAddRouteModeOn: boolean = false;
-    selectLocationModeType: SelectLocationModeType | undefined = undefined; // Undefined means select location mode is off
-    private listenersSetUp = false;
+    private listenersSetUp: boolean = false;
+    private selectLocationModeOn: boolean = false;
     private temporaryRoutes: any[] = [];
 
     faArrowRotateRight = faArrowRotateRight;
@@ -428,9 +428,9 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             return;
         }
 
-        this.addRouteComponent.onSelectLocationModeChanged.subscribe((selectLocationModeType) => {
-            console.log("On select location mode changed: ", this.selectLocationModeType);
-            this.selectLocationModeType = selectLocationModeType;
+        this.addRouteComponent.onSelectLocationModeChanged.subscribe((on) => {
+            this.selectLocationModeOn = on;
+            console.log("Select loc mode: ", this.selectLocationModeOn);
         });
 
         this.addRouteComponent.onDrawRoute.subscribe((locations) => {
@@ -445,6 +445,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     }
 
     private handleDrawRoute(locations: Pair<number, number>[], isTemporary: boolean): void {
+        console.log("Drawing route: ", locations);
         const srcLatLng: [number, number] = [locations[0]?.first ?? 0, locations[0]?.second ?? 0];
         const destLatLng: [number, number] = [locations[1]?.first ?? 0, locations[1]?.second ?? 0];
 

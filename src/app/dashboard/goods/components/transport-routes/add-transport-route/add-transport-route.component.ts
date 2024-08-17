@@ -25,14 +25,14 @@ import { ShipmentStatus } from '../../../../supply/models/SupplierShipment';
 })
 export class AddTransportRouteComponent {
     @Output() onRouteAdded = new EventEmitter<ResourceTransportRoute>();
-    @Output() onSelectLocationModeChanged = new EventEmitter<SelectLocationModeType>;
+    @Output() onSelectLocationModeChanged = new EventEmitter<boolean>();
     @Output() onDrawRoute = new EventEmitter<Pair<number, number>[]>();
     @Output() onCancelSelectedLocations = new EventEmitter<Pair<number, number>[]>();
 
     currentUser: User | undefined = undefined;
     routeForm: FormGroup = new FormGroup({});
     clickedLocations: Pair<number, number>[] = [];
-    selectLocationModeType: SelectLocationModeType | undefined = undefined; // Undefined means select location mode is off
+    isSelectLocationModeOn: boolean = false;
     areLocationsSelected: boolean = false;
     confirmedLocations: Pair<number, number>[] = [];
     sourceLocationLatitude: number | undefined = undefined;
@@ -79,7 +79,7 @@ export class AddTransportRouteComponent {
     onLocationClicked(location: Pair<number, number>): void {
         this.clickedLocations.push(location);
 
-        if (this.selectLocationModeType === SelectLocationModeType.SOURCE) {
+        if (this.isSelectLocationModeOn) {
             const selectedLocations = this.clickedLocations.length;
 
             if (selectedLocations >= 1) {
@@ -97,9 +97,9 @@ export class AddTransportRouteComponent {
         }
     }
 
-    handleToggleSelectLocationMode(type: SelectLocationModeType): void {
-        this.selectLocationModeType = type;
-        this.onSelectLocationModeChanged.emit(type);
+    handleToggleSelectLocationMode(on: boolean): void {
+        this.isSelectLocationModeOn = on;
+        this.onSelectLocationModeChanged.emit(on);
     }
 
     // Internal handlers
