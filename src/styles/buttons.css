@@ -36,6 +36,10 @@
     }
 }
 
+.standard-button.selected {
+    background-color: rgb(249, 250, 251);  
+}
+
 .standard-write-button {
     display: flex;
     height: 2.25rem;

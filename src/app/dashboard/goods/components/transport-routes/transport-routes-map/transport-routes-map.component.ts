@@ -179,7 +179,9 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         this.addRouteComponent.onLocationClicked({ first: clickedLat, second: clickedLng });
            
-        this.addLocationPin(clickedLat, clickedLat, true);
+        if (this.selectLocationModeOn) {
+            this.addLocationPin(clickedLat, clickedLng, true);
+        }
     }
 
     private addLocationPin(clickedLat: number, clickedLng: number, temporary: true): void {
@@ -193,7 +195,11 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         const marker = this.L.marker([clickedLat, clickedLng], { icon: customIcon });
         marker.addTo(this.map);
+
         if (temporary) {
+            if (this.temporaryPins.length == 2) {
+                this.temporaryPins?.[0]?.remove();
+            }
             this.temporaryPins.push(marker);
         }
     }
@@ -436,25 +442,23 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         this.addRouteComponent.onSelectLocationModeChanged.subscribe((on) => {
             this.selectLocationModeOn = on;
-            console.log("Select loc mode: ", this.selectLocationModeOn);
+            this.handleRemoveTemporaryPins(true);
+            this.handleRemoveTemporaryRoutes();
         });
 
         this.addRouteComponent.onDrawRoute.subscribe((locations) => {
-            console.log("On drawing routes in map: ", locations);
-            this.handleRemoveTemporaryPins();
+            this.handleRemoveTemporaryPins(false);
             this.handleRemoveTemporaryRoutes();
             this.handleDrawRoute(locations, true);
         });
         
         this.addRouteComponent.onCancelSelectedLocations.subscribe((locations) => {
-            console.log("On cancel in map");
-            this.handleRemoveTemporaryPins();
+            this.handleRemoveTemporaryPins(true);
             this.handleRemoveTemporaryRoutes();
         })
     }
 
     private handleDrawRoute(locations: Pair<number, number>[], isTemporary: boolean): void {
-        console.log("Drawing route: ", locations);
         const srcLatLng: [number, number] = [locations[0]?.first ?? 0, locations[0]?.second ?? 0];
         const destLatLng: [number, number] = [locations[1]?.first ?? 0, locations[1]?.second ?? 0];
 
@@ -468,12 +472,18 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    private handleRemoveTemporaryPins(): void {
-        this.temporaryPins.forEach(pin => {
-            pin.remove();
-        });
-
-        this.temporaryPins = [];
+    private handleRemoveTemporaryPins(all: boolean): void {
+        if (all) {
+            this.temporaryPins.forEach(pin => {
+                pin.remove();
+            });
+            this.temporaryPins = [];
+        } else {
+            while (this.temporaryPins.length > 2) {
+                const pinToRemove = this.temporaryPins.shift();
+                pinToRemove.remove();
+            }
+        }
     }
     
     private handleRemoveTemporaryRoutes(): void {

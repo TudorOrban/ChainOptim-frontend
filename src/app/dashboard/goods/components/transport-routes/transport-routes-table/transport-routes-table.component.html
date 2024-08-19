@@ -16,7 +16,6 @@
                 <th class="select-col"><input type="checkbox" (change)="toggleAllSelections($event)"/></th>
                 <th class="id-col">ID</th>
                 <th class="company-id-col">Company ID</th>
-                <!-- <th class="quantity-col">Quantity</th> -->
                 <th class="route-date-col">Departure Date</th>
                 <th class="est-delivery-col">Estimated Delivery Date</th>
                 <th class="delivery-date-col">Delivery Date</th>
@@ -28,7 +27,6 @@
                 <td><input type="checkbox" [(ngModel)]="newRoute.selected"></td>
                 <td>{{ i + 1 }}</td>
                 <td><input type="text" [(ngModel)]="newRoute.companyId" class="form-input"></td>
-                <!-- <td><input type="number" [(ngModel)]="newRoute.quantity" class="form-input"></td> -->
                 <td><input type="date" [(ngModel)]="newRoute.transportRoute.departureDateTime" class="form-input"></td>
                 <td><input type="date" [(ngModel)]="newRoute.transportRoute.estimatedArrivalDateTime" class="form-input"></td>
                 <td><input type="date" [(ngModel)]="newRoute.transportRoute.arrivalDateTime" class="form-input"></td>
@@ -46,7 +44,6 @@
                     <td><input type="checkbox" [checked]="route?.selected" (change)="toggleSelection(route)" /></td> <!-- Row-specific Checkbox -->
                     <td>{{ route.id }}</td>
                     <td>{{ route?.companyId }}</td>
-                    <!-- <td>{{ route?.quantity }}</td> -->
                     <td>{{ route.transportRoute.departureDateTime | date:'shortDate' }}</td>
                     <td>{{ route.transportRoute.estimatedArrivalDateTime | date:'shortDate' }}</td>
                     <td>{{ route.transportRoute.arrivalDateTime | date:'shortDate' }}</td>
@@ -56,7 +53,6 @@
                     <td><input type="checkbox" [(ngModel)]="route.selected"></td>
                     <td>{{ route.id }}</td>
                     <td><input type="text" [(ngModel)]="route.companyId" class="form-input"></td>
-                    <!-- <td><input type="number" [(ngModel)]="route.quantity" class="form-input"></td> -->
                     <td><input type="date" [(ngModel)]="route.transportRoute.departureDateTime" class="form-input"></td>
                     <td><input type="date" [(ngModel)]="route.transportRoute.estimatedArrivalDateTime" class="form-input"></td>
                     <td><input type="date" [(ngModel)]="route.transportRoute.arrivalDateTime" class="form-input"></td>

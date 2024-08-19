@@ -107,7 +107,6 @@ export class SidebarComponent {
     ];
 
     expandItem(item: SidebarItem): void {
-        console.log("Expanding: ", item);
         item.isExpanded = !item.isExpanded;
         if (!item.subItems) {
             return;
@@ -116,7 +115,6 @@ export class SidebarComponent {
     }
     
     selectItem(item: SidebarItem): void {
-        console.log("Selecting: ", item);
         item.isSelected = true;
 
         for (let otherItem of this.sidebarItems) {
