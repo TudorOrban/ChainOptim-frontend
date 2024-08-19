@@ -19,7 +19,7 @@
     </div>
 
     <div class="flex items-start space-x-12">
-        <!-- Source and Destination Locations & Facilities-->
+        <!-- Source and Destination Locations & Facilities -->
         <div class="space-y-4">
             <div class="flex items-start justify-between space-x-2">
                 <div>
@@ -66,8 +66,33 @@
                     Cancel Selection
                 </button>
             </div>
+
+            <!-- Source Facility --> 
+            <div class="flex items-start justify-between space-x-2">
+                <div>
+                    <div class="form-label">Source Facility</div>
+                    <select [ngModel]="routeForm?.get('srcFacility')?.value?.id" [ngModelOptions]="{standalone: true}" class="custom-select mt-2 max-w-40">
+                        <option *ngFor="let facility of sortFacilitiesByCloseness(confirmedSrcDestLocations?.[0])" [value]="facility.id">
+                            {{ facility.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <p class="form-label">-</p>
+                
+                <div>
+                    <div class="form-label">Destination Facility</div>
+                    <select [ngModel]="routeForm?.get('destFacility')?.value?.id" [ngModelOptions]="{standalone: true}" class="custom-select mt-2 max-w-40">
+                        <option *ngFor="let facility of sortFacilitiesByCloseness(confirmedSrcDestLocations?.[1])" [value]="facility.id">
+                            {{ facility.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>           
+            
         </div>
         
+        <!-- Current Location -->
         <div class="space-y-4">
             <div>
                 <div class="form-label">Current Location</div>
@@ -105,7 +130,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div>    
 
     <div class="flex items-start space-x-12">
         <div>

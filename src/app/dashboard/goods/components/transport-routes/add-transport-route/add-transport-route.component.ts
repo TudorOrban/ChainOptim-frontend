@@ -25,7 +25,7 @@ import { SelectProductComponent } from '../../../../../shared/common/components/
 import { SelectComponentComponent } from '../../../../../shared/common/components/select/select-component/select-component.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { Facility } from '../../../../overview/types/supplyChainMapTypes';
+import { Facility, FacilityType } from '../../../../overview/types/supplyChainMapTypes';
 
 @Component({
     selector: 'app-add-transport-route',
@@ -108,6 +108,20 @@ export class AddTransportRouteComponent {
             destLocationLongitude: new FormControl(null),
             currentLocationLatitude: new FormControl(null),
             currentLocationLongitude: new FormControl(null),
+            srcFacility: this.fb.group({
+                id: new FormControl(null),
+                name: new FormControl(null),
+                latitude: new FormControl(null),
+                longitude: new FormControl(null),
+                type: new FormControl(null),
+            }),
+            destFacility: this.fb.group({
+                id: new FormControl(null),
+                name: new FormControl(null),
+                latitude: new FormControl(null),
+                longitude: new FormControl(null),
+                type: new FormControl(null),
+            }),
             departureDateTime: new FormControl(null),
             arrivalDateTime: new FormControl(null),
             estimatedArrivalDateTime: new FormControl(null),
@@ -371,6 +385,12 @@ export class AddTransportRouteComponent {
             transportRoute: {
                 srcLocation: this.confirmedSrcDestLocations[0],
                 destLocation: this.confirmedSrcDestLocations[1],
+                srcFacilityId: this.routeForm.get('srcFacility')?.get('id')?.value,
+                srcFacilityName: this.routeForm.get('srcFacility')?.get('name')?.value,
+                srcFacilityType: this.routeForm.get('srcFacility')?.get('type')?.value,
+                destFacilityId: this.routeForm.get('destFacility')?.get('id')?.value,
+                destFacilityName: this.routeForm.get('destFacility')?.get('name')?.value,
+                destFacilityType: this.routeForm.get('destFacility')?.get('type')?.value,
                 waypoints: [],
                 liveLocation: this.confirmedCurrentLocation,
                 departureDateTime: this.formatDate(this.routeForm.get('departureDateTime')?.value),
@@ -394,6 +414,36 @@ export class AddTransportRouteComponent {
             return false;
         }
         return true;
+    }
+
+    // Utils
+    sortFacilitiesByCloseness(location?: Pair<number, number>) {
+        if (!location) return this.facilities;
+        return this.facilities?.sort((a, b) => {
+            const aDistance = this.calculateDistance(location, { first: a.latitude, second: a.longitude });
+            const bDistance = this.calculateDistance(location, { first: b.latitude, second: b.longitude });
+            return aDistance - bDistance;
+        });
+    }
+
+    calculateDistance(location1: Pair<number, number>, location2: Pair<number, number>): number {
+        const lat1 = location1.first;
+        const lon1 = location1.second;
+        const lat2 = location2.first;
+        const lon2 = location2.second;
+
+        const R = 6371e3; // metres
+        const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
+        const φ2 = lat2 * Math.PI / 180;
+        const Δφ = (lat2 - lat1) * Math.PI / 180;
+        const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c; // in
     }
 
     formatDate(dateStr: string | null): Date {
