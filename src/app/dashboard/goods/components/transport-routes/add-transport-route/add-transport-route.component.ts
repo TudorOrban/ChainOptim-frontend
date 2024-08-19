@@ -32,22 +32,38 @@ export class AddTransportRouteComponent {
     @Output() onCancelSelectedLocations = new EventEmitter<void>();
     @Output() onCancelConfirmedLocations = new EventEmitter<void>();
 
+    @Output() onSelectCurrentLocationModeChanged = new EventEmitter<boolean>();
+    @Output() onDrawCurrentLocation = new EventEmitter<Pair<number, number>>();
+    @Output() onConfirmCurrentLocation = new EventEmitter<Pair<number, number>>();
+    @Output() onCancelCurrentLocation = new EventEmitter<void>();
+    @Output() onCancelConfirmedCurrentLocation = new EventEmitter<void>();
+
+    // State
+    // - Base
     currentUser: User | undefined = undefined;
     routeForm: FormGroup = new FormGroup({});
 
     clickedLocations: Pair<number, number>[] = [];
-    isSelectLocationModeOn: boolean = false;
-    areLocationsSelected: boolean = false;
-    confirmedLocations: Pair<number, number>[] = [];
-    areLocationsConfirmed: boolean = false;
+
+    // - Src and dest locations
+    isSelectSrcDestLocationModeOn: boolean = false;
+    areSrcDestLocationsSelected: boolean = false;
+    confirmedSrcDestLocations: Pair<number, number>[] = [];
+    areSrcDestLocationsConfirmed: boolean = false;
     sourceLocationLatitude: number | undefined = undefined;
     sourceLocationLongitude: number | undefined = undefined;
     destLocationLatitude: number | undefined = undefined;
     destLocationLongitude: number | undefined = undefined;
+
+    // - Current location
     isSelectCurrentLocationModeOn: boolean = false;
+    isCurrentLocationSelected: boolean = false;
+    confirmedCurrentLocation: Pair<number, number> | undefined = undefined;
+    isCurrentLocationConfirmed: boolean = false;
     currentLocationLatitude: number | undefined = undefined;
     currentLocationLongitude: number | undefined = undefined;
 
+    // - Enum selections
     selectedTransportType: TransportType | undefined = undefined;
     selectedStatus: ShipmentStatus | undefined = undefined;
 
@@ -75,6 +91,8 @@ export class AddTransportRouteComponent {
             sourceLocationLongitude: new FormControl(null),
             destLocationLatitude: new FormControl(null),
             destLocationLongitude: new FormControl(null),
+            currentLocationLatitude: new FormControl(null),
+            currentLocationLongitude: new FormControl(null),
             departureDateTime: new FormControl(null),
             arrivalDateTime: new FormControl(null),
             estimatedArrivalDateTime: new FormControl(null),
@@ -96,38 +114,46 @@ export class AddTransportRouteComponent {
         });
     }
 
-
-    // Communication with parent component
     onLocationClicked(location: Pair<number, number>): void {
         this.clickedLocations.push(location);
 
-        if (this.isSelectLocationModeOn) {
-            const selectedLocations = this.clickedLocations.length;
-
-            if (selectedLocations == 1) {
-                this.routeForm.controls['sourceLocationLatitude'].setValue(this.clickedLocations[0].first);
-                this.routeForm.controls['sourceLocationLongitude'].setValue(this.clickedLocations[0].second);
-            }
-            if (selectedLocations >= 2) {
-                this.routeForm.controls['sourceLocationLatitude'].setValue(this.clickedLocations[selectedLocations - 2].first);
-                this.routeForm.controls['sourceLocationLongitude'].setValue(this.clickedLocations[selectedLocations - 2].second);
-                this.routeForm.controls['destLocationLatitude'].setValue(this.clickedLocations[selectedLocations - 1].first);
-                this.routeForm.controls['destLocationLongitude'].setValue(this.clickedLocations[selectedLocations - 1].second);
-    
-                this.onDrawRoute.emit([
-                    this.clickedLocations[selectedLocations - 2],
-                    this.clickedLocations[selectedLocations - 1]
-                ]);
-                this.areLocationsSelected = true;
-            }
-            
+        if (this.isSelectSrcDestLocationModeOn) {
+            this.handleSrcDestLocationClicked(location);
+        }
+        if (this.isSelectCurrentLocationModeOn) {
+            this.handleCurrentLocationClicked(location);
         }
     }
 
-    handleToggleSelectLocationMode(): void {
-        this.isSelectLocationModeOn = !this.isSelectLocationModeOn;
+    // Src and Dest location handlers
+    private handleSrcDestLocationClicked(location: Pair<number, number>): void {
+        const selectedLocations = this.clickedLocations.length;
+
+        if (selectedLocations == 1) {
+            this.routeForm.controls['sourceLocationLatitude'].setValue(this.clickedLocations[0].first);
+            this.routeForm.controls['sourceLocationLongitude'].setValue(this.clickedLocations[0].second);
+        }
+        if (selectedLocations >= 2) {
+            this.routeForm.controls['sourceLocationLatitude'].setValue(this.clickedLocations[selectedLocations - 2].first);
+            this.routeForm.controls['sourceLocationLongitude'].setValue(this.clickedLocations[selectedLocations - 2].second);
+            this.routeForm.controls['destLocationLatitude'].setValue(this.clickedLocations[selectedLocations - 1].first);
+            this.routeForm.controls['destLocationLongitude'].setValue(this.clickedLocations[selectedLocations - 1].second);
+
+            this.onDrawRoute.emit([
+                this.clickedLocations[selectedLocations - 2],
+                this.clickedLocations[selectedLocations - 1]
+            ]);
+            this.areSrcDestLocationsSelected = true;
+        }
+    }
+
+    handleToggleSelectSrcDestLocationMode(): void {
+        this.isSelectSrcDestLocationModeOn = !this.isSelectSrcDestLocationModeOn;
+        if (this.isSelectSrcDestLocationModeOn && this.isSelectCurrentLocationModeOn) {
+            this.handleToggleSelectCurrentLocationMode();
+        }
         this.clickedLocations = [];
-        if (this.confirmedLocations.length != 2) {
+        if (this.confirmedSrcDestLocations.length != 2) {
             this.routeForm.patchValue({
                 sourceLocationLatitude: null,
                 sourceLocationLongitude: null,
@@ -135,40 +161,89 @@ export class AddTransportRouteComponent {
                 destLocationLongitude: null
             });
         }
-        this.areLocationsSelected = !this.isSelectLocationModeOn ? false : this.areLocationsSelected;
-        console.log("Select location mode: ", this.isSelectLocationModeOn);
-        this.onSelectLocationModeChanged.emit(this.isSelectLocationModeOn);
+        this.areSrcDestLocationsSelected = !this.isSelectSrcDestLocationModeOn ? false : this.areSrcDestLocationsSelected;
+        console.log("Select location mode: ", this.isSelectSrcDestLocationModeOn);
+        this.onSelectLocationModeChanged.emit(this.isSelectSrcDestLocationModeOn);
+    }
+
+    // Current location handlers
+    private handleCurrentLocationClicked(location: Pair<number, number>): void {
+        this.routeForm.controls['currentLocationLatitude'].setValue(location.first);
+        this.routeForm.controls['currentLocationLongitude'].setValue(location.second);
+        this.confirmedCurrentLocation = location;
+        this.isCurrentLocationSelected = true;
+    }
+    
+    handleToggleSelectCurrentLocationMode(): void {
+        this.isSelectCurrentLocationModeOn = !this.isSelectCurrentLocationModeOn;
+        if (this.isSelectCurrentLocationModeOn && this.isSelectSrcDestLocationModeOn) {
+            this.handleToggleSelectSrcDestLocationMode();
+        }
+        this.clickedLocations = [];
+        if (this.confirmedCurrentLocation) {
+            this.routeForm.patchValue({
+                currentLocationLatitude: null,
+                currentLocationLongitude: null
+            });
+        }
+        this.isCurrentLocationSelected = !this.isSelectCurrentLocationModeOn ? false : this.isCurrentLocationSelected;
+        console.log("Select current location mode: ", this.isSelectCurrentLocationModeOn);
+        this.onSelectCurrentLocationModeChanged.emit(this.isSelectCurrentLocationModeOn);
     }
 
     // Internal handlers
-    handleConfirmRouteLocations(): void {
+    // - Src and dest locations
+    handleConfirmRouteSrcDestLocations(): void {
         const selectedLocations = this.clickedLocations.length;
-        this.confirmedLocations.push(
+        this.confirmedSrcDestLocations.push(
             this.clickedLocations[selectedLocations - 2],
             this.clickedLocations[selectedLocations - 1]
         );
-        this.areLocationsConfirmed = true;
-        this.onConfirmSelectedLocations.emit(this.confirmedLocations);
-        this.handleToggleSelectLocationMode();
+        this.areSrcDestLocationsConfirmed = true;
+        this.onConfirmSelectedLocations.emit(this.confirmedSrcDestLocations);
+        this.handleToggleSelectSrcDestLocationMode();
     }
 
-    handleCancelRouteLocations(): void {
-        this.areLocationsSelected = false;
+    handleCancelRouteSrcDestLocations(): void {
+        this.areSrcDestLocationsSelected = false;
         this.onCancelSelectedLocations.emit();
     }
 
-    handleCancelConfirmedLocations(): void {
+    handleCancelConfirmedSrcDestLocations(): void {
         this.routeForm.patchValue({
             sourceLocationLatitude: null,
             sourceLocationLongitude: null,
             destLocationLatitude: null,
             destLocationLongitude: null
         });
-        this.confirmedLocations = [];
-        this.areLocationsConfirmed = false;
+        this.confirmedSrcDestLocations = [];
+        this.areSrcDestLocationsConfirmed = false;
         this.onCancelConfirmedLocations.emit();
     }
 
+    // - Current location
+    handleConfirmCurrentLocation(): void {
+        this.isCurrentLocationConfirmed = true;
+        this.onConfirmCurrentLocation.emit(this.confirmedCurrentLocation);
+        this.handleToggleSelectCurrentLocationMode();
+    }
+
+    handleCancelCurrentLocation(): void {
+        this.isCurrentLocationSelected = false;
+        this.onCancelCurrentLocation.emit();
+    }
+
+    handleCancelConfirmedCurrentLocation(): void {
+        this.routeForm.patchValue({
+            currentLocationLatitude: null,
+            currentLocationLongitude: null
+        });
+        this.confirmedCurrentLocation = undefined;
+        this.isCurrentLocationConfirmed = false;
+        this.onCancelConfirmedCurrentLocation.emit();
+    }
+
+    // Enums
     onTransportTypeSelectionChanged(selectedValue: string) {
         console.log("Selected value for tr type: ", selectedValue);
         this.selectedTransportType = selectedValue as TransportType;
@@ -246,8 +321,8 @@ export class AddTransportRouteComponent {
                 departureDateTime: this.routeForm.get('departureDateTime')?.value,
                 arrivalDateTime: this.routeForm.get('arrivalDateTime')?.value,
                 estimatedArrivalDateTime: this.routeForm.get('estimatedArrivalDateTime')?.value,
-                srcLocation: this.confirmedLocations[0],
-                destLocation: this.confirmedLocations[1]
+                srcLocation: this.confirmedSrcDestLocations[0],
+                destLocation: this.confirmedSrcDestLocations[1]
             },
             companyId: this.routeForm.get('companyId')?.value,
         };
@@ -256,7 +331,7 @@ export class AddTransportRouteComponent {
     }
 
     private isRouteDTOValid(): boolean {
-        if (this.confirmedLocations?.length != 2 || !this.confirmedLocations[0].first || !this.confirmedLocations[0].second || !this.confirmedLocations[1].first || !this.confirmedLocations[1].second) {
+        if (this.confirmedSrcDestLocations?.length != 2 || !this.confirmedSrcDestLocations[0].first || !this.confirmedSrcDestLocations[0].second || !this.confirmedSrcDestLocations[1].first || !this.confirmedSrcDestLocations[1].second) {
             return false;
         }
         if (this.selectedStatus == undefined || this.selectedTransportType == undefined) {

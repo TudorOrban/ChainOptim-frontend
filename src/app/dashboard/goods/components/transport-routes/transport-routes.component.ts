@@ -12,7 +12,7 @@ import { TransportRoutesMapComponent } from './transport-routes-map/transport-ro
   styleUrl: './transport-routes.component.css'
 })
 export class TransportRoutesComponent {
-    selectedTab = 'Table';
+    selectedTab = 'Map';
     s = ''
 
     

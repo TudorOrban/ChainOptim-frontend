@@ -36,10 +36,17 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     
     isAddRouteModeOn: boolean = false;
     private listenersSetUp: boolean = false;
-    private selectLocationModeOn: boolean = false;
+
+    // Src and Dest location selection
+    private isSelectSrcDestLocationModeOn: boolean = false;
     private isLocationConfirmed: boolean = false;
     private temporaryPins: any[] = [];
     private temporaryRoutes: any[] = [];
+
+    // Current location selection
+    private isSelectCurrentLocationModeOn: boolean = false;
+    private isCurrentLocationConfirmed: boolean = false;
+    private currentLocationTemporaryPin: any;
 
     faArrowRotateRight = faArrowRotateRight;
     faPlus = faPlus;
@@ -180,7 +187,10 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         this.addRouteComponent.onLocationClicked({ first: clickedLat, second: clickedLng });
            
-        if (this.selectLocationModeOn) {
+        if (this.isSelectSrcDestLocationModeOn) {
+            this.addLocationPin(clickedLat, clickedLng, true);
+        }
+        if (this.isSelectCurrentLocationModeOn) {
             this.addLocationPin(clickedLat, clickedLng, true);
         }
     }
@@ -443,8 +453,9 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             return;
         }
 
+        // Src and Dest location selection
         this.addRouteComponent.onSelectLocationModeChanged.subscribe((on) => {
-            this.selectLocationModeOn = on;
+            this.isSelectSrcDestLocationModeOn = on;
             if (!this.isLocationConfirmed) {
                 this.handleRemoveTemporaryPins(true);
                 this.handleRemoveTemporaryRoutes();
@@ -466,6 +477,11 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             this.isLocationConfirmed = false;
             this.handleRemoveTemporaryPins(true);
             this.handleRemoveTemporaryRoutes();
+        });
+        
+        // Current location selection
+        this.addRouteComponent.onSelectCurrentLocationModeChanged.subscribe((on) => {
+            this.isSelectCurrentLocationModeOn = on;
         });
     }
 
@@ -494,6 +510,12 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
                 const pinToRemove = this.temporaryPins.shift();
                 pinToRemove.remove();
             }
+        }
+    }
+
+    private handleRemoveCurrentLocationPin(): void {
+        if (this.currentLocationTemporaryPin) {
+            this.currentLocationTemporaryPin.remove();
         }
     }
     

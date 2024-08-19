@@ -18,8 +18,8 @@
         </div>
     </div>
 
-    <!-- Source and Destination Locations -->
     <div class="flex items-start space-x-12">
+        <!-- Source and Destination Locations -->
         <div class="space-y-4">
             <div class="flex items-start justify-between space-x-2">
                 <div>
@@ -39,27 +39,27 @@
     
             <div class="flex items-center space-x-4">
                 <button 
-                    *ngIf="!areLocationsConfirmed"
+                    *ngIf="!areSrcDestLocationsConfirmed"
                     type="button" 
-                    (click)="handleToggleSelectLocationMode()" 
-                    [class.selected]="isSelectLocationModeOn"
+                    (click)="handleToggleSelectSrcDestLocationMode()" 
+                    [class.selected]="isSelectSrcDestLocationModeOn"
                     class="standard-button"
                 >
                     Select on Map
                 </button>
     
-                <div *ngIf="areLocationsSelected" class="flex items-center space-x-2">  
-                    <button (click)="handleCancelRouteLocations()" type="button" class="standard-button">
+                <div *ngIf="areSrcDestLocationsSelected" class="flex items-center space-x-2">  
+                    <button (click)="handleCancelRouteSrcDestLocations()" type="button" class="standard-button">
                         Cancel
                     </button>
-                    <button (click)="handleConfirmRouteLocations()" type="button" class="standard-write-button">
+                    <button (click)="handleConfirmRouteSrcDestLocations()" type="button" class="standard-write-button">
                         Confirm
                     </button>
                 </div>
     
                 <button
-                    *ngIf="areLocationsConfirmed"
-                    (click)="handleCancelConfirmedLocations()"
+                    *ngIf="areSrcDestLocationsConfirmed"
+                    (click)="handleCancelConfirmedSrcDestLocations()"
                     type="button"
                     class="standard-button"
                 >
@@ -68,36 +68,71 @@
             </div>
         </div>
         
-        <div>
-            <div class="form-label">Current Location</div>
-            <button type="button" (click)="handleToggleSelectLocationMode()" class="standard-button">
-                Select on Map
-            </button>
+        <div class="space-y-4">
+            <div>
+                <div class="form-label">Current Location</div>
+                <input id="currentLocationLatitude" type="number" formControlName="currentLocationLatitude" placeholder="Latitude" class="form-input"/>
+                <input id="currentLocationLongitude" type="number" formControlName="currentLocationLongitude" placeholder="Longitude" class="form-input"/>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button 
+                    *ngIf="!isCurrentLocationConfirmed"
+                    type="button" 
+                    (click)="handleToggleSelectCurrentLocationMode()" 
+                    [class.selected]="isSelectCurrentLocationModeOn"
+                    class="standard-button"
+                >
+                    Select on Map
+                </button>
+    
+                <div *ngIf="isCurrentLocationSelected" class="flex items-center space-x-2">  
+                    <button (click)="handleCancelCurrentLocation()" type="button" class="standard-button">
+                        Cancel
+                    </button>
+                    <button (click)="handleConfirmCurrentLocation()" type="button" class="standard-write-button">
+                        Confirm
+                    </button>
+                </div>
+    
+                <button
+                    *ngIf="isCurrentLocationConfirmed"
+                    (click)="handleCancelConfirmedCurrentLocation()"
+                    type="button"
+                    class="standard-button"
+                >
+                    Cancel Selection
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- Dates -->
-    <div>
-        <div class="form-label">Departure Date</div>
-        <input id="departureDateTime" type="date" formControlName="departureDateTime" class="form-input">
+    <div class="flex items-start space-x-12">
+        <div>
+            <div class="form-label">Departure Date</div>
+            <input id="departureDateTime" type="date" formControlName="departureDateTime" class="form-input">
+        </div>
+        <div>
+            <div class="form-label">Arrival Date</div>
+            <input id="arrivalDateTime" type="date" formControlName="arrivalDateTime" class="form-input">
+        </div>
+        <div>
+            <div class="form-label">Estimated Arrival Date</div>
+            <input id="estimatedArrivalDateTime" type="date" formControlName="estimatedArrivalDateTime" class="form-input">
+        </div>
     </div>
-    <div>
-        <div class="form-label">Arrival Date</div>
-        <input id="arrivalDateTime" type="date" formControlName="arrivalDateTime" class="form-input">
-    </div>
-    <div>
-        <div class="form-label">Estimated Arrival Date</div>
-        <input id="estimatedArrivalDateTime" type="date" formControlName="estimatedArrivalDateTime" class="form-input">
-    </div>
-
-    <div>
-        <div class="form-label">Transport Type</div>
-        <app-select-enum [enumType]="TransportType" (selectionChange)="onTransportTypeSelectionChanged($event)"></app-select-enum>
-    </div>
-
-    <div>
-        <div class="form-label">Route Status</div>
-        <app-select-enum [enumType]="ShipmentStatus" (selectionChange)="onStatusSelectionChanged($event)"></app-select-enum>
+    
+    <!-- Enums -->
+    <div class="flex items-start space-x-12">
+        <div>
+            <div class="form-label">Route Status</div>
+            <app-select-enum [enumType]="ShipmentStatus" (selectionChange)="onStatusSelectionChanged($event)"></app-select-enum>
+        </div>
+        <div>
+            <div class="form-label">Transport Type</div>
+            <app-select-enum [enumType]="TransportType" (selectionChange)="onTransportTypeSelectionChanged($event)"></app-select-enum>
+        </div>
     </div>
 
     <!-- Submit -->
