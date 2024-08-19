@@ -17,9 +17,10 @@
                 <th class="id-col">ID</th>
                 <th class="company-id-col">Company ID</th>
                 <th class="route-date-col">Departure Date</th>
-                <th class="est-delivery-col">Estimated Delivery Date</th>
-                <th class="delivery-date-col">Delivery Date</th>
+                <th class="est-arrival-col">Estimated Arrival Date</th>
+                <th class="arrival-date-col">Arrival Date</th>
                 <th class="status-col">Status</th>
+                <th class="transport-type-col">Transport Type</th>
             </tr>
         </thead>
         <tbody>
@@ -38,6 +39,14 @@
                         </option>
                     </select>
                 </td>
+                <td>
+                    <!-- Dropdown for selecting route transport type -->
+                    <select [(ngModel)]="newRoute.transportRoute.transportType" name="transportType-{{ i }}" class="custom-select">
+                        <option *ngFor="let transportType of TransportType | keyvalue" [value]="transportType.value">
+                            {{ transportType.value }}
+                        </option>
+                    </select>
+                </td>
             </tr>
             <ng-container *ngFor="let route of routes?.results; let i = index">
                 <tr *ngIf="!route.isEditing">
@@ -48,6 +57,7 @@
                     <td>{{ route.transportRoute.estimatedArrivalDateTime | date:'shortDate' }}</td>
                     <td>{{ route.transportRoute.arrivalDateTime | date:'shortDate' }}</td>
                     <td>{{ decapitalize(route.transportRoute.status?.toString()) }}</td>
+                    <td>{{ decapitalize(route.transportRoute.transportType?.toString()) }}</td>
                 </tr>
                 <tr *ngIf="route.isEditing">
                     <td><input type="checkbox" [(ngModel)]="route.selected"></td>
@@ -61,6 +71,14 @@
                         <select [(ngModel)]="route.transportRoute.status" name="status-{{ i }}" class="custom-select">
                             <option *ngFor="let status of ShipmentStatus | keyvalue" [value]="status.value">
                                 {{ status.value }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <!-- Dropdown for selecting route transport type -->
+                        <select [(ngModel)]="route.transportRoute.transportType" name="transportType-{{ i }}" class="custom-select">
+                            <option *ngFor="let transportType of TransportType | keyvalue" [value]="transportType.value">
+                                {{ transportType.value }}
                             </option>
                         </select>
                     </td>

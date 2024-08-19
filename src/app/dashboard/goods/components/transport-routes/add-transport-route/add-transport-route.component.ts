@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../../core/user/model/user';
-import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType, TransportType } from '../../../models/TransportRoute';
+import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType, TransportedEntity, TransportedEntityType, TransportType } from '../../../models/TransportRoute';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
@@ -17,11 +17,19 @@ import { OperationOutcome } from '../../../../../shared/common/components/toast-
 import { ShipmentStatus } from '../../../../supply/models/SupplierShipment';
 import { SelectEnumComponent } from '../../../../../shared/common/components/select/select-enum/select-enum.component';
 import { TransportRouteService } from '../../../services/transportroute.service';
+import { ComponentSearchDTO } from '../../../models/Component';
+import { ProductSearchDTO } from '../../../models/Product';
+import { ComponentService } from '../../../services/component.service';
+import { ProductService } from '../../../services/product.service';
+import { SelectProductComponent } from '../../../../../shared/common/components/select/select-product/select-product.component';
+import { SelectComponentComponent } from '../../../../../shared/common/components/select/select-component/select-component.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-add-transport-route',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, FormsModule, SelectEnumComponent],
+    imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule, FormsModule, SelectProductComponent, SelectComponentComponent, SelectEnumComponent],
     templateUrl: './add-transport-route.component.html',
     styleUrl: './add-transport-route.component.css',
 })
@@ -64,6 +72,12 @@ export class AddTransportRouteComponent {
     currentLocationLatitude: number | undefined = undefined;
     currentLocationLongitude: number | undefined = undefined;
 
+    // - Component and Product selection
+    components: ComponentSearchDTO[] = [];
+    products: ProductSearchDTO[] = [];
+    transportedComponents: TransportedEntity[] = [];
+    transportedProducts: TransportedEntity[] = [];
+
     // - Enum selections
     selectedTransportType: TransportType | undefined = undefined;
     selectedStatus: ShipmentStatus | undefined = undefined;
@@ -72,17 +86,21 @@ export class AddTransportRouteComponent {
     ShipmentStatus = ShipmentStatus;
     TransportType = TransportType;
 
+    faTimes = faTimes;
+
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
         private routeService: TransportRouteService,
+        private componentService: ComponentService,
+        private productService: ProductService,
         private fallbackManagerService: FallbackManagerService,
         private toastService: ToastService
     ) {}
 
     ngOnInit() {
         this.initializeForm();
-        this.loadCurrentUser();
+        this.loadData();
     }
 
     private initializeForm() {
@@ -101,17 +119,48 @@ export class AddTransportRouteComponent {
         });
     }
 
-    private loadCurrentUser() {
+    private loadData() {
         this.userService.getCurrentUser().subscribe({
             next: (user) => {
-                if (user) {
-                    this.currentUser = user;
-                }
                 this.fallbackManagerService.updateLoading(false);
+
+                if (!user?.organization) {
+                    this.fallbackManagerService.updateNoOrganization(true);
+                    return;
+                }
+                
+                this.currentUser = user;
+                this.loadComponents();
+                this.loadProducts();
             },
             error: (error: Error) => {
                 this.fallbackManagerService.updateError(error.message ?? '');
                 this.fallbackManagerService.updateLoading(false);
+            },
+        });
+        
+    }
+
+    private loadComponents(): void {
+        this.componentService.getComponentsByOrganizationId(this.currentUser?.organization?.id ?? 0, true).subscribe({
+            next: (components) => {
+                this.components = components;
+                console.log("Components: ", components);
+            },
+            error: (error: Error) => {
+                console.error('Error fetching components:', error);
+            },
+        });
+    }
+
+    private loadProducts(): void {
+        this.productService.getProductsByOrganizationId(this.currentUser?.organization?.id ?? 0, true).subscribe({
+            next: (products) => {
+                this.products = products;
+                console.log("Products: ", products);
+            },
+            error: (error: Error) => {
+                console.error('Error fetching products:', error);
             },
         });
     }
@@ -121,7 +170,7 @@ export class AddTransportRouteComponent {
         this.clickedLocations.push(location);
 
         if (this.isSelectSrcDestLocationModeOn) {
-            this.handleSrcDestLocationClicked(location);
+            this.handleSrcDestLocationClicked();
         }
         if (this.isSelectCurrentLocationModeOn) {
             this.handleCurrentLocationClicked(location);
@@ -129,7 +178,7 @@ export class AddTransportRouteComponent {
     }
 
     // - Src and Dest location handlers
-    private handleSrcDestLocationClicked(location: Pair<number, number>): void {
+    private handleSrcDestLocationClicked(): void {
         const selectedLocations = this.clickedLocations.length;
 
         if (selectedLocations == 1) {
@@ -250,6 +299,45 @@ export class AddTransportRouteComponent {
             currentLocationLongitude: null
         });
     }
+    
+    // - Components and Products
+    handleComponentIdChange(componentId: number): void {
+        const component = this.components.find((c) => c.id == componentId);
+        if (!component) {
+            console.error('Component not found');
+            return;
+        }
+
+        this.transportedComponents.push({
+            entityId: component.id,
+            entityType: TransportedEntityType.COMPONENT,
+            entityName: component.name,
+            quantity: 0
+        });
+    }
+
+    handleRemoveTransportedComponent(componentId: number): void {
+        this.transportedComponents = this.transportedComponents.filter((c) => c.entityId != componentId);
+    }
+
+    handleProductIdChange(productId: number): void {
+        const product = this.products.find((c) => c.id == productId);
+        if (!product) {
+            console.error('Product not found');
+            return;
+        }
+
+        this.transportedProducts.push({
+            entityId: product.id,
+            entityType: TransportedEntityType.PRODUCT,
+            entityName: product.name,
+            quantity: 0
+        });
+    }
+
+    handleRemoveTransportedProduct(productId: number): void {
+        this.transportedProducts = this.transportedProducts.filter((c) => c.entityId != productId);
+    }
 
     // Enums
     onTransportTypeSelectionChanged(selectedValue: string) {
@@ -324,13 +412,16 @@ export class AddTransportRouteComponent {
         const routeDTO: CreateRouteDTO = {
             organizationId: this.currentUser?.organization?.id ?? 0,
             transportRoute: {
-                status: this.selectedStatus ?? ShipmentStatus.PLANNED,
-                transportType: this.selectedTransportType ?? TransportType.ROAD,
+                srcLocation: this.confirmedSrcDestLocations[0],
+                destLocation: this.confirmedSrcDestLocations[1],
+                waypoints: [],
+                liveLocation: this.confirmedCurrentLocation,
                 departureDateTime: this.formatDate(this.routeForm.get('departureDateTime')?.value),
                 arrivalDateTime: this.formatDate(this.routeForm.get('arrivalDateTime')?.value),
                 estimatedArrivalDateTime: this.formatDate(this.routeForm.get('estimatedArrivalDateTime')?.value),
-                srcLocation: this.confirmedSrcDestLocations[0],
-                destLocation: this.confirmedSrcDestLocations[1]
+                transportedEntities: [...this.transportedComponents, ...this.transportedProducts],
+                status: this.selectedStatus ?? ShipmentStatus.PLANNED,
+                transportType: this.selectedTransportType ?? TransportType.ROAD,
             },
             companyId: this.routeForm.get('companyId')?.value,
         };

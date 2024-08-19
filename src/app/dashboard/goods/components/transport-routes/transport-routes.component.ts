@@ -13,9 +13,6 @@ import { TransportRoutesMapComponent } from './transport-routes-map/transport-ro
 })
 export class TransportRoutesComponent {
     selectedTab = 'Map';
-    s = ''
-
-    
 
     handleSelectTab(tab: string) {
         this.selectedTab = tab;

@@ -18,7 +18,7 @@ import { ConfirmDialogInput } from '../../../../../shared/common/models/confirmD
 import { GenericConfirmDialogComponent } from '../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { SearchOptionsService } from '../../../../../shared/search/services/searchoptions.service';
 import { PageSelectorComponent } from '../../../../../shared/search/components/page-selector/page-selector.component';
-import { CreateRouteDTO, ResourceTransportRoute, UpdateRouteDTO } from '../../../models/TransportRoute';
+import { CreateRouteDTO, ResourceTransportRoute, TransportType, UpdateRouteDTO } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';
 import { ShipmentStatus } from '../../../../supply/models/SupplierShipment';
 
@@ -50,6 +50,7 @@ export class TransportRoutesTableComponent implements OnInit {
     };
     SearchMode = SearchMode;
     ShipmentStatus = ShipmentStatus;
+    TransportType = TransportType;
     
     selectedRouteIds = new Set<number>();
     newRawRoutes: any[] = [];

@@ -60,9 +60,9 @@ export enum EntityType {
 export interface TransportedEntity {
     entityId: number;
     entityType: TransportedEntityType;
-    entityName: string;
-    quantity: number;
-    deliveredQuantity: number;
+    entityName?: string;
+    quantity?: number;
+    deliveredQuantity?: number;
 }
 
 export enum TransportedEntityType {
