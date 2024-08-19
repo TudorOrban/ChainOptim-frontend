@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../../core/user/model/user';
-import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType } from '../../../models/TransportRoute';
+import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType, TransportType } from '../../../models/TransportRoute';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
@@ -34,6 +34,7 @@ export class AddTransportRouteComponent {
 
     currentUser: User | undefined = undefined;
     routeForm: FormGroup = new FormGroup({});
+
     clickedLocations: Pair<number, number>[] = [];
     isSelectLocationModeOn: boolean = false;
     areLocationsSelected: boolean = false;
@@ -43,8 +44,16 @@ export class AddTransportRouteComponent {
     sourceLocationLongitude: number | undefined = undefined;
     destLocationLatitude: number | undefined = undefined;
     destLocationLongitude: number | undefined = undefined;
+    isSelectCurrentLocationModeOn: boolean = false;
+    currentLocationLatitude: number | undefined = undefined;
+    currentLocationLongitude: number | undefined = undefined;
+
+    selectedTransportType: TransportType | undefined = undefined;
+    selectedStatus: ShipmentStatus | undefined = undefined;
+
     SelectLocationModeType = SelectLocationModeType;
     ShipmentStatus = ShipmentStatus;
+    TransportType = TransportType;
 
     constructor(
         private fb: FormBuilder,
@@ -160,8 +169,14 @@ export class AddTransportRouteComponent {
         this.onCancelConfirmedLocations.emit();
     }
 
-    onSelectionChanged(selectedValue: string) {
-        console.log("Selected value: ", selectedValue);
+    onTransportTypeSelectionChanged(selectedValue: string) {
+        console.log("Selected value for tr type: ", selectedValue);
+        this.selectedTransportType = selectedValue as TransportType;
+    }
+
+    onStatusSelectionChanged(selectedValue: string) {
+        console.log("Selected value for status: ", selectedValue);
+        this.selectedStatus = selectedValue as ShipmentStatus;
     }
 
     // Form
@@ -226,7 +241,8 @@ export class AddTransportRouteComponent {
         const routeDTO: CreateRouteDTO = {
             organizationId: this.currentUser?.organization?.id ?? 0,
             transportRoute: {
-                status: ShipmentStatus.CANCELLED,
+                status: this.selectedStatus ?? ShipmentStatus.PLANNED,
+                transportType: this.selectedTransportType ?? TransportType.ROAD,
                 departureDateTime: this.routeForm.get('departureDateTime')?.value,
                 arrivalDateTime: this.routeForm.get('arrivalDateTime')?.value,
                 estimatedArrivalDateTime: this.routeForm.get('estimatedArrivalDateTime')?.value,
@@ -241,6 +257,9 @@ export class AddTransportRouteComponent {
 
     private isRouteDTOValid(): boolean {
         if (this.confirmedLocations?.length != 2 || !this.confirmedLocations[0].first || !this.confirmedLocations[0].second || !this.confirmedLocations[1].first || !this.confirmedLocations[1].second) {
+            return false;
+        }
+        if (this.selectedStatus == undefined || this.selectedTransportType == undefined) {
             return false;
         }
         return true;

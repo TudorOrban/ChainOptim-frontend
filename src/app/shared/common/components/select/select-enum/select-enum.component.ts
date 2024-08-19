@@ -34,7 +34,9 @@ export class SelectEnumComponent implements OnInit {
     }
 
     onChange(newValue: string) {
-        const selectedKey = this.enumValues.find(item => item.value === +newValue)?.key;
+        const isNumericEnum = typeof this.enumValues[0]?.value === 'number';
+        const selectedKey = this.enumValues.find(item => isNumericEnum ? item.value === +newValue : item.value === newValue)?.key;
+    
         if (selectedKey) {
             this.selectionChange.emit(selectedKey);
         } else {
@@ -42,6 +44,7 @@ export class SelectEnumComponent implements OnInit {
             this.selectionChange.emit(undefined);
         }
     }
+    
 
     toTitleCase(text: string): string {
         return text.toLowerCase().replace(/(?:^|\s)\w/g, (match) => match.toUpperCase()).replace(/_/g, ' ');

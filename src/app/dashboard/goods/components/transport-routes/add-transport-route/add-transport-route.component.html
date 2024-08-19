@@ -1,91 +1,103 @@
 <form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">    
-    <div>
-        <label for="name" class="form-label">Name:</label>
-        <input type="text" id="name" formControlName="name" class="form-input">
-        <div *ngIf="routeForm.get('name')?.touched && routeForm.get('name')?.errors">
-            <p *ngIf="routeForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
-            <p *ngIf="routeForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
+    <div class="flex items-start space-x-12">
+        <div>
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" formControlName="name" class="form-input">
+            <div *ngIf="routeForm.get('name')?.touched && routeForm.get('name')?.errors">
+                <p *ngIf="routeForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
+                <p *ngIf="routeForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
+            </div>
         </div>
-    </div>
-
-    <div>
-        <label for="companyId" class="form-label">Company ID:</label>
-        <textarea id="companyId" formControlName="companyId" class="form-input"></textarea>
-        <div *ngIf="routeForm.get('companyId')?.touched">
-            <p *ngIf="routeForm.get('companyId')?.errors?.['maxlength']" class="form-error">Company ID must not exceed 200 characters.</p>
+    
+        <div>
+            <label for="companyId" class="form-label">Company ID:</label>
+            <input id="companyId" formControlName="companyId" class="form-input"/>
+            <div *ngIf="routeForm.get('companyId')?.touched">
+                <p *ngIf="routeForm.get('companyId')?.errors?.['maxlength']" class="form-error">Company ID must not exceed 200 characters.</p>
+            </div>
         </div>
     </div>
 
     <!-- Source and Destination Locations -->
-    <div class="space-y-4">
-        <div class="flex items-start justify-between space-x-4">
-            <div>
-                <div class="form-label whitespace-nowrap">Source Location</div>
-                <input id="sourceLocationLatitude" type="number" formControlName="sourceLocationLatitude" class="form-input"/>
-                <input id="sourceLocationLongitude" type="number" formControlName="sourceLocationLongitude" class="form-input"/>
+    <div class="flex items-start space-x-12">
+        <div class="space-y-4">
+            <div class="flex items-start justify-between space-x-2">
+                <div>
+                    <div class="form-label">Source Location</div>
+                    <input id="sourceLocationLatitude" type="number" formControlName="sourceLocationLatitude" placeholder="Latitude" class="form-input"/>
+                    <input id="sourceLocationLongitude" type="number" formControlName="sourceLocationLongitude" placeholder="Longitude" class="form-input"/>
+                </div>
+
+                <p class="form-label">-</p>
+                
+                <div>
+                    <div class="form-label">Destination Location</div>
+                    <input id="destLocationLatitude" type="number" formControlName="destLocationLatitude" placeholder="Latitude" class="form-input"/>
+                    <input id="destLocationLongitude" type="number" formControlName="destLocationLongitude" placeholder="Longitude" class="form-input"/>
+                </div>
             </div>
-            
-            <div>
-                <div class="form-label whitespace-nowrap">Destination Location</div>
-                <input id="destLocationLatitude" type="number" formControlName="destLocationLatitude" class="form-input"/>
-                <input id="destLocationLongitude" type="number" formControlName="destLocationLongitude" class="form-input"/>
+    
+            <div class="flex items-center space-x-4">
+                <button 
+                    *ngIf="!areLocationsConfirmed"
+                    type="button" 
+                    (click)="handleToggleSelectLocationMode()" 
+                    [class.selected]="isSelectLocationModeOn"
+                    class="standard-button"
+                >
+                    Select on Map
+                </button>
+    
+                <div *ngIf="areLocationsSelected" class="flex items-center space-x-2">  
+                    <button (click)="handleCancelRouteLocations()" type="button" class="standard-button">
+                        Cancel
+                    </button>
+                    <button (click)="handleConfirmRouteLocations()" type="button" class="standard-write-button">
+                        Confirm
+                    </button>
+                </div>
+    
+                <button
+                    *ngIf="areLocationsConfirmed"
+                    (click)="handleCancelConfirmedLocations()"
+                    type="button"
+                    class="standard-button"
+                >
+                    Cancel Selection
+                </button>
             </div>
         </div>
-
-        <div class="flex items-center space-x-4">
-            <button 
-                type="button" 
-                (click)="handleToggleSelectLocationMode()" 
-                [class.selected]="isSelectLocationModeOn"
-                class="standard-button"
-            >
+        
+        <div>
+            <div class="form-label">Current Location</div>
+            <button type="button" (click)="handleToggleSelectLocationMode()" class="standard-button">
                 Select on Map
             </button>
-
-            <div *ngIf="areLocationsSelected" class="flex items-center space-x-2">  
-                <button (click)="handleCancelRouteLocations()" type="button" class="standard-button">
-                    Cancel
-                </button>
-                <button (click)="handleConfirmRouteLocations()" type="button" class="standard-write-button">
-                    Confirm
-                </button>
-            </div>
-
-            <button
-                *ngIf="areLocationsConfirmed"
-                (click)="handleCancelConfirmedLocations()"
-                type="button"
-                class="standard-button"
-            >
-                Cancel Selection
-            </button>
         </div>
-    </div>
-
-    <div>
-        <div class="form-label">Current Location</div>
-        <button type="button" (click)="handleToggleSelectLocationMode()" class="standard-button">
-            Select on Map
-        </button>
     </div>
 
     <!-- Dates -->
     <div>
-        <div class="form-label whitespace-nowrap">Departure Date</div>
+        <div class="form-label">Departure Date</div>
         <input id="departureDateTime" type="date" formControlName="departureDateTime" class="form-input">
     </div>
     <div>
-        <div class="form-label whitespace-nowrap">Arrival Date</div>
+        <div class="form-label">Arrival Date</div>
         <input id="arrivalDateTime" type="date" formControlName="arrivalDateTime" class="form-input">
     </div>
     <div>
-        <div class="form-label whitespace-nowrap">Estimated Arrival Date</div>
+        <div class="form-label">Estimated Arrival Date</div>
         <input id="estimatedArrivalDateTime" type="date" formControlName="estimatedArrivalDateTime" class="form-input">
     </div>
 
     <div>
-        <div class="form-label whitespace-nowrap">Route Status</div>
-        <app-select-enum [enumType]="ShipmentStatus" (selectionChange)="onSelectionChanged($event)"></app-select-enum>
+        <div class="form-label">Transport Type</div>
+        <app-select-enum [enumType]="TransportType" (selectionChange)="onTransportTypeSelectionChanged($event)"></app-select-enum>
+    </div>
+
+    <div>
+        <div class="form-label">Route Status</div>
+        <app-select-enum [enumType]="ShipmentStatus" (selectionChange)="onStatusSelectionChanged($event)"></app-select-enum>
     </div>
 
     <!-- Submit -->

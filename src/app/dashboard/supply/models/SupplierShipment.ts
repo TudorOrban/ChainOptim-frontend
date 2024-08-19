@@ -27,10 +27,10 @@ export interface SupplierShipment {
 }
 
 export enum ShipmentStatus {
-    PLANNED,
-    IN_TRANSIT,
-    DELIVERED,
-    CANCELLED
+    PLANNED = 'PLANNED',
+    IN_TRANSIT = 'IN_TRANSIT',
+    DELIVERED = 'DELIVERED',
+    CANCELLED = 'CANCELLED'
 }
 
 export interface CreateSupplierShipmentDTO {
