@@ -114,6 +114,7 @@ export class AddTransportRouteComponent {
         });
     }
 
+    // Handlers
     onLocationClicked(location: Pair<number, number>): void {
         this.clickedLocations.push(location);
 
@@ -125,7 +126,7 @@ export class AddTransportRouteComponent {
         }
     }
 
-    // Src and Dest location handlers
+    // - Src and Dest location handlers
     private handleSrcDestLocationClicked(location: Pair<number, number>): void {
         const selectedLocations = this.clickedLocations.length;
 
@@ -152,17 +153,13 @@ export class AddTransportRouteComponent {
         if (this.isSelectSrcDestLocationModeOn && this.isSelectCurrentLocationModeOn) {
             this.handleToggleSelectCurrentLocationMode();
         }
+
         this.clickedLocations = [];
         if (this.confirmedSrcDestLocations.length != 2) {
-            this.routeForm.patchValue({
-                sourceLocationLatitude: null,
-                sourceLocationLongitude: null,
-                destLocationLatitude: null,
-                destLocationLongitude: null
-            });
+            this.handleResetSrcDestFormLocations();
         }
+
         this.areSrcDestLocationsSelected = !this.isSelectSrcDestLocationModeOn ? false : this.areSrcDestLocationsSelected;
-        console.log("Select location mode: ", this.isSelectSrcDestLocationModeOn);
         this.onSelectLocationModeChanged.emit(this.isSelectSrcDestLocationModeOn);
     }
 
@@ -179,15 +176,13 @@ export class AddTransportRouteComponent {
         if (this.isSelectCurrentLocationModeOn && this.isSelectSrcDestLocationModeOn) {
             this.handleToggleSelectSrcDestLocationMode();
         }
+
         this.clickedLocations = [];
-        if (this.confirmedCurrentLocation) {
-            this.routeForm.patchValue({
-                currentLocationLatitude: null,
-                currentLocationLongitude: null
-            });
+        if (!this.confirmedCurrentLocation) {
+            this.handleResetCurrentLocationForm();
         }
+
         this.isCurrentLocationSelected = !this.isSelectCurrentLocationModeOn ? false : this.isCurrentLocationSelected;
-        console.log("Select current location mode: ", this.isSelectCurrentLocationModeOn);
         this.onSelectCurrentLocationModeChanged.emit(this.isSelectCurrentLocationModeOn);
     }
 
@@ -205,42 +200,53 @@ export class AddTransportRouteComponent {
     }
 
     handleCancelRouteSrcDestLocations(): void {
+        this.handleResetSrcDestFormLocations();
         this.areSrcDestLocationsSelected = false;
         this.onCancelSelectedLocations.emit();
     }
 
     handleCancelConfirmedSrcDestLocations(): void {
+        this.handleResetSrcDestFormLocations();
+        this.confirmedSrcDestLocations = [];
+        this.areSrcDestLocationsConfirmed = false;
+        this.onCancelConfirmedLocations.emit();
+    }
+
+    handleResetSrcDestFormLocations(): void {
         this.routeForm.patchValue({
             sourceLocationLatitude: null,
             sourceLocationLongitude: null,
             destLocationLatitude: null,
             destLocationLongitude: null
         });
-        this.confirmedSrcDestLocations = [];
-        this.areSrcDestLocationsConfirmed = false;
-        this.onCancelConfirmedLocations.emit();
     }
 
     // - Current location
     handleConfirmCurrentLocation(): void {
         this.isCurrentLocationConfirmed = true;
+        this.confirmedCurrentLocation = this.clickedLocations?.[this.clickedLocations?.length - 1];
         this.onConfirmCurrentLocation.emit(this.confirmedCurrentLocation);
         this.handleToggleSelectCurrentLocationMode();
     }
 
     handleCancelCurrentLocation(): void {
+        this.handleResetCurrentLocationForm();
         this.isCurrentLocationSelected = false;
         this.onCancelCurrentLocation.emit();
     }
 
     handleCancelConfirmedCurrentLocation(): void {
+        this.handleResetCurrentLocationForm();
+        this.confirmedCurrentLocation = undefined;
+        this.isCurrentLocationConfirmed = false;
+        this.onCancelConfirmedCurrentLocation.emit();
+    }
+
+    handleResetCurrentLocationForm(): void {
         this.routeForm.patchValue({
             currentLocationLatitude: null,
             currentLocationLongitude: null
         });
-        this.confirmedCurrentLocation = undefined;
-        this.isCurrentLocationConfirmed = false;
-        this.onCancelConfirmedCurrentLocation.emit();
     }
 
     // Enums

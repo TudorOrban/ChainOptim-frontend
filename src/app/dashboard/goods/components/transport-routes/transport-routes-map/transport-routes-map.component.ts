@@ -39,7 +39,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
     // Src and Dest location selection
     private isSelectSrcDestLocationModeOn: boolean = false;
-    private isLocationConfirmed: boolean = false;
+    private areSrcDestLocationsConfirmed: boolean = false;
     private temporaryPins: any[] = [];
     private temporaryRoutes: any[] = [];
 
@@ -188,14 +188,14 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         this.addRouteComponent.onLocationClicked({ first: clickedLat, second: clickedLng });
            
         if (this.isSelectSrcDestLocationModeOn) {
-            this.addLocationPin(clickedLat, clickedLng, true);
+            this.addLocationPin(clickedLat, clickedLng, true, false);
         }
         if (this.isSelectCurrentLocationModeOn) {
-            this.addLocationPin(clickedLat, clickedLng, true);
+            this.addLocationPin(clickedLat, clickedLng, true, true);
         }
     }
 
-    private addLocationPin(clickedLat: number, clickedLng: number, temporary: true): void {
+    private addLocationPin(clickedLat: number, clickedLng: number, temporary: boolean, isCurrentLocation: boolean): void {
         const iconHtml = `<i class="fas fa-map-pin" style="color: red; font-size: 24px;"></i>`;
 
         const customIcon = this.L.divIcon({
@@ -212,6 +212,12 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
                 this.temporaryPins?.[0]?.remove();
             }
             this.temporaryPins.push(marker);
+        }
+        if (isCurrentLocation) {
+            if (this.currentLocationTemporaryPin) {
+                this.currentLocationTemporaryPin.remove();
+            }
+            this.currentLocationTemporaryPin = marker;
         }
     }
 
@@ -456,7 +462,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         // Src and Dest location selection
         this.addRouteComponent.onSelectLocationModeChanged.subscribe((on) => {
             this.isSelectSrcDestLocationModeOn = on;
-            if (!this.isLocationConfirmed) {
+            if (!this.areSrcDestLocationsConfirmed) {
                 this.handleRemoveTemporaryPins(true);
                 this.handleRemoveTemporaryRoutes();
             }
@@ -467,14 +473,14 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             this.handleDrawRoute(locations, true);
         });
         this.addRouteComponent.onConfirmSelectedLocations.subscribe((locations) => {
-            this.isLocationConfirmed = true;
+            this.areSrcDestLocationsConfirmed = true;
         });
-        this.addRouteComponent.onCancelSelectedLocations.subscribe((locations) => {
+        this.addRouteComponent.onCancelSelectedLocations.subscribe(() => {
             this.handleRemoveTemporaryPins(true);
             this.handleRemoveTemporaryRoutes();
         })
-        this.addRouteComponent.onCancelConfirmedLocations.subscribe((locations) => {
-            this.isLocationConfirmed = false;
+        this.addRouteComponent.onCancelConfirmedLocations.subscribe(() => {
+            this.areSrcDestLocationsConfirmed = false;
             this.handleRemoveTemporaryPins(true);
             this.handleRemoveTemporaryRoutes();
         });
@@ -482,6 +488,19 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         // Current location selection
         this.addRouteComponent.onSelectCurrentLocationModeChanged.subscribe((on) => {
             this.isSelectCurrentLocationModeOn = on;
+        });
+        this.addRouteComponent.onConfirmCurrentLocation.subscribe((location) => {
+            this.isCurrentLocationConfirmed = true;
+            this.handleRemoveCurrentLocationPin();
+            this.addLocationPin(location.first, location.second, false, true);
+        });
+        this.addRouteComponent.onCancelCurrentLocation.subscribe(() => {
+            this.isCurrentLocationConfirmed = false;
+            this.handleRemoveCurrentLocationPin();
+        });
+        this.addRouteComponent.onCancelConfirmedCurrentLocation.subscribe(() => {
+            this.isCurrentLocationConfirmed = false;
+            this.handleRemoveCurrentLocationPin();
         });
     }
 
