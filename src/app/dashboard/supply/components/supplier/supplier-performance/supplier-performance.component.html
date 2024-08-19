@@ -60,7 +60,7 @@
 
     <div class="label-large pt-2 pb-4">Component Statistics</div>
 
-    <app-select-component [initialData]="{ componentId: selectedComponentId, initialComponents: getAvailableComponents(), preventComponentLoading: true }" (componentSelected)="handleComponentIdChange($event)"></app-select-component>
+    <app-select-component [initialData]="{ componentId: selectedComponentId, initialComponents: getAvailableComponents(), preventComponentLoading: true }" (componentSelected)="handleComponentChange($event)"></app-select-component>
     
     <div class="flex items-start justify-between w-full">
         <div class="space-y-2">

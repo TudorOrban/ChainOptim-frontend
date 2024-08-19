@@ -96,7 +96,9 @@ export class SupplierPerformanceComponent implements OnInit {
             if (!this.componentRef) {
                 return;
             }
-            this.handleComponentIdChange(this.selectedComponentId);
+            this.handleComponentChange({
+                id: this.selectedComponentId, name: "" 
+            });
         })
     }
 
@@ -104,7 +106,7 @@ export class SupplierPerformanceComponent implements OnInit {
         return this.componentIds.map(id => this.orgComponents[id]).filter(component => !!component);
     }
  
-    handleComponentIdChange(componentId: number) {
+    handleComponentChange(component: ComponentSearchDTO) {
         if (!this.performance?.report?.componentPerformances) {
             return;
         }
@@ -113,7 +115,7 @@ export class SupplierPerformanceComponent implements OnInit {
         if (this.componentIds.length == 0) {
             return;
         }
-        this.selectedComponentId = componentId;
+        this.selectedComponentId = component.id;
         if (!this.performance?.report.componentPerformances[this.selectedComponentId] || !this.componentRef) {
             return;
         }

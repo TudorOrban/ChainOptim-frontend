@@ -12,10 +12,11 @@ import { FallbackManagerService } from '../../../../../../../shared/fallback/ser
 import { OperationOutcome } from '../../../../../../../shared/common/components/toast-system/toastTypes';
 import { CommonModule } from '@angular/common';
 import { SelectStageComponent } from '../../../../../../../shared/common/components/select/select-stage/select-stage.component';
-import { CreateStageOutputDTO, StageOutput } from '../../../../../models/Product';
+import { CreateStageOutputDTO, ProductSearchDTO, StageOutput } from '../../../../../models/Product';
 import { StageOutputService } from '../../../../../services/stageoutput.service';
 import { SelectComponentComponent } from '../../../../../../../shared/common/components/select/select-component/select-component.component';
 import { SelectProductComponent } from '../../../../../../../shared/common/components/select/select-product/select-product.component';
+import { ComponentSearchDTO } from '../../../../../models/Component';
 
 @Component({
     selector: 'app-add-stage-output',
@@ -146,11 +147,11 @@ export class AddStageOutputComponent {
         this.selectedStageId = stageId;
     }
 
-    handleComponentIdChange(componentId: number) {
-        this.selectedComponentId = componentId;
+    handleComponentChange(component: ComponentSearchDTO) {
+        this.selectedComponentId = component.id;
     }
 
-    handleProductIdChange(productId: number) {
-        this.selectedProductId = productId;
+    handleProductChange(product: ProductSearchDTO) {
+        this.selectedProductId = product.id;
     }
 }

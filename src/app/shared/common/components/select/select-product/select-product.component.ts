@@ -3,7 +3,7 @@ import { ProductService } from '../../../../../dashboard/goods/services/product.
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Product } from '../../../../../dashboard/goods/models/Product';
+import { Product, ProductSearchDTO } from '../../../../../dashboard/goods/models/Product';
 
 @Component({
     selector: 'app-select-product',
@@ -18,7 +18,7 @@ export class SelectProductComponent implements OnChanges {
     products: Product[] = [];
     selectedProductId: number | undefined = undefined;
 
-    @Output() productSelected = new EventEmitter<number>();
+    @Output() productSelected = new EventEmitter<ProductSearchDTO>();
 
     constructor(
         private productService: ProductService,
@@ -73,6 +73,11 @@ export class SelectProductComponent implements OnChanges {
     selectProduct(productId: number | undefined): void {
         console.log("Selected product: ", productId);
         this.selectedProductId = productId;
-        this.productSelected.emit(productId);
+        const product = this.products.find(p => p.id === productId);
+        if (!product) {
+            console.error("Error: Product not found: ", productId);
+            return;
+        }
+        this.productSelected.emit(product);
     }
 }

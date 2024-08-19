@@ -19,7 +19,7 @@
     </div>
 
     <div class="flex items-start space-x-12">
-        <!-- Source and Destination Locations -->
+        <!-- Source and Destination Locations & Facilities-->
         <div class="space-y-4">
             <div class="flex items-start justify-between space-x-2">
                 <div>
@@ -110,7 +110,7 @@
     <div class="flex items-start space-x-12">
         <div>
             <div class="form-label">Transported Components</div>
-            <app-select-component (componentSelected)="handleComponentIdChange($event)"></app-select-component>
+            <app-select-component (componentSelected)="handleComponentChange($event)"></app-select-component>
             <div *ngFor="let component of transportedComponents" class="flex items-center">
                 <div class="flex items-center justify-between space-x-4 bg-gray-50 border border-gray-300 rounded-md shadow-sm px-4 py-2">
                     <div class="font-semibold text-ellipsis overflow-hidden max-w-24 whitespace-nowrap">
@@ -127,7 +127,7 @@
         </div>
         <div>
             <div class="form-label">Transported Products</div>
-            <app-select-product (productSelected)="handleProductIdChange($event)"></app-select-product>
+            <app-select-product (productSelected)="handleProductChange($event)"></app-select-product>
             <div *ngFor="let product of transportedProducts" class="flex items-center">
                 <div class="flex items-center justify-between space-x-4 bg-gray-50 border border-gray-300 rounded-md shadow-sm px-4 py-2">
                     <div class="font-semibold text-ellipsis overflow-hidden max-w-24 whitespace-nowrap">

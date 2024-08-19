@@ -15,6 +15,7 @@ import { SelectStageComponent } from '../../../../../../../shared/common/compone
 import { CreateStageInputDTO, StageInput } from '../../../../../models/Product';
 import { StageInputService } from '../../../../../services/stageinput.service';
 import { SelectComponentComponent } from '../../../../../../../shared/common/components/select/select-component/select-component.component';
+import { ComponentSearchDTO } from '../../../../../models/Component';
 
 @Component({
     selector: 'app-add-stage-input',
@@ -143,7 +144,7 @@ export class AddStageInputComponent {
         this.selectedStageId = stageId;
     }
 
-    handleComponentIdChange(componentId: number) {
-        this.selectedComponentId = componentId;
+    handleComponentChange(component: ComponentSearchDTO) {
+        this.selectedComponentId = component.id;
     }
 }

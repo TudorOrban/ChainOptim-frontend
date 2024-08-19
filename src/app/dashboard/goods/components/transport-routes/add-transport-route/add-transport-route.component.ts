@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
     FormBuilder,
     FormControl,
@@ -25,6 +25,7 @@ import { SelectProductComponent } from '../../../../../shared/common/components/
 import { SelectComponentComponent } from '../../../../../shared/common/components/select/select-component/select-component.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Facility } from '../../../../overview/types/supplyChainMapTypes';
 
 @Component({
     selector: 'app-add-transport-route',
@@ -34,6 +35,8 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
     styleUrl: './add-transport-route.component.css',
 })
 export class AddTransportRouteComponent {
+    @Input() facilities?: Facility[] = [];
+
     @Output() onRouteAdded = new EventEmitter<ResourceTransportRoute>();
     @Output() onSelectLocationModeChanged = new EventEmitter<boolean>();
     @Output() onDrawRoute = new EventEmitter<Pair<number, number>[]>();
@@ -59,10 +62,6 @@ export class AddTransportRouteComponent {
     areSrcDestLocationsSelected: boolean = false;
     confirmedSrcDestLocations: Pair<number, number>[] = [];
     areSrcDestLocationsConfirmed: boolean = false;
-    sourceLocationLatitude: number | undefined = undefined;
-    sourceLocationLongitude: number | undefined = undefined;
-    destLocationLatitude: number | undefined = undefined;
-    destLocationLongitude: number | undefined = undefined;
 
     // - Current location
     isSelectCurrentLocationModeOn: boolean = false;
@@ -73,8 +72,6 @@ export class AddTransportRouteComponent {
     currentLocationLongitude: number | undefined = undefined;
 
     // - Component and Product selection
-    components: ComponentSearchDTO[] = [];
-    products: ProductSearchDTO[] = [];
     transportedComponents: TransportedEntity[] = [];
     transportedProducts: TransportedEntity[] = [];
 
@@ -92,8 +89,6 @@ export class AddTransportRouteComponent {
         private fb: FormBuilder,
         private userService: UserService,
         private routeService: TransportRouteService,
-        private componentService: ComponentService,
-        private productService: ProductService,
         private fallbackManagerService: FallbackManagerService,
         private toastService: ToastService
     ) {}
@@ -130,8 +125,6 @@ export class AddTransportRouteComponent {
                 }
                 
                 this.currentUser = user;
-                this.loadComponents();
-                this.loadProducts();
             },
             error: (error: Error) => {
                 this.fallbackManagerService.updateError(error.message ?? '');
@@ -139,30 +132,6 @@ export class AddTransportRouteComponent {
             },
         });
         
-    }
-
-    private loadComponents(): void {
-        this.componentService.getComponentsByOrganizationId(this.currentUser?.organization?.id ?? 0, true).subscribe({
-            next: (components) => {
-                this.components = components;
-                console.log("Components: ", components);
-            },
-            error: (error: Error) => {
-                console.error('Error fetching components:', error);
-            },
-        });
-    }
-
-    private loadProducts(): void {
-        this.productService.getProductsByOrganizationId(this.currentUser?.organization?.id ?? 0, true).subscribe({
-            next: (products) => {
-                this.products = products;
-                console.log("Products: ", products);
-            },
-            error: (error: Error) => {
-                console.error('Error fetching products:', error);
-            },
-        });
     }
 
     // Handlers
@@ -301,17 +270,11 @@ export class AddTransportRouteComponent {
     }
     
     // - Components and Products
-    handleComponentIdChange(componentId: number): void {
-        const component = this.components.find((c) => c.id == componentId);
-        if (!component) {
-            console.error('Component not found');
-            return;
-        }
-
+    handleComponentChange(component: ComponentSearchDTO): void {
         this.transportedComponents.push({
             entityId: component.id,
-            entityType: TransportedEntityType.COMPONENT,
             entityName: component.name,
+            entityType: TransportedEntityType.COMPONENT,
             quantity: 0
         });
     }
@@ -320,17 +283,11 @@ export class AddTransportRouteComponent {
         this.transportedComponents = this.transportedComponents.filter((c) => c.entityId != componentId);
     }
 
-    handleProductIdChange(productId: number): void {
-        const product = this.products.find((c) => c.id == productId);
-        if (!product) {
-            console.error('Product not found');
-            return;
-        }
-
+    handleProductChange(product: ProductSearchDTO): void {
         this.transportedProducts.push({
             entityId: product.id,
-            entityType: TransportedEntityType.PRODUCT,
             entityName: product.name,
+            entityType: TransportedEntityType.PRODUCT,
             quantity: 0
         });
     }

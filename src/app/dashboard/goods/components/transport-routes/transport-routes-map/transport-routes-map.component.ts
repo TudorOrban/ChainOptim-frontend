@@ -30,7 +30,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent | TransportRouteUIComponent>> = new Map();
     private routePolylines: Map<string, L.Polyline> = new Map();
     
-    private supplyChainMap: SupplyChainMap | undefined;
+    supplyChainMap: SupplyChainMap | undefined;
     private routes: ResourceTransportRoute[] = [];
     private currentOrganization: Organization | undefined;
     

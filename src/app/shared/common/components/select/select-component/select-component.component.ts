@@ -18,7 +18,7 @@ export class SelectComponentComponent implements OnChanges {
     components: ProdComponent[] | ComponentSearchDTO[] = [];
     selectedComponentId: number | undefined = undefined;
 
-    @Output() componentSelected = new EventEmitter<number>();
+    @Output() componentSelected = new EventEmitter<ComponentSearchDTO>();
 
     constructor(
         private componentService: ComponentService,
@@ -88,6 +88,11 @@ export class SelectComponentComponent implements OnChanges {
     selectComponent(componentId: number | undefined): void {
         console.log("Selected component: ", componentId);
         this.selectedComponentId = componentId;
-        this.componentSelected.emit(componentId);
+        const selectedComponent = this.components.find(component => component.id === componentId);
+        if (!selectedComponent) {
+            console.error("Error: Selected component not found: ", componentId);
+            return;
+        }
+        this.componentSelected.emit(selectedComponent);
     }
 }

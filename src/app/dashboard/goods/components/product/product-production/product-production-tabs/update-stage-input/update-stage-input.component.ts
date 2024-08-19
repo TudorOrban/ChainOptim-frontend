@@ -15,6 +15,7 @@ import { SelectStageComponent } from '../../../../../../../shared/common/compone
 import { Stage, StageInput, UpdateStageInputDTO } from '../../../../../models/Product';
 import { StageInputService } from '../../../../../services/stageinput.service';
 import { SelectComponentComponent } from '../../../../../../../shared/common/components/select/select-component/select-component.component';
+import { ComponentSearchDTO } from '../../../../../models/Component';
 
 @Component({
     selector: 'app-update-stage-input',
@@ -177,7 +178,7 @@ export class UpdateStageInputComponent {
         this.selectedStageId = stageId;
     }
 
-    handleComponentIdChange(componentId: number) {
-        this.selectedComponentId = componentId;
+    handleComponentChange(component: ComponentSearchDTO) {
+        this.selectedComponentId = component.id;
     }
 }
