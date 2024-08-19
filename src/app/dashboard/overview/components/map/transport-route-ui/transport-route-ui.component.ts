@@ -56,8 +56,10 @@ export class TransportRouteUIComponent {
         if (!this.route) return;
 
         if (this.route.departureDateTime && this.route.estimatedArrivalDateTime) {
-            const totalDuration = this.route.estimatedArrivalDateTime.getTime() - this.route.departureDateTime.getTime();
-            const elapsedDuration = new Date().getTime() - this.route.departureDateTime.getTime();
+            const departureDateTime = new Date(this.route.departureDateTime);
+            const estimatedArrivalDateTime = new Date(this.route.estimatedArrivalDateTime);
+            const totalDuration = estimatedArrivalDateTime.getTime() - departureDateTime.getTime();
+            const elapsedDuration = new Date().getTime() - departureDateTime.getTime();
             this.estimatedProgress = elapsedDuration / totalDuration;
         }
 

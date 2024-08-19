@@ -16,6 +16,7 @@ import { ToastService } from '../../../../../shared/common/components/toast-syst
 import { OperationOutcome } from '../../../../../shared/common/components/toast-system/toastTypes';
 import { ShipmentStatus } from '../../../../supply/models/SupplierShipment';
 import { SelectEnumComponent } from '../../../../../shared/common/components/select/select-enum/select-enum.component';
+import { TransportRouteService } from '../../../services/transportroute.service';
 
 @Component({
     selector: 'app-add-transport-route',
@@ -74,6 +75,7 @@ export class AddTransportRouteComponent {
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
+        private routeService: TransportRouteService,
         private fallbackManagerService: FallbackManagerService,
         private toastService: ToastService
     ) {}
@@ -284,28 +286,28 @@ export class AddTransportRouteComponent {
 
         const routeDTO = this.getRouteDTO();
         console.log("Route DTO: ", routeDTO);
-        // this.routeService
-        //     .createRoute(routeDTO, true)
-        //     .subscribe(
-        //         (route) => {
-        //             this.toastService.addToast({
-        //                 id: 123,
-        //                 title: 'Success',
-        //                 message: 'Product route created successfully.',
-        //                 outcome: OperationOutcome.SUCCESS,
-        //             });
-        //             this.onRouteAdded.emit(route);
-        //         },
-        //         (error) => {
-        //             this.toastService.addToast({
-        //                 id: 123,
-        //                 title: 'Error',
-        //                 message: 'Product route creation failed.',
-        //                 outcome: OperationOutcome.ERROR,
-        //             });
-        //             console.error('Error creating product route:', error);
-        //         }
-        //     );
+        this.routeService
+            .createRoute(routeDTO)
+            .subscribe(
+                (route) => {
+                    this.toastService.addToast({
+                        id: 123,
+                        title: 'Success',
+                        message: 'Product route created successfully.',
+                        outcome: OperationOutcome.SUCCESS,
+                    });
+                    this.onRouteAdded.emit(route);
+                },
+                (error) => {
+                    this.toastService.addToast({
+                        id: 123,
+                        title: 'Error',
+                        message: 'Product route creation failed.',
+                        outcome: OperationOutcome.ERROR,
+                    });
+                    console.error('Error creating product route:', error);
+                }
+            );
     }
 
     private isFormInvalid(): boolean {
@@ -324,9 +326,9 @@ export class AddTransportRouteComponent {
             transportRoute: {
                 status: this.selectedStatus ?? ShipmentStatus.PLANNED,
                 transportType: this.selectedTransportType ?? TransportType.ROAD,
-                departureDateTime: this.routeForm.get('departureDateTime')?.value,
-                arrivalDateTime: this.routeForm.get('arrivalDateTime')?.value,
-                estimatedArrivalDateTime: this.routeForm.get('estimatedArrivalDateTime')?.value,
+                departureDateTime: this.formatDate(this.routeForm.get('departureDateTime')?.value),
+                arrivalDateTime: this.formatDate(this.routeForm.get('arrivalDateTime')?.value),
+                estimatedArrivalDateTime: this.formatDate(this.routeForm.get('estimatedArrivalDateTime')?.value),
                 srcLocation: this.confirmedSrcDestLocations[0],
                 destLocation: this.confirmedSrcDestLocations[1]
             },
@@ -345,4 +347,10 @@ export class AddTransportRouteComponent {
         }
         return true;
     }
+
+    formatDate(dateStr: string | null): Date {
+        if (!dateStr) return new Date();
+        return new Date(`${dateStr}T00:00`);
+    }
+      
 }
