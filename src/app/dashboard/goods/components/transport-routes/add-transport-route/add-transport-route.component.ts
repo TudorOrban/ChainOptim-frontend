@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
     FormBuilder,
     FormControl,
@@ -10,7 +10,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../../core/user/model/user';
 import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType } from '../../../models/TransportRoute';
-import { TransportRouteService } from '../../../services/transportroute.service';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
@@ -30,6 +29,7 @@ export class AddTransportRouteComponent {
     @Output() onDrawRoute = new EventEmitter<Pair<number, number>[]>();
     @Output() onConfirmSelectedLocations = new EventEmitter<Pair<number, number>[]>();
     @Output() onCancelSelectedLocations = new EventEmitter<void>();
+    @Output() onCancelConfirmedLocations = new EventEmitter<void>();
 
     currentUser: User | undefined = undefined;
     routeForm: FormGroup = new FormGroup({});
@@ -37,6 +37,7 @@ export class AddTransportRouteComponent {
     isSelectLocationModeOn: boolean = false;
     areLocationsSelected: boolean = false;
     confirmedLocations: Pair<number, number>[] = [];
+    areLocationsConfirmed: boolean = false;
     sourceLocationLatitude: number | undefined = undefined;
     sourceLocationLongitude: number | undefined = undefined;
     destLocationLatitude: number | undefined = undefined;
@@ -45,7 +46,6 @@ export class AddTransportRouteComponent {
 
     constructor(
         private fb: FormBuilder,
-        private routeService: TransportRouteService,
         private userService: UserService,
         private fallbackManagerService: FallbackManagerService,
         private toastService: ToastService
@@ -113,8 +113,15 @@ export class AddTransportRouteComponent {
     handleToggleSelectLocationMode(): void {
         this.isSelectLocationModeOn = !this.isSelectLocationModeOn;
         this.clickedLocations = [];
-        this.sourceLocationLatitude = undefined;
-        this.sourceLocationLongitude = undefined;
+        if (this.confirmedLocations.length != 2) {
+            this.routeForm.patchValue({
+                sourceLocationLatitude: null,
+                sourceLocationLongitude: null,
+                destLocationLatitude: null,
+                destLocationLongitude: null
+            });
+        }
+        this.areLocationsSelected = !this.isSelectLocationModeOn ? false : this.areLocationsSelected;
         console.log("Select location mode: ", this.isSelectLocationModeOn);
         this.onSelectLocationModeChanged.emit(this.isSelectLocationModeOn);
     }
@@ -126,12 +133,26 @@ export class AddTransportRouteComponent {
             this.clickedLocations[selectedLocations - 2],
             this.clickedLocations[selectedLocations - 1]
         );
+        this.areLocationsConfirmed = true;
         this.onConfirmSelectedLocations.emit(this.confirmedLocations);
+        this.handleToggleSelectLocationMode();
     }
 
     handleCancelRouteLocations(): void {
         this.areLocationsSelected = false;
         this.onCancelSelectedLocations.emit();
+    }
+
+    handleCancelConfirmedLocations(): void {
+        this.routeForm.patchValue({
+            sourceLocationLatitude: null,
+            sourceLocationLongitude: null,
+            destLocationLatitude: null,
+            destLocationLongitude: null
+        });
+        this.confirmedLocations = [];
+        this.areLocationsConfirmed = false;
+        this.onCancelConfirmedLocations.emit();
     }
 
     // Form

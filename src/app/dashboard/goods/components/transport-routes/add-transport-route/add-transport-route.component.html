@@ -32,21 +32,32 @@
             </div>
         </div>
 
-        <button 
-            type="button" 
-            (click)="handleToggleSelectLocationMode()" 
-            [class.selected]="isSelectLocationModeOn"
-            class="standard-button"
-        >
-            Select on Map
-        </button>
-
-        <div *ngIf="areLocationsSelected" class="flex items-center space-x-2">  
-            <button (click)="handleCancelRouteLocations()" type="button" class="standard-button">
-                Cancel
+        <div class="flex items-center space-x-4">
+            <button 
+                type="button" 
+                (click)="handleToggleSelectLocationMode()" 
+                [class.selected]="isSelectLocationModeOn"
+                class="standard-button"
+            >
+                Select on Map
             </button>
-            <button (click)="handleConfirmRouteLocations()" type="button" class="standard-write-button">
-                Confirm
+
+            <div *ngIf="areLocationsSelected" class="flex items-center space-x-2">  
+                <button (click)="handleCancelRouteLocations()" type="button" class="standard-button">
+                    Cancel
+                </button>
+                <button (click)="handleConfirmRouteLocations()" type="button" class="standard-write-button">
+                    Confirm
+                </button>
+            </div>
+
+            <button
+                *ngIf="areLocationsConfirmed"
+                (click)="handleCancelConfirmedLocations()"
+                type="button"
+                class="standard-button"
+            >
+                Cancel Selection
             </button>
         </div>
     </div>

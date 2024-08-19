@@ -37,6 +37,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     isAddRouteModeOn: boolean = false;
     private listenersSetUp: boolean = false;
     private selectLocationModeOn: boolean = false;
+    private isLocationConfirmed: boolean = false;
     private temporaryPins: any[] = [];
     private temporaryRoutes: any[] = [];
 
@@ -442,8 +443,11 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         this.addRouteComponent.onSelectLocationModeChanged.subscribe((on) => {
             this.selectLocationModeOn = on;
-            this.handleRemoveTemporaryPins(true);
-            this.handleRemoveTemporaryRoutes();
+            console.log("Is loc confirmed: ", this.isLocationConfirmed);
+            if (!this.isLocationConfirmed) {
+                this.handleRemoveTemporaryPins(true);
+                this.handleRemoveTemporaryRoutes();
+            }
         });
 
         this.addRouteComponent.onDrawRoute.subscribe((locations) => {
@@ -452,10 +456,19 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             this.handleDrawRoute(locations, true);
         });
         
+        this.addRouteComponent.onConfirmSelectedLocations.subscribe((locations) => {
+            this.isLocationConfirmed = true;
+            console.log("Is loc confirmed in confirm: ", this.isLocationConfirmed);
+        });
         this.addRouteComponent.onCancelSelectedLocations.subscribe((locations) => {
             this.handleRemoveTemporaryPins(true);
             this.handleRemoveTemporaryRoutes();
         })
+        this.addRouteComponent.onCancelConfirmedLocations.subscribe((locations) => {
+            this.isLocationConfirmed = false;
+            this.handleRemoveTemporaryPins(true);
+            this.handleRemoveTemporaryRoutes();
+        });
     }
 
     private handleDrawRoute(locations: Pair<number, number>[], isTemporary: boolean): void {
