@@ -1,11 +1,11 @@
-import { AfterViewChecked, AfterViewInit, Component, ComponentRef, EmbeddedViewRef, Inject, OnInit, PLATFORM_ID, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewChecked, Component, ComponentRef, EmbeddedViewRef, Inject, OnInit, PLATFORM_ID, ViewChild, ViewContainerRef } from '@angular/core';
 import { FacilityCardComponent } from '../../../../overview/components/map/cards/facility-card/facility-card.component';
 import { TransportRouteUIComponent } from '../../../../overview/components/map/transport-route-ui/transport-route-ui.component';
 import { SupplyChainMapService } from '../../../../overview/services/supplychainmap.service';
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { Organization } from '../../../../organization/models/organization';
-import { EntityType, Pair, ResourceTransportRoute, SelectLocationModeType, TransportRoute } from '../../../models/TransportRoute';
+import { EntityType, Pair, ResourceTransportRoute, TransportRoute } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Facility, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
@@ -73,7 +73,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             .subscribe({
                 next: (user) => {
                     this.currentOrganization = user?.organization;
-                    if (user && user.organization) {
+                    if (user?.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
                         this.loadSupplyChainMap(this.currentOrganization?.id ?? 0, refresh);
@@ -211,7 +211,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             return;
         }
 
-        if (!this.routes || !this.routes || !this.supplyChainMap) {
+        if (!this.routes || !this.supplyChainMap) {
             console.error('Supply Chain Map data is not available.');
             return;
         }
@@ -287,9 +287,9 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     private drawRoute(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
         this.createRoutePolyline(route, (componentRef));
         
-        this.createRouteMarker(route, (componentRef));
+        this.createRouteMarker((componentRef), route.srcLocation, route.destLocation, route.liveLocation);
 
-        this.addArrowheads(route, 5);
+        this.addArrowheads(5, route.srcLocation, route.destLocation);
     }
     
     private createRoutePolyline(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
@@ -313,18 +313,18 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         });
     }
 
-    private createRouteMarker(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+    private createRouteMarker(componentRef: ComponentRef<TransportRouteUIComponent>, srcLocation?: Pair<number, number>, destLocation?: Pair<number, number>, liveLocation?: Pair<number, number>): void {
         const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
             .rootNodes[0] as HTMLElement;
 
         // Create a Leaflet marker with the component's element
         let lat = 0;
         let lng = 0;
-        const midPointLat = ((route.srcLocation?.first ?? 0) + (route.destLocation?.first ?? 0)) / 2;
-        const midPointLng = ((route.srcLocation?.second ?? 0) + (route.destLocation?.second ?? 0)) / 2;
-        if (route.liveLocation && route.liveLocation.first && route.liveLocation.second) {
-            lat = route.liveLocation.first;
-            lng = route.liveLocation.second;
+        const midPointLat = ((srcLocation?.first ?? 0) + (destLocation?.first ?? 0)) / 2;
+        const midPointLng = ((srcLocation?.second ?? 0) + (destLocation?.second ?? 0)) / 2;
+        if (liveLocation?.first && liveLocation?.second) {
+            lat = liveLocation.first;
+            lng = liveLocation.second;
         } else {
             lat = midPointLat;
             lng = midPointLng;
@@ -363,10 +363,12 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         marker.addTo(this.map);
     }
     
-    private addArrowheads(route: TransportRoute, n: number): void {
+    private addArrowheads(n: number, srcLocation?: Pair<number, number>, destLocation?: Pair<number, number>): void {
+        if (!srcLocation || !destLocation) return;
+
         // Calculate the geographical midpoints for arrows
-        const start: [number, number] = [route.srcLocation?.first ?? 0, route?.srcLocation?.second ?? 0];
-        const end: [number, number] = [route.destLocation?.first ?? 0, route?.destLocation?.second ?? 0];
+        const start: [number, number] = [srcLocation?.first ?? 0, srcLocation?.second ?? 0];
+        const end: [number, number] = [destLocation?.first ?? 0, destLocation?.second ?? 0];
 
         const arrowPoints = this.calculateIntermediatePoints(start, end, n);
         
@@ -443,22 +445,18 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         this.addRouteComponent.onSelectLocationModeChanged.subscribe((on) => {
             this.selectLocationModeOn = on;
-            console.log("Is loc confirmed: ", this.isLocationConfirmed);
             if (!this.isLocationConfirmed) {
                 this.handleRemoveTemporaryPins(true);
                 this.handleRemoveTemporaryRoutes();
             }
         });
-
         this.addRouteComponent.onDrawRoute.subscribe((locations) => {
             this.handleRemoveTemporaryPins(false);
             this.handleRemoveTemporaryRoutes();
             this.handleDrawRoute(locations, true);
         });
-        
         this.addRouteComponent.onConfirmSelectedLocations.subscribe((locations) => {
             this.isLocationConfirmed = true;
-            console.log("Is loc confirmed in confirm: ", this.isLocationConfirmed);
         });
         this.addRouteComponent.onCancelSelectedLocations.subscribe((locations) => {
             this.handleRemoveTemporaryPins(true);

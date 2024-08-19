@@ -15,11 +15,12 @@ import { FallbackManagerService } from '../../../../../shared/fallback/services/
 import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
 import { OperationOutcome } from '../../../../../shared/common/components/toast-system/toastTypes';
 import { ShipmentStatus } from '../../../../supply/models/SupplierShipment';
+import { SelectEnumComponent } from '../../../../../shared/common/components/select/select-enum/select-enum.component';
 
 @Component({
     selector: 'app-add-transport-route',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, FormsModule],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, SelectEnumComponent],
     templateUrl: './add-transport-route.component.html',
     styleUrl: './add-transport-route.component.css',
 })
@@ -43,6 +44,7 @@ export class AddTransportRouteComponent {
     destLocationLatitude: number | undefined = undefined;
     destLocationLongitude: number | undefined = undefined;
     SelectLocationModeType = SelectLocationModeType;
+    ShipmentStatus = ShipmentStatus;
 
     constructor(
         private fb: FormBuilder,
@@ -64,6 +66,9 @@ export class AddTransportRouteComponent {
             sourceLocationLongitude: new FormControl(null),
             destLocationLatitude: new FormControl(null),
             destLocationLongitude: new FormControl(null),
+            departureDateTime: new FormControl(null),
+            arrivalDateTime: new FormControl(null),
+            estimatedArrivalDateTime: new FormControl(null),
         });
     }
 
@@ -155,6 +160,10 @@ export class AddTransportRouteComponent {
         this.onCancelConfirmedLocations.emit();
     }
 
+    onSelectionChanged(selectedValue: string) {
+        console.log("Selected value: ", selectedValue);
+    }
+
     // Form
     hasError(controlName: string, errorName: string): boolean {
         const control = this.routeForm.get(controlName);
@@ -178,7 +187,7 @@ export class AddTransportRouteComponent {
         }
 
         const routeDTO = this.getRouteDTO();
-
+        console.log("Route DTO: ", routeDTO);
         // this.routeService
         //     .createRoute(routeDTO, true)
         //     .subscribe(
@@ -218,9 +227,9 @@ export class AddTransportRouteComponent {
             organizationId: this.currentUser?.organization?.id ?? 0,
             transportRoute: {
                 status: ShipmentStatus.CANCELLED,
-                departureDateTime: new Date(),
-                arrivalDateTime: new Date(),
-                estimatedArrivalDateTime: new Date(),
+                departureDateTime: this.routeForm.get('departureDateTime')?.value,
+                arrivalDateTime: this.routeForm.get('arrivalDateTime')?.value,
+                estimatedArrivalDateTime: this.routeForm.get('estimatedArrivalDateTime')?.value,
                 srcLocation: this.confirmedLocations[0],
                 destLocation: this.confirmedLocations[1]
             },

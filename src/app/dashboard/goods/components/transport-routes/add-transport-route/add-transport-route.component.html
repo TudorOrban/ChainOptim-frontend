@@ -63,16 +63,32 @@
     </div>
 
     <div>
-        
-    </div>
-
-    <div>
         <div class="form-label">Current Location</div>
         <button type="button" (click)="handleToggleSelectLocationMode()" class="standard-button">
             Select on Map
         </button>
     </div>
 
+    <!-- Dates -->
+    <div>
+        <div class="form-label whitespace-nowrap">Departure Date</div>
+        <input id="departureDateTime" type="date" formControlName="departureDateTime" class="form-input">
+    </div>
+    <div>
+        <div class="form-label whitespace-nowrap">Arrival Date</div>
+        <input id="arrivalDateTime" type="date" formControlName="arrivalDateTime" class="form-input">
+    </div>
+    <div>
+        <div class="form-label whitespace-nowrap">Estimated Arrival Date</div>
+        <input id="estimatedArrivalDateTime" type="date" formControlName="estimatedArrivalDateTime" class="form-input">
+    </div>
+
+    <div>
+        <div class="form-label whitespace-nowrap">Route Status</div>
+        <app-select-enum [enumType]="ShipmentStatus" (selectionChange)="onSelectionChanged($event)"></app-select-enum>
+    </div>
+
+    <!-- Submit -->
     <div class="flex items-center w-full justify-end">
         <button type="submit" class="standard-write-button">
             Add Route
