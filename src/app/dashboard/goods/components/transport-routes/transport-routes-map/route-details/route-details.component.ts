@@ -27,10 +27,8 @@ export class RouteDetailsComponent {
     }
 
     updateTransportedEntities(): void {
-        console.log('RouteDetailsComponent: updateTransportedEntities:', this.route?.transportRoute?.transportedEntities);
         this.transportedComponents = this.route?.transportRoute?.transportedEntities?.filter(entity => entity.entityType === TransportedEntityType.COMPONENT) || [];
         this.transportedProducts = this.route?.transportRoute?.transportedEntities?.filter(entity => entity.entityType === TransportedEntityType.PRODUCT) || [];
-        console.log("products: ", this.transportedProducts);
     }
 
     getTransportedComponents(): TransportedEntity[] {

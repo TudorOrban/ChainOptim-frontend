@@ -61,7 +61,6 @@ export class SelectProductComponent implements OnChanges {
                     return;
                 }
 
-                console.log("Products: ", products);
                 this.products = products;
 
                 if (this.initialData && this.initialData.product) {

@@ -1,0 +1,206 @@
+<form [formGroup]="routeForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">    
+    <div class="flex items-start space-x-12">
+        <div>
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" formControlName="name" class="form-input">
+            <div *ngIf="routeForm.get('name')?.touched && routeForm.get('name')?.errors">
+                <p *ngIf="routeForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
+                <p *ngIf="routeForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
+            </div>
+        </div>
+    
+        <div>
+            <label for="companyId" class="form-label">Company ID:</label>
+            <input id="companyId" formControlName="companyId" class="form-input"/>
+            <div *ngIf="routeForm.get('companyId')?.touched">
+                <p *ngIf="routeForm.get('companyId')?.errors?.['maxlength']" class="form-error">Company ID must not exceed 200 characters.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-start space-x-12">
+        <!-- Source and Destination Locations & Facilities -->
+        <div class="space-y-4">
+            <div class="flex items-start justify-between space-x-2">
+                <div>
+                    <div class="form-label">Source Location</div>
+                    <input id="sourceLocationLatitude" type="number" formControlName="sourceLocationLatitude" placeholder="Latitude" class="form-input"/>
+                    <input id="sourceLocationLongitude" type="number" formControlName="sourceLocationLongitude" placeholder="Longitude" class="form-input"/>
+                </div>
+
+                <p class="form-label">-</p>
+                
+                <div>
+                    <div class="form-label">Destination Location</div>
+                    <input id="destLocationLatitude" type="number" formControlName="destLocationLatitude" placeholder="Latitude" class="form-input"/>
+                    <input id="destLocationLongitude" type="number" formControlName="destLocationLongitude" placeholder="Longitude" class="form-input"/>
+                </div>
+            </div>
+    
+            <div class="flex items-center space-x-4">
+                <button 
+                    *ngIf="!areSrcDestLocationsConfirmed"
+                    type="button" 
+                    (click)="handleToggleSelectSrcDestLocationMode()" 
+                    [class.selected]="isSelectSrcDestLocationModeOn"
+                    class="standard-button"
+                >
+                    Select on Map
+                </button>
+    
+                <div *ngIf="areSrcDestLocationsSelected" class="flex items-center space-x-2">  
+                    <button (click)="handleCancelRouteSrcDestLocations()" type="button" class="standard-button">
+                        Cancel
+                    </button>
+                    <button (click)="handleConfirmRouteSrcDestLocations()" type="button" class="standard-write-button">
+                        Confirm
+                    </button>
+                </div>
+    
+                <button
+                    *ngIf="areSrcDestLocationsConfirmed"
+                    (click)="handleCancelConfirmedSrcDestLocations()"
+                    type="button"
+                    class="standard-button"
+                >
+                    Cancel Selection
+                </button>
+            </div>
+
+            <!-- Source Facility --> 
+            <div class="flex items-start justify-between space-x-2">
+                <div>
+                    <div class="form-label">Source Facility</div>
+                    <select [ngModel]="routeForm?.get('srcFacility')?.value?.id" [ngModelOptions]="{standalone: true}" class="custom-select mt-2 max-w-40">
+                        <option *ngFor="let facility of sortFacilitiesByCloseness(confirmedSrcDestLocations?.[0])" [value]="facility.id">
+                            {{ facility.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <p class="form-label">-</p>
+                
+                <div>
+                    <div class="form-label">Destination Facility</div>
+                    <select [ngModel]="routeForm?.get('destFacility')?.value?.id" [ngModelOptions]="{standalone: true}" class="custom-select mt-2 max-w-40">
+                        <option *ngFor="let facility of sortFacilitiesByCloseness(confirmedSrcDestLocations?.[1])" [value]="facility.id">
+                            {{ facility.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>           
+            
+        </div>
+        
+        <!-- Current Location -->
+        <div class="space-y-4">
+            <div>
+                <div class="form-label">Current Location</div>
+                <input id="currentLocationLatitude" type="number" formControlName="currentLocationLatitude" placeholder="Latitude" class="form-input"/>
+                <input id="currentLocationLongitude" type="number" formControlName="currentLocationLongitude" placeholder="Longitude" class="form-input"/>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button 
+                    *ngIf="!isCurrentLocationConfirmed"
+                    type="button" 
+                    (click)="handleToggleSelectCurrentLocationMode()" 
+                    [class.selected]="isSelectCurrentLocationModeOn"
+                    class="standard-button"
+                >
+                    Select on Map
+                </button>
+    
+                <div *ngIf="isCurrentLocationSelected" class="flex items-center space-x-2">  
+                    <button (click)="handleCancelCurrentLocation()" type="button" class="standard-button">
+                        Cancel
+                    </button>
+                    <button (click)="handleConfirmCurrentLocation()" type="button" class="standard-write-button">
+                        Confirm
+                    </button>
+                </div>
+    
+                <button
+                    *ngIf="isCurrentLocationConfirmed"
+                    (click)="handleCancelConfirmedCurrentLocation()"
+                    type="button"
+                    class="standard-button"
+                >
+                    Cancel Selection
+                </button>
+            </div>
+        </div>
+    </div>    
+
+    <div class="flex items-start space-x-12">
+        <div>
+            <div class="form-label">Transported Components</div>
+            <app-select-component (componentSelected)="handleComponentChange($event)"></app-select-component>
+            <div *ngFor="let component of transportedComponents" class="flex items-center">
+                <div class="flex items-center justify-between space-x-4 bg-gray-50 border border-gray-300 rounded-md shadow-sm px-4 py-2">
+                    <div class="font-semibold text-ellipsis overflow-hidden max-w-24 whitespace-nowrap">
+                        {{ component.entityName }}
+                    </div>
+    
+                    <button (click)="handleRemoveTransportedComponent(component.entityId)" class="text-gray-700 hover:text-red-700">
+                        <fa-icon [icon]="faTimes"></fa-icon>
+                    </button>
+                </div>
+                
+                <input type="number" [(ngModel)]="component.quantity" [ngModelOptions]="{standalone: true}" class="form-input">
+            </div>
+        </div>
+        <div>
+            <div class="form-label">Transported Products</div>
+            <app-select-product (productSelected)="handleProductChange($event)"></app-select-product>
+            <div *ngFor="let product of transportedProducts" class="flex items-center">
+                <div class="flex items-center justify-between space-x-4 bg-gray-50 border border-gray-300 rounded-md shadow-sm px-4 py-2">
+                    <div class="font-semibold text-ellipsis overflow-hidden max-w-24 whitespace-nowrap">
+                        {{ product.entityName }}
+                    </div>
+    
+                    <button (click)="handleRemoveTransportedProduct(product.entityId)" class="text-gray-700 hover:text-red-700">
+                        <fa-icon [icon]="faTimes"></fa-icon>
+                    </button>
+                </div>
+                
+                <input type="number" [(ngModel)]="product.quantity" [ngModelOptions]="{standalone: true}" class="form-input">
+            </div>
+        </div>
+    </div>
+
+    <!-- Dates -->
+    <div class="flex items-start space-x-12">
+        <div>
+            <div class="form-label">Departure Date</div>
+            <input id="departureDateTime" type="date" formControlName="departureDateTime" class="form-input">
+        </div>
+        <div>
+            <div class="form-label">Arrival Date</div>
+            <input id="arrivalDateTime" type="date" formControlName="arrivalDateTime" class="form-input">
+        </div>
+        <div>
+            <div class="form-label">Estimated Arrival Date</div>
+            <input id="estimatedArrivalDateTime" type="date" formControlName="estimatedArrivalDateTime" class="form-input">
+        </div>
+    </div>
+    
+    <!-- Enums -->
+    <div class="flex items-start space-x-12">
+        <div>
+            <div class="form-label">Route Status</div>
+            <app-select-enum [enumType]="ShipmentStatus" (selectionChange)="onStatusSelectionChanged($event)"></app-select-enum>
+        </div>
+        <div>
+            <div class="form-label">Transport Type</div>
+            <app-select-enum [enumType]="TransportType" (selectionChange)="onTransportTypeSelectionChanged($event)"></app-select-enum>
+        </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="flex items-center w-full justify-end">
+        <button type="submit" class="standard-write-button">
+            Add Route
+        </button>
+    </div>
+</form>

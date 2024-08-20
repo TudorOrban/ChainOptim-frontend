@@ -154,10 +154,6 @@ export class UpdateStageInputComponent {
     }
 
     private getStageInputDTO(): UpdateStageInputDTO {
-        console.log("Product ID", this.inputData?.productId);
-        console.log("Stage ID", this.selectedStageId);
-        console.log("Organization ID", this.currentUser?.organization?.id);
-        console.log("Component ID", this.selectedComponentId);
         if (!this.inputData?.productId || !this.selectedStageId || !this.currentUser?.organization?.id || !this.selectedComponentId) {
             throw new Error('Invalid form data');
         }

@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ComponentRef, EmbeddedViewRef, Inject, OnInit, PLATFORM_ID, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ComponentRef, EmbeddedViewRef, Inject, OnInit, PLATFORM_ID, ViewChild, ViewContainerRef } from '@angular/core';
 import { FacilityCardComponent } from '../../../../overview/components/map/cards/facility-card/facility-card.component';
 import { TransportRouteUIComponent } from '../../../../overview/components/map/transport-route-ui/transport-route-ui.component';
 import { SupplyChainMapService } from '../../../../overview/services/supplychainmap.service';
@@ -10,20 +10,22 @@ import { TransportRouteService } from '../../../services/transportroute.service'
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Facility, FacilityType, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowRotateRight, faLocationPin, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateRight, faEdit, faLocationPin, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { AddTransportRouteComponent } from './add-transport-route/add-transport-route.component';
 import { RouteDetailsComponent } from './route-details/route-details.component';
 import { LeafletEvent, LeafletMouseEvent } from 'leaflet';
+import { UpdateTransportRouteComponent } from './update-transport-route/update-transport-route.component';
 
 @Component({
   selector: 'app-transport-routes-map',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, AddTransportRouteComponent, RouteDetailsComponent],
+  imports: [CommonModule, FontAwesomeModule, AddTransportRouteComponent, RouteDetailsComponent, UpdateTransportRouteComponent],
   templateUrl: './transport-routes-map.component.html',
   styleUrl: './transport-routes-map.component.css'
 })
 export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     @ViewChild(AddTransportRouteComponent) addRouteComponent!: AddTransportRouteComponent;
+    @ViewChild(UpdateTransportRouteComponent) updateRouteComponent!: UpdateTransportRouteComponent;
 
     private map: any;
     private L: any;
@@ -40,6 +42,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     
     // Add Route state
     isAddRouteModeOn: boolean = false;
+    isUpdateRouteModeOn: boolean = false;
     private listenersSetUp: boolean = false;
 
     // - Src and Dest location selection
@@ -55,6 +58,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
     faArrowRotateRight = faArrowRotateRight;
     faPlus = faPlus;
+    faEdit = faEdit;
     faLocationPin = faLocationPin;
 
     constructor(
@@ -64,6 +68,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         private supplyChainMapService: SupplyChainMapService,
         private fallbackManagerService: FallbackManagerService,
         private userService: UserService,
+        private cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -517,6 +522,20 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         this.deselectRoute();
     }
     
+    
+    handleToggleUpdateRouteMode(): void {
+        this.isAddRouteModeOn = false;
+        this.isUpdateRouteModeOn = !this.isUpdateRouteModeOn;
+        this.cdr.detectChanges(); // Force change detection to update the view
+
+        console.log('Update route mode:', this.isUpdateRouteModeOn);
+        if (this.updateRouteComponent) {
+            this.updateRouteComponent.onUpdateModeChanged(this.selectedRoute);
+        } else {
+            console.error('Update route component is not available.');
+        }
+    }
+
     private setUpListeners(): void {
         console.log("Setting up listeners...: ", this.addRouteComponent);
         if (!this.addRouteComponent) {
