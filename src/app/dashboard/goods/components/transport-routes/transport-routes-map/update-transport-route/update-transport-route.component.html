@@ -189,11 +189,11 @@
     <div class="flex items-start space-x-12">
         <div>
             <div class="form-label">Route Status</div>
-            <app-select-enum [enumType]="ShipmentStatus" (selectionChange)="onStatusSelectionChanged($event)"></app-select-enum>
+            <app-select-enum [initialValue]="selectedStatus" [enumType]="ShipmentStatus" (selectionChange)="onStatusSelectionChanged($event)"></app-select-enum>
         </div>
         <div>
             <div class="form-label">Transport Type</div>
-            <app-select-enum [enumType]="TransportType" (selectionChange)="onTransportTypeSelectionChanged($event)"></app-select-enum>
+            <app-select-enum [initialValue]="selectedTransportType" [enumType]="TransportType" (selectionChange)="onTransportTypeSelectionChanged($event)"></app-select-enum>
         </div>
     </div>
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './select-enum.component.html',
   styleUrl: './select-enum.component.css'
 })
-export class SelectEnumComponent implements OnInit {
+export class SelectEnumComponent implements OnInit, OnChanges {
     enumValues: any[] = [];
 
     @Input() set enumType(value: any) {
@@ -27,6 +27,13 @@ export class SelectEnumComponent implements OnInit {
     selectedValue: string | undefined;
 
     ngOnInit(): void {
+        if (this.initialValue) {
+            const initialKey = this.enumValues.find(item => item.value === this.initialValue)?.key;
+            this.selectedValue = initialKey;
+        }
+    }
+
+    ngOnChanges(): void {
         if (this.initialValue) {
             const initialKey = this.enumValues.find(item => item.value === this.initialValue)?.key;
             this.selectedValue = initialKey;

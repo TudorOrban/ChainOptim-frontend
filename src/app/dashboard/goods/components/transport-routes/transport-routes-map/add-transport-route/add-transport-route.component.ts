@@ -37,7 +37,6 @@ import { Facility, FacilityType } from '../../../../../overview/types/supplyChai
 export class AddTransportRouteComponent {
     @Input() facilities?: Facility[] = [];
 
-    @Output() onRouteAdded = new EventEmitter<ResourceTransportRoute>();
     @Output() onSelectLocationModeChanged = new EventEmitter<boolean>();
     @Output() onDrawRoute = new EventEmitter<Pair<number, number>[]>();
     @Output() onConfirmSelectedLocations = new EventEmitter<Pair<number, number>[]>();
@@ -49,6 +48,7 @@ export class AddTransportRouteComponent {
     @Output() onConfirmCurrentLocation = new EventEmitter<Pair<number, number>>();
     @Output() onCancelCurrentLocation = new EventEmitter<void>();
     @Output() onCancelConfirmedCurrentLocation = new EventEmitter<void>();
+    @Output() onRouteAdded = new EventEmitter<ResourceTransportRoute>();
 
     // State
     // - Base

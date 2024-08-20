@@ -1,4 +1,4 @@
-<div class="map-container space-y-4 px-8 pr-16">
+<div class="map-container space-y-4 pl-8 pr-16">
     <div class="flex items-center justify-between w-full">
         <h1 class="page-title">Map</h1>
         <div class="flex items-center space-x-4">
@@ -6,6 +6,7 @@
                 *ngIf="!!selectedRoute && !isAddRouteModeOn"
                 (click)="handleToggleUpdateRouteMode()"
                 class="standard-write-button"
+                [class.selected]="isUpdateRouteModeOn"
             >   
                 <fa-icon [icon]="faEdit" class="text-white mr-2"></fa-icon>
                 Update Route

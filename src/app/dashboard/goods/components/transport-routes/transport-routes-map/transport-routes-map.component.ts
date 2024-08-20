@@ -43,7 +43,8 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     // Add Route state
     isAddRouteModeOn: boolean = false;
     isUpdateRouteModeOn: boolean = false;
-    private listenersSetUp: boolean = false;
+    private addRouteListenersSetUp: boolean = false;
+    private updateRouteListenersSetUp: boolean = false;
 
     // - Src and Dest location selection
     private isSelectSrcDestLocationModeOn: boolean = false;
@@ -76,9 +77,10 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     }
         
     ngAfterViewChecked(): void {
-        if (this.addRouteComponent && !this.listenersSetUp) {
-            this.setUpListeners();
-            this.listenersSetUp = true;  
+        if (this.addRouteComponent && !this.addRouteListenersSetUp) {
+            console.log('Setting up add route listeners:', this.updateRouteComponent);
+            this.setUpAddRouteListeners();
+            this.addRouteListenersSetUp = true;  
         }
     }
 
@@ -198,9 +200,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             this.createRouteComponent(route);
         });
 
-        if (isPlatformBrowser(this.platformId)) {
-            this.setUpListeners();
-        }
+        this.setUpListeners();
     }
     
     // - Facility component
@@ -471,7 +471,18 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         );
         
         // this.deselectRoute();
+        this.informAddRouteComponentOnLocationClicked(clickedLat, clickedLng);
+        this.informUpdateRouteComponentOnLocationClicked(clickedLat, clickedLng);
+           
+        if (this.isSelectSrcDestLocationModeOn) {
+            this.addLocationPin(clickedLat, clickedLng, true, false);
+        }
+        if (this.isSelectCurrentLocationModeOn) {
+            this.addLocationPin(clickedLat, clickedLng, true, true);
+        }
+    }
 
+    private informAddRouteComponentOnLocationClicked(clickedLat: number, clickedLng: number): void {
         if (!this.isAddRouteModeOn) {
             return;
         }
@@ -481,13 +492,18 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         }
 
         this.addRouteComponent.onLocationClicked({ first: clickedLat, second: clickedLng });
-           
-        if (this.isSelectSrcDestLocationModeOn) {
-            this.addLocationPin(clickedLat, clickedLng, true, false);
+    }
+
+    private informUpdateRouteComponentOnLocationClicked(clickedLat: number, clickedLng: number): void {
+        if (!this.isUpdateRouteModeOn) {
+            return;
         }
-        if (this.isSelectCurrentLocationModeOn) {
-            this.addLocationPin(clickedLat, clickedLng, true, true);
+        if (!this.updateRouteComponent) {
+            console.error('Update route component is not available.');
+            return;
         }
+
+        this.updateRouteComponent.onLocationClicked({ first: clickedLat, second: clickedLng });
     }
 
     private addLocationPin(clickedLat: number, clickedLng: number, temporary: boolean, isCurrentLocation: boolean): void {
@@ -531,13 +547,19 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         console.log('Update route mode:', this.isUpdateRouteModeOn);
         if (this.updateRouteComponent) {
             this.updateRouteComponent.onUpdateModeChanged(this.selectedRoute);
+            this.setUpUpdateRouteListeners();
+            this.updateRouteListenersSetUp = true;
         } else {
             console.error('Update route component is not available.');
         }
     }
 
     private setUpListeners(): void {
-        console.log("Setting up listeners...: ", this.addRouteComponent);
+        this.setUpAddRouteListeners();
+        this.setUpUpdateRouteListeners();
+    }
+
+    private setUpAddRouteListeners(): void {
         if (!this.addRouteComponent) {
             return;
         }
@@ -585,6 +607,69 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             this.isCurrentLocationConfirmed = false;
             this.handleRemoveCurrentLocationPin();
         });
+
+        // Add route
+        this.addRouteComponent.onRouteAdded.subscribe((route) => {
+            this.handleAddRoute(route);
+        });
+    }
+
+    private setUpUpdateRouteListeners(): void {
+        if (!this.updateRouteComponent) {
+            console.error('Update route component is not available.');
+            return;
+        }
+
+        // Src and Dest location selection
+        this.updateRouteComponent.onSelectLocationModeChanged.subscribe((on) => {
+            console.log('Select location mode changed:', on);
+            this.isSelectSrcDestLocationModeOn = on;
+            if (!this.areSrcDestLocationsConfirmed) {
+                this.handleRemoveTemporaryPins(true);
+                this.handleRemoveTemporaryRoutes();
+            }
+        });
+        this.updateRouteComponent.onDrawRoute.subscribe((locations) => {
+            console.log('Draw route:', locations);
+            this.handleRemoveTemporaryPins(false);
+            this.handleRemoveTemporaryRoutes();
+            this.handleDrawRoute(locations, true);
+        });
+        this.updateRouteComponent.onConfirmSelectedLocations.subscribe((locations) => {
+            this.areSrcDestLocationsConfirmed = true;
+        });
+        this.updateRouteComponent.onCancelSelectedLocations.subscribe(() => {
+            this.handleRemoveTemporaryPins(true);
+            this.handleRemoveTemporaryRoutes();
+        })
+        this.updateRouteComponent.onCancelConfirmedLocations.subscribe(() => {
+            this.areSrcDestLocationsConfirmed = false;
+            this.handleRemoveTemporaryPins(true);
+            this.handleRemoveTemporaryRoutes();
+        });
+        
+        // Current location selection
+        this.updateRouteComponent.onSelectCurrentLocationModeChanged.subscribe((on) => {
+            this.isSelectCurrentLocationModeOn = on;
+        });
+        this.updateRouteComponent.onConfirmCurrentLocation.subscribe((location) => {
+            this.isCurrentLocationConfirmed = true;
+            this.handleRemoveCurrentLocationPin();
+            this.addLocationPin(location.first, location.second, false, true);
+        });
+        this.updateRouteComponent.onCancelCurrentLocation.subscribe(() => {
+            this.isCurrentLocationConfirmed = false;
+            this.handleRemoveCurrentLocationPin();
+        });
+        this.updateRouteComponent.onCancelConfirmedCurrentLocation.subscribe(() => {
+            this.isCurrentLocationConfirmed = false;
+            this.handleRemoveCurrentLocationPin();
+        });
+
+        // Update route
+        this.updateRouteComponent.onRouteUpdated.subscribe((route) => {
+            this.handleUpdateRoute(route);
+        });
     }
 
     private handleDrawRoute(locations: Pair<number, number>[], isTemporary: boolean): void {
@@ -600,7 +685,47 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             this.temporaryRoutes.push(polyline);
         }
     }
+    
+    private handleAddRoute(route: ResourceTransportRoute): void {
+        this.routes.push(route);
+        this.createRouteComponent(route);
+        this.handleRemoveTemporaryPins(true);
+        this.handleRemoveTemporaryRoutes();
+        this.handleRemoveCurrentLocationPin();
+        this.areSrcDestLocationsConfirmed = false;
+        this.isCurrentLocationConfirmed = false;
+        this.isSelectSrcDestLocationModeOn = false;
+        this.isSelectCurrentLocationModeOn = false;
+        this.isAddRouteModeOn = false;
+    }
 
+    private handleUpdateRoute(route: ResourceTransportRoute): void {
+        this.handleRemoveTemporaryPins(true);
+        this.handleRemoveTemporaryRoutes();
+        this.handleRemoveCurrentLocationPin();
+        this.areSrcDestLocationsConfirmed = false;
+        this.isCurrentLocationConfirmed = false;
+        this.isSelectSrcDestLocationModeOn = false;
+        this.isSelectCurrentLocationModeOn = false;
+        this.isUpdateRouteModeOn = false;
+
+        // Remove and recreate the route component
+        const routeIndex = this.routes.findIndex(r => r.id === route.id);
+        if (routeIndex === -1) {
+            console.error('Route not found:', route);
+            return;
+        }
+        this.routes[routeIndex] = route;
+
+        const routeKey = `${route.transportRoute.entityId}-${route.transportRoute.entityType}`;
+        const polyline = this.routePolylines.get(routeKey);
+        polyline?.remove();
+        this.routePolylines.delete(routeKey);
+
+        this.createRouteComponent(route);
+    }
+    
+    
     private handleRemoveTemporaryPins(all: boolean): void {
         if (all) {
             this.temporaryPins.forEach(pin => {

@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../../../core/user/model/user';
-import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType, TransportedEntity, TransportedEntityType, TransportType } from '../../../../models/TransportRoute';
+import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType, TransportedEntity, TransportedEntityType, TransportType, UpdateRouteDTO } from '../../../../models/TransportRoute';
 import { UserService } from '../../../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ToastService } from '../../../../../../shared/common/components/toast-system/toast.service';
@@ -38,7 +38,6 @@ export class UpdateTransportRouteComponent {
     @Input() route?: ResourceTransportRoute;
     @Input() facilities?: Facility[] = [];
 
-    @Output() onRouteAdded = new EventEmitter<ResourceTransportRoute>();
     @Output() onSelectLocationModeChanged = new EventEmitter<boolean>();
     @Output() onDrawRoute = new EventEmitter<Pair<number, number>[]>();
     @Output() onConfirmSelectedLocations = new EventEmitter<Pair<number, number>[]>();
@@ -50,6 +49,7 @@ export class UpdateTransportRouteComponent {
     @Output() onConfirmCurrentLocation = new EventEmitter<Pair<number, number>>();
     @Output() onCancelCurrentLocation = new EventEmitter<void>();
     @Output() onCancelConfirmedCurrentLocation = new EventEmitter<void>();
+    @Output() onRouteUpdated = new EventEmitter<ResourceTransportRoute>();
 
     // State
     // - Base
@@ -174,6 +174,20 @@ export class UpdateTransportRouteComponent {
         this.transportedProducts = this.route?.transportRoute?.transportedEntities?.filter((e) => e.entityType == TransportedEntityType.PRODUCT) ?? [];
         this.selectedStatus = this.route?.transportRoute?.status;
         this.selectedTransportType = this.route?.transportRoute?.transportType;
+
+        if (this.route?.transportRoute?.srcLocation) {
+            this.confirmedSrcDestLocations.push(this.route?.transportRoute?.srcLocation);
+        }
+        if (this.route?.transportRoute?.destLocation) {
+            this.confirmedSrcDestLocations.push(this.route?.transportRoute?.destLocation);
+        }
+        if (this.route?.transportRoute?.srcLocation && this.route?.transportRoute?.destLocation) {
+            this.areSrcDestLocationsConfirmed = true;
+        }
+        if (this.route?.transportRoute?.liveLocation) {
+            this.confirmedCurrentLocation = this.route?.transportRoute?.liveLocation;
+            this.isCurrentLocationConfirmed = true;
+        }
     }
 
     private loadData() {
@@ -200,6 +214,7 @@ export class UpdateTransportRouteComponent {
     onLocationClicked(location: Pair<number, number>): void {
         this.clickedLocations.push(location);
 
+        console.log("Clicked locations: ", this.clickedLocations);
         if (this.isSelectSrcDestLocationModeOn) {
             this.handleSrcDestLocationClicked();
         }
@@ -222,6 +237,10 @@ export class UpdateTransportRouteComponent {
             this.routeForm.controls['destLocationLatitude'].setValue(this.clickedLocations[selectedLocations - 1].first);
             this.routeForm.controls['destLocationLongitude'].setValue(this.clickedLocations[selectedLocations - 1].second);
 
+            console.log("Draw route: ", [
+                this.clickedLocations[selectedLocations - 2],
+                this.clickedLocations[selectedLocations - 1]
+            ]);
             this.onDrawRoute.emit([
                 this.clickedLocations[selectedLocations - 2],
                 this.clickedLocations[selectedLocations - 1]
@@ -380,8 +399,10 @@ export class UpdateTransportRouteComponent {
             console.error('Missing user');
             return;
         }
-        const isFormInvalid = this.isFormInvalid();
+
+        const isFormInvalid = this.isFormInvalid() && !this.isRouteDTOValid();
         if (isFormInvalid) {
+            console.log("Route invalid");
             this.toastService.addToast({
                 id: 123,
                 title: 'Error',
@@ -393,8 +414,9 @@ export class UpdateTransportRouteComponent {
 
         const routeDTO = this.getRouteDTO();
         console.log("Route DTO: ", routeDTO);
+
         this.routeService
-            .createRoute(routeDTO)
+            .updateRoute(routeDTO)
             .subscribe(
                 (route) => {
                     this.toastService.addToast({
@@ -403,7 +425,7 @@ export class UpdateTransportRouteComponent {
                         message: 'Product route created successfully.',
                         outcome: OperationOutcome.SUCCESS,
                     });
-                    this.onRouteAdded.emit(route);
+                    this.onRouteUpdated.emit(route);
                 },
                 (error) => {
                     this.toastService.addToast({
@@ -421,13 +443,9 @@ export class UpdateTransportRouteComponent {
         return this.routeForm.invalid;
     }
 
-    private getRouteDTO(): CreateRouteDTO {
-        if (!this.isRouteDTOValid()) {
-            console.log("Route invalid");
-            throw new Error('Route DTO is not valid');
-        }
-
-        const routeDTO: CreateRouteDTO = {
+    private getRouteDTO(): UpdateRouteDTO {
+        const routeDTO: UpdateRouteDTO = {
+            id: this.route?.id ?? 0,
             organizationId: this.currentUser?.organization?.id ?? 0,
             transportRoute: {
                 srcLocation: this.confirmedSrcDestLocations[0],

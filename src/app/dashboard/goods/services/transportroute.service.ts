@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
-import { CreateRouteDTO, ResourceTransportRoute } from '../models/TransportRoute';
+import { CreateRouteDTO, ResourceTransportRoute, UpdateRouteDTO } from '../models/TransportRoute';
 import { PaginatedResults, SearchParams } from '../../../shared/search/models/searchTypes';
 import { CachingService } from '../../../shared/search/services/caching.service';
 
@@ -66,6 +66,16 @@ export class TransportRouteService {
     createRoute(routeDTO: CreateRouteDTO): Observable<ResourceTransportRoute> {
         return this.http
             .post<ResourceTransportRoute>(`${this.apiUrl}/create`, routeDTO)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
+
+    updateRoute(routeDTO: UpdateRouteDTO): Observable<ResourceTransportRoute> {
+        return this.http
+            .put<ResourceTransportRoute>(`${this.apiUrl}/update`, routeDTO)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)
