@@ -8,24 +8,24 @@ import {
     Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { User } from '../../../../../core/user/model/user';
-import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType, TransportedEntity, TransportedEntityType, TransportType } from '../../../models/TransportRoute';
-import { UserService } from '../../../../../core/auth/services/user.service';
-import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
-import { OperationOutcome } from '../../../../../shared/common/components/toast-system/toastTypes';
-import { ShipmentStatus } from '../../../../supply/models/SupplierShipment';
-import { SelectEnumComponent } from '../../../../../shared/common/components/select/select-enum/select-enum.component';
-import { TransportRouteService } from '../../../services/transportroute.service';
-import { ComponentSearchDTO } from '../../../models/Component';
-import { ProductSearchDTO } from '../../../models/Product';
-import { ComponentService } from '../../../services/component.service';
-import { ProductService } from '../../../services/product.service';
-import { SelectProductComponent } from '../../../../../shared/common/components/select/select-product/select-product.component';
-import { SelectComponentComponent } from '../../../../../shared/common/components/select/select-component/select-component.component';
+import { User } from '../../../../../../core/user/model/user';
+import { CreateRouteDTO, Pair, ResourceTransportRoute, SelectLocationModeType, TransportedEntity, TransportedEntityType, TransportType } from '../../../../models/TransportRoute';
+import { UserService } from '../../../../../../core/auth/services/user.service';
+import { FallbackManagerService } from '../../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
+import { ToastService } from '../../../../../../shared/common/components/toast-system/toast.service';
+import { OperationOutcome } from '../../../../../../shared/common/components/toast-system/toastTypes';
+import { ShipmentStatus } from '../../../../../supply/models/SupplierShipment';
+import { SelectEnumComponent } from '../../../../../../shared/common/components/select/select-enum/select-enum.component';
+import { TransportRouteService } from '../../../../services/transportroute.service';
+import { ComponentSearchDTO } from '../../../../models/Component';
+import { ProductSearchDTO } from '../../../../models/Product';
+import { ComponentService } from '../../../../services/component.service';
+import { ProductService } from '../../../../services/product.service';
+import { SelectProductComponent } from '../../../../../../shared/common/components/select/select-product/select-product.component';
+import { SelectComponentComponent } from '../../../../../../shared/common/components/select/select-component/select-component.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { Facility, FacilityType } from '../../../../overview/types/supplyChainMapTypes';
+import { Facility, FacilityType } from '../../../../../overview/types/supplyChainMapTypes';
 
 @Component({
     selector: 'app-add-transport-route',
@@ -379,7 +379,6 @@ export class AddTransportRouteComponent {
             throw new Error('Route DTO is not valid');
         }
 
-        console.log("Route valid");
         const routeDTO: CreateRouteDTO = {
             organizationId: this.currentUser?.organization?.id ?? 0,
             transportRoute: {

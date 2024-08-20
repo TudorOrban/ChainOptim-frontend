@@ -15,6 +15,8 @@ export interface ResourceTransportRoute {
 }
 
 export interface TransportRoute {
+    name?: string;
+
     entityId?: number;
     entityType?: EntityType;
 
@@ -66,8 +68,8 @@ export interface TransportedEntity {
 }
 
 export enum TransportedEntityType {
-    PRODUCT,
-    COMPONENT
+    PRODUCT = "PRODUCT",
+    COMPONENT = "COMPONENT"
 }
 
 export interface Pair<S, T> {

@@ -15,6 +15,16 @@
     </div>
 </div>
 
+<div
+    *ngIf="!!selectedRoute && !isAddRouteModeOn" 
+    class="mx-10 p-10 border border-gray-300 rounded-b-sm shadow-sm"
+>
+    <app-route-details
+        [route]="selectedRoute"
+    >
+    </app-route-details>
+</div>
+
 <ng-container *ngIf="isAddRouteModeOn">
     <ng-container *ngTemplateOutlet="routeTemplate"></ng-container>
 </ng-container>

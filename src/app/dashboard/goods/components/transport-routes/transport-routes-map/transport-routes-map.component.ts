@@ -5,18 +5,19 @@ import { SupplyChainMapService } from '../../../../overview/services/supplychain
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { Organization } from '../../../../organization/models/organization';
-import { EntityType, Pair, ResourceTransportRoute, TransportRoute } from '../../../models/TransportRoute';
+import { EntityType, Pair, ResourceTransportRoute } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Facility, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRotateRight, faLocationPin, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { AddTransportRouteComponent } from '../add-transport-route/add-transport-route.component';
+import { AddTransportRouteComponent } from './add-transport-route/add-transport-route.component';
+import { RouteDetailsComponent } from './route-details/route-details.component';
 
 @Component({
   selector: 'app-transport-routes-map',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, AddTransportRouteComponent],
+  imports: [CommonModule, FontAwesomeModule, AddTransportRouteComponent, RouteDetailsComponent],
   templateUrl: './transport-routes-map.component.html',
   styleUrl: './transport-routes-map.component.css'
 })
@@ -33,17 +34,20 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     supplyChainMap: SupplyChainMap | undefined;
     private routes: ResourceTransportRoute[] = [];
     private currentOrganization: Organization | undefined;
+
+    selectedRoute: ResourceTransportRoute | undefined;
     
+    // Add Route state
     isAddRouteModeOn: boolean = false;
     private listenersSetUp: boolean = false;
 
-    // Src and Dest location selection
+    // - Src and Dest location selection
     private isSelectSrcDestLocationModeOn: boolean = false;
     private areSrcDestLocationsConfirmed: boolean = false;
     private temporaryPins: any[] = [];
     private temporaryRoutes: any[] = [];
 
-    // Current location selection
+    // - Current location selection
     private isSelectCurrentLocationModeOn: boolean = false;
     private isCurrentLocationConfirmed: boolean = false;
     private currentLocationTemporaryPin: any;
@@ -144,16 +148,16 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             return;
         }
 
-        // Import leaflet and load map
+        // Import Leaflet dynamically to avoid issue with SSR
         this.L = await import('leaflet');
-
+        
+        // Load map and tiles
         this.map = this.L.map('map', {
             center: [39.8282, -98.5795],
             zoom: 5,
             worldCopyJump: true,
         });
 
-        // Load tiles
         const tiles = this.L.tileLayer(
             'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             {
@@ -168,60 +172,8 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         this.map.on('click', (e: L.LeafletMouseEvent) => this.handleMapClick(e));
     }
-
-    private handleMapClick(e: L.LeafletMouseEvent): void {
-        const clickedLat = e.latlng.lat;
-        const clickedLng = e.latlng.lng;
-        console.log(
-            `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
-        );
-
-        if (!this.isAddRouteModeOn) {
-            console.log('Add route mode is off.');
-            return;
-        }
-        if (!this.addRouteComponent) {
-            console.error('Add route component is not available.');
-            return;
-        }
-
-        this.addRouteComponent.onLocationClicked({ first: clickedLat, second: clickedLng });
-           
-        if (this.isSelectSrcDestLocationModeOn) {
-            this.addLocationPin(clickedLat, clickedLng, true, false);
-        }
-        if (this.isSelectCurrentLocationModeOn) {
-            this.addLocationPin(clickedLat, clickedLng, true, true);
-        }
-    }
-
-    private addLocationPin(clickedLat: number, clickedLng: number, temporary: boolean, isCurrentLocation: boolean): void {
-        const iconHtml = `<i class="fas fa-map-pin" style="color: red; font-size: 24px;"></i>`;
-
-        const customIcon = this.L.divIcon({
-            html: iconHtml,
-            iconSize: this.L.point(30, 30),
-            iconAnchor: this.L.point(15, 30)
-        });
-
-        const marker = this.L.marker([clickedLat, clickedLng], { icon: customIcon });
-        marker.addTo(this.map);
-
-        if (temporary) {
-            if (this.temporaryPins.length == 2) {
-                this.temporaryPins?.[0]?.remove();
-            }
-            this.temporaryPins.push(marker);
-        }
-        if (isCurrentLocation) {
-            if (this.currentLocationTemporaryPin) {
-                this.currentLocationTemporaryPin.remove();
-            }
-            this.currentLocationTemporaryPin = marker;
-        }
-    }
-
     
+    // Map rendering
     private createMapElements(): void {
         if (!isPlatformBrowser(this.platformId)) {
             return;
@@ -237,7 +189,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         });
 
         this.routes.forEach(route => {
-            this.createRouteComponent(route.transportRoute);
+            this.createRouteComponent(route);
         });
 
         if (isPlatformBrowser(this.platformId)) {
@@ -286,12 +238,12 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         marker.addTo(this.map);
     }
     
-    private createRouteComponent(route: TransportRoute): void {
-        if (route.srcLocation && route.destLocation) {
+    private createRouteComponent(route: ResourceTransportRoute): void {
+        if (route.transportRoute.srcLocation && route.transportRoute.destLocation) {
             const componentRef =
                 this.viewContainerRef.createComponent(TransportRouteUIComponent);
             
-            componentRef.instance.route = route;
+            componentRef.instance.route = route.transportRoute;
             componentRef.instance.initializeData();
             
             this.drawRoute(route, componentRef);
@@ -300,24 +252,24 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         }
     }
     
-    private drawRoute(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+    private drawRoute(route: ResourceTransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
         this.createRoutePolyline(route, (componentRef));
         
-        this.createRouteMarker((componentRef), route.srcLocation, route.destLocation, route.liveLocation);
+        this.createRouteMarker((componentRef), route.transportRoute.srcLocation, route.transportRoute.destLocation, route.transportRoute.liveLocation);
 
-        this.addArrowheads(5, route.srcLocation, route.destLocation);
+        this.addArrowheads(5, route.transportRoute.srcLocation, route.transportRoute.destLocation);
     }
     
-    private createRoutePolyline(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
-        const srcLatLng: [number, number] = [route.srcLocation?.first ?? 0, route?.srcLocation?.second ?? 0];
-        const destLatLng: [number, number] = [route.destLocation?.first ?? 0, route?.destLocation?.second ?? 0];
+    private createRoutePolyline(route: ResourceTransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
+        const srcLatLng: [number, number] = [route.transportRoute.srcLocation?.first ?? 0, route?.transportRoute.srcLocation?.second ?? 0];
+        const destLatLng: [number, number] = [route.transportRoute.destLocation?.first ?? 0, route?.transportRoute.destLocation?.second ?? 0];
 
         const polyline = this.L.polyline([srcLatLng, destLatLng], {
-            color: route.entityType === EntityType.SUPPLIER_SHIPMENT ? 'blue' : 'green', 
+            color: route.transportRoute.entityType === EntityType.SUPPLIER_SHIPMENT ? 'blue' : 'green', 
             weight: 3
         }).addTo(this.map);
 
-        const routeKey = `${route.entityId}-${route.entityType}`;
+        const routeKey = `${route.transportRoute.entityId}-${route.transportRoute.entityType}`;
         this.routePolylines.set(routeKey, polyline);
 
         componentRef.instance.onToggle.subscribe(event => {
@@ -327,6 +279,18 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
                 polyline.setStyle({ weight: 3 });
             }
         });
+
+        polyline.on('click', () => {
+            this.selectRoute(route, polyline);
+        });
+    }
+
+    private selectRoute(route: ResourceTransportRoute, polyline: L.Polyline): void {
+        console.log("Route selected:", route);
+        polyline.setStyle({ color: 'red', weight: 6 });
+        this.map.fitBounds(polyline.getBounds());
+        
+        this.selectedRoute = route;
     }
 
     private createRouteMarker(componentRef: ComponentRef<TransportRouteUIComponent>, srcLocation?: Pair<number, number>, destLocation?: Pair<number, number>, liveLocation?: Pair<number, number>): void {
@@ -448,7 +412,60 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         return rad * (180 / Math.PI);
     }
 
-    // Communication with Add Route component
+    // Location selection
+    // - Map click handler
+    private handleMapClick(e: L.LeafletMouseEvent): void {
+        const clickedLat = e.latlng.lat;
+        const clickedLng = e.latlng.lng;
+        console.log(
+            `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
+        );
+
+        if (!this.isAddRouteModeOn) {
+            return;
+        }
+        if (!this.addRouteComponent) {
+            console.error('Add route component is not available.');
+            return;
+        }
+
+        this.addRouteComponent.onLocationClicked({ first: clickedLat, second: clickedLng });
+           
+        if (this.isSelectSrcDestLocationModeOn) {
+            this.addLocationPin(clickedLat, clickedLng, true, false);
+        }
+        if (this.isSelectCurrentLocationModeOn) {
+            this.addLocationPin(clickedLat, clickedLng, true, true);
+        }
+    }
+
+    private addLocationPin(clickedLat: number, clickedLng: number, temporary: boolean, isCurrentLocation: boolean): void {
+        const iconHtml = `<i class="fas fa-map-pin" style="color: red; font-size: 24px;"></i>`;
+
+        const customIcon = this.L.divIcon({
+            html: iconHtml,
+            iconSize: this.L.point(30, 30),
+            iconAnchor: this.L.point(15, 30)
+        });
+
+        const marker = this.L.marker([clickedLat, clickedLng], { icon: customIcon });
+        marker.addTo(this.map);
+
+        if (temporary) {
+            if (this.temporaryPins.length == 2) {
+                this.temporaryPins?.[0]?.remove();
+            }
+            this.temporaryPins.push(marker);
+        }
+        if (isCurrentLocation) {
+            if (this.currentLocationTemporaryPin) {
+                this.currentLocationTemporaryPin.remove();
+            }
+            this.currentLocationTemporaryPin = marker;
+        }
+    }
+
+    // - Communication with Add Route component
     handleToggleAddRouteMode(): void {
         this.isAddRouteModeOn = !this.isAddRouteModeOn;
     }
