@@ -8,11 +8,12 @@ import { Organization } from '../../../../organization/models/organization';
 import { EntityType, Pair, ResourceTransportRoute } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Facility, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
+import { Facility, FacilityType, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRotateRight, faLocationPin, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { AddTransportRouteComponent } from './add-transport-route/add-transport-route.component';
 import { RouteDetailsComponent } from './route-details/route-details.component';
+import { LeafletEvent, LeafletMouseEvent } from 'leaflet';
 
 @Component({
   selector: 'app-transport-routes-map',
@@ -29,7 +30,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
     isMapInitialized: boolean = false;
     private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent | TransportRouteUIComponent>> = new Map();
-    private routePolylines: Map<string, L.Polyline> = new Map();
+    private routePolylines: Map<string, L.Polyline> = new Map(); // Key: route ID
     
     supplyChainMap: SupplyChainMap | undefined;
     private routes: ResourceTransportRoute[] = [];
@@ -197,6 +198,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         }
     }
     
+    // - Facility component
     private createFacilityComponent(facilityData: Facility): void {
         if (!this.L) {
             console.error('Leaflet (L) is not available.');
@@ -218,26 +220,31 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         });
     
         componentRef.instance.onToggle.subscribe(({ first, second }) => {
-            const facilityKey = `${first}-${second}`;
-
-            // Manage other cards
-            this.openCardComponentRef.forEach((value, key) => {
-                if (key !== facilityKey && value.instance.isCardOpen) {
-                    value.instance.toggleCard(); 
-                }
-            });
-
-            // Update the reference map
-            if (componentRef.instance.isCardOpen) {
-                this.openCardComponentRef.set(facilityKey, componentRef);
-            } else {
-                this.openCardComponentRef.delete(facilityKey);
-            }
+            this.handleToggleFacilityComponentCard(componentRef, first, second);
         });
 
         marker.addTo(this.map);
     }
+
+    private handleToggleFacilityComponentCard(componentRef: ComponentRef<FacilityCardComponent>, id: number, type: FacilityType): void {
+        const facilityKey = `${id}-${type}`;
+
+        // Manage other cards
+        this.openCardComponentRef.forEach((value, key) => {
+            if (key !== facilityKey && value.instance.isCardOpen) {
+                value.instance.toggleCard(); 
+            }
+        });
+
+        // Update the reference map
+        if (componentRef.instance.isCardOpen) {
+            this.openCardComponentRef.set(facilityKey, componentRef);
+        } else {
+            this.openCardComponentRef.delete(facilityKey);
+        }
+    }
     
+    // - Route component
     private createRouteComponent(route: ResourceTransportRoute): void {
         if (route.transportRoute.srcLocation && route.transportRoute.destLocation) {
             const componentRef =
@@ -279,18 +286,45 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
                 polyline.setStyle({ weight: 3 });
             }
         });
+        
+        this.addHoverAndSelectEffect(route, componentRef, polyline);
+    }
 
-        polyline.on('click', () => {
-            this.selectRoute(route, polyline);
+    private addHoverAndSelectEffect(route: ResourceTransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>, polyline: L.Polyline): void {
+        polyline.on('mouseover', (e: LeafletEvent) => {
+            polyline.setStyle({ weight: this.getRouteLineWeight(route, componentRef, true) });
+        });    
+        polyline.on('mouseout', (e: LeafletEvent) => {
+            polyline.setStyle({ weight: this.getRouteLineWeight(route, componentRef, false) });
+        });
+        polyline.on('click', (e: LeafletMouseEvent) => {
+            e.originalEvent.stopPropagation(); 
+            polyline.setStyle({ color: 'red', weight: this.getRouteLineWeight(route, componentRef, false) });
+            this.map.fitBounds(polyline.getBounds());
+            this.selectedRoute = route;
         });
     }
 
-    private selectRoute(route: ResourceTransportRoute, polyline: L.Polyline): void {
-        console.log("Route selected:", route);
-        polyline.setStyle({ color: 'red', weight: 6 });
-        this.map.fitBounds(polyline.getBounds());
-        
-        this.selectedRoute = route;
+    private getRouteLineWeight(route: ResourceTransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>, isHovering: boolean): number {
+        let weight = 3;
+        if (componentRef.instance.isCardOpen) {
+            weight = 5;
+        } else if (this.selectedRoute?.id === route.id) {
+            weight = 6;
+        } else if (isHovering) {
+            weight = 5;
+        }
+        return weight;
+    }
+
+    private deselectRoute(): void {
+        console.log('Deselecting route');
+        if (this.selectedRoute?.id && this.routePolylines.has(`${this.selectedRoute.transportRoute.entityId}-${this.selectedRoute.transportRoute.entityType}`)) {
+            const polyline = this.routePolylines.get(`${this.selectedRoute.transportRoute.entityId}-${this.selectedRoute.transportRoute.entityType}`);
+            console.log('Polyline:', polyline);
+            polyline?.setStyle({ weight: 3, color: 'green' });
+        }
+        this.selectedRoute = undefined;
     }
 
     private createRouteMarker(componentRef: ComponentRef<TransportRouteUIComponent>, srcLocation?: Pair<number, number>, destLocation?: Pair<number, number>, liveLocation?: Pair<number, number>): void {
@@ -298,17 +332,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             .rootNodes[0] as HTMLElement;
 
         // Create a Leaflet marker with the component's element
-        let lat = 0;
-        let lng = 0;
-        const midPointLat = ((srcLocation?.first ?? 0) + (destLocation?.first ?? 0)) / 2;
-        const midPointLng = ((srcLocation?.second ?? 0) + (destLocation?.second ?? 0)) / 2;
-        if (liveLocation?.first && liveLocation?.second) {
-            lat = liveLocation.first;
-            lng = liveLocation.second;
-        } else {
-            lat = midPointLat;
-            lng = midPointLng;
-        }
+        const [lat, lng] = this.computeMarkerLatLng(srcLocation, destLocation, liveLocation);
 
         const marker = this.L.marker(
             [lat, lng],
@@ -322,25 +346,45 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         );
 
         componentRef.instance.onToggle.subscribe(({ first, second }) => {
-            const routeKey = `${first}-${second}`;
-
-            // Manage other cards
-            this.openCardComponentRef.forEach((value, key) => {
-                if (key !== routeKey && value.instance.isCardOpen) {
-                    value.instance.toggleCard(); 
-                }
-            });
-
-            // Update the reference map
-            if (componentRef.instance.isCardOpen) {
-                this.openCardComponentRef.set(routeKey, componentRef);
-            } else {
-                this.openCardComponentRef.delete(routeKey);
-            }
+            this.handleToggleRouteCard(componentRef, first, second);
         });
 
         // Add the marker to the map
         marker.addTo(this.map);
+    }
+
+    private computeMarkerLatLng(srcLocation?: Pair<number, number>, destLocation?: Pair<number, number>, liveLocation?: Pair<number, number>): [number, number] {
+        let lat = 0;
+        let lng = 0;
+        const midPointLat = ((srcLocation?.first ?? 0) + (destLocation?.first ?? 0)) / 2;
+        const midPointLng = ((srcLocation?.second ?? 0) + (destLocation?.second ?? 0)) / 2;
+        if (liveLocation?.first && liveLocation?.second) {
+            lat = liveLocation.first;
+            lng = liveLocation.second;
+        } else {
+            lat = midPointLat;
+            lng = midPointLng;
+        }
+
+        return [lat, lng];
+    }
+
+    private handleToggleRouteCard(componentRef: ComponentRef<TransportRouteUIComponent>, id: number, type: EntityType): void {
+        const routeKey = `${id}-${type}`;
+
+        // Manage other cards
+        this.openCardComponentRef.forEach((value, key) => {
+            if (key !== routeKey && value.instance.isCardOpen) {
+                value.instance.toggleCard(); 
+            }
+        });
+
+        // Update the reference map
+        if (componentRef.instance.isCardOpen) {
+            this.openCardComponentRef.set(routeKey, componentRef);
+        } else {
+            this.openCardComponentRef.delete(routeKey);
+        }
     }
     
     private addArrowheads(n: number, srcLocation?: Pair<number, number>, destLocation?: Pair<number, number>): void {
@@ -420,6 +464,8 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         console.log(
             `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
         );
+        
+        // this.deselectRoute();
 
         if (!this.isAddRouteModeOn) {
             return;
@@ -468,6 +514,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     // - Communication with Add Route component
     handleToggleAddRouteMode(): void {
         this.isAddRouteModeOn = !this.isAddRouteModeOn;
+        this.deselectRoute();
     }
     
     private setUpListeners(): void {
