@@ -5,7 +5,7 @@ import { SupplyChainMapService } from '../../../../overview/services/supplychain
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { UserService } from '../../../../../core/auth/services/user.service';
 import { Organization } from '../../../../organization/models/organization';
-import { EntityType, Pair, ResourceTransportRoute } from '../../../models/TransportRoute';
+import { EntityType, Pair, ResourceTransportRoute, TransportRoute } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Facility, FacilityType, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
@@ -33,6 +33,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     isMapInitialized: boolean = false;
     private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent | TransportRouteUIComponent>> = new Map();
     private routePolylines: Map<string, L.Polyline> = new Map(); // Key: route ID
+    private arrowHeads: Map<string, L.Marker[]> = new Map(); // Key: route ID
     
     supplyChainMap: SupplyChainMap | undefined;
     private routes: ResourceTransportRoute[] = [];
@@ -269,7 +270,7 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         
         this.createRouteMarker((componentRef), route.transportRoute.srcLocation, route.transportRoute.destLocation, route.transportRoute.liveLocation);
 
-        this.addArrowheads(5, route.transportRoute.srcLocation, route.transportRoute.destLocation);
+        this.addArrowheads(5, route.transportRoute);
     }
     
     private createRoutePolyline(route: ResourceTransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
@@ -281,14 +282,14 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             weight: 3
         }).addTo(this.map);
 
-        const routeKey = `${route.transportRoute.entityId}-${route.transportRoute.entityType}`;
+        const routeKey = this.getRouteKey(route.transportRoute);
         this.routePolylines.set(routeKey, polyline);
 
         componentRef.instance.onToggle.subscribe(event => {
             if (componentRef.instance.isCardOpen) {
-                polyline.setStyle({ weight: 6 });
+                polyline.setStyle({ weight: this.getRouteLineWeight(route, componentRef, false) });
             } else {
-                polyline.setStyle({ weight: 3 });
+                polyline.setStyle({ weight: this.getRouteLineWeight(route, componentRef, false) });
             }
         });
         
@@ -324,8 +325,8 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
     private deselectRoute(): void {
         console.log('Deselecting route');
-        if (this.selectedRoute?.id && this.routePolylines.has(`${this.selectedRoute.transportRoute.entityId}-${this.selectedRoute.transportRoute.entityType}`)) {
-            const polyline = this.routePolylines.get(`${this.selectedRoute.transportRoute.entityId}-${this.selectedRoute.transportRoute.entityType}`);
+        if (this.selectedRoute?.id && this.routePolylines.has(this.getRouteKey(this.selectedRoute.transportRoute))) {
+            const polyline = this.routePolylines.get(this.getRouteKey(this.selectedRoute.transportRoute));
             console.log('Polyline:', polyline);
             polyline?.setStyle({ weight: 3, color: 'green' });
         }
@@ -392,7 +393,9 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         }
     }
     
-    private addArrowheads(n: number, srcLocation?: Pair<number, number>, destLocation?: Pair<number, number>): void {
+    private addArrowheads(n: number, route?: TransportRoute): void {
+        const srcLocation = route?.srcLocation;
+        const destLocation = route?.destLocation;
         if (!srcLocation || !destLocation) return;
 
         // Calculate the geographical midpoints for arrows
@@ -418,7 +421,16 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             });
 
             // Add the marker at the calculated point
-            this.L.marker(point, { icon: arrowIcon }).addTo(this.map);
+            const arrowMarker = this.L.marker(point, { icon: arrowIcon }).addTo(this.map);
+
+            // Save the marker for later removal
+            const routeKey = this.getRouteKey(route);
+            
+            if (!this.arrowHeads.has(routeKey)) {
+                this.arrowHeads.set(routeKey, []);
+            } else {
+                this.arrowHeads.get(routeKey)?.push(arrowMarker);
+            }
         });
     }
 
@@ -710,6 +722,12 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         this.isUpdateRouteModeOn = false;
 
         // Remove and recreate the route component
+        this.updateCurrentRoute(route);
+
+        this.createRouteComponent(route);
+    }
+    
+    private updateCurrentRoute(route: ResourceTransportRoute): void {
         const routeIndex = this.routes.findIndex(r => r.id === route.id);
         if (routeIndex === -1) {
             console.error('Route not found:', route);
@@ -717,14 +735,14 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         }
         this.routes[routeIndex] = route;
 
-        const routeKey = `${route.transportRoute.entityId}-${route.transportRoute.entityType}`;
+        const routeKey = this.getRouteKey(route.transportRoute);
         const polyline = this.routePolylines.get(routeKey);
+        console.log('Polyline:', polyline);
         polyline?.remove();
         this.routePolylines.delete(routeKey);
 
-        this.createRouteComponent(route);
+        this.handleRemoveRouteArrowHeads(route.transportRoute);
     }
-    
     
     private handleRemoveTemporaryPins(all: boolean): void {
         if (all) {
@@ -753,5 +771,18 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         });
     
         this.temporaryRoutes = [];
+    }
+
+    private handleRemoveRouteArrowHeads(route: TransportRoute): void {
+        const routeKey = this.getRouteKey(route);
+        const arrowHeads = this.arrowHeads.get(routeKey);
+        arrowHeads?.forEach(arrow => {
+            arrow.remove();
+        });
+        this.arrowHeads.delete(routeKey);
+    }
+
+    private getRouteKey(route: TransportRoute): string {
+        return `${route.entityId}-${route.entityType}`;
     }
 }
