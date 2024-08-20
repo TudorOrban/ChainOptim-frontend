@@ -5,11 +5,12 @@ import { SearchInputComponent } from '../../../search/components/search-input/se
 import { SortSelectorComponent } from '../../../search/components/sort-selector/sort-selector.component';
 import { SearchParams, SortOption } from '../../../search/models/searchTypes';
 import { RouterModule } from '@angular/router';
+import { InfoComponent } from '../info/info.component';
 
 @Component({
   selector: 'app-list-header',
   standalone: true,
-  imports: [FontAwesomeModule, RouterModule, SearchInputComponent, SortSelectorComponent],
+  imports: [FontAwesomeModule, RouterModule, SearchInputComponent, SortSelectorComponent, InfoComponent],
   templateUrl: './list-header.component.html',
   styleUrl: './list-header.component.css'
 })

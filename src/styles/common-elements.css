@@ -129,3 +129,54 @@
     text-decoration: underline;
     text-underline-offset: 4px;
 }
+
+.info-icon {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+  
+.custom-tooltip {
+    position: absolute;
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    z-index: 1;
+    white-space: nowrap;
+}
+  
+.tooltip-above {
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+  
+.tooltip-above::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+  
+.tooltip-below {
+    top: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+  
+.tooltip-below::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}

@@ -19,6 +19,7 @@ import { OrganizationService } from './dashboard/organization/services/organizat
 import { ToastManagerComponent } from './shared/common/components/toast-system/toast-manager/toast-manager.component';
 import { NotificationLiveService } from './dashboard/overview/services/notificationlive.service';
 import { User } from './core/user/model/user';
+import { UserSettingsService } from './dashboard/settings/services/user-settings.service';
 
 @Component({
     selector: 'app-root',
@@ -39,16 +40,15 @@ import { User } from './core/user/model/user';
 })
 export class AppComponent implements OnInit {
     messages$: Observable<any> | undefined = undefined;
-    // Display variables
     hideHeader = false;
     title = 'Chain Optimizer';
     faSearch = faSearch;
 
-    // Constructor
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
         public authService: AuthenticationService,
         private userService: UserService,
+        private userSettingsService: UserSettingsService,
         private notificationLiveService: NotificationLiveService,
         private router: Router
     ) {
@@ -82,29 +82,11 @@ export class AppComponent implements OnInit {
 
                     }
                 });
-
-
-                // this.userService
-                //     .getCurrentUser()
-                //     .pipe(
-                //         filter(
-                //             (user) =>
-                //                 user !== null &&
-                //                 user.organization !== undefined &&
-                //                 user.organization.id !== undefined
-                //         ),
-                //         switchMap((user) => {
-                //             return this.organizationService.fetchAndSetCurrentOrganization(
-                //                 user?.organization?.id as number
-                //             );
-                //         })
-                //     )
-                //     .subscribe();
+                this.userSettingsService.fetchAndSetUserSettings(username);
             }
         }
     }
 
-    // Logout
     logout() {
         this.authService.logout();
     }
