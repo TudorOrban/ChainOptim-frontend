@@ -10,18 +10,22 @@ import { TransportRouteService } from '../../../services/transportroute.service'
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Facility, FacilityType, SupplyChainMap } from '../../../../overview/types/supplyChainMapTypes';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowRotateRight, faEdit, faLocationPin, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateRight, faEdit, faLocationPin, faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { AddTransportRouteComponent } from './add-transport-route/add-transport-route.component';
 import { RouteDetailsComponent } from './route-details/route-details.component';
 import { LeafletEvent, LeafletMouseEvent } from 'leaflet';
 import { UpdateTransportRouteComponent } from './update-transport-route/update-transport-route.component';
+import { ConfirmDialogInput } from '../../../../../shared/common/models/confirmDialogTypes';
+import { GenericConfirmDialogComponent } from '../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
+import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
+import { OperationOutcome } from '../../../../../shared/common/components/toast-system/toastTypes';
 
 @Component({
-  selector: 'app-transport-routes-map',
-  standalone: true,
-  imports: [CommonModule, FontAwesomeModule, AddTransportRouteComponent, RouteDetailsComponent, UpdateTransportRouteComponent],
-  templateUrl: './transport-routes-map.component.html',
-  styleUrl: './transport-routes-map.component.css'
+    selector: 'app-transport-routes-map',
+    standalone: true,
+    imports: [CommonModule, FontAwesomeModule, AddTransportRouteComponent, RouteDetailsComponent, UpdateTransportRouteComponent, GenericConfirmDialogComponent],
+    templateUrl: './transport-routes-map.component.html',
+    styleUrl: './transport-routes-map.component.css'
 })
 export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     @ViewChild(AddTransportRouteComponent) addRouteComponent!: AddTransportRouteComponent;
@@ -45,7 +49,6 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     isAddRouteModeOn: boolean = false;
     isUpdateRouteModeOn: boolean = false;
     private addRouteListenersSetUp: boolean = false;
-    private updateRouteListenersSetUp: boolean = false;
 
     // - Src and Dest location selection
     private isSelectSrcDestLocationModeOn: boolean = false;
@@ -57,7 +60,16 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     private isSelectCurrentLocationModeOn: boolean = false;
     private isCurrentLocationConfirmed: boolean = false;
     private currentLocationTemporaryPin: any;
+    
+    // Delete
+    deleteDialogInput: ConfirmDialogInput = {
+        dialogTitle: 'Delete Transport Route',
+        dialogMessage: 'Are you sure you want to delete this transport route?',
+    };
+    isConfirmDialogOpen = false;
 
+    faTrash = faTrash;
+    faTimes = faTimes;
     faArrowRotateRight = faArrowRotateRight;
     faPlus = faPlus;
     faEdit = faEdit;
@@ -66,10 +78,11 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
         private viewContainerRef: ViewContainerRef,
+        private userService: UserService,
         private transportRouteService: TransportRouteService,
         private supplyChainMapService: SupplyChainMapService,
         private fallbackManagerService: FallbackManagerService,
-        private userService: UserService,
+        private toastService: ToastService,
         private cdr: ChangeDetectorRef
     ) {}
 
@@ -560,7 +573,6 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         if (this.updateRouteComponent) {
             this.updateRouteComponent.onUpdateModeChanged(this.selectedRoute);
             this.setUpUpdateRouteListeners();
-            this.updateRouteListenersSetUp = true;
         } else {
             console.error('Update route component is not available.');
         }
@@ -658,6 +670,9 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             this.areSrcDestLocationsConfirmed = false;
             this.handleRemoveTemporaryPins(true);
             this.handleRemoveTemporaryRoutes();
+            if (this.selectedRoute) {
+                this.removeCurrentRoute(this.selectedRoute);
+            }
         });
         
         // Current location selection
@@ -722,12 +737,12 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
         this.isUpdateRouteModeOn = false;
 
         // Remove and recreate the route component
-        this.updateCurrentRoute(route);
+        this.removeCurrentRoute(route);
 
         this.createRouteComponent(route);
     }
     
-    private updateCurrentRoute(route: ResourceTransportRoute): void {
+    private removeCurrentRoute(route: ResourceTransportRoute): void {
         const routeIndex = this.routes.findIndex(r => r.id === route.id);
         if (routeIndex === -1) {
             console.error('Route not found:', route);
@@ -737,13 +752,12 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
         const routeKey = this.getRouteKey(route.transportRoute);
         const polyline = this.routePolylines.get(routeKey);
-        console.log('Polyline:', polyline);
         polyline?.remove();
         this.routePolylines.delete(routeKey);
 
         this.handleRemoveRouteArrowHeads(route.transportRoute);
     }
-    
+
     private handleRemoveTemporaryPins(all: boolean): void {
         if (all) {
             this.temporaryPins.forEach(pin => {
@@ -784,5 +798,39 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
 
     private getRouteKey(route: TransportRoute): string {
         return `${route.entityId}-${route.entityType}`;
+    }
+
+    // Delete
+    openDeleteConfirmDialog(): void {
+        this.isConfirmDialogOpen = true;
+    }
+
+    handleDeleteRoute(): void {
+        console.log('Deleting route:', this.selectedRoute);
+
+        this.transportRouteService.deleteRouteById(this.selectedRoute?.id ?? 0).subscribe({
+            next: () => {
+                this.handleSuccessfullDeletion();
+                this.toastService.addToast({ id: 0, title: 'Route deleted', message: 'The route has been deleted successfully.', outcome: OperationOutcome.SUCCESS });
+            },
+            error: (error: Error) => {
+                console.error('Error deleting route:', error);
+                this.toastService.addToast({ id: 0, title: 'Error deleting route', message: error.message, outcome: OperationOutcome.ERROR });
+            },
+        });
+    }
+
+    handleCancelDeletion(): void {
+        console.log('Canceling route deletion');
+        this.isConfirmDialogOpen = false;
+    }
+
+    private handleSuccessfullDeletion(): void {
+        console.log('Route deleted successfully');
+        this.isConfirmDialogOpen = false;
+        if (this.selectedRoute) {
+            this.removeCurrentRoute(this.selectedRoute);
+        }
+        this.selectedRoute = undefined;
     }
 }

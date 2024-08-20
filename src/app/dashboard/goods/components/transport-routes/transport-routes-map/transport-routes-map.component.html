@@ -3,6 +3,13 @@
         <h1 class="page-title">Map</h1>
         <div class="flex items-center space-x-4">
             <button
+                (click)="openDeleteConfirmDialog()"
+                *ngIf="!!selectedRoute && !isUpdateRouteModeOn" 
+                class="standard-delete-button"
+            >
+                <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
+            </button>
+            <button
                 *ngIf="!!selectedRoute && !isAddRouteModeOn"
                 (click)="handleToggleUpdateRouteMode()"
                 class="standard-write-button"
@@ -57,3 +64,15 @@
         <app-update-transport-route [facilities]="supplyChainMap?.mapData?.facilities || []" #updateRouteComponent></app-update-transport-route>
     </div>
 </ng-template>
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteRoute()"
+            (cancel)="handleCancelDeletion()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>

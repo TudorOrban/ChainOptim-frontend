@@ -82,4 +82,14 @@ export class TransportRouteService {
                 )
             );
     }
+
+    deleteRouteById(routeId: number): Observable<void> {
+        return this.http
+            .delete<void>(`${this.apiUrl}/delete/${routeId}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
 }
