@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { PlanTier } from '../../../../dashboard/organization/models/SubscriptionPlan';
 
 @Component({
   selector: 'app-pricing',
@@ -9,4 +10,9 @@ import { Component } from '@angular/core';
 })
 export class PricingComponent {
 
+    PlanTier = PlanTier;
+    
+    openPlan(planTier: PlanTier): void {
+        console.log('Open plan', planTier);
+    }
 }
