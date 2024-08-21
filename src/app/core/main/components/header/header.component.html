@@ -1,0 +1,68 @@
+<header
+    class="header-gradient"
+>
+    <nav class="h-14 flex items-center justify-between mx-4">
+        <!-- Logo -->
+        <div class="w-10 h-10">
+            <img
+                src="assets/images/science-logo.jpg"
+                alt="App Icon"
+                class="rounded-md"
+            />
+        </div>
+
+        <!-- Navigation Items, depending on whether logged in -->
+        <div *ngIf="!authService.isAuthenticated()" class="space-x-12 text-lg hidden md:inline-block">
+            <a routerLink="/" class="hover:text-gray-200">Home</a>
+            <a routerLink="/product" class="hover:text-gray-200">Product</a>
+            <a routerLink="/pricing" class="hover:text-gray-200">Pricing</a>
+            <a routerLink="/resources" class="hover:text-gray-200">Resources</a>
+        </div>
+        <div *ngIf="authService.isAuthenticated()" class="space-x-12 text-lg hidden md:inline-block">
+            <a routerLink="/" class="hover:text-gray-200">Home</a>
+            <a routerLink="/dashboard" class="hover:text-gray-200">Dashboard</a>
+            <a routerLink="/resources" class="hover:text-gray-200">Resources</a>
+        </div>
+
+
+        <!-- Searchbar -->
+        <div class="flex items-center">
+            <input
+                type="text"
+                placeholder="Search ChainOptim"
+                class="rounded-l-md px-2 py-1 w-80 h-10 border border-gray-500"
+            />
+            <button
+                class="w-10 h-10 bg-white text-gray-900 border border-gray-500 rounded-r-md hover:bg-gray-100"
+            >
+                <fa-icon [icon]="faSearch" class="w-4 h-4"></fa-icon>
+            </button>
+        </div>
+
+        <!-- Auth -->
+        <div class="">
+            <div
+                *ngIf="authService.isAuthenticated(); else notLoggedIn"
+                class="flex items-center space-x-4"
+            >
+                <img
+                    src="assets/images/blank-avatar-image.png"
+                    alt="Avatar"
+                    class="avatar-icon"
+                    class="w-10 h-10 rounded-full"
+                />
+                <button (click)="logout()" class="auth-button">Logout</button>
+            </div>
+            <ng-template #notLoggedIn>
+                <div class="flex items-center space-x-4">
+                    <button routerLink="/login" class="auth-button">
+                        Login
+                    </button>
+                    <button routerLink="/signup" class="auth-button">
+                        Sign Up
+                    </button>
+                </div>
+            </ng-template>
+        </div>
+    </nav>
+</header>

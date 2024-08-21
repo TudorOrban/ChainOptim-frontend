@@ -20,6 +20,7 @@ import { ToastManagerComponent } from './shared/common/components/toast-system/t
 import { NotificationLiveService } from './dashboard/overview/services/notificationlive.service';
 import { User } from './core/user/model/user';
 import { UserSettingsService } from './dashboard/settings/services/user-settings.service';
+import { HeaderComponent } from './core/main/components/header/header.component';
 
 @Component({
     selector: 'app-root',
@@ -29,6 +30,7 @@ import { UserSettingsService } from './dashboard/settings/services/user-settings
         RouterOutlet,
         FontAwesomeModule,
         RouterModule,
+        HeaderComponent,
         SidebarComponent,
         ToastManagerComponent
     ],

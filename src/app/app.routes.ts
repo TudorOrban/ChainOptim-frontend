@@ -6,11 +6,15 @@ import { SignupComponent } from './core/auth/components/signup/signup.component'
 import { HomeComponent } from './home/home.component';
 import { dashboardRoutes } from './dashboard/dashboard.routes';
 import { PricingComponent } from './core/main/components/pricing/pricing.component';
+import { ResourcesComponent } from './core/main/components/resources/resources.component';
+import { ProductComponent } from './core/main/components/product/product.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
+    { path: 'product', component: ProductComponent },
     { path: 'pricing', component: PricingComponent },
+    { path: 'resources', component: ResourcesComponent },
     { path: '', component: HomeComponent },
     ...dashboardRoutes,
 ];
