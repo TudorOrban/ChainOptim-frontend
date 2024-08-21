@@ -1,6 +1,7 @@
 export type SubscriptionPlans = Record<PlanTier, SubscriptionPlan>;
 
 export interface SubscriptionPlan {
+    name: string;
     dollarsPerMonth: number;
     maxMembers: number;
     maxRoles: number;

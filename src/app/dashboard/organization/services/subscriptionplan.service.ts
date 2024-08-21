@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { PlanTier, SubscriptionPlans } from "../models/SubscriptionPlan";
+import { PlanTier, SubscriptionPlan, SubscriptionPlans } from "../models/SubscriptionPlan";
 
 @Injectable({
     providedIn: 'root'
@@ -8,6 +8,7 @@ export class SubscriptionPlanService {
 
     private subscriptionPlans: SubscriptionPlans = {
         [PlanTier.NONE]: {
+            name: 'No Plan',
             dollarsPerMonth: 0,
             maxMembers: 2,
             maxRoles: 2,
@@ -33,9 +34,10 @@ export class SubscriptionPlanService {
             clientEvaluationOn: false,
         },
         [PlanTier.BASIC]: {
+            name: 'Basic Plan',
             dollarsPerMonth: 30,
-            maxMembers: 5,
-            maxRoles: 5,
+            maxMembers: 4,
+            maxRoles: 6,
             maxProducts: 5,
             realTimeNotificationsOn: false,
             emailNotificationsOn: false,
@@ -58,6 +60,7 @@ export class SubscriptionPlanService {
             clientEvaluationOn: false,
         },
         [PlanTier.PROFESSIONAL]: {
+            name: 'Professional Plan',
             dollarsPerMonth: 120,
             maxMembers: 10,
             maxRoles: 20,
@@ -83,33 +86,34 @@ export class SubscriptionPlanService {
             clientEvaluationOn: true,
         },
         [PlanTier.ENTERPRISE]: {
+            name: 'Enterprise Plan',
             dollarsPerMonth: 700,
             maxMembers: -1,
             maxRoles: -1,
-            maxProducts: 1,
+            maxProducts: -1,
             realTimeNotificationsOn: true,
             emailNotificationsOn: true,
             customNotificationsOn: true,
-            maxComponents: 1,
-            maxProductStages: 1,
-            maxFactories: 1,
+            maxComponents: -1,
+            maxProductStages: -1,
+            maxFactories: -1,
             maxFactoryStages: -1,
             maxFactoryInventoryItems: -1,
             factoryPerformanceOn: true,
-            maxWarehouses: 1,
+            maxWarehouses: -1,
             maxWarehouseInventoryItems: -1,
-            maxSuppliers: 1,
+            maxSuppliers: -1,
             maxSupplierOrders: -1,
             maxSupplierShipments: -1,
             supplierPerformanceOn: true,
-            maxClients: 1,
-            maxClientOrders: 2,
-            maxClientShipments: 2,
+            maxClients: -1,
+            maxClientOrders: -1,
+            maxClientShipments: -1,
             clientEvaluationOn: true,
         }
     }
 
-    getSubscriptionPlan(tier: PlanTier) {
+    getSubscriptionPlan(tier: PlanTier): SubscriptionPlan {
         return this.subscriptionPlans[tier];
     }
 }
