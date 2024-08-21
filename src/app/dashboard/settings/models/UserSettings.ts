@@ -26,7 +26,7 @@ export interface GeneralSettings {
 }
 
 export enum InfoLevel {
-    NONE,
-    ADVANCED,
-    ALL
+    NONE = "NONE",
+    ADVANCED = "ADVANCED",
+    ALL = "ALL"
 }

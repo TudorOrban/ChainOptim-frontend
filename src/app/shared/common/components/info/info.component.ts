@@ -21,7 +21,7 @@ import { InfoLevel } from '../../../../dashboard/settings/models/UserSettings';
 })
 export class InfoComponent implements OnInit {
     @Input() tooltipText: string = 'More information';
-    @Input() infoLevel?: InfoLevel;
+    @Input() infoLevel?: InfoLevel = InfoLevel.ALL;
 
     isVisible: boolean = false;
     show: boolean = false;
@@ -29,7 +29,7 @@ export class InfoComponent implements OnInit {
 
     faInfo = faInfo;
 
-    @ViewChild('iconWrapper', { static: true }) iconWrapper!: ElementRef;
+    @ViewChild('iconWrapper', { static: false }) iconWrapper!: ElementRef;
 
     constructor(
         private userSettingsService: UserSettingsService,
@@ -62,11 +62,13 @@ export class InfoComponent implements OnInit {
             (settings) => {
                 console.log('Fetched user settings:', settings);
                 const desiredInfoLevel = settings?.generalSettings.infoLevel;
+                console.log('Info level:', this.infoLevel, 'desired:', desiredInfoLevel);
                 if (desiredInfoLevel && this.infoLevel) {
                     this.isVisible = desiredInfoLevel >= this.infoLevel;
-                    console.log('Info level:', this.infoLevel, 'is visible:', this.isVisible);
+                    console.log('Is visible:', this.isVisible);
                 }
             }
         );
     }
+    
 }

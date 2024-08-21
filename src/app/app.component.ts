@@ -76,13 +76,16 @@ export class AppComponent implements OnInit {
             if (username) {
                 this.userService.fetchAndSetCurrentUser(username);
                 this.userService.getCurrentUser().subscribe((user: User | null) => {
-                    if (user) {
-                        console.log('Current in app:', user);
-                        this.messages$ = this.notificationLiveService.connect(`ws://localhost:8080/ws?userId=${user.id}`);
-
+                    if (!user) {
+                        console.error('Error fetching current user');
+                        return;
                     }
+                    
+                    console.log('Current in app:', user);
+                    this.messages$ = this.notificationLiveService.connect(`ws://localhost:8080/ws?userId=${user.id}`);
+                    
+                    this.userSettingsService.fetchAndSetUserSettings(user.id);
                 });
-                this.userSettingsService.fetchAndSetUserSettings(username);
             }
         }
     }
