@@ -79,6 +79,8 @@ export class WarehouseInventoryComponent implements OnInit {
     sortOptions: UIItem[] = [];
     filterOptions: FilterOption[] = [];
 
+    Feature = Feature;
+    
     constructor(
         private userService: UserService,
         private warehouseInventoryItemService: WarehouseInventoryItemService,

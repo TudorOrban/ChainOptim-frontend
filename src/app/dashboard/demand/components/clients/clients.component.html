@@ -1,6 +1,6 @@
 <!-- Header -->
 <app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
-    [title]="'Clients'" [icon]="faBox" [searchPlaceholder]="'Search Clients'" [sortOptions]="sortOptions" [createName]="'Client'" [createLink]="'create-client'"
+    [title]="'Clients'" [icon]="faBox" [searchPlaceholder]="'Search Clients'" [sortOptions]="sortOptions" [createName]="'Client'" [createLink]="'create-client'" [feature]="Feature.CLIENT"
     (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
 ></app-list-header>
 

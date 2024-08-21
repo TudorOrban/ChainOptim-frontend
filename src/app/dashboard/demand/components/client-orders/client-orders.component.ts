@@ -77,6 +77,8 @@ export class ClientOrdersComponent implements OnInit {
     sortOptions: UIItem[] = [];
     filterOptions: FilterOption[] = [];
 
+    Feature = Feature;
+    
     constructor(
         private userService: UserService,
         private clientOrderService: ClientOrderService,

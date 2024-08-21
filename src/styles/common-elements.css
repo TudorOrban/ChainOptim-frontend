@@ -139,12 +139,12 @@
 .custom-tooltip {
     position: absolute;
     background-color: black;
+    width: 25rem;
     color: white;
     text-align: center;
     padding: 5px;
     border-radius: 6px;
-    z-index: 1;
-    white-space: nowrap;
+    z-index: 1000;
 }
   
 .tooltip-above {

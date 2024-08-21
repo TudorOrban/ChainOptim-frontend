@@ -66,7 +66,6 @@ export class InfoComponent implements OnInit {
         this.userSettingsService.getCurrentSettings().subscribe(
             (settings) => {
                 if (!settings) {
-                    console.error('No user settings found');
                     return;
                 }
                 this.userSettings = settings;
