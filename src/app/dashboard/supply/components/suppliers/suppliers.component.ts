@@ -15,6 +15,7 @@ import { ListHeaderComponent } from '../../../../shared/common/components/list-h
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 import { SortOption } from '../../../../shared/search/models/searchTypes';
 import { UserService } from '../../../../core/auth/services/user.service';
+import { Feature } from '../../../../shared/enums/commonEnums';
 
 @Component({
     selector: 'app-organization',
@@ -47,6 +48,8 @@ export class SuppliersComponent implements OnInit {
     ascending = false;
     page = 1;
     itemsPerPage = 10;
+
+    Feature = Feature;
     
     constructor(
         private userService: UserService,

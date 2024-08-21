@@ -6,6 +6,7 @@ import { SortSelectorComponent } from '../../../search/components/sort-selector/
 import { SearchParams, SortOption } from '../../../search/models/searchTypes';
 import { RouterModule } from '@angular/router';
 import { InfoComponent } from '../info/info.component';
+import { Feature } from '../../../enums/commonEnums';
 
 @Component({
   selector: 'app-list-header',
@@ -24,6 +25,7 @@ export class ListHeaderComponent {
         { label: 'Updated At', value: 'updatedAt' },
     ];
     @Input() createLink: string = '';
+    @Input() feature?: Feature;
 
     @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() onSortChange = new EventEmitter<{ value: string, ascending: boolean }>();

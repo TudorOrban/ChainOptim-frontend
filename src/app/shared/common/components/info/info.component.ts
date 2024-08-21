@@ -10,7 +10,9 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { UserSettingsService } from '../../../../dashboard/settings/services/user-settings.service';
-import { InfoLevel } from '../../../../dashboard/settings/models/UserSettings';
+import { InfoLevel, UserSettings } from '../../../../dashboard/settings/models/UserSettings';
+import { InfoService } from '../../services/info.service';
+import { Feature } from '../../../enums/commonEnums';
 
 @Component({
     selector: 'app-info',
@@ -20,11 +22,13 @@ import { InfoLevel } from '../../../../dashboard/settings/models/UserSettings';
     styleUrl: './info.component.css',
 })
 export class InfoComponent implements OnInit {
-    @Input() tooltipText: string = 'More information';
-    @Input() infoLevel?: InfoLevel = InfoLevel.ALL;
+    @Input() feature?: Feature;
 
+    userSettings: UserSettings | undefined = undefined;
     isVisible: boolean = false;
-    show: boolean = false;
+    tooltipText: string = '';
+    infoLevel: InfoLevel | undefined = undefined;
+    showTooltip: boolean = false;
     tooltipPosition: string = 'above';
 
     faInfo = faInfo;
@@ -33,6 +37,7 @@ export class InfoComponent implements OnInit {
 
     constructor(
         private userSettingsService: UserSettingsService,
+        private infoService: InfoService
     ) {}
 
     @HostListener('mouseenter')
@@ -49,26 +54,41 @@ export class InfoComponent implements OnInit {
             this.tooltipPosition = 'above';
         }
 
-        this.show = true;
+        this.showTooltip = true;
     }
 
     @HostListener('mouseleave')
     onMouseLeave() {
-        this.show = false;
+        this.showTooltip = false;
     }
 
     ngOnInit() {
         this.userSettingsService.getCurrentSettings().subscribe(
             (settings) => {
-                console.log('Fetched user settings:', settings);
-                const desiredInfoLevel = settings?.generalSettings.infoLevel;
-                console.log('Info level:', this.infoLevel, 'desired:', desiredInfoLevel);
-                if (desiredInfoLevel && this.infoLevel) {
-                    this.isVisible = desiredInfoLevel >= this.infoLevel;
-                    console.log('Is visible:', this.isVisible);
+                if (!settings) {
+                    console.error('No user settings found');
+                    return;
                 }
+                this.userSettings = settings;
+                console.log('Fetched user settings:', settings);
+                
+                this.decideVisibility();
             }
         );
     }
-    
+
+    private decideVisibility(): void {
+        if (!this.feature) {
+            console.error('No feature provided');
+            return;
+        }
+        const featureInfo = this.infoService.getFeatureInfo(this.feature);
+        this.tooltipText = featureInfo.tooltipText;
+        this.infoLevel = featureInfo.infoLevel;
+
+        const desiredInfoLevel = this.userSettings?.generalSettings.infoLevel;
+        if (desiredInfoLevel && this.infoLevel) {
+            this.isVisible = desiredInfoLevel >= this.infoLevel;
+        }
+    }
 }

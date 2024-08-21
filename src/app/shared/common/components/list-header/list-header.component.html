@@ -1,7 +1,7 @@
 <h2 class="flex items-center page-standard-horizontal-padding pt-4 bg-gray-50">
     <fa-icon [icon]="icon" class="text-lg text-gray-700"></fa-icon>
     <div class="page-title ml-2 mr-4">{{ title }}</div>
-    <app-info [tooltipText]="'tooltipText'"></app-info>
+    <app-info [feature]="feature"></app-info>
 </h2>
 <div class="flex items-center flex-wrap lg:flex-nowrap justify-between page-standard-horizontal-padding py-4 bg-gray-50 border-b border-gray-300 shadow-sm">
     <app-search-input (searchEvent)="performSearch($event)" [placeholder]="searchPlaceholder"></app-search-input>
