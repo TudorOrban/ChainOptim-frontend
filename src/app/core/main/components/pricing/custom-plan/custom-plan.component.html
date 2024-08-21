@@ -1,0 +1,20 @@
+<div class="w-96 h-80 bg-white border border-gray-300 rounded-md shadow-sm">
+    <div class="flex items-center justify-between w-full">
+        <h2 class="text-xl font-semibold">Customize Plan</h2>
+
+        <div class="flex items-center space-x-4">
+            <span class="font-semibold text-gray-700">Monthly</span>
+            <div class="toggle-switch">
+                <label>
+                    <input
+                        type="checkbox"
+                        [(ngModel)]="isMonthly"
+                        (ngModelChange)="switchTime()"
+                    />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <span class="font-semibold text-gray-700">Yearly</span>
+        </div>
+    </div>
+</div>

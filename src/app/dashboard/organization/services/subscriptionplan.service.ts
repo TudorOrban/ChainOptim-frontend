@@ -1,11 +1,21 @@
 import { Injectable } from "@angular/core";
-import { PlanTier, SubscriptionPlan, SubscriptionPlans } from "../models/SubscriptionPlan";
+import { CustomPlanPricing, FeaturePricing, PlanTier, SubscriptionPlan, SubscriptionPlans } from "../models/SubscriptionPlan";
+import { Feature } from "../../../shared/enums/commonEnums";
 
 @Injectable({
     providedIn: 'root'
 })
 export class SubscriptionPlanService {
+    
+    getSubscriptionPlan(tier: PlanTier): SubscriptionPlan {
+        return this.subscriptionPlans[tier];
+    }
 
+    getFeaturePricing(feature: Feature): FeaturePricing {
+        return this.customPlanPricing[feature];
+    }
+
+    
     private subscriptionPlans: SubscriptionPlans = {
         [PlanTier.NONE]: {
             name: 'No Plan',
@@ -113,7 +123,281 @@ export class SubscriptionPlanService {
         }
     }
 
-    getSubscriptionPlan(tier: PlanTier): SubscriptionPlan {
-        return this.subscriptionPlans[tier];
-    }
+    private customPlanPricing: CustomPlanPricing = {
+        [Feature.PRODUCT]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.FACTORY]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.WAREHOUSE]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.SUPPLIER]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.CLIENT]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.COMPONENT]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.PRODUCT_STAGE]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.FACTORY_STAGE]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.FACTORY_INVENTORY_ITEM]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.FACTORY_PRODUCTION_HISTORY]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.FACTORY_PERFORMANCE]: {},
+        [Feature.RESOURCE_ALLOCATION_PLAN]: {},
+        [Feature.WAREHOUSE_INVENTORY_ITEM]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.SUPPLIER_ORDER]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.SUPPLIER_SHIPMENT]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.SUPPLIER_PERFORMANCE]: {},
+        [Feature.CLIENT_ORDER]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.CLIENT_SHIPMENT]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
+        [Feature.CLIENT_EVALUATION]: {},
+    };
+
 }
