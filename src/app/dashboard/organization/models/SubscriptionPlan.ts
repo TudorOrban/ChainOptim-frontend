@@ -45,3 +45,8 @@ export type QuantityPrice = {
     dollarsMonthly: number; // per month, per unit
     dollarsYearly: number; // per month, per unit
 }
+
+export interface CustomSubscriptionPlan {
+    basePlanTier: PlanTier;
+    additionalFeatures: Record<Feature, number>;
+}

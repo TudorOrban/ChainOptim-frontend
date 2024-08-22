@@ -124,6 +124,24 @@ export class SubscriptionPlanService {
     }
 
     private customPlanPricing: CustomPlanPricing = {
+        [Feature.USER]: {
+            1: {
+                dollarsMonthly: 1,
+                dollarsYearly: 0.8,
+            },
+            5: {
+                dollarsMonthly: 0.8,
+                dollarsYearly: 0.6,
+            },
+            20: {
+                dollarsMonthly: 0.6,
+                dollarsYearly: 0.5,
+            },
+            100: {
+                dollarsMonthly: 0.5,
+                dollarsYearly: 0.4,
+            },
+        },
         [Feature.PRODUCT]: {
             1: {
                 dollarsMonthly: 1,
