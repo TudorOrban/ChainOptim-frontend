@@ -1,9 +1,9 @@
-<div class="p-10 space-y-10 bg-gray-50">
-    <div class="flex items-center justify-center w-full">
+<div class="w-full p-10 space-y-10 bg-gray-50 overflow-x-hidden">
+    <div class="flex items-center justify-center w-full py-4">
         <h2 class="text-4xl font-semibold">Pricing Tiers</h2>
     </div>
     
-    <div class="flex items-center justify-between w-full px-8 xl:px-20 lg:space-x-4">
+    <!-- <div class="flex items-center justify-between w-full px-8 py-4 lg:space-x-4 overflow-x-auto overflow-y-hidden">
         <div>
             <app-plan-box [planTier]="PlanTier.NONE"></app-plan-box>
         </div>
@@ -19,9 +19,13 @@
         <div>
             <app-plan-box [planTier]="PlanTier.ENTERPRISE"></app-plan-box>
         </div>
+    </div> -->
+
+    <div class="flex items-center justify-center w-full py-6">
+        <h2 class="text-3xl font-semibold">Customize Plan</h2>
     </div>
 
-    <div class="flex items-center w-full justify-center mt-40">
-        <app-custom-plan></app-custom-plan>
+    <div class="flex items-center w-full justify-center px-40 pb-10">
+        <app-custom-plan class="w-full"></app-custom-plan>
     </div>
 </div>
