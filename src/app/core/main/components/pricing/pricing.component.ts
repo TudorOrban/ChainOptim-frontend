@@ -18,4 +18,11 @@ export class PricingComponent {
     openPlan(planTier: PlanTier): void {
         console.log('Open plan', planTier);
     }
+    
+    scrollToCustomizePlan(): void {
+        const element = document.getElementById('custom-plan');
+        if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
 }

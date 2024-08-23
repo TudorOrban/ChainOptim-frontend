@@ -15,6 +15,12 @@ export class InfoService {
                 "You can assign different roles to Users, each with different permissions and access levels.",
             infoLevel: InfoLevel.ALL,
         },
+        [Feature.CUSTOM_ROLE]: {
+            tooltipText: "A Custom Role is a role that you can define and assign to Users. " +
+                "You can set up different permissions and access levels for each Custom Role, " +
+                "as well as assign it to any number of Users.",
+            infoLevel: InfoLevel.ADVANCED,
+        },
         [Feature.PRODUCT]: {
             tooltipText: "A Product is any item that is manufactured and/or sold by your organization.",
             infoLevel: InfoLevel.ALL,

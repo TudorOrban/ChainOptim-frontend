@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PlanTier, SubscriptionPlan } from '../../../../../dashboard/organization/models/SubscriptionPlan';
 import { SubscriptionPlanService } from '../../../../../dashboard/organization/services/subscriptionplan.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -14,6 +14,7 @@ import { faCircleCheck, faGear, faIndustry, faTruck, faUniversalAccess, faUser, 
 })
 export class PlanBoxComponent implements OnInit {
     @Input() planTier: PlanTier | undefined = undefined;
+    @Output() customizePlan = new EventEmitter<void>();
 
     subscriptionPlan: SubscriptionPlan | undefined = undefined;
     showTooltip = false;
@@ -50,5 +51,10 @@ export class PlanBoxComponent implements OnInit {
     getMaxNumberString(maxNumber: number | undefined): string {
         if (maxNumber === undefined) return ""; 
         return maxNumber === -1 ? 'Unlimited' : maxNumber.toString();
+    }
+
+    
+    triggerCustomizePlan() {
+        this.customizePlan.emit();
     }
 }

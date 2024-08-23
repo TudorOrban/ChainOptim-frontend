@@ -25,7 +25,7 @@ export class CustomPlanComponent {
     }
 
     featuresByGroup: Record<string, Feature[]> = {
-        'Members': [Feature.USER],
+        'Members': [Feature.USER, Feature.CUSTOM_ROLE],
         'Goods': [Feature.PRODUCT, Feature.PRODUCT_STAGE, Feature.COMPONENT],
         'Supply': [Feature.SUPPLIER, Feature.SUPPLIER_ORDER, Feature.SUPPLIER_SHIPMENT],
         'Production': [Feature.FACTORY, Feature.FACTORY_STAGE, Feature.FACTORY_INVENTORY_ITEM],
@@ -39,6 +39,16 @@ export class CustomPlanComponent {
         PRODUCT_STAGE: 'maxProductStages',
         COMPONENT: 'maxComponents',
         FACTORY: 'maxFactories',
+        FACTORY_STAGE: 'maxFactoryStages',
+        FACTORY_INVENTORY_ITEM: 'maxFactoryInventoryItems',
+        WAREHOUSE: 'maxWarehouses',
+        WAREHOUSE_INVENTORY_ITEM: 'maxWarehouseInventoryItems',
+        SUPPLIER: 'maxSuppliers',
+        SUPPLIER_ORDER: 'maxSupplierOrders',
+        SUPPLIER_SHIPMENT: 'maxSupplierShipments',
+        CLIENT: 'maxClients',
+        CLIENT_ORDER: 'maxClientOrders',
+        CLIENT_SHIPMENT: 'maxClientShipments',
     };
 
     Feature = Feature;
@@ -51,10 +61,6 @@ export class CustomPlanComponent {
     ) {
         this.planService = planService;
         this.currentPlan = this.planService.getSubscriptionPlan(this.selectedPlanTier);
-    }
-
-    switchTime(): void {
-        this.isMonthly = !this.isMonthly;
     }
 
     selectPlanTier(planTier: PlanTier): void {
@@ -103,15 +109,16 @@ export class CustomPlanComponent {
 
     getTotalPrice(): number {
         let total = this.planService.getSubscriptionPlan(this.customPlan.basePlanTier).dollarsPerMonth;
-        if (!this.isMonthly) {
-            total *= 12;
-        }
 
         for (const feature in this.customPlan.additionalFeatures) {
             total += this.getPriceByFeature(feature as Feature);
         }
 
         return total;
+    }
+
+    continueWithCustomPlan(): void {
+        console.log('Custom plan:', this.customPlan);
     }
 
     // Utils

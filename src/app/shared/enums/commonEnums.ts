@@ -5,6 +5,7 @@ export enum SearchMode {
 
 export enum Feature {
     USER = "USER",
+    CUSTOM_ROLE = "CUSTOM_ROLE",
     PRODUCT = "PRODUCT",
     PRODUCT_STAGE = "PRODUCT_STAGE",
     COMPONENT = "COMPONENT",

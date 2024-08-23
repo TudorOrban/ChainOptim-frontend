@@ -3,29 +3,29 @@
         <h2 class="text-4xl font-semibold">Pricing Tiers</h2>
     </div>
     
-    <!-- <div class="flex items-center justify-between w-full px-8 py-4 lg:space-x-4 overflow-x-auto overflow-y-hidden">
+    <div class="flex items-center justify-between w-full px-8 py-4 lg:space-x-4 overflow-x-auto overflow-y-hidden">
         <div>
-            <app-plan-box [planTier]="PlanTier.NONE"></app-plan-box>
+            <app-plan-box [planTier]="PlanTier.NONE" (customizePlan)="scrollToCustomizePlan()"></app-plan-box>
         </div>
 
         <div>
-            <app-plan-box [planTier]="PlanTier.BASIC"></app-plan-box>
+            <app-plan-box [planTier]="PlanTier.BASIC" (customizePlan)="scrollToCustomizePlan()"></app-plan-box>
         </div>
 
         <div>
-            <app-plan-box [planTier]="PlanTier.PROFESSIONAL"></app-plan-box>
+            <app-plan-box [planTier]="PlanTier.PROFESSIONAL" (customizePlan)="scrollToCustomizePlan()"></app-plan-box>
         </div>
 
         <div>
-            <app-plan-box [planTier]="PlanTier.ENTERPRISE"></app-plan-box>
+            <app-plan-box [planTier]="PlanTier.ENTERPRISE" (customizePlan)="scrollToCustomizePlan()"></app-plan-box>
         </div>
-    </div> -->
+    </div>
 
     <div class="flex items-center justify-center w-full py-6">
         <h2 class="text-3xl font-semibold">Customize Plan</h2>
     </div>
 
     <div class="flex items-center w-full justify-center px-32 pb-10">
-        <app-custom-plan class="w-full"></app-custom-plan>
+        <app-custom-plan id="custom-plan" class="w-full"></app-custom-plan>
     </div>
 </div>
