@@ -8,12 +8,14 @@ import { dashboardRoutes } from './dashboard/dashboard.routes';
 import { PricingComponent } from './core/main/components/pricing/pricing.component';
 import { ResourcesComponent } from './core/main/components/resources/resources.component';
 import { ProductComponent } from './core/main/components/product/product.component';
+import { SubscriptionComponent } from './core/payment/components/subscription/subscription.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'product', component: ProductComponent },
     { path: 'pricing', component: PricingComponent },
+    { path: 'subscribe', component: SubscriptionComponent },
     { path: 'resources', component: ResourcesComponent },
     { path: '', component: HomeComponent },
     ...dashboardRoutes,

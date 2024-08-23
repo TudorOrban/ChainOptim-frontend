@@ -2,12 +2,13 @@
   "name": "chain-optimizer-frontend",
   "version": "0.0.0",
   "scripts": {
+    "prestart": "node set-env.js",
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "node set-env.js && ng serve",
+    "build": "node set-env.js && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:chain-optimizer-frontend": "node dist/chain-optimizer-frontend/server/server.mjs"
+    "serve:ssr:chain-optimizer-frontend": "node set-env.js && node dist/chain-optimizer-frontend/server/server.mjs"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +30,7 @@
     "@ngrx/effects": "^18.0.2",
     "@ngrx/store": "^18.0.2",
     "@ngrx/store-devtools": "^18.0.2",
+    "@stripe/stripe-js": "^4.3.0",
     "apexcharts": "^3.52.0",
     "cors": "^2.8.5",
     "d3": "^7.9.0",
@@ -53,6 +55,7 @@
     "@types/leaflet-polylinedecorator": "^1.6.4",
     "@types/node": "^18.18.0",
     "autoprefixer": "^10.4.16",
+    "dotenv": "^16.4.5",
     "jasmine": "^5.1.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
