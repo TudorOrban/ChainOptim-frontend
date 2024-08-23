@@ -1,5 +1,5 @@
-<div class="w-full h-96 p-4 bg-white border border-gray-300 rounded-md shadow-sm">
-    <div class="flex items-center justify-between w-full p-4">
+<div class="w-full p-4 bg-white border border-gray-300 rounded-md shadow-sm">
+    <div class="flex items-center justify-between w-full px-4 py-6">
         <h2 class="text-xl font-semibold">Custom Plan</h2>
 
         <div class="flex items-center space-x-4">
@@ -34,6 +34,52 @@
             </span>
         </button>
     </div>
+
+    <mat-accordion multi="true" class="overflow-y-auto">
+        <div class="grid grid-cols-4 gap-4 px-8 py-4 font-semibold text-lg bg-white">
+            <div>Features</div>
+            <div>Base</div>
+            <div>Add. Quantity</div>
+            <div>Price</div>
+        </div>
+    
+        <mat-expansion-panel *ngFor="let group of getObjectValues(featuresByGroup)" class="border-t border-gray-300">
+            <mat-expansion-panel-header class="border-0 shadow-none">
+                <mat-panel-title class="text-xl font-semibold p-2">
+                    {{ group }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+            <div *ngFor="let featureKey of featuresByGroup[group]" class="py-2 px-4">
+                <div class="grid grid-cols-4 gap-4 items-center">
+                    <div class="col-span-1">
+                        <h2 class="text-lg font-semibold">{{ toTitleCase(featureKey) }}</h2>
+                    </div>
+                    <div class="col-span-1 text-lg text-gray-800">
+                        {{ getPlanFeatureDetail(getFeatureEnum(featureKey), currentPlan) }}
+                    </div>
+                    <div class="col-span-1">
+                        <input type="number" [(ngModel)]="customPlan.additionalFeatures[getFeatureEnum(featureKey)]"
+                               class="w-20 h-10 border border-gray-300 rounded-md p-2 text-center" />
+                    </div>
+                    <div class="col-span-1 text-lg font-semibold text-gray-800">
+                        ${{ getFeaturePrice(getFeatureEnum(featureKey)) | number:'1.0-2' }}
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    
+    
+
+    <div class="flex items-center justify-end w-full px-10">
+        <div class="text-xl font-semibold text-gray-800">
+            Total:  ${{ getTotalPrice() | number: '1.0-2' }} 
+        </div>
+    </div>
+</div>
+
+
     
     <!-- <div class="space-y-4 p-4">
         <div class="flex items-center justify-between w-full px-8">
@@ -92,40 +138,3 @@
             </div>
         </div>
     </div> -->
-
-    <mat-accordion multi="true" class="overflow-y-auto">
-        <mat-expansion-panel *ngFor="let planTierKey of getObjectValues(PlanTier)">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    {{ decapitalize(planTierKey) }} Plan
-                </mat-panel-title>
-                <span>
-                    Base Price: ${{ planService.getSubscriptionPlan(getPlanTierEnum(planTierKey)).dollarsPerMonth | number: '1.0-2' }}
-                </span>
-            </mat-expansion-panel-header>
-    
-            <div *ngFor="let featureKeyString of getObjectValues(Feature)">
-                <div class="flex items-center justify-between w-full px-8">
-                    <div class="flex items-center space-x-4">
-                        <h2 class="text-lg font-semibold">{{ decapitalize(featureKeyString) }}</h2>
-                    </div>
-                    <div class="text-lg text-gray-800">
-                        {{ getPlanFeatureDetail(planService.getSubscriptionPlan(getPlanTierEnum(planTierKey)), getFeatureEnum(featureKeyString)) }}
-                    </div>
-                    <input type="number" [(ngModel)]="customPlan.additionalFeatures[getFeatureEnum(featureKeyString)]"
-                           class="w-20 h-10 border border-gray-300 rounded-md p-2" />
-                    <div class="text-lg font-semibold text-gray-800">
-                        ${{ getFeaturePrice(getFeatureEnum(featureKeyString)) | number:'1.0-2' }}
-                    </div>
-                </div>
-            </div>
-        </mat-expansion-panel>
-    </mat-accordion>
-
-
-    <div class="flex items-center justify-end w-full px-10">
-        <div class="text-xl font-semibold text-gray-800">
-            Total:  ${{ getTotalPrice() | number: '1.0-2' }} 
-        </div>
-    </div>
-</div>

@@ -17,11 +17,29 @@ export class CustomPlanComponent {
 
     isMonthly: boolean = true;
     selectedPlanTier: PlanTier = PlanTier.NONE;
+    currentPlan: SubscriptionPlan | undefined = undefined;
 
     customPlan: CustomSubscriptionPlan = {
         basePlanTier: PlanTier.NONE,
         additionalFeatures: this.initializeFeatures(0),
     }
+
+    featuresByGroup: Record<string, Feature[]> = {
+        'Members': [Feature.USER],
+        'Goods': [Feature.PRODUCT, Feature.PRODUCT_STAGE, Feature.COMPONENT],
+        'Supply': [Feature.SUPPLIER, Feature.SUPPLIER_ORDER, Feature.SUPPLIER_SHIPMENT],
+        'Production': [Feature.FACTORY, Feature.FACTORY_STAGE, Feature.FACTORY_INVENTORY_ITEM],
+        'Storage': [Feature.WAREHOUSE, Feature.WAREHOUSE_INVENTORY_ITEM],
+        'Demand': [Feature.CLIENT, Feature.CLIENT_ORDER, Feature.CLIENT_SHIPMENT],
+    }
+
+    featureToPlanPropMap: { [key in Feature]?: keyof SubscriptionPlan } = {
+        USER: 'maxMembers',
+        PRODUCT: 'maxProducts',
+        PRODUCT_STAGE: 'maxProductStages',
+        COMPONENT: 'maxComponents',
+        FACTORY: 'maxFactories',
+    };
 
     Feature = Feature;
     PlanTier = PlanTier;
@@ -32,22 +50,24 @@ export class CustomPlanComponent {
         planService: SubscriptionPlanService,
     ) {
         this.planService = planService;
+        this.currentPlan = this.planService.getSubscriptionPlan(this.selectedPlanTier);
     }
 
     switchTime(): void {
         this.isMonthly = !this.isMonthly;
     }
 
-    featureToPlanPropMap: { [key in Feature]?: keyof SubscriptionPlan } = {
-        USER: 'maxMembers',
-        PRODUCT: 'maxProducts',
-        PRODUCT_STAGE: 'maxProductStages',
-        COMPONENT: 'maxComponents',
-        FACTORY: 'maxFactories',
-        // Continue mapping all other features...
-    };
+    selectPlanTier(planTier: PlanTier): void {
+        this.selectedPlanTier = planTier;
+        this.resetCustomPlan(planTier);
+        this.currentPlan = this.planService.getSubscriptionPlan(planTier);
+    }
 
-    getPlanFeatureDetail(plan: SubscriptionPlan, feature: Feature): number | boolean {
+    getPlanFeatureDetail(feature: Feature, plan?: SubscriptionPlan): number | boolean {
+        if (!plan) {
+            plan = this.planService.getSubscriptionPlan(this.selectedPlanTier);
+        }
+
         const planProp = this.featureToPlanPropMap[feature];
         if (planProp) {
             const value = plan[planProp];
@@ -55,31 +75,12 @@ export class CustomPlanComponent {
                 return value;
             }
         }
-        return 0; // Assuming 0 as a default for numbers, adjust based on what makes sense for your application
-    }
-
-    getPlanTierEnum(key: string): PlanTier {
-        return PlanTier[key as keyof typeof PlanTier];
-    }
-    
-    getFeatureEnum(key: string): Feature {
-        return Feature[key as keyof typeof Feature];
-    }
-    
-
-    selectPlanTier(planTier: PlanTier): void {
-        this.selectedPlanTier = planTier;
-        this.resetCustomPlan(planTier);
-    }
+        return 0;
+    }    
 
     getFeaturePrice(featureKey: string): number {
         const feature = this.parseFeatureKey(featureKey);
         return this.getPriceByFeature(feature);
-    }
-
-    getPlanDetails(planKey: string): SubscriptionPlan {
-        const planTier = this.parsePlanTier(planKey);
-        return this.planService.getSubscriptionPlan(planTier);
     }
 
     getPriceByFeature(feature: Feature): number {
@@ -131,9 +132,18 @@ export class CustomPlanComponent {
             additionalFeatures: this.initializeFeatures(0),
         };
     }
-
+    
     getObjectValues<T extends object>(enumObj: T): Array<keyof T> {
         return Object.keys(enumObj) as Array<keyof T>;
+    }
+
+    
+    getPlanTierEnum(key: string): PlanTier {
+        return PlanTier[key as keyof typeof PlanTier];
+    }
+    
+    getFeatureEnum(key: string): Feature {
+        return Feature[key as keyof typeof Feature];
     }
 
     parseFeatureKey(key: string): Feature {
@@ -154,5 +164,9 @@ export class CustomPlanComponent {
             acc[key as Feature] = defaultValue;
             return acc;
         }, {} as Record<Feature, number>);
+    }
+    
+    toTitleCase(text: string): string {
+        return text.toLowerCase().replace(/(?:^|\s)\w/g, (match) => match.toUpperCase()).replace(/_/g, ' ');
     }
 }
