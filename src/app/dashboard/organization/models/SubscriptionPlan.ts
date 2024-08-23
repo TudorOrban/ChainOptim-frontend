@@ -48,5 +48,6 @@ export type QuantityPrice = {
 
 export interface CustomSubscriptionPlan {
     basePlanTier: PlanTier;
+    totalDollarsMonthly?: number;
     additionalFeatures: Record<Feature, number>;
 }

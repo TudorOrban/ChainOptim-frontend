@@ -20,22 +20,22 @@
 
     <div class="flex items-center px-8">
         <button
-            (click)="selectPlanTier(planTier)"
-            *ngFor="let planTier of getObjectValues(PlanTier)" 
-            [class]="planTier === selectedPlanTier ? 'bg-gray-100' : ''"
+            (click)="selectPlanTier(getPlanTierEnum(planTierKey))"
+            *ngFor="let planTierKey of getObjectValues(PlanTier)" 
+            [class]="planTierKey === selectedPlanTier ? 'bg-gray-100' : ''"
             class="flex flex-col items-center justify-center space-y-2 px-8 py-4 hover:bg-gray-100"
         >
             <h2 class="font-semibold text-lg">
-                {{ decapitalize(planTier.toString()) }}
+                {{ decapitalize(planTierKey.toString()) }}
             </h2>
 
             <span class="text-lg font-semibold text-gray-800">
-                ${{ planService.getSubscriptionPlan(planTier).dollarsPerMonth}}
+                ${{ planService.getSubscriptionPlan(getPlanTierEnum(planTierKey)).dollarsPerMonth}}
             </span>
         </button>
     </div>
     
-    <div class="space-y-4 p-4">
+    <!-- <div class="space-y-4 p-4">
         <div class="flex items-center justify-between w-full px-8">
             <h2 class="label-medium-large">
                 Feature
@@ -91,12 +91,41 @@
                 ${{ getPriceByFeature(Feature.PRODUCT) | number: '1.0-2' }}
             </div>
         </div>
-    </div>
+    </div> -->
+
+    <mat-accordion multi="true" class="overflow-y-auto">
+        <mat-expansion-panel *ngFor="let planTierKey of getObjectValues(PlanTier)">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ decapitalize(planTierKey) }} Plan
+                </mat-panel-title>
+                <span>
+                    Base Price: ${{ planService.getSubscriptionPlan(getPlanTierEnum(planTierKey)).dollarsPerMonth | number: '1.0-2' }}
+                </span>
+            </mat-expansion-panel-header>
+    
+            <div *ngFor="let featureKeyString of getObjectValues(Feature)">
+                <div class="flex items-center justify-between w-full px-8">
+                    <div class="flex items-center space-x-4">
+                        <h2 class="text-lg font-semibold">{{ decapitalize(featureKeyString) }}</h2>
+                    </div>
+                    <div class="text-lg text-gray-800">
+                        {{ getPlanFeatureDetail(planService.getSubscriptionPlan(getPlanTierEnum(planTierKey)), getFeatureEnum(featureKeyString)) }}
+                    </div>
+                    <input type="number" [(ngModel)]="customPlan.additionalFeatures[getFeatureEnum(featureKeyString)]"
+                           class="w-20 h-10 border border-gray-300 rounded-md p-2" />
+                    <div class="text-lg font-semibold text-gray-800">
+                        ${{ getFeaturePrice(getFeatureEnum(featureKeyString)) | number:'1.0-2' }}
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 
 
     <div class="flex items-center justify-end w-full px-10">
         <div class="text-xl font-semibold text-gray-800">
-            ${{ getTotalPrice() | number: '1.0-2' }} 
+            Total:  ${{ getTotalPrice() | number: '1.0-2' }} 
         </div>
     </div>
 </div>

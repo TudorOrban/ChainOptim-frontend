@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Feature } from '../../../../../shared/enums/commonEnums';
-import { CustomSubscriptionPlan, FeaturePricing, PlanTier } from '../../../../../dashboard/organization/models/SubscriptionPlan';
+import { CustomSubscriptionPlan, FeaturePricing, PlanTier, SubscriptionPlan } from '../../../../../dashboard/organization/models/SubscriptionPlan';
 import { SubscriptionPlanService } from '../../../../../dashboard/organization/services/subscriptionplan.service';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-custom-plan',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatExpansionModule],
   templateUrl: './custom-plan.component.html',
   styleUrl: './custom-plan.component.css'
 })
@@ -37,9 +38,48 @@ export class CustomPlanComponent {
         this.isMonthly = !this.isMonthly;
     }
 
+    featureToPlanPropMap: { [key in Feature]?: keyof SubscriptionPlan } = {
+        USER: 'maxMembers',
+        PRODUCT: 'maxProducts',
+        PRODUCT_STAGE: 'maxProductStages',
+        COMPONENT: 'maxComponents',
+        FACTORY: 'maxFactories',
+        // Continue mapping all other features...
+    };
+
+    getPlanFeatureDetail(plan: SubscriptionPlan, feature: Feature): number | boolean {
+        const planProp = this.featureToPlanPropMap[feature];
+        if (planProp) {
+            const value = plan[planProp];
+            if (typeof value === 'number' || typeof value === 'boolean') {
+                return value;
+            }
+        }
+        return 0; // Assuming 0 as a default for numbers, adjust based on what makes sense for your application
+    }
+
+    getPlanTierEnum(key: string): PlanTier {
+        return PlanTier[key as keyof typeof PlanTier];
+    }
+    
+    getFeatureEnum(key: string): Feature {
+        return Feature[key as keyof typeof Feature];
+    }
+    
+
     selectPlanTier(planTier: PlanTier): void {
         this.selectedPlanTier = planTier;
         this.resetCustomPlan(planTier);
+    }
+
+    getFeaturePrice(featureKey: string): number {
+        const feature = this.parseFeatureKey(featureKey);
+        return this.getPriceByFeature(feature);
+    }
+
+    getPlanDetails(planKey: string): SubscriptionPlan {
+        const planTier = this.parsePlanTier(planKey);
+        return this.planService.getSubscriptionPlan(planTier);
     }
 
     getPriceByFeature(feature: Feature): number {
@@ -92,10 +132,18 @@ export class CustomPlanComponent {
         };
     }
 
-    getObjectValues(obj: any): any[] {
-        return Object.values(obj);
+    getObjectValues<T extends object>(enumObj: T): Array<keyof T> {
+        return Object.keys(enumObj) as Array<keyof T>;
     }
 
+    parseFeatureKey(key: string): Feature {
+        return Feature[key as keyof typeof Feature];
+    }
+    
+    parsePlanTier(key: string): PlanTier {
+        return PlanTier[key as keyof typeof PlanTier];
+    }
+    
     decapitalize(word?: string) {
         if (!word) return '';
         return word.charAt(0) + word.slice(1).toLowerCase();

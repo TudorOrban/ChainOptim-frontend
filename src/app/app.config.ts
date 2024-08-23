@@ -10,6 +10,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { metaReducers, reducers } from './core/caching/reducers';
 import { ProductEffects } from './core/caching/effects/ProductEffects';
 import { JwtInterceptor } from './core/auth/services/jwt-interceptor.service';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -22,6 +23,6 @@ export const appConfig: ApplicationConfig = {
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         provideStore(reducers, { metaReducers }), 
         provideEffects([ProductEffects]), 
-        provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+        provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }), provideAnimationsAsync(),
     ]
 };
