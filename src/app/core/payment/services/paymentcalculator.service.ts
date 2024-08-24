@@ -38,6 +38,18 @@ export class PaymentCalculatorService {
         CLIENT_ORDER: 'maxClientOrders',
         CLIENT_SHIPMENT: 'maxClientShipments',
     };
+    
+    getTotalPrice(customPlan: CustomSubscriptionPlan, isMonthly: boolean): number {
+        let total = this.planService.getSubscriptionPlan(customPlan.basePlanTier).dollarsPerMonth;
+
+        for (const feature in customPlan.additionalFeatures) {
+            total += this.getPriceByFeature(feature as Feature, customPlan, isMonthly);
+        }
+
+        customPlan.totalDollarsMonthly = total;
+        
+        return total;
+    }
 
     getFeaturePrice(featureKey: string, customPlan: CustomSubscriptionPlan, isMonthly: boolean): number {
         const feature = this.parseFeatureKey(featureKey);

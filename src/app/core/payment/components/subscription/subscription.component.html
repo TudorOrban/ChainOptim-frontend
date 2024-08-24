@@ -1,6 +1,6 @@
 
-<div class="w-full p-10 space-y-10 bg-gray-50 overflow-x-hidden">
-    <div class="flex items-center justify-center w-full py-4">
+<div class="w-full p-10 space-y-8 bg-gray-50 overflow-x-hidden">
+    <div class="flex items-center justify-center w-full py-8">
         <h2 class="text-4xl font-semibold">Subscription</h2>
     </div>
 
@@ -38,6 +38,18 @@
             </div>
         </mat-expansion-panel>
     </mat-accordion>
+
+    <div class="flex items-center justify-end w-full py-4">
+        <div class="space-y-3 text-end">
+            <div class="text-xl font-semibold text-gray-800">
+                Total:  ${{ this.calculatorService.getTotalPrice(customPlan, isMonthly) | number: '1.0-2' }} 
+            </div>
+            <p class="text-gray-700">per organization / month</p>
+            <p class="text-gray-700">
+                {{ isMonthly ? 'Billed monthly' : 'Billed annually' }}
+            </p>
+        </div>
+    </div>
     
     <div>
         <app-payment
