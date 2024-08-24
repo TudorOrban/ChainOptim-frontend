@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { PaymentService } from '../../services/payment.service';
 import { CustomSubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
+import { StripeService } from '../../services/stripe.service';
 
 @Component({
   selector: 'app-payment',
@@ -14,6 +15,7 @@ export class PaymentComponent implements OnInit, OnChanges {
 
     constructor(
         private paymentService: PaymentService,
+        private stripeService: StripeService
     ) {}
 
     ngOnInit() {
@@ -30,7 +32,14 @@ export class PaymentComponent implements OnInit, OnChanges {
             return;
         }
         this.paymentService.createCheckoutSession(this.customPlan).subscribe({
-            next: session => console.log('Stripe session created:', session),
+            next: response => {
+                console.log('Stripe session created:', response);
+                this.stripeService.redirectToCheckout(response.sessionId).then(result => {
+                    if (result.error) {
+                        console.error('Error redirecting to checkout:', result.error);
+                    }
+                });
+            },
             error: error => console.error('Error creating Stripe session:', error)
         });
     }
