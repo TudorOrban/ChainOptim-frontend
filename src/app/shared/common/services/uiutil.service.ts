@@ -29,4 +29,8 @@ export class UIUtilService {
         if (!value) return '0';
         return value.toFixed(2).replace(/\.?0+$/, '');
     }
+    
+    formatEnum(text: string): string {
+        return text.toLowerCase().replace(/(?:^|\s)\w/g, (match) => match.toUpperCase()).replace(/_/g, ' ');
+    }
 }

@@ -14,7 +14,6 @@ export class SubscriptionPlanService {
     getFeaturePricing(feature: Feature): FeaturePricing {
         return this.customPlanPricing[feature];
     }
-
     
     private subscriptionPlans: SubscriptionPlans = {
         [PlanTier.NONE]: {

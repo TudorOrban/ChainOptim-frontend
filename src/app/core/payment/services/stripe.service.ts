@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, Injector } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, Injector, PLATFORM_ID } from '@angular/core';
 import { ConfigService } from './config.service';
 
 @Injectable({
@@ -10,13 +10,15 @@ export class StripeService {
     private configService: ConfigService;
 
     constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
         @Inject(DOCUMENT) private document: Document,
         private injectors: Injector
     ) {
         this.configService = this.injectors.get(ConfigService);
         const stripeKey = this.configService.getStripePublishableKey();
-        console.log('Stripe key:', stripeKey);
-        this.stripe = (window as any).Stripe(stripeKey);
+        if (isPlatformBrowser(platformId) && stripeKey && !window) {
+            this.stripe = (window as any).Stripe(stripeKey);
+        }
     }
 
     redirectToCheckout(sessionId: string): Promise<any> {
