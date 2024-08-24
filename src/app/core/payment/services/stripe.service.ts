@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Injector } from '@angular/core';
 import { ConfigService } from './config.service';
 
 @Injectable({
@@ -7,11 +7,13 @@ import { ConfigService } from './config.service';
 })
 export class StripeService {
     private stripe: any;
+    private configService: ConfigService;
 
     constructor(
         @Inject(DOCUMENT) private document: Document,
-        private configService: ConfigService
+        private injectors: Injector
     ) {
+        this.configService = this.injectors.get(ConfigService);
         const stripeKey = this.configService.getStripePublishableKey();
         console.log('Stripe key:', stripeKey);
         this.stripe = (window as any).Stripe(stripeKey);

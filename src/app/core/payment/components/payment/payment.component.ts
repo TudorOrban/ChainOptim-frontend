@@ -10,7 +10,7 @@ import { StripeService } from '../../services/stripe.service';
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.css'
 })
-export class PaymentComponent implements OnInit, OnChanges {
+export class PaymentComponent {
     @Input() customPlan: CustomSubscriptionPlan | undefined = undefined;
 
     constructor(
@@ -18,11 +18,8 @@ export class PaymentComponent implements OnInit, OnChanges {
         private stripeService: StripeService
     ) {}
 
-    ngOnInit() {
-        this.startStripeSession();
-    }
-    
-    ngOnChanges() {
+    confirmPayment(): void {
+        console.log('Confirm payment');
         this.startStripeSession();
     }
 
