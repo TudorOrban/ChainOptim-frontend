@@ -5,6 +5,8 @@ import { Feature } from '../../../../../shared/enums/commonEnums';
 import { CustomSubscriptionPlan, FeaturePricing, PlanTier, SubscriptionPlan } from '../../../../../dashboard/organization/models/SubscriptionPlan';
 import { SubscriptionPlanService } from '../../../../../dashboard/organization/services/subscriptionplan.service';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { CurrentPlanService } from '../../../../payment/services/currentplan.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-custom-plan',
@@ -25,24 +27,24 @@ export class CustomPlanComponent {
     }
 
     featuresByGroup: Record<string, Feature[]> = {
-        'Members': [Feature.USER, Feature.CUSTOM_ROLE],
+        'Members': [Feature.MEMBER, Feature.CUSTOM_ROLE],
         'Goods': [Feature.PRODUCT, Feature.PRODUCT_STAGE, Feature.COMPONENT],
         'Supply': [Feature.SUPPLIER, Feature.SUPPLIER_ORDER, Feature.SUPPLIER_SHIPMENT],
-        'Production': [Feature.FACTORY, Feature.FACTORY_STAGE, Feature.FACTORY_INVENTORY_ITEM],
-        'Storage': [Feature.WAREHOUSE, Feature.WAREHOUSE_INVENTORY_ITEM],
+        'Production': [Feature.FACTORY, Feature.FACTORY_STAGE, Feature.FACTORY_INVENTORY],
+        'Storage': [Feature.WAREHOUSE, Feature.WAREHOUSE_INVENTORY],
         'Demand': [Feature.CLIENT, Feature.CLIENT_ORDER, Feature.CLIENT_SHIPMENT],
     }
 
     featureToPlanPropMap: { [key in Feature]?: keyof SubscriptionPlan } = {
-        USER: 'maxMembers',
+        MEMBER: 'maxMembers',
         PRODUCT: 'maxProducts',
         PRODUCT_STAGE: 'maxProductStages',
         COMPONENT: 'maxComponents',
         FACTORY: 'maxFactories',
         FACTORY_STAGE: 'maxFactoryStages',
-        FACTORY_INVENTORY_ITEM: 'maxFactoryInventoryItems',
+        FACTORY_INVENTORY: 'maxFactoryInventoryItems',
         WAREHOUSE: 'maxWarehouses',
-        WAREHOUSE_INVENTORY_ITEM: 'maxWarehouseInventoryItems',
+        WAREHOUSE_INVENTORY: 'maxWarehouseInventoryItems',
         SUPPLIER: 'maxSuppliers',
         SUPPLIER_ORDER: 'maxSupplierOrders',
         SUPPLIER_SHIPMENT: 'maxSupplierShipments',
@@ -58,6 +60,8 @@ export class CustomPlanComponent {
 
     constructor(
         planService: SubscriptionPlanService,
+        private currentPlanService: CurrentPlanService,
+        private router: Router
     ) {
         this.planService = planService;
         this.currentPlan = this.planService.getSubscriptionPlan(this.selectedPlanTier);
@@ -114,11 +118,16 @@ export class CustomPlanComponent {
             total += this.getPriceByFeature(feature as Feature);
         }
 
+        this.customPlan.totalDollarsMonthly = total;
+        
         return total;
     }
 
     continueWithCustomPlan(): void {
         console.log('Custom plan:', this.customPlan);
+        this.currentPlanService.setCurrentPlan(this.customPlan);
+
+        this.router.navigate(['/subscribe']);
     }
 
     // Utils

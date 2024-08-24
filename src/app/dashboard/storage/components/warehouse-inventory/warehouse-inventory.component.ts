@@ -91,10 +91,10 @@ export class WarehouseInventoryComponent implements OnInit {
         private searchOptionsService: SearchOptionsService
     ) {
         this.filterOptions =
-            this.searchOptionsService.getSearchOptions(Feature.WAREHOUSE_INVENTORY_ITEM)
+            this.searchOptionsService.getSearchOptions(Feature.WAREHOUSE_INVENTORY)
                 ?.filterOptions || [];
         this.sortOptions =
-            this.searchOptionsService.getSearchOptions(Feature.WAREHOUSE_INVENTORY_ITEM)
+            this.searchOptionsService.getSearchOptions(Feature.WAREHOUSE_INVENTORY)
                 ?.sortOptions || [];
     }
 

@@ -124,7 +124,7 @@ export class SubscriptionPlanService {
     }
 
     private customPlanPricing: CustomPlanPricing = {
-        [Feature.USER]: {
+        [Feature.MEMBER]: {
             1: {
                 dollarsMonthly: 1,
                 dollarsYearly: 0.8,
@@ -304,7 +304,7 @@ export class SubscriptionPlanService {
                 dollarsYearly: 0.4,
             },
         },
-        [Feature.FACTORY_INVENTORY_ITEM]: {
+        [Feature.FACTORY_INVENTORY]: {
             1: {
                 dollarsMonthly: 1,
                 dollarsYearly: 0.8,
@@ -342,7 +342,7 @@ export class SubscriptionPlanService {
         },
         [Feature.FACTORY_PERFORMANCE]: {},
         [Feature.RESOURCE_ALLOCATION_PLAN]: {},
-        [Feature.WAREHOUSE_INVENTORY_ITEM]: {
+        [Feature.WAREHOUSE_INVENTORY]: {
             1: {
                 dollarsMonthly: 1,
                 dollarsYearly: 0.8,

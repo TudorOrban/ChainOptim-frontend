@@ -2,7 +2,7 @@
     <app-table-toolbar
         [title]="searchMode == SearchMode.ORGANIZATION ? 'Warehouse Items' : ''" [searchPlaceholder]="'Search by company ID'" [dontPadHorizontally]="dontPadHorizontally"
         [sortOptions]="sortOptions" [filterOptions]="filterOptions"
-        [selectedItemIds]="selectedItemIds" [newRawItems]="newRawItems" [isEditing]="isEditing" [feature]="Feature.WAREHOUSE_INVENTORY_ITEM"
+        [selectedItemIds]="selectedItemIds" [newRawItems]="newRawItems" [isEditing]="isEditing" [feature]="Feature.WAREHOUSE_INVENTORY"
         (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onFilterChange)="handleFilterChange($event)" (onRefresh)="handleRefresh()"
         (onCancel)="handleCancel()"(onAddItem)="handleAddItem()" (onCreateItems)="handleCreateItems()" (onEditItems)="editSelectedItems()" (onSaveEditedItems)="saveEditedItems()" (onDeleteItems)="openConfirmDeleteDialog()"
     ></app-table-toolbar>

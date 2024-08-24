@@ -10,7 +10,7 @@ import { InfoLevel } from "../../../dashboard/settings/models/UserSettings";
 export class InfoService {
 
     private infoConfiguration: FeatureConfiguration = {
-        [Feature.USER]: {
+        [Feature.MEMBER]: {
             tooltipText: "A User is any person that has access to the resources of the organization. " +
                 "You can assign different roles to Users, each with different permissions and access levels.",
             infoLevel: InfoLevel.ALL,
@@ -54,7 +54,7 @@ export class InfoService {
                 "activate it, as well as seek resources for existing deficits.",
             infoLevel: InfoLevel.ADVANCED,
         },
-        [Feature.FACTORY_INVENTORY_ITEM]: {
+        [Feature.FACTORY_INVENTORY]: {
             tooltipText: "A Factory Inventory is a record of all the Products and Components currently stored within a Factory.",
             infoLevel: InfoLevel.ALL,
         },
@@ -74,7 +74,7 @@ export class InfoService {
             tooltipText: "A Warehouse is any organization site where storage and distribution of goods takes place.",
             infoLevel: InfoLevel.ALL,
         },
-        [Feature.WAREHOUSE_INVENTORY_ITEM]: {
+        [Feature.WAREHOUSE_INVENTORY]: {
             tooltipText: "A Warehouse Inventory is a record of all the Products and Components currently stored within a Warehouse.",
             infoLevel: InfoLevel.ALL,
         },
