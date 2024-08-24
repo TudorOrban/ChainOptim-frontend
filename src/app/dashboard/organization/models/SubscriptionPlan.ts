@@ -1,8 +1,8 @@
 import { Feature } from "../../../shared/enums/commonEnums";
 
-export type SubscriptionPlans = Record<PlanTier, SubscriptionPlan>;
+export type BaseSubscriptionPlans = Record<PlanTier, BaseSubscriptionPlan>;
 
-export interface SubscriptionPlan {
+export interface BaseSubscriptionPlan {
     name: string;
     dollarsPerMonth: number;
     maxMembers: number;
@@ -44,6 +44,17 @@ export type FeaturePricing = Record<number, QuantityPrice>;
 export type QuantityPrice = {
     dollarsMonthly: number; // per month, per unit
     dollarsYearly: number; // per month, per unit
+}
+
+export interface SubscriptionPlan {
+    id: number;
+    organizationId: number;
+    createdAt?: Date;
+    updatedAt?: Date;
+    isBasic?: boolean;
+    isActive?: boolean;
+    isPaid?: boolean;
+    customPlan: CustomSubscriptionPlan;
 }
 
 export interface CustomSubscriptionPlan {

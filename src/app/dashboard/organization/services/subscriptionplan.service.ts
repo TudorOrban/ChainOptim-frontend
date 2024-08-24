@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CustomPlanPricing, FeaturePricing, PlanTier, SubscriptionPlan, SubscriptionPlans } from "../models/SubscriptionPlan";
+import { CustomPlanPricing, FeaturePricing, PlanTier, BaseSubscriptionPlan, BaseSubscriptionPlans } from "../models/SubscriptionPlan";
 import { Feature } from "../../../shared/enums/commonEnums";
 
 @Injectable({
@@ -7,7 +7,7 @@ import { Feature } from "../../../shared/enums/commonEnums";
 })
 export class SubscriptionPlanService {
     
-    getSubscriptionPlan(tier: PlanTier): SubscriptionPlan {
+    getSubscriptionPlan(tier: PlanTier): BaseSubscriptionPlan {
         return this.subscriptionPlans[tier];
     }
 
@@ -15,7 +15,7 @@ export class SubscriptionPlanService {
         return this.customPlanPricing[feature];
     }
     
-    private subscriptionPlans: SubscriptionPlans = {
+    private subscriptionPlans: BaseSubscriptionPlans = {
         [PlanTier.NONE]: {
             name: 'No Plan',
             dollarsPerMonth: 0,

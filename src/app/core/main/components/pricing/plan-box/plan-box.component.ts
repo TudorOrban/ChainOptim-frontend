@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PlanTier, SubscriptionPlan } from '../../../../../dashboard/organization/models/SubscriptionPlan';
+import { PlanTier, BaseSubscriptionPlan } from '../../../../../dashboard/organization/models/SubscriptionPlan';
 import { SubscriptionPlanService } from '../../../../../dashboard/organization/services/subscriptionplan.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
@@ -16,7 +16,7 @@ export class PlanBoxComponent implements OnInit {
     @Input() planTier: PlanTier | undefined = undefined;
     @Output() customizePlan = new EventEmitter<void>();
 
-    subscriptionPlan: SubscriptionPlan | undefined = undefined;
+    subscriptionPlan: BaseSubscriptionPlan | undefined = undefined;
     showTooltip = false;
 
     mainFeatures: { title: string, icon: any }[] = [];

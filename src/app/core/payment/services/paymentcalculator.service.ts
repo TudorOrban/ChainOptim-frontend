@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CustomSubscriptionPlan, FeaturePricing, PlanTier, SubscriptionPlan } from "../../../dashboard/organization/models/SubscriptionPlan";
+import { CustomSubscriptionPlan, FeaturePricing, PlanTier, BaseSubscriptionPlan } from "../../../dashboard/organization/models/SubscriptionPlan";
 import { Feature } from "../../../shared/enums/commonEnums";
 import { SubscriptionPlanService } from "../../../dashboard/organization/services/subscriptionplan.service";
 
@@ -21,7 +21,7 @@ export class PaymentCalculatorService {
         'Demand': [Feature.CLIENT, Feature.CLIENT_ORDER, Feature.CLIENT_SHIPMENT],
     }
 
-    featureToPlanPropMap: { [key in Feature]?: keyof SubscriptionPlan } = {
+    featureToPlanPropMap: { [key in Feature]?: keyof BaseSubscriptionPlan } = {
         MEMBER: 'maxMembers',
         PRODUCT: 'maxProducts',
         PRODUCT_STAGE: 'maxProductStages',
@@ -74,7 +74,7 @@ export class PaymentCalculatorService {
         return featureQuantity * pricePerUnit;
     }
     
-    getPlanFeatureDetail(feature: Feature, selectedPlanTier: PlanTier, plan?: SubscriptionPlan): number | boolean {
+    getPlanFeatureDetail(feature: Feature, selectedPlanTier: PlanTier, plan?: BaseSubscriptionPlan): number | boolean {
         if (!plan) {
             plan = this.planService.getSubscriptionPlan(selectedPlanTier);
         }

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PaymentComponent } from '../payment/payment.component';
-import { CustomSubscriptionPlan, FeaturePricing, PlanTier, SubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
+import { CustomSubscriptionPlan, FeaturePricing, PlanTier, BaseSubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
 import { CurrentPlanService } from '../../services/currentplan.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -12,16 +12,16 @@ import { PaymentCalculatorService } from '../../services/paymentcalculator.servi
 import { UIUtilService } from '../../../../shared/common/services/uiutil.service';
 
 @Component({
-  selector: 'app-subscription',
-  standalone: true,
-  imports: [CommonModule, FontAwesomeModule, FormsModule, MatExpansionModule, PaymentComponent],
-  templateUrl: './subscription.component.html',
-  styleUrl: './subscription.component.css'
+    selector: 'app-subscription',
+    standalone: true,
+    imports: [CommonModule, FontAwesomeModule, FormsModule, MatExpansionModule, PaymentComponent],
+    templateUrl: './subscription.component.html',
+    styleUrl: './subscription.component.css'
 })
 export class SubscriptionComponent implements OnInit, OnDestroy {
     @ViewChild(PaymentComponent) paymentComponent!: PaymentComponent;
 
-    currentPlan: SubscriptionPlan | undefined = undefined; 
+    currentPlan: BaseSubscriptionPlan | undefined = undefined; 
     selectedPlanTier: PlanTier = PlanTier.NONE;   
     customPlan: CustomSubscriptionPlan = {
         basePlanTier: PlanTier.NONE,
