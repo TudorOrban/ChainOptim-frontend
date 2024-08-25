@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Organization } from '../../../models/organization';
 import { User } from "../../../../../core/user/model/user";
 import { OrganizationService } from "../../../services/organization.service";
@@ -6,19 +6,25 @@ import { DatePipe, NgForOf } from "@angular/common";
 import { CustomRole } from "../../../models/custom-role";
 import { CustomRoleService } from "../../../services/custom-role.service";
 import { FallbackManagerService, FallbackManagerState } from "../../../../../shared/fallback/services/fallback-manager/fallback-manager.service";
+import {RouterLink} from "@angular/router";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-organization-overview',
   standalone: true,
     imports: [
         NgForOf,
-        DatePipe
+        DatePipe,
+        RouterLink,
+        FaIconComponent
     ],
   templateUrl: './organization-overview.component.html',
   styleUrl: './organization-overview.component.css'
 })
 export class OrganizationOverviewComponent implements OnInit {
-    @Input() organization!: Organization;
+    @Input({required: true}) organization!: Organization;
+    createLink: string = '';
     users!: User[];
     fallbackManagerState: FallbackManagerState = {};
     membersNumber: number = 0;
@@ -74,4 +80,6 @@ export class OrganizationOverviewComponent implements OnInit {
             }
         });
     }
+
+    faPlus = faPlus;
 }
