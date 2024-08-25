@@ -4,6 +4,9 @@
     } @else {
         <p class="flex-1 font-bold text-lg">No custom roles found!</p>
     }
+    <button (click)="expandDeleteButtons()" class="standard-delete-button">
+        <fa-icon [icon]="faTrash"/>
+    </button>
     <a [routerLink]="createLink" class="standard-write-button flex items-center">
         <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
         Add New Role
@@ -60,6 +63,13 @@
                             </div>
                         }
                     </td>
+                    <td>
+                        @if(isDeleting) {
+                            <button (click)="openConfirmDialog(role.id)" class="standard-delete-button">
+                                <fa-icon [icon]="faTrash"/>
+                            </button>
+                        }
+                    </td>
                 </tr>
 
                 @if(showPermissions[role.id]) {
@@ -77,3 +87,17 @@
         </tbody>
     </table>
 </div>
+
+<!--Confirm dialog-->
+@if(isConfirmDialogOpen) {
+    <div class="overlay">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog
+                [dialogInput]="deleteDialogInput"
+                (confirm)="handleDeleteCustomRole(selectedRoleId)"
+                (cancel)="handleCancel()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+}
