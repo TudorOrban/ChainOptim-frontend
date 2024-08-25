@@ -1,1 +1,103 @@
-<p>organization-custom-roles works!</p>
+<div class="flex px-6 py-6">
+    @if(customRolesNumber != 0) {
+        <p class="flex-1 font-bold text-lg">Custom Roles ({{ customRolesNumber }})</p>
+    } @else {
+        <p class="flex-1 font-bold text-lg">No custom roles found!</p>
+    }
+    <button (click)="expandDeleteButtons()" class="standard-delete-button">
+        <fa-icon [icon]="faTrash"/>
+    </button>
+    <a [routerLink]="createLink" class="standard-write-button flex items-center">
+        <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
+        Add New Role
+    </a>
+
+</div>
+<hr>
+<div class="px-6 py-8">
+    <table class="w-full">
+        <thead>
+        <tr class="text-lg text-center p-2 underline decoration-lightgrey decoration-1 underline-offset-4 ">
+            <th class="w-[12.5%]">Role Name</th>
+            <th class="w-[12.5%]">Read</th>
+            <th class="w-[12.5%]">Create</th>
+            <th class="w-[12.5%]">Update</th>
+            <th class="w-[12.5%]">Delete</th>
+            <th class="w-[12.5%]"></th>
+            <th class="w-[12.5%]"></th>
+            <th class="w-[12.5%]"></th>
+        </tr>
+        </thead>
+        <tbody>
+            @for(role of customRoles; track role.id) {
+                <tr class="text-center text-base">
+                    <td class="py-4 font-bold">{{ role.name }}</td>
+                    <td><input type="checkbox" [checked]="areAllPermissionsGranted(role.permissions, 'canRead')" [disabled]="!isEditing[role.id]"/></td>
+                    <td><input type="checkbox" [checked]="areAllPermissionsGranted(role.permissions, 'canCreate')" [disabled]="!isEditing[role.id]"/></td>
+                    <td><input type="checkbox" [checked]="areAllPermissionsGranted(role.permissions, 'canUpdate')" [disabled]="!isEditing[role.id]"/></td>
+                    <td><input type="checkbox" [checked]="areAllPermissionsGranted(role.permissions, 'canDelete')" [disabled]="!isEditing[role.id]"/></td>
+                    <td>
+                        <button (click)="togglePermissions(role.id)">
+                            @if(!showPermissions[role.id]){
+                                <fa-icon [icon]="faAngleDown"/>
+                            } @else {
+                                <fa-icon [icon]="faAngleUp"/>
+                            }
+                        </button>
+                    </td>
+                    <td>
+                        @if(isEditing[role.id]) {
+                            <div class="flex justify-center space-x-2">
+                                <button (click)="cancelEdit(role.id)" class="standard-write-button">
+                                    <fa-icon [icon]="faXmark"/>
+                                </button>
+                                <button (click)="saveEdit(role.id)" class="standard-write-button">
+                                    <fa-icon [icon]="faSave"/>
+                                </button>
+                            </div>
+                        } @else {
+                            <div class="flex justify-center">
+                                <button (click)="editRole(role.id)" class="standard-write-button">
+                                    <fa-icon [icon]="faEdit"/>
+                                </button>
+                            </div>
+                        }
+                    </td>
+                    <td>
+                        @if(isDeleting) {
+                            <button (click)="openConfirmDialog(role.id)" class="standard-delete-button">
+                                <fa-icon [icon]="faTrash"/>
+                            </button>
+                        }
+                    </td>
+                </tr>
+
+                @if(showPermissions[role.id]) {
+                    @for(permission of getPermissionsArray(role.permissions); track permission.feature) {
+                        <tr class="text-center text-base">
+                            <td class="py-2 capitalize">{{ permission.feature }}</td>
+                            <td><input type="checkbox" [checked]="permission.permissions?.canRead" [disabled]="!isEditing[role.id]"/></td>
+                            <td><input type="checkbox" [checked]="permission.permissions?.canCreate" [disabled]="!isEditing[role.id]"/></td>
+                            <td><input type="checkbox" [checked]="permission.permissions?.canUpdate" [disabled]="!isEditing[role.id]"/></td>
+                            <td><input type="checkbox" [checked]="permission.permissions?.canDelete" [disabled]="!isEditing[role.id]"/></td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<!--Confirm dialog-->
+@if(isConfirmDialogOpen) {
+    <div class="overlay">
+        <div class="dialog-container">
+            <app-generic-confirm-dialog
+                [dialogInput]="deleteDialogInput"
+                (confirm)="handleDeleteCustomRole(selectedRoleId)"
+                (cancel)="handleCancel()"
+            >
+            </app-generic-confirm-dialog>
+        </div>
+    </div>
+}

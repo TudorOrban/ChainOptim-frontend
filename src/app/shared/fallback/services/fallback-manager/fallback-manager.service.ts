@@ -3,19 +3,19 @@ import { BehaviorSubject } from 'rxjs';
 
 /**
  * Fallback Manager Service
- * 
- * Centralized management of fallback states. It connects with the FallbackManagerComponent 
+ *
+ * Centralized management of fallback states. It connects with the FallbackManagerComponent
  * to display the fallbacks.
- * 
+ *
  * Usage:
- * See eg products component.
+ * See e.g. products component.
  */
 export interface FallbackManagerState {
     errorMessage?: string;
     loading?: boolean;
     noOrganization?: boolean;
     noResults?: boolean;
-    fallBack?: boolean; 
+    fallBack?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -33,7 +33,7 @@ export class FallbackManagerService {
         const currentState = { ...this._fallbackManagerState.value, loading };
         this._fallbackManagerState.next(currentState);
     }
-    
+
 
     updateNoOrganization(noOrganization: boolean) {
         const currentState = this._fallbackManagerState.value;
