@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Feature } from '../../../../../shared/enums/commonEnums';
-import { CustomSubscriptionPlan, FeaturePricing, PlanTier, BaseSubscriptionPlan } from '../../../../../dashboard/organization/models/SubscriptionPlan';
-import { SubscriptionPlanService } from '../../../../../dashboard/organization/services/subscriptionplan.service';
+import { CustomSubscriptionPlan, PlanTier, BaseSubscriptionPlan } from '../../../../../dashboard/organization/models/SubscriptionPlan';
+import { BaseSubscriptionPlanService } from '../../../../../dashboard/organization/services/basesubscriptionplan.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CurrentPlanService } from '../../../../payment/services/currentplan.service';
 import { Router } from '@angular/router';
@@ -32,12 +32,12 @@ export class CustomPlanComponent {
     Feature = Feature;
     PlanTier = PlanTier;
 
-    planService: SubscriptionPlanService;
+    planService: BaseSubscriptionPlanService;
     calculatorService: PaymentCalculatorService;
     uiUtilService: UIUtilService;
 
     constructor(
-        planService: SubscriptionPlanService,
+        planService: BaseSubscriptionPlanService,
         private currentPlanService: CurrentPlanService,
         private paymentCalculatorService: PaymentCalculatorService,
         private utilService: UIUtilService,

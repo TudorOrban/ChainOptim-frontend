@@ -17,7 +17,7 @@
     </div>
     <div class="flex flex-col justify-end space-y-2">
         <span class="font-semibold text-lg">
-            Subscription Plan: {{ organization?.subscriptionPlanTier }}
+            Subscription Plan: {{ uiUtilService.formatEnum(organization?.subscriptionPlanTier?.toString() ?? '') }}
         </span>
         <button class="standard-write-button self-end">Edit Organization</button>
     </div>

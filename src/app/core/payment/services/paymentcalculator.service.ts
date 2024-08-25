@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { CustomSubscriptionPlan, FeaturePricing, PlanTier, BaseSubscriptionPlan } from "../../../dashboard/organization/models/SubscriptionPlan";
 import { Feature } from "../../../shared/enums/commonEnums";
-import { SubscriptionPlanService } from "../../../dashboard/organization/services/subscriptionplan.service";
+import { BaseSubscriptionPlanService } from "../../../dashboard/organization/services/basesubscriptionplan.service";
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +9,7 @@ import { SubscriptionPlanService } from "../../../dashboard/organization/service
 export class PaymentCalculatorService {
 
     constructor(
-        private planService: SubscriptionPlanService,
+        private planService: BaseSubscriptionPlanService,
     ) {}
 
     featuresByGroup: Record<string, Feature[]> = {

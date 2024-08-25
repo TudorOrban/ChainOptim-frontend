@@ -2,8 +2,6 @@ import { Injectable } from "@angular/core";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import { ConfigService } from "./config.service";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { CreateSubscriptionPlanDTO } from "../models/SubscriptionPlan";
 
 @Injectable({
     providedIn: 'root'
@@ -27,11 +25,6 @@ export class PaymentService {
         }
         this.stripe = await loadStripe(stripeKey);
     }    
-
-    createCheckoutSession(planDTO: CreateSubscriptionPlanDTO): Observable<{ sessionId: string }> {
-        console.log('Creating checkout session for custom plan:', planDTO);
-        return this.http.post<{ sessionId: string }>(`${this.apiUrl}/create`, planDTO);
-    }
 
     async redirectToCheckout(sessionId: string) {
         if (!this.stripe) {

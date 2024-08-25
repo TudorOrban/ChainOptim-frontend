@@ -14,6 +14,7 @@ import { OrganizationSubscriptionPlanComponent } from './organization-subscripti
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { NavigationItem } from '../../../../shared/common/models/uiTypes';
+import { UIUtilService } from '../../../../shared/common/services/uiutil.service';
 
 @Component({
     selector: 'app-organization',
@@ -48,11 +49,16 @@ export class OrganizationComponent implements OnInit {
     ];
     activeTab: string = "Overview";
 
+    uiUtilService: UIUtilService;
+
     constructor(
         private userService: UserService,
         private organizationService: OrganizationService,
-        private fallbackManagerService: FallbackManagerService
-    ) {}
+        private fallbackManagerService: FallbackManagerService,
+        uiUtilService: UIUtilService
+    ) {
+        this.uiUtilService = uiUtilService;
+    }
 
     ngOnInit() {
         // Manage fallbacks
@@ -65,20 +71,28 @@ export class OrganizationComponent implements OnInit {
             this.currentUser = data;
             console.log('User', data);
 
-            if (this.currentUser?.organization?.id) {
-                this.organizationService.getOrganizationById(this.currentUser?.organization?.id || 0).subscribe((orgData) => {
-                    if (orgData) {
-                        console.log('Organization', orgData);
-                        this.organization = orgData;
-                        this.fallbackManagerService.updateLoading(false);
-                    } else {
-                        this.fallbackManagerService.updateError('Organization not found');
-                        this.fallbackManagerService.updateLoading(false);
-                    }
-                });
-            }
+            this.getOrganization();
         });
 
+    }
+
+    private getOrganization(): void {
+        if (!this.currentUser?.organization?.id) {
+            console.error('No organization found');
+            return;
+        }
+
+        this.organizationService.getOrganizationById(this.currentUser?.organization?.id || 0).subscribe((orgData) => {
+            if (!orgData) {
+                this.fallbackManagerService.updateError('Organization not found');
+                this.fallbackManagerService.updateLoading(false);
+                return;
+            }
+            
+            console.log('Organization', orgData);
+                this.organization = orgData;
+                this.fallbackManagerService.updateLoading(false);
+        });
     }
 
     onTabSelected(selectedTabLabel: string) {

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PlanTier, BaseSubscriptionPlan } from '../../../../../dashboard/organization/models/SubscriptionPlan';
-import { SubscriptionPlanService } from '../../../../../dashboard/organization/services/subscriptionplan.service';
+import { BaseSubscriptionPlanService } from '../../../../../dashboard/organization/services/basesubscriptionplan.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { faCircleCheck, faGear, faIndustry, faTruck, faUniversalAccess, faUser, faWarehouse } from '@fortawesome/free-solid-svg-icons';
@@ -31,11 +31,11 @@ export class PlanBoxComponent implements OnInit {
     faUniversalAccess = faUniversalAccess;
 
     constructor(
-        private planService: SubscriptionPlanService
+        private planService: BaseSubscriptionPlanService
     ) {}
 
     ngOnInit(): void {
-        this.subscriptionPlan = this.planService.getSubscriptionPlan(this.planTier || PlanTier.NONE); 
+        this.subscriptionPlan = this.planService.getSubscriptionPlan(this.planTier ?? PlanTier.NONE); 
         this.mainFeatures = [
             { title: 'Products', icon: this.faGear },
             { title: 'Factories', icon: this.faIndustry },

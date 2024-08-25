@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PaymentService } from '../../services/payment.service';
 import { CustomSubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
 import { StripeService } from '../../services/stripe.service';
 import { UserService } from '../../../auth/services/user.service';
 import { User } from '../../../user/model/user';
 import { CreateSubscriptionPlanDTO } from '../../models/SubscriptionPlan';
+import { SubscriptionPlanService } from '../../../../dashboard/organization/services/subscriptionplan.service';
 
 @Component({
   selector: 'app-payment',
@@ -20,13 +20,11 @@ export class PaymentComponent implements OnInit{
 
     constructor(
         private userService: UserService,
-        private paymentService: PaymentService,
+        private planService: SubscriptionPlanService,
         private stripeService: StripeService
     ) {}
 
     ngOnInit(): void {
-        console.log('Payment component initialized');
-
         this.userService.getCurrentUser().subscribe(user => {
             if (!user) {
                 return;
@@ -37,7 +35,6 @@ export class PaymentComponent implements OnInit{
     }
 
     confirmPayment(): void {
-        console.log('Confirm payment');
         this.startStripeSession();
     }
 
@@ -52,7 +49,7 @@ export class PaymentComponent implements OnInit{
             customPlan: this.customPlan
         };
 
-        this.paymentService.createCheckoutSession(planDTO).subscribe({
+        this.planService.createSubscriptionPlan(planDTO).subscribe({
             next: response => {
                 console.log('Stripe session created:', response);
                 this.stripeService.redirectToCheckout(response.sessionId).then(result => {

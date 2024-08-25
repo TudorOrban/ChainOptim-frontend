@@ -38,7 +38,7 @@ type SidebarItem = {
     styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
-    isSidebarOpen = false;
+    isSidebarOpen = true;
 
     toggleSidebar() {
         this.isSidebarOpen = !this.isSidebarOpen;
