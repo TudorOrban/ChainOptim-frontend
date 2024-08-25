@@ -1,1 +1,78 @@
-<p>warehouse-overview works!</p>
+<div class="px-8 py-4 space-y-4">
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Created At: </h2>
+        <p class="value-medium">{{ warehouse?.createdAt | date: 'medium' }}</p>
+    </div>
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Last Modified: </h2>
+        <p class="value-medium">{{ warehouse?.updatedAt | date: 'medium' }}</p>
+    </div>
+
+    <div>
+        <app-overview-section
+            [label]="'Compartments: '"
+            [feature]="''"
+            [entities]="warehouseOverview?.compartments"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Stored Components: '"
+            [feature]="'components'"
+            [entities]="warehouseOverview?.storedComponents"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Stored Products: '"
+            [feature]="'products'"
+            [entities]="warehouseOverview?.storedProducts"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Delivered from Suppliers: '"
+            [feature]="'suppliers'"
+            [entities]="warehouseOverview?.deliveredFromSuppliers"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Delivered to Clients: '"
+            [feature]="'clients'"
+            [entities]="warehouseOverview?.deliveredToClients"
+        ></app-overview-section>
+    </div>
+
+    <div class="space-y-4">
+        <h2 class="label-large">Location</h2>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Address: </h2>
+            <p class="value-medium">{{ warehouse?.location?.address }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">City: </h2>
+            <p class="value-medium">{{ warehouse?.location?.city }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">State: </h2>
+            <p class="value-medium">{{ warehouse?.location?.state }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Country: </h2>
+            <p class="value-medium">{{ warehouse?.location?.country }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Zip Code: </h2>
+            <p class="value-medium">{{ warehouse?.location?.zipCode }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Latitude: </h2>
+            <p class="value-medium">{{ warehouse?.location?.latitude }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Longitude: </h2>
+            <p class="value-medium">{{ warehouse?.location?.longitude }}</p>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,4 @@
+import { SmallEntityDTO } from "../../../shared/common/models/reusableTypes";
 import { Component } from "./Component";
 import { UnitOfMeasurement } from "./UnitOfMeasurement";
 
@@ -8,6 +9,7 @@ export interface Product {
     createdAt: Date;
     updatedAt: Date;
     stages?: Stage[];
+    newUnit?: UnitOfMeasurement;
 }
 
 export interface CreateProductDTO {
@@ -152,4 +154,11 @@ export interface DeleteConnectionDTO {
     srcStageOutputId: number;
     destProductStageId: number;
     destStageInputId: number;
+}
+
+export interface ProductOverviewDTO {
+    stages: SmallEntityDTO[];
+    manufacturedInFactories: SmallEntityDTO[];
+    storedInWarehouses: SmallEntityDTO[];
+    orderedByClients: SmallEntityDTO[];
 }

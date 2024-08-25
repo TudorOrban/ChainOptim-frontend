@@ -15,6 +15,8 @@ import { SearchInputComponent } from '../../search/components/search-input/searc
 import { SortSelectorComponent } from '../../search/components/sort-selector/sort-selector.component';
 import { CommonModule } from '@angular/common';
 import { FilterBarComponent } from '../../search/components/filter-bar/filter-bar.component';
+import { Feature } from '../../enums/commonEnums';
+import { InfoComponent } from '../../common/components/info/info.component';
 
 @Component({
     selector: 'app-table-toolbar',
@@ -25,7 +27,8 @@ import { FilterBarComponent } from '../../search/components/filter-bar/filter-ba
         CommonModule,
         SearchInputComponent,
         SortSelectorComponent,
-        FilterBarComponent
+        FilterBarComponent,
+        InfoComponent
     ],
     templateUrl: './table-toolbar.component.html',
     styleUrl: './table-toolbar.component.css',
@@ -43,6 +46,7 @@ export class TableToolbarComponent {
     @Input() selectedItemIds = new Set<number>();
     @Input() newRawItems: any[] = [];
     @Input() isEditing: boolean = false;
+    @Input() feature?: Feature;
 
     @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() onSortChange = new EventEmitter<{ value: string; ascending: boolean; }>();

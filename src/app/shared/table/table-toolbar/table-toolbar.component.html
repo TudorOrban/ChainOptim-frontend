@@ -1,6 +1,9 @@
 <div [ngClass]="{'page-standard-horizontal-padding': !dontPadHorizontally}" class="bg-gray-100 py-4 space-y-4 border-b border-gray-300 shadow-sm">
-    <div *ngIf="title !== ''" class="flex items-center page-title">
-        {{ title }}
+    <div class="flex items-center">
+        <div *ngIf="title !== ''" class="flex items-center page-title mr-4">
+            {{ title }}
+        </div>
+        <app-info [feature]="feature"></app-info>
     </div>
     <div class="flex items-center flex-wrap space-x-4">
         <app-search-input (searchEvent)="performSearch($event)" [placeholder]="searchPlaceholder" class="ml-4"></app-search-input>

@@ -21,12 +21,14 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
+    white-space: nowrap;
     color: rgb(55 65 81);
 }
 
 .form-input {
     appearance: none;
     border: 1px solid #d3d3d3;
+    min-width: 10rem;
     border-radius: 4px;
     padding: 0.5rem 0.75rem;
     width: 100%;

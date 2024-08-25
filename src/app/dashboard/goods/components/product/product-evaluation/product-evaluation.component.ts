@@ -9,7 +9,7 @@ import { Product } from '../../../models/Product';
   styleUrl: './product-evaluation.component.css'
 })
 export class ProductEvaluationComponent {
-    @Input() product: Product | null = null;
+    @Input() product: Product | undefined = undefined;
 
     ngOnInit(): void {
         console.log('Product in Evaluation', this.product);

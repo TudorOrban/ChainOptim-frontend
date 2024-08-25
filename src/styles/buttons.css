@@ -36,6 +36,10 @@
     }
 }
 
+.standard-button.selected {
+    background-color: rgb(247, 248, 247);  
+}
+
 .standard-write-button {
     display: flex;
     height: 2.25rem;
@@ -57,7 +61,7 @@
 }
 
 .standard-write-button:hover {
-    background-color: rgb(29, 78, 216);
+    background-color: rgb(20, 117, 219);
     border-color: rgb(156 163 175);
 }
 
@@ -139,7 +143,7 @@
 }
 
 .standard-write-button-small:hover {
-    background-color: rgb(29, 78, 216);
+    background-color: rgb(20, 117, 219);
     border-color: rgb(156 163 175);
 }
 
@@ -174,4 +178,8 @@
 .standard-delete-button-small:disabled {
     background-color: rgb(215, 100, 100);
     color: rgb(156 163 175);
+}
+
+.hidden {
+    display: none;
 }

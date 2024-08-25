@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CreateWarehouseDTO, Warehouse, UpdateWarehouseDTO } from '../models/Warehouse';
+import { CreateWarehouseDTO, Warehouse, UpdateWarehouseDTO, WarehouseOverviewDTO } from '../models/Warehouse';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -68,6 +68,16 @@ export class WarehouseService {
     getWarehouseById(id: number): Observable<Warehouse> {
         return this.http
             .get<Warehouse>(`${this.apiUrl}/${id}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
+
+    getWarehouseOverview(id: number): Observable<WarehouseOverviewDTO> {
+        return this.http
+            .get<WarehouseOverviewDTO>(`${this.apiUrl}/${id}/overview`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

@@ -1,1 +1,17 @@
-<p>production-history works!</p>
+<div class="px-8 py-4 space-y-4">
+    <div class="flex items-center justify-between">
+        <h2 class="page-title">
+            Production History
+        </h2>
+    </div>
+
+    <div class="flex items-start w-full space-x-10">
+        <div style="min-width: 450px; max-height: 300px;">
+            <ng-container #chartContainer></ng-container>
+        </div>
+
+        <select class="custom-select" [(ngModel)]="selectedDuration" (change)="handleDurationChange()">
+            <option *ngFor="let option of durationOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+    </div>
+</div>

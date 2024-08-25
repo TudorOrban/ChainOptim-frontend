@@ -1,0 +1,12 @@
+<div class="relative">
+    <apx-chart [series]="chartOptions.series"
+           [chart]="chartOptions.chart"
+           [xaxis]="chartOptions.xaxis"
+           [tooltip]="chartOptions.tooltip"
+           [dataLabels]="chartOptions.dataLabels">
+    </apx-chart>
+
+    <div *ngIf="isLoading" class="spinner-overlay">
+        <fa-icon [icon]="faSpinner" class="spinner"></fa-icon>
+    </div>
+</div>

@@ -38,6 +38,7 @@ import { UpdateClientComponent } from './demand/components/update-client/update-
 import { ComponentComponent } from './goods/components/component/component.component';
 import { UpdateComponentComponent } from './goods/components/update-component/update-component.component';
 import { CreateComponentComponent } from './goods/components/create-component/create-component.component';
+import { TransportRoutesComponent } from './goods/components/transport-routes/transport-routes.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -87,6 +88,10 @@ export const dashboardRoutes: Routes = [
     {
         path: 'dashboard/components/:componentId/update',
         component: UpdateComponentComponent,
+    },
+    {
+        path: 'dashboard/transport-routes',
+        component: TransportRoutesComponent,
     },
     {
         path: 'dashboard/factories',

@@ -24,7 +24,11 @@
 
 <app-general-settings *ngIf="activeTab === 'General'" [settings]="userSettings"></app-general-settings>
 <app-account-settings *ngIf="activeTab === 'Account'" [settings]="userSettings"></app-account-settings>
-<app-notification-settings *ngIf="activeTab === 'Notifications'" [settings]="userSettings"></app-notification-settings>
+<app-notification-settings 
+    *ngIf="activeTab === 'Notifications'" [settings]="userSettings"
+    (onSettingsChange)="onNotificationSettingsChanged($event)"
+
+></app-notification-settings>
 
 
 <!-- Fallback manager -->

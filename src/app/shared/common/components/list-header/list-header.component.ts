@@ -5,11 +5,13 @@ import { SearchInputComponent } from '../../../search/components/search-input/se
 import { SortSelectorComponent } from '../../../search/components/sort-selector/sort-selector.component';
 import { SearchParams, SortOption } from '../../../search/models/searchTypes';
 import { RouterModule } from '@angular/router';
+import { InfoComponent } from '../info/info.component';
+import { Feature } from '../../../enums/commonEnums';
 
 @Component({
   selector: 'app-list-header',
   standalone: true,
-  imports: [FontAwesomeModule, RouterModule, SearchInputComponent, SortSelectorComponent],
+  imports: [FontAwesomeModule, RouterModule, SearchInputComponent, SortSelectorComponent, InfoComponent],
   templateUrl: './list-header.component.html',
   styleUrl: './list-header.component.css'
 })
@@ -23,6 +25,7 @@ export class ListHeaderComponent {
         { label: 'Updated At', value: 'updatedAt' },
     ];
     @Input() createLink: string = '';
+    @Input() feature?: Feature;
 
     @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
     @Output() onSortChange = new EventEmitter<{ value: string, ascending: boolean }>();

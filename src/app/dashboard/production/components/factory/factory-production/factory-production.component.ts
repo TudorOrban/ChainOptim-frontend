@@ -12,7 +12,7 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrl: './factory-production.component.css'
 })
 export class FactoryProductionComponent implements AfterViewInit, OnDestroy {
-    @Input() factory: Factory | null = null;
+    @Input() factory: Factory | undefined = undefined;
     @ViewChild('resizer') resizer!: ElementRef<HTMLDivElement>;
     @ViewChild(FactoryProductionTabsComponent) tabsComponent!: FactoryProductionTabsComponent;
     @ViewChild(FactoryProductionToolbarComponent) toolbarComponent!: FactoryProductionToolbarComponent;

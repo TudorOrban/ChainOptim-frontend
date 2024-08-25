@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { EntityType, FacilityType, Pair, TransportRoute, TransportType } from '../../../types/supplyChainMapTypes';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { EntityType, Pair, TransportRoute, TransportType } from '../../../../goods/models/TransportRoute';
 
 @Component({
     selector: 'app-transport-route-ui',
@@ -49,15 +49,17 @@ export class TransportRouteUIComponent {
 
     toggleCard(): void {
         this.isCardOpen = !this.isCardOpen;
-        this.onToggle.emit({ first: this.route.entityId, second: this.route.entityType });
+        this.onToggle.emit({ first: this.route.entityId || 0, second: this.route.entityType || EntityType.SUPPLIER_SHIPMENT });
     }
 
     computeMetrics(): void {
         if (!this.route) return;
 
         if (this.route.departureDateTime && this.route.estimatedArrivalDateTime) {
-            const totalDuration = this.route.estimatedArrivalDateTime.getTime() - this.route.departureDateTime.getTime();
-            const elapsedDuration = new Date().getTime() - this.route.departureDateTime.getTime();
+            const departureDateTime = new Date(this.route.departureDateTime);
+            const estimatedArrivalDateTime = new Date(this.route.estimatedArrivalDateTime);
+            const totalDuration = estimatedArrivalDateTime.getTime() - departureDateTime.getTime();
+            const elapsedDuration = new Date().getTime() - departureDateTime.getTime();
             this.estimatedProgress = elapsedDuration / totalDuration;
         }
 

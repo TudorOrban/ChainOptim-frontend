@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CreateFactoryDTO, CreateFactoryStageDTO, Factory, FactoryStage, UpdateFactoryDTO, UpdateFactoryStageDTO } from '../models/Factory';
+import { CreateFactoryDTO, CreateFactoryStageDTO, Factory, FactoryStage, FactoryStageSearchDTO, UpdateFactoryDTO, UpdateFactoryStageDTO } from '../models/Factory';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -16,6 +16,26 @@ export class FactoryStageService {
         private http: HttpClient,
         private errorHandlerService: ErrorHandlerService,
     ) {}
+
+    getFactoryStagesByOrganizationId(organizationId: number): Observable<FactoryStageSearchDTO[]> {
+        return this.http
+            .get<FactoryStageSearchDTO[]>(`${this.apiUrl}/organization/${organizationId}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
+
+    getFactoryStagesByFactoryId(factoryId: number): Observable<FactoryStageSearchDTO[]> {
+        return this.http
+            .get<FactoryStageSearchDTO[]>(`${this.apiUrl}/factory/${factoryId}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
 
     getFactoryStageById(stageId: number): Observable<FactoryStage> {
         return this.http

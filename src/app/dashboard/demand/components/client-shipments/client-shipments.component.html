@@ -2,7 +2,7 @@
     <app-table-toolbar
         [title]="searchMode == SearchMode.ORGANIZATION ? 'Client Shipments' : ''" [searchPlaceholder]="'Search by company ID'" [dontPadHorizontally]="dontPadHorizontally"
         [sortOptions]="sortOptions" [filterOptions]="filterOptions"
-        [selectedItemIds]="selectedShipmentIds" [newRawItems]="newRawShipments" [isEditing]="isEditing"
+        [selectedItemIds]="selectedShipmentIds" [newRawItems]="newRawShipments" [isEditing]="isEditing" [feature]="Feature.CLIENT_SHIPMENT"
         (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)" (onFilterChange)="handleFilterChange($event)" (onRefresh)="handleRefresh()"
         (onCancel)="handleCancel()"(onAddItem)="handleAddShipment()" (onCreateItems)="handleCreateShipments()" (onEditItems)="editSelectedShipments()" (onSaveEditedItems)="saveEditedShipments()" (onDeleteItems)="openConfirmDeleteDialog()"
     ></app-table-toolbar>

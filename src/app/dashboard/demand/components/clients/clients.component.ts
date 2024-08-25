@@ -15,6 +15,7 @@ import { SortOption } from '../../../../shared/search/models/searchTypes';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { Client } from '../../models/Client';
+import { Feature } from '../../../../shared/enums/commonEnums';
 
 @Component({
     selector: 'app-organization',
@@ -48,6 +49,8 @@ export class ClientsComponent implements OnInit {
     page = 1;
     itemsPerPage = 10;
 
+    Feature = Feature;
+    
     constructor(
         private userService: UserService,
         private clientService: ClientService,

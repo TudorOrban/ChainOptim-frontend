@@ -1,0 +1,7 @@
+<div *ngIf="isVisible" class="flex items-center justify-center w-7 h-7 bg-white border border-gray-300 rounded-full shadow-sm">
+    <span #iconWrapper class="info-icon" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+        <fa-icon [icon]="faInfo"></fa-icon>
+        <p class="custom-tooltip" *ngIf="showTooltip" [ngClass]="{'tooltip-above': tooltipPosition === 'above', 'tooltip-below': tooltipPosition === 'below'}">{{ tooltipText }}</p>
+    </span>
+</div>
+  

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBox, faGear, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -38,8 +38,10 @@ import { SearchMode } from '../../../../shared/enums/commonEnums';
     styleUrl: './supplier.component.css',
 })
 export class SupplierComponent implements OnInit {
-    supplierId: number | null = null;
-    supplier: Supplier | null = null;
+    @ViewChild(TabsComponent) tabsComponent!: TabsComponent;
+    
+    supplierId: number | undefined = undefined;
+    supplier: Supplier | undefined = undefined;
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
         {

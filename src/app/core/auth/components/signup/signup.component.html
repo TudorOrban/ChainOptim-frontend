@@ -2,36 +2,39 @@
     class="flex justify-center"
     *ngIf="!authService.isAuthenticated(); else loggedInMessage"
 >
-    <form (ngSubmit)="onSignupSubmit()" class="form-container">
-        <span class="flex justify-center font-bold text-2xl pb-6">Sign up</span>
-        <div class="form-field">
-            <label for="username">Username:</label>
+    <form (ngSubmit)="onSignupSubmit()" class="form-container space-y-6">
+        <span class="flex justify-center font-bold text-2xl">Sign up</span>
+        <div class="space-y-4">
+            <label for="username" class="form-label">Username:</label>
             <input
                 type="text"
                 id="username"
                 [(ngModel)]="username"
                 name="username"
                 required
+                class="form-input"
             />
         </div>
-        <div class="form-field">
-            <label for="email">Email:</label>
+        <div class="space-y-4">
+            <label for="email" class="form-label">Email:</label>
             <input
                 type="email"
                 id="email"
                 [(ngModel)]="email"
                 name="email"
                 required
+                class="form-input"
             />
         </div>
-        <div class="form-field">
-            <label for="password">Password:</label>
+        <div class="space-y-4">
+            <label for="password" class="form-label">Password:</label>
             <input
                 type="password"
                 id="password"
                 [(ngModel)]="password"
                 name="password"
                 required
+                class="form-input"
             />
         </div>
         <div class="flex items-center justify-between pt-4 w-full space-x-4">

@@ -79,6 +79,8 @@ export class FactoryInventoryComponent implements OnInit {
     sortOptions: UIItem[] = [];
     filterOptions: FilterOption[] = [];
 
+    Feature = Feature;
+    
     constructor(
         private userService: UserService,
         private factoryInventoryItemService: FactoryInventoryItemService,
@@ -89,10 +91,10 @@ export class FactoryInventoryComponent implements OnInit {
         private searchOptionsService: SearchOptionsService
     ) {
         this.filterOptions =
-            this.searchOptionsService.getSearchOptions(Feature.FACTORY_INVENTORY_ITEM)
+            this.searchOptionsService.getSearchOptions(Feature.FACTORY_INVENTORY)
                 ?.filterOptions || [];
         this.sortOptions =
-            this.searchOptionsService.getSearchOptions(Feature.FACTORY_INVENTORY_ITEM)
+            this.searchOptionsService.getSearchOptions(Feature.FACTORY_INVENTORY)
                 ?.sortOptions || [];
     }
 

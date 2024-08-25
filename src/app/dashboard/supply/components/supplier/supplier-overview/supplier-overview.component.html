@@ -1,1 +1,64 @@
-<p>supplier-overview works!</p>
+<div class="px-8 py-4 space-y-4">
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Created At: </h2>
+        <p class="value-medium">{{ supplier?.createdAt | date: 'medium' }}</p>
+    </div>
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Last Modified: </h2>
+        <p class="value-medium">{{ supplier?.updatedAt | date: 'medium' }}</p>
+    </div>
+
+    <div>
+        <app-overview-section
+            [label]="'Supplied Components: '"
+            [feature]="'components'"
+            [entities]="supplierOverview?.suppliedComponents"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Delivered to Factories: '"
+            [feature]="'factories'"
+            [entities]="supplierOverview?.deliveredToFactories"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Delivered to Warehouses: '"
+            [feature]="'warehouses'"
+            [entities]="supplierOverview?.deliveredToWarehouses"
+        ></app-overview-section>
+    </div>
+
+    <div class="space-y-4">
+        <h2 class="label-large">Location</h2>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Address: </h2>
+            <p class="value-medium">{{ supplier?.location?.address }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">City: </h2>
+            <p class="value-medium">{{ supplier?.location?.city }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">State: </h2>
+            <p class="value-medium">{{ supplier?.location?.state }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Country: </h2>
+            <p class="value-medium">{{ supplier?.location?.country }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Zip Code: </h2>
+            <p class="value-medium">{{ supplier?.location?.zipCode }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Latitude: </h2>
+            <p class="value-medium">{{ supplier?.location?.latitude }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Longitude: </h2>
+            <p class="value-medium">{{ supplier?.location?.longitude }}</p>
+        </div>
+    </div>
+</div>

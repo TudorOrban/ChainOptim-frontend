@@ -1,25 +1,47 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Product } from '../../../models/Product';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Product, ProductOverviewDTO } from '../../../models/Product';
+import { ProductService } from '../../../services/product.service';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { OverviewSectionComponent } from '../../../../../shared/common/components/overview-section/overview-section.component';
 
 @Component({
   selector: 'app-product-overview',
   standalone: true,
-  imports: [
-    RouterModule,
-    FontAwesomeModule
-  ],
+  imports: [CommonModule, RouterModule, OverviewSectionComponent],
   templateUrl: './product-overview.component.html',
   styleUrl: './product-overview.component.css'
 })
-export class ProductOverviewComponent implements OnInit {
-    @Input() product: Product | null = null;
-    
+export class ProductOverviewComponent implements OnInit, OnChanges {
+    @Input() product: Product | undefined = undefined;
+
+    productOverview: ProductOverviewDTO | undefined = undefined;
+    hasLoadedOverview: boolean = false;
+
+    constructor(
+        private productService: ProductService
+    ) { }
+
+
     ngOnInit(): void {
-        console.log('Product in Overview', this.product);
+        if (!this.product) {
+            return;
+        }
+
+        this.productService.getProductOverview(this.product!.id).subscribe((overview) => {
+            this.productOverview = overview
+            this.hasLoadedOverview = true;
+        });
     }
 
-    faGear = faGear;
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!this.product || this.hasLoadedOverview) {
+            return;
+        }
+        if (changes['product'] && this.product) {
+            this.productService.getProductOverview(this.product.id).subscribe((overview) => {
+                this.productOverview = overview;
+            });
+        }
+    }
 }

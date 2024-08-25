@@ -223,7 +223,7 @@ export class SearchOptionsService {
                     { label: 'Quantity', value: 'quantity' },
                 ],
             }],
-            [Feature.FACTORY_INVENTORY_ITEM, {
+            [Feature.FACTORY_INVENTORY, {
                 filterOptions: [
                     {
                         key: {

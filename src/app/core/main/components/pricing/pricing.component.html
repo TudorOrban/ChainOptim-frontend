@@ -1,19 +1,31 @@
-<div class="pricing-page">
+<div class="w-full p-10 space-y-10 bg-gray-50 overflow-x-hidden">
+    <div class="flex items-center justify-center w-full py-4">
+        <h2 class="text-4xl font-semibold">Pricing Tiers</h2>
+    </div>
+    
+    <div class="flex items-center justify-between w-full px-8 py-4 lg:space-x-4 overflow-x-auto overflow-y-hidden">
+        <div>
+            <app-plan-box [planTier]="PlanTier.NONE" (customizePlan)="scrollToCustomizePlan()"></app-plan-box>
+        </div>
 
-    <div class="plan-box">
-        <p class="plan-title">No Plan</p>
-        <p class="text-gray-700">You are not subscribed to any plan</p>
+        <div>
+            <app-plan-box [planTier]="PlanTier.BASIC" (customizePlan)="scrollToCustomizePlan()"></app-plan-box>
+        </div>
+
+        <div>
+            <app-plan-box [planTier]="PlanTier.PROFESSIONAL" (customizePlan)="scrollToCustomizePlan()"></app-plan-box>
+        </div>
+
+        <div>
+            <app-plan-box [planTier]="PlanTier.ENTERPRISE" (customizePlan)="scrollToCustomizePlan()"></app-plan-box>
+        </div>
     </div>
 
-    <div class="plan-box">
-        <p class="plan-title">Basic Plan</p>
+    <div class="flex items-center justify-center w-full py-6">
+        <h2 class="text-3xl font-semibold">Customize Plan</h2>
     </div>
 
-    <div class="plan-box">
-        <p class="plan-title ">Professional Plan</p>
-    </div>
-
-    <div class="plan-box">
-        <p class="plan-title">Enterprise Plan</p>
+    <div class="flex items-center w-full justify-center px-32 pb-10">
+        <app-custom-plan id="custom-plan" class="w-full"></app-custom-plan>
     </div>
 </div>

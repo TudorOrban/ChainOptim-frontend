@@ -8,6 +8,8 @@ export interface Organization {
     subscriptionPlanTier: SubscriptionPlan;
     createdAt: Date;
     updatedAt: Date;
+    isPlanBasic?: boolean;
+    isPlanActive?: boolean;
     users?: User[];
 }
 

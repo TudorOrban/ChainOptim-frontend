@@ -7,7 +7,7 @@ import {
     RouterModule,
     RouterOutlet,
 } from '@angular/router';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './core/auth/services/jwt-interceptor.service';
 import { AuthenticationService } from './core/auth/services/authentication.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -19,6 +19,8 @@ import { OrganizationService } from './dashboard/organization/services/organizat
 import { ToastManagerComponent } from './shared/common/components/toast-system/toast-manager/toast-manager.component';
 import { NotificationLiveService } from './dashboard/overview/services/notificationlive.service';
 import { User } from './core/user/model/user';
+import { UserSettingsService } from './dashboard/settings/services/user-settings.service';
+import { HeaderComponent } from './core/main/components/header/header.component';
 
 @Component({
     selector: 'app-root',
@@ -26,9 +28,9 @@ import { User } from './core/user/model/user';
     imports: [
         CommonModule,
         RouterOutlet,
-        HttpClientModule,
         FontAwesomeModule,
         RouterModule,
+        HeaderComponent,
         SidebarComponent,
         ToastManagerComponent
     ],
@@ -40,16 +42,15 @@ import { User } from './core/user/model/user';
 })
 export class AppComponent implements OnInit {
     messages$: Observable<any> | undefined = undefined;
-    // Display variables
     hideHeader = false;
     title = 'Chain Optimizer';
     faSearch = faSearch;
 
-    // Constructor
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
         public authService: AuthenticationService,
         private userService: UserService,
+        private userSettingsService: UserSettingsService,
         private notificationLiveService: NotificationLiveService,
         private router: Router
     ) {
@@ -77,35 +78,20 @@ export class AppComponent implements OnInit {
             if (username) {
                 this.userService.fetchAndSetCurrentUser(username);
                 this.userService.getCurrentUser().subscribe((user: User | null) => {
-                    if (user) {
-                        console.log('Current in app:', user);
-                        this.messages$ = this.notificationLiveService.connect(`ws://localhost:8080/ws?userId=${user.id}`);
-
+                    if (!user) {
+                        console.error('Error fetching current user');
+                        return;
                     }
+                    
+                    console.log('Current in app:', user);
+                    this.messages$ = this.notificationLiveService.connect(`ws://localhost:8080/ws?userId=${user.id}`);
+                    
+                    this.userSettingsService.fetchAndSetUserSettings(user.id);
                 });
-
-
-                // this.userService
-                //     .getCurrentUser()
-                //     .pipe(
-                //         filter(
-                //             (user) =>
-                //                 user !== null &&
-                //                 user.organization !== undefined &&
-                //                 user.organization.id !== undefined
-                //         ),
-                //         switchMap((user) => {
-                //             return this.organizationService.fetchAndSetCurrentOrganization(
-                //                 user?.organization?.id as number
-                //             );
-                //         })
-                //     )
-                //     .subscribe();
             }
         }
     }
 
-    // Logout
     logout() {
         this.authService.logout();
     }

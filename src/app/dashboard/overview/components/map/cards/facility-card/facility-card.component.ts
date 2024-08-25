@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { Facility, FacilityType, Pair } from '../../../../types/supplyChainMapTypes';
+import { Facility, FacilityType } from '../../../../types/supplyChainMapTypes';
+import { Pair } from '../../../../../goods/models/TransportRoute';
 
 @Component({
   selector: 'app-facility-card',

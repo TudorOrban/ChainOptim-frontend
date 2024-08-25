@@ -9,7 +9,7 @@
 
         <div>
             <label for="component" class="form-label">Component:</label>
-            <app-select-component [initialData]="{ componentId: currentStageInput?.component?.id }" (componentSelected)="handleComponentIdChange($event)"></app-select-component>
+            <app-select-component [initialData]="{ componentId: currentStageInput?.component?.id }" (componentSelected)="handleComponentChange($event)"></app-select-component>
         </div>
         
         <div>

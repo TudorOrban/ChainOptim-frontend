@@ -1,0 +1,73 @@
+<div class="plan-box space-y-2">
+    <!-- Title -->
+    <div class="border-b border-gray-300 py-3 space-y-3">
+        <div class="text-xl font-semibold text-gray-900 pb-3">{{ subscriptionPlan?.name }}</div>
+
+        <div class="text-3xl font-semibold">
+            ${{ subscriptionPlan?.dollarsPerMonth }}
+        </div>
+        <div class="text-gray-700">
+            per organization / month
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="flex flex-col items-center justify-center space-y-3 p-3">
+        <div class="flex items-center space-x-2">
+            <fa-icon [icon]="faUser" class="text-gray-700"></fa-icon>
+            <h2 class="label-medium-large">
+                Users:
+            </h2>
+            <p class="text-gray-800 font-semibold text-lg">{{ getMaxNumberString(subscriptionPlan?.maxMembers) }}</p>
+        </div>
+
+        <div class="flex items-center space-x-2 relative"
+            (mouseenter)="showTooltip = true"
+            (mouseleave)="showTooltip = false">
+            <fa-icon [icon]="faCircleCheck" class="text-gray-700"></fa-icon>
+            <h2 class="label-medium-large">
+                Main Features:
+            </h2>
+            <p class="text-gray-800 font-semibold text-lg">{{ getMaxNumberString(subscriptionPlan?.maxProducts) }}</p>
+            <div [class]="showTooltip ? 'tooltip-text visible' : 'tooltip-text'"
+                class="absolute w-auto p-3 space-y-3 rounded-lg shadow-md"
+                style="left: 50%; transform: translateX(-50%); bottom: 100%; margin-bottom: 10px;">
+                
+                <div *ngFor="let feature of mainFeatures" class="flex items-center space-x-2">
+                    <fa-icon [icon]="feature.icon" class="text-gray-700"></fa-icon>
+                    <p class="font-semibold text-gray-800">{{ feature.title }}</p>
+                </div>
+            </div>
+        </div>  
+
+        <div class="flex items-center space-x-2 relative"
+            (mouseenter)="showTooltip = true"
+            (mouseleave)="showTooltip = false">
+            <fa-icon [icon]="faCircleCheck" class="text-gray-700"></fa-icon>
+            <h2 class="label-medium-large">
+                Secondary Features:
+            </h2>
+            <p class="text-gray-800 font-semibold text-lg">{{ getMaxNumberString(subscriptionPlan?.maxSupplierOrders) }}</p>
+            <div [class]="showTooltip ? 'tooltip-text visible' : 'tooltip-text'"
+                class="absolute w-auto p-3 space-y-3 rounded-lg shadow-md"
+                style="left: 50%; transform: translateX(-50%); bottom: 100%; margin-bottom: 10px;">
+                
+                <div *ngFor="let feature of secondaryFeatures">
+                    <p class="font-semibold text-gray-800 whitespace-nowrap">{{ feature }}</p>
+                </div>
+            </div>
+        </div>  
+
+        <button class="standard-write-button flex items-center justify-center w-52 h-16">
+            <p class="font-semibold text-lg">View Plan</p>
+        </button>
+        <button
+            (click)="triggerCustomizePlan()"
+            class="standard-button flex items-center justify-center w-52 h-12"
+        >
+            <p class="font-semibold">Customize Plan</p>
+        </button>
+    </div>
+
+
+</div>

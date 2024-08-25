@@ -1,0 +1,26 @@
+<div class="flex items-center bg-gray-100 justify-between page-standard-horizontal-padding py-4">
+    <h1 class="page-title">Transport Routes</h1>
+
+    <div class="flex items-center border border-gray-300 rounded-md shadow-sm font-semibold">
+        <button
+            (click)="handleSelectTab('Table')"
+            [class.bg-white]="selectedTab == 'Table'" 
+            class="bg-white px-4 py-2 border-r border-gray-300 rounded-l-md hover:bg-gray-50">
+            Table
+        </button>
+        <button 
+            (click)="handleSelectTab('Map')"
+            [class.bg-white]="selectedTab == 'Map'" 
+            class="bg-white px-4 py-2 border-l border-gray-300 rounded-r-md hover:bg-gray-50">
+            Map
+        </button>
+    </div>
+</div>
+
+<div *ngIf="selectedTab == 'Table'">
+    <app-transport-routes-table></app-transport-routes-table>
+</div>
+
+<div *ngIf="selectedTab == 'Map'" class="overflow-x-hidden border-t border-gray-300">
+    <app-transport-routes-map></app-transport-routes-map>
+</div>

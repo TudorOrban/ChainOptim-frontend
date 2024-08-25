@@ -1,1 +1,43 @@
-<p>product-overview works!</p>
+<div class="px-8 py-4 space-y-4">
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Created At: </h2>
+        <p class="value-medium">{{ product?.createdAt | date: 'medium' }}</p>
+    </div>
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Last Modified: </h2>
+        <p class="value-medium">{{ product?.updatedAt | date: 'medium' }}</p>
+    </div>
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Unit of Measurement: </h2>
+        <p class="value-medium">{{ product?.newUnit?.standardUnit }}</p>
+    </div>
+
+    <div>
+        <app-overview-section
+            [label]="'Stages: '"
+            [feature]="'stages'"
+            [entities]="productOverview?.stages"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Manufactured in Factories: '"
+            [feature]="'factories'"
+            [entities]="productOverview?.manufacturedInFactories"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Stored in Warehouses: '"
+            [feature]="'warehouses'"
+            [entities]="productOverview?.storedInWarehouses"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Ordered by Clients: '"
+            [feature]="'clients'"
+            [entities]="productOverview?.orderedByClients"
+        ></app-overview-section>
+    </div>
+</div>

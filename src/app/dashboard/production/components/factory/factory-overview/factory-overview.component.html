@@ -1,1 +1,78 @@
-<p>factory-overview works!</p>
+<div class="px-8 py-4 space-y-4">
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Created At: </h2>
+        <p class="value-medium">{{ factory?.createdAt | date: 'medium' }}</p>
+    </div>
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Last Modified: </h2>
+        <p class="value-medium">{{ factory?.updatedAt | date: 'medium' }}</p>
+    </div>
+
+    <div>
+        <app-overview-section
+            [label]="'Factory Stages: '"
+            [feature]="'stages'"
+            [entities]="factoryOverview?.factoryStages"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Manufactured Components: '"
+            [feature]="'components'"
+            [entities]="factoryOverview?.manufacturedComponents"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Manufactured Products: '"
+            [feature]="'products'"
+            [entities]="factoryOverview?.manufacturedProducts"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Delivered from Suppliers: '"
+            [feature]="'suppliers'"
+            [entities]="factoryOverview?.deliveredFromSuppliers"
+        ></app-overview-section>
+    </div>
+    <div>
+        <app-overview-section
+            [label]="'Delivered to Clients: '"
+            [feature]="'clients'"
+            [entities]="factoryOverview?.deliveredToClients"
+        ></app-overview-section>
+    </div>
+
+    <div class="space-y-4">
+        <h2 class="label-large">Location</h2>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Address: </h2>
+            <p class="value-medium">{{ factory?.location?.address }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">City: </h2>
+            <p class="value-medium">{{ factory?.location?.city }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">State: </h2>
+            <p class="value-medium">{{ factory?.location?.state }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Country: </h2>
+            <p class="value-medium">{{ factory?.location?.country }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Zip Code: </h2>
+            <p class="value-medium">{{ factory?.location?.zipCode }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Latitude: </h2>
+            <p class="value-medium">{{ factory?.location?.latitude }}</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <h2 class="label-medium-large">Longitude: </h2>
+            <p class="value-medium">{{ factory?.location?.longitude }}</p>
+        </div>
+    </div>
+</div>

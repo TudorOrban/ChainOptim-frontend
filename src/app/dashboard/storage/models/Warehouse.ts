@@ -1,4 +1,4 @@
-import { CreateLocationDTO, Location } from "../../../shared/common/models/reusableTypes";
+import { CreateLocationDTO, Location, SmallEntityDTO } from "../../../shared/common/models/reusableTypes";
 
 export interface Warehouse {
     id: number;
@@ -24,4 +24,12 @@ export interface UpdateWarehouseDTO {
     locationId?: number;
     location?: CreateLocationDTO;
     createLocation?: boolean;
+}
+
+export interface WarehouseOverviewDTO {
+    compartments: SmallEntityDTO[];
+    storedComponents: SmallEntityDTO[];
+    storedProducts: SmallEntityDTO[];
+    deliveredFromSuppliers: SmallEntityDTO[];
+    deliveredToClients: SmallEntityDTO[];
 }

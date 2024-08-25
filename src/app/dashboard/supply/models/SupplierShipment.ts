@@ -1,4 +1,5 @@
 import { Location } from "../../../shared/common/models/reusableTypes";
+import { TransportType } from "../../goods/models/TransportRoute";
 
 
 export interface SupplierShipment {
@@ -25,18 +26,11 @@ export interface SupplierShipment {
     isEditing?: boolean; // For UI purposes
 }
 
-export enum TransportType {
-    ROAD = 'ROAD',
-    RAIL = 'RAIL',
-    SEA = 'SEA',
-    AIR = 'AIR',
-}
-
 export enum ShipmentStatus {
-    PLANNED,
-    IN_TRANSIT,
-    DELIVERED,
-    CANCELLED
+    PLANNED = 'PLANNED',
+    IN_TRANSIT = 'IN_TRANSIT',
+    DELIVERED = 'DELIVERED',
+    CANCELLED = 'CANCELLED'
 }
 
 export interface CreateSupplierShipmentDTO {

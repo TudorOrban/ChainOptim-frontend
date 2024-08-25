@@ -1,0 +1,10 @@
+<div class="flex items-center space-x-2 flex-wrap">
+    <h2 class="label-medium-large">{{ label }}</h2>
+    <div *ngFor="let entity of entities" class="flex items-center">
+        <a [routerLink]="'/dashboard/' + feature + '/' + entity.id" class="pseudo-link">{{ entity.name }}</a>
+        <p *ngIf="entity.id !== entities?.[(entities?.length ?? 0) - 1]?.id" class="text-gray-700">,</p>
+    </div>
+    <div *ngIf="(entities?.length ?? 0) === 0" class="value-medium">
+        None
+    </div>
+</div>

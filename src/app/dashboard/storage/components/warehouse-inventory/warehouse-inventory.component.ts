@@ -79,6 +79,8 @@ export class WarehouseInventoryComponent implements OnInit {
     sortOptions: UIItem[] = [];
     filterOptions: FilterOption[] = [];
 
+    Feature = Feature;
+    
     constructor(
         private userService: UserService,
         private warehouseInventoryItemService: WarehouseInventoryItemService,
@@ -89,10 +91,10 @@ export class WarehouseInventoryComponent implements OnInit {
         private searchOptionsService: SearchOptionsService
     ) {
         this.filterOptions =
-            this.searchOptionsService.getSearchOptions(Feature.WAREHOUSE_INVENTORY_ITEM)
+            this.searchOptionsService.getSearchOptions(Feature.WAREHOUSE_INVENTORY)
                 ?.filterOptions || [];
         this.sortOptions =
-            this.searchOptionsService.getSearchOptions(Feature.WAREHOUSE_INVENTORY_ITEM)
+            this.searchOptionsService.getSearchOptions(Feature.WAREHOUSE_INVENTORY)
                 ?.sortOptions || [];
     }
 

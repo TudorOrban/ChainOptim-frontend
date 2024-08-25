@@ -69,7 +69,7 @@ export class SidebarComponent {
             subItems: [
                 { label: 'Products', link: '/dashboard/products' },
                 { label: 'Components', link: '/dashboard/components' },
-                { label: 'Stages', link: '/dashboard/stages' },
+                { label: 'Transport Routes', link: '/dashboard/transport-routes' },
             ]
         },
         { label: 'Supply', icon: this.faTruckArrowRight, link: '/dashboard/suppliers',
@@ -107,7 +107,6 @@ export class SidebarComponent {
     ];
 
     expandItem(item: SidebarItem): void {
-        console.log("Expanding: ", item);
         item.isExpanded = !item.isExpanded;
         if (!item.subItems) {
             return;
@@ -116,7 +115,6 @@ export class SidebarComponent {
     }
     
     selectItem(item: SidebarItem): void {
-        console.log("Selecting: ", item);
         item.isSelected = true;
 
         for (let otherItem of this.sidebarItems) {

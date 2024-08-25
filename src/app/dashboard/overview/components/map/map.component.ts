@@ -8,7 +8,7 @@ import {
     PLATFORM_ID,
     ViewContainerRef,
 } from '@angular/core';
-import { EntityType, Facility, SupplyChainMap, TransportRoute } from '../../types/supplyChainMapTypes';
+import { Facility, SupplyChainMap } from '../../types/supplyChainMapTypes';
 import { SupplyChainMapService } from '../../services/supplychainmap.service';
 import { UserService } from '../../../../core/auth/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
@@ -17,6 +17,7 @@ import { FacilityCardComponent } from './cards/facility-card/facility-card.compo
 import { TransportRouteUIComponent } from './transport-route-ui/transport-route-ui.component';
 import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EntityType, TransportRoute } from '../../../goods/models/TransportRoute';
 
 @Component({
     selector: 'app-map',
@@ -42,7 +43,6 @@ export class MapComponent {
         private supplyChainMapService: SupplyChainMapService,
         private fallbackManagerService: FallbackManagerService,
         private userService: UserService,
-        private changeDetectorRef: ChangeDetectorRef
     ) {}
 
     loadMap(): void {
@@ -219,8 +219,8 @@ export class MapComponent {
     }
     
     private createRoutePolyline(route: TransportRoute, componentRef: ComponentRef<TransportRouteUIComponent>): void {
-        const srcLatLng: [number, number] = [route.srcLocation.first, route.srcLocation.second];
-        const destLatLng: [number, number] = [route.destLocation.first, route.destLocation.second];
+        const srcLatLng: [number, number] = [route.srcLocation?.first ?? 0, route?.srcLocation?.second ?? 0];
+        const destLatLng: [number, number] = [route.destLocation?.first ?? 0, route?.destLocation?.second ?? 0];
 
         const polyline = this.L.polyline([srcLatLng, destLatLng], {
             color: route.entityType === EntityType.SUPPLIER_SHIPMENT ? 'blue' : 'green', 
@@ -246,8 +246,8 @@ export class MapComponent {
         // Create a Leaflet marker with the component's element
         let lat = 0;
         let lng = 0;
-        const midPointLat = (route.srcLocation.first + route.destLocation.first) / 2;
-        const midPointLng = (route.srcLocation.second + route.destLocation.second) / 2;
+        const midPointLat = ((route.srcLocation?.first ?? 0) + (route.destLocation?.first ?? 0)) / 2;
+        const midPointLng = ((route.srcLocation?.second ?? 0) + (route.destLocation?.second ?? 0)) / 2;
         if (route.liveLocation && route.liveLocation.first && route.liveLocation.second) {
             lat = route.liveLocation.first;
             lng = route.liveLocation.second;
@@ -291,8 +291,8 @@ export class MapComponent {
     
     private addArrowheads(route: TransportRoute, n: number): void {
         // Calculate the geographical midpoints for arrows
-        const start: [number, number] = [route.srcLocation.first, route.srcLocation.second];
-        const end: [number, number] = [route.destLocation.first, route.destLocation.second];
+        const start: [number, number] = [route.srcLocation?.first ?? 0, route?.srcLocation?.second ?? 0];
+        const end: [number, number] = [route.destLocation?.first ?? 0, route?.destLocation?.second ?? 0];
 
         const arrowPoints = this.calculateIntermediatePoints(start, end, n);
         

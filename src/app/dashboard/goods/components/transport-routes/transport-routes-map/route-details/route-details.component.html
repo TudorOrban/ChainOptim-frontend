@@ -1,0 +1,98 @@
+<div class="w-2/3 space-y-6">
+    <div class="flex items-center space-x-12">
+        <div class="flex items-center space-x-4">
+            <div class="label-medium-large">Name:</div>
+            <div class="medium-value">{{ route?.transportRoute?.name ?? '-' }}</div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="label-medium-large">Company ID:</div>
+            <div class="medium-value">{{ route?.companyId ?? '-' }}</div>
+        </div>
+    </div>
+    
+    <div class="flex items-center space-x-12">
+        <div class="flex items-center space-x-6">
+            <div class="label-medium-large">Source Location:</div>
+            <div class="medium-value">{{ route?.transportRoute?.srcLocation?.first | number : '1.2-2' }},</div>
+            <div class="medium-value">{{ route?.transportRoute?.srcLocation?.second | number : '1.2-2' }}</div>
+        </div>
+
+        <div class="flex items-center space-x-6">
+            <div class="label-medium-large">Destination Location:</div>
+            <div class="medium-value">{{ route?.transportRoute?.destLocation?.first | number : '1.2-2' }},</div>
+            <div class="medium-value">{{ route?.transportRoute?.destLocation?.second | number : '1.2-2' }}</div>
+        </div>
+    </div>
+
+    <div class="flex items-center space-x-12">
+        <div class="flex items-center space-x-4">
+            <div class="label-medium-large">Source Facility:</div>
+            <div class="medium-value">{{ route?.transportRoute?.srcFacilityName ?? 'None' }}</div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="label-medium-large">Destination Facility:</div>
+            <div class="medium-value">{{ route?.transportRoute?.destFacilityName ?? 'None' }}</div>
+        </div>
+    </div>
+
+    <div class="flex items-start space-x-16">
+        <div class="space-y-4">
+            <div class="label-medium-large">Transported Components:</div>
+
+            <div *ngFor="let component of transportedComponents">
+                <div class="bg-gray-50 px-4 py-2 border border-gray-300 rounded-md shadow-sm font-semibold whitespace-nowrap">
+                    {{ component.entityName }}: {{ component.quantity }}
+                </div>
+            </div>
+            
+            <div *ngIf="transportedComponents.length === 0" class="px-4 py-2 font-semibold">
+                None
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="label-medium-large">Transported Products:</div>
+
+            <div *ngFor="let product of transportedProducts">
+                <div class="bg-gray-50 px-4 py-2 border border-gray-300 rounded-md shadow-sm font-semibold whitespace-nowrap">
+                    {{ product.entityName }}: {{ product.quantity }}
+                </div>
+            </div>
+
+            <div *ngIf="transportedProducts?.length === 0" class="px-4 py-2 font-semibold">
+                None
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex items-center space-x-4">
+        <div class="label-medium-large">Departure Date:</div>
+        <div class="medium-value whitespace-nowrap">{{ route?.transportRoute?.departureDateTime | date: 'short' }}</div>
+    </div>
+    
+    <div class="flex items-center space-x-12">
+        <div class="flex items-center space-x-4">
+            <div class="label-medium-large">Estimated Arrival Date:</div>
+            <div class="medium-value whitespace-nowrap">{{ route?.transportRoute?.estimatedArrivalDateTime | date: 'short' }}</div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="label-medium-large">Arrival Date:</div>
+            <div class="medium-value whitespace-nowrap">{{ route?.transportRoute?.arrivalDateTime | date: 'short' }}</div>
+        </div>
+    </div>
+
+    <div class="flex items-center space-x-12">
+        <div class="flex items-center space-x-4">
+            <div class="label-medium-large">Route Status:</div>
+            <div class="medium-value whitespace-nowrap">{{ decapitalize(route?.transportRoute?.status) ?? 'None' }}</div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="label-medium-large">Transport Type:</div>
+            <div class="medium-value whitespace-nowrap">{{ decapitalize(route?.transportRoute?.transportType) ?? 'None' }}</div>
+        </div>
+    </div>
+</div>

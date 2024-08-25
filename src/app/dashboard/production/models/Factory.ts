@@ -1,4 +1,4 @@
-import { CreateLocationDTO, Location } from "../../../shared/common/models/reusableTypes";
+import { CreateLocationDTO, Location, SmallEntityDTO } from "../../../shared/common/models/reusableTypes";
 import { Stage } from "../../goods/models/Product";
 
 export interface Factory {
@@ -9,9 +9,10 @@ export interface Factory {
     updatedAt: Date;
     location: Location;
     overallScore: number;
-    resourceDistributionScore: number;
-    resourceReadinessScore: number;
-    resourceUtilizationScore: number;
+    resourceDistributionScore?: number;
+    resourceReadinessScore?: number;
+    resourceUtilizationScore?: number;
+    resourceEfficiencyScore?: number;
     factoryStages: FactoryStage[];
 }
 
@@ -61,6 +62,13 @@ export interface UpdateFactoryStageDTO {
     minimumRequiredCapacity?: number;
 }
 
+export interface FactoryStageSearchDTO {
+    id: number;
+    factoryId: number;
+    stageId: number;
+    stageName: string;
+}
+
 export interface FactoryStageConnection {
     id: number;
     factoryId: number;
@@ -94,4 +102,12 @@ export interface DeleteConnectionDTO {
     srcStageOutputId: number;
     destFactoryStageId: number;
     destStageInputId: number;
+}
+
+export interface FactoryOverviewDTO {
+    factoryStages: SmallEntityDTO[];
+    manufacturedComponents: SmallEntityDTO[];
+    manufacturedProducts: SmallEntityDTO[];
+    deliveredFromSuppliers: SmallEntityDTO[];
+    deliveredToClients: SmallEntityDTO[];
 }

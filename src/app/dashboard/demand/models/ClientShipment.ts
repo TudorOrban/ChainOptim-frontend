@@ -1,4 +1,5 @@
 import { Location } from "../../../shared/common/models/reusableTypes";
+import { TransportType } from "../../goods/models/TransportRoute";
 
 
 export interface ClientShipment {
@@ -23,13 +24,6 @@ export interface ClientShipment {
     destWarehouseId?: number;
     selected?: boolean; // For UI purposes
     isEditing?: boolean; // For UI purposes
-}
-
-export enum TransportType {
-    ROAD = 'ROAD',
-    RAIL = 'RAIL',
-    SEA = 'SEA',
-    AIR = 'AIR',
 }
 
 export enum ShipmentStatus {

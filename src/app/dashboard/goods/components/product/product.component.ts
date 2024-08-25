@@ -43,8 +43,8 @@ import { ToastService } from '../../../../shared/common/components/toast-system/
     styleUrl: './product.component.css',
 })
 export class ProductComponent implements OnInit {
-    productId: string | null = null;
-    product: Product | null = null;
+    productId: number | undefined = undefined;
+    product: Product | undefined = undefined;
     components: ProdComponent[] = [];
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
@@ -86,7 +86,7 @@ export class ProductComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         this.route.paramMap.subscribe((params) => {
-            this.productId = params.get('productId');
+            this.productId = Number(params.get('productId'));
             
             this.productService
                 .getProductById(Number(this.productId))

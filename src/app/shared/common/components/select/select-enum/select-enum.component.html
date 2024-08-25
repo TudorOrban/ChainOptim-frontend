@@ -1,0 +1,5 @@
+<select [(ngModel)]="selectedValue" (ngModelChange)="onChange($event)" class="custom-select">
+    <option *ngFor="let item of enumValues" [value]="item.value">
+        {{ toTitleCase(item.key) }}
+    </option>
+</select>

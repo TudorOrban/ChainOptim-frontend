@@ -1,6 +1,6 @@
 <!-- Header -->
 <app-list-header *ngIf="(!fallbackManagerState.errorMessage && !fallbackManagerState.noOrganization) || fallbackManagerState.loading"
-    [title]="'Warehouses'" [icon]="faWarehouse" [searchPlaceholder]="'Search Warehouses'" [sortOptions]="sortOptions" [createName]="'Warehouse'" [createLink]="'create-warehouse'"
+    [title]="'Warehouses'" [icon]="faWarehouse" [searchPlaceholder]="'Search Warehouses'" [sortOptions]="sortOptions" [createName]="'Warehouse'" [createLink]="'create-warehouse'" [feature]="Feature.WAREHOUSE"
     (onSearch)="handleSearch($event)" (onSortChange)="handleSortChange($event)"
 ></app-list-header>
 

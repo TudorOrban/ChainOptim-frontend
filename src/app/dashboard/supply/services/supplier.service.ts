@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CreateSupplierDTO, Supplier, UpdateSupplierDTO } from '../models/Supplier';
+import { CreateSupplierDTO, Supplier, SupplierOverviewDTO, UpdateSupplierDTO } from '../models/Supplier';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
@@ -68,6 +68,16 @@ export class SupplierService {
     getSupplierById(id: number): Observable<Supplier> {
         return this.http
             .get<Supplier>(`${this.apiUrl}/${id}`)
+            .pipe(
+                catchError((error) =>
+                    this.errorHandlerService.handleError(error)
+                )
+            );
+    }
+
+    getSupplierOverview(id: number): Observable<SupplierOverviewDTO> {
+        return this.http
+            .get<SupplierOverviewDTO>(`${this.apiUrl}/${id}/overview`)
             .pipe(
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)

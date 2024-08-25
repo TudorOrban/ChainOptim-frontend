@@ -18,6 +18,7 @@ import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDial
 import { OperationOutcome, ToastInfo } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
 import { SearchMode } from '../../../../shared/enums/commonEnums';
+import { ProductionHistoryComponent } from './factory-production/factory-production-tabs/production-history/production-history.component';
 
 @Component({
     selector: 'app-factory',
@@ -32,14 +33,15 @@ import { SearchMode } from '../../../../shared/enums/commonEnums';
         FactoryInventoryComponent,
         FactoryPerformanceComponent,
         FallbackManagerComponent,
-        GenericConfirmDialogComponent
+        GenericConfirmDialogComponent,
+        ProductionHistoryComponent
     ],
     templateUrl: './factory.component.html',
     styleUrl: './factory.component.css',
 })
 export class FactoryComponent implements OnInit {
-    factoryId: string | null = null;
-    factory: Factory | null = null;
+    factoryId: number | undefined = undefined;
+    factory: Factory | undefined = undefined;
     fallbackManagerState: FallbackManagerState = {};
     tabs: NavigationItem[] = [
         {
@@ -86,7 +88,7 @@ export class FactoryComponent implements OnInit {
         this.fallbackManagerService.updateLoading(true);
 
         this.route.paramMap.subscribe((params) => {
-            this.factoryId = params.get('factoryId');
+            this.factoryId = Number(params.get('factoryId'));
             
             this.factoryService
                 .getFactoryById(Number(this.factoryId))

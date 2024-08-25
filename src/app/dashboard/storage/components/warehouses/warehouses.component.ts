@@ -15,6 +15,7 @@ import { SortOption } from '../../../../shared/search/models/searchTypes';
 import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 import { UserService } from '../../../../core/auth/services/user.service';
+import { Feature } from '../../../../shared/enums/commonEnums';
 
 @Component({
     selector: 'app-organization',
@@ -48,6 +49,8 @@ export class WarehousesComponent implements OnInit {
     page = 1;
     itemsPerPage = 10;
 
+    Feature = Feature;
+    
     constructor(
         private userService: UserService,
         private warehouseService: WarehouseService,
