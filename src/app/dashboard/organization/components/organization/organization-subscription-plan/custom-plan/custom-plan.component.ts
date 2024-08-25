@@ -10,17 +10,21 @@ import { PaymentCalculatorService } from '../../../../../../core/payment/service
 import { UIUtilService } from '../../../../../../shared/common/services/uiutil.service';
 import { CurrentPlanService } from '../../../../../../core/payment/services/currentplan.service';
 import { UserService } from '../../../../../../core/auth/services/user.service';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-custom-plan',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatExpansionModule],
+  imports: [CommonModule, FontAwesomeModule, FormsModule, MatExpansionModule],
   templateUrl: './custom-plan.component.html',
   styleUrl: './custom-plan.component.css'
 })
 export class CustomPlanComponent implements OnInit, OnChanges {
     @Input() existingPlan: SubscriptionPlan | undefined = undefined;
     @Input() isEditing?: boolean = false;
+    @Input() isInPricingPage?: boolean = false;
+    @Input() isExpanded?: boolean = false;
 
     isMonthly: boolean = true;
     selectedPlanTier: PlanTier = PlanTier.NONE;
@@ -37,6 +41,9 @@ export class CustomPlanComponent implements OnInit, OnChanges {
     planService: BaseSubscriptionPlanService;
     calculatorService: PaymentCalculatorService;
     uiUtilService: UIUtilService;
+
+    faChevronDown = faChevronDown;
+    faChevronUp = faChevronUp;
 
     constructor(
         planService: BaseSubscriptionPlanService,
@@ -70,6 +77,11 @@ export class CustomPlanComponent implements OnInit, OnChanges {
         }
     }
     
+    // Handlers
+    expandCustomPlan(): void {
+        this.isExpanded = !this.isExpanded;
+    }
+
     selectPlanTier(planTier: PlanTier): void {
         this.selectedPlanTier = planTier;
         this.resetCustomPlan(planTier);

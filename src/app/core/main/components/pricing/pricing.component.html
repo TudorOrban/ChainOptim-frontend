@@ -26,6 +26,12 @@
     </div>
 
     <div class="flex items-center w-full justify-center px-32 pb-10">
-        <app-custom-plan id="custom-plan" class="w-full border border-gray-300 rounded-md shadow-sm"></app-custom-plan>
+        <app-custom-plan
+            id="custom-plan" 
+            [isInPricingPage]="true"
+            [isEditing]="true"
+            [isExpanded]="true"
+            class="w-full bg-white border border-gray-300 rounded-md shadow-sm px-8 py-4"
+        ></app-custom-plan>
     </div>
 </div>

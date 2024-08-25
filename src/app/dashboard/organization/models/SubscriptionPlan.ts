@@ -54,6 +54,7 @@ export interface SubscriptionPlan {
     isBasic?: boolean;
     isActive?: boolean;
     isPaid?: boolean;
+    lastPaymentDate?: Date;
     customPlan: CustomSubscriptionPlan;
 }
 

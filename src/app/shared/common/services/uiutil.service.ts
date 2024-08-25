@@ -34,4 +34,9 @@ export class UIUtilService {
     formatEnum(text: string): string {
         return text.toLowerCase().replace(/(?:^|\s)\w/g, (match) => match.toUpperCase()).replace(/_/g, ' ');
     }
+
+    formatDate(dateStr: Date | string | null |undefined): Date {
+        if (!dateStr) return new Date();
+        return new Date(`${dateStr}T00:00`);
+    }
 }

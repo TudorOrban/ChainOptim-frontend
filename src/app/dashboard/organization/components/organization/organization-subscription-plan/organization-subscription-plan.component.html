@@ -4,16 +4,55 @@
         Subscription Plan
     </div>
 
-    <div>
-        <h2 class="label-large">
-            Plan: {{ currentPlan?.customPlan?.planTier ? currentPlan?.customPlan?.planTier : organization?.subscriptionPlanTier ? uiUtilService.formatEnum(organization?.subscriptionPlanTier?.toString() ?? '') : 'No Plan' }}
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">
+            Plan:
         </h2>
+        <p class="label-medium">
+            {{ currentPlan?.customPlan?.planTier ? 
+                uiUtilService.formatEnum(currentPlan?.customPlan?.planTier?.toString() ?? '') : 
+                organization?.subscriptionPlanTier ? 
+                uiUtilService.formatEnum(organization?.subscriptionPlanTier?.toString() ?? '') : 
+                'No Plan' }}
+        </p>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">
+            Status:
+        </h2>
+        <div
+            *ngIf="currentPlan?.isActive"
+            class="flex items-center space-x-2"
+        >
+            <div class="bg-green-700 w-2 h-2 rounded-full">
+            </div>
+            <p class="label-medium">Active</p>
+        </div>
+        <div
+            *ngIf="!currentPlan?.isActive"
+            class="flex items-center space-x-2"
+        >
+            <div class="bg-red-700 w-2 h-2 rounded-full">
+            </div>
+            <p class="label-medium">Inactive</p>
+        </div>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">
+            Last Payment:
+        </h2>
+        <p class="label-medium">
+            {{ currentPlan?.lastPaymentDate ? this.uiUtilService.formatDate(currentPlan?.lastPaymentDate) : '-' }}
+        </p>
     </div>
 
     <div *ngIf="!currentPlan?.isBasic">
         <app-custom-plan
             [existingPlan]="currentPlan"
             [isEditing]="isEditingPlan"
+            class=""
         >
 
         </app-custom-plan>
