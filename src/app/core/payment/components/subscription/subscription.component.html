@@ -1,56 +1,13 @@
 
-<div class="w-full p-10 space-y-8 bg-gray-50 overflow-x-hidden">
+<div class="w-full p-10 space-y-8 overflow-x-hidden">
     <div class="flex items-center justify-center w-full py-8">
         <h2 class="text-4xl font-semibold">Subscription</h2>
     </div>
 
-    <div class="overflow-y-auto border border-gray-300 bg-white">
-        <mat-accordion multi="true" class="overflow-y-auto pt-6">
-            <div class="grid grid-cols-4 gap-4 px-8 py-4 font-semibold text-xl">
-                <div>Features</div>
-                <div>Base</div>
-                <div>Quantity</div>
-                <div>Price</div>
-            </div>
-        
-            <mat-expansion-panel *ngFor="let group of this.calculatorService.getObjectValues(this.calculatorService.getFeaturesByGroup())" class="border-b border-gray-200">
-                <mat-expansion-panel-header class="border-0 shadow-none">
-                    <mat-panel-title class="text-xl font-semibold p-2">
-                        {{ group }}
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-        
-                <div *ngFor="let featureKey of this.calculatorService.getFeaturesByGroup()[group]" class="pt-2 pl-8">
-                    <div class="grid grid-cols-4 gap-4 items-center">
-                        <div class="col-span-1">
-                            <h2 class="text-lg font-semibold">{{ this.uiUtilService.formatEnum(featureKey) }}</h2>
-                        </div>
-                        <div class="col-span-1 text-lg text-gray-800">
-                            {{ this.calculatorService.getPlanFeatureDetail(this.calculatorService.getFeatureEnum(featureKey), selectedPlanTier, currentPlan) }}
-                        </div>
-                        <div class="col-span-1">
-                            <input type="number" [(ngModel)]="customPlan.additionalFeatures[this.calculatorService.getFeatureEnum(featureKey)]"
-                                   class="w-20 h-10 border border-gray-300 rounded-md p-2 text-center font-semibold" />
-                        </div>
-                        <div class="col-span-1 text-lg font-semibold text-gray-800">
-                            ${{ this.calculatorService.getFeaturePrice(this.calculatorService.getFeatureEnum(featureKey), customPlan, isMonthly) | number:'1.0-2' }}
-                        </div>
-                    </div>
-                </div>
-            </mat-expansion-panel>
-        </mat-accordion>
-    </div>
-
-    <div class="flex items-center justify-end w-full py-4">
-        <div class="space-y-3 text-end">
-            <div class="text-xl font-semibold text-gray-800">
-                Total:  ${{ this.calculatorService.getTotalPrice(customPlan, isMonthly) | number: '1.0-2' }} 
-            </div>
-            <p class="text-gray-700">per organization / month</p>
-            <p class="text-gray-700">
-                {{ isMonthly ? 'Billed monthly' : 'Billed annually' }}
-            </p>
-        </div>
+    <div>
+        <app-custom-plan
+            [isExpanded]='true'
+        ></app-custom-plan>
     </div>
     
     <div>

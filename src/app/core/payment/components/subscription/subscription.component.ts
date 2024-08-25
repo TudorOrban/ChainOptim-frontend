@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PaymentComponent } from '../payment/payment.component';
-import { CustomSubscriptionPlan, PlanTier, BaseSubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
+import { CustomSubscriptionPlan, PlanTier, BaseSubscriptionPlan, SubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
 import { CurrentPlanService } from '../../services/currentplan.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -10,17 +10,24 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { Feature } from '../../../../shared/enums/commonEnums';
 import { PaymentCalculatorService } from '../../services/paymentcalculator.service';
 import { UIUtilService } from '../../../../shared/common/services/uiutil.service';
+import { CustomPlanComponent } from '../../../../dashboard/organization/components/organization/organization-subscription-plan/custom-plan/custom-plan.component';
+import { UserService } from '../../../auth/services/user.service';
+import { User } from '../../../user/model/user';
+import { Router } from '@angular/router';
+import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
+import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
 
 @Component({
     selector: 'app-subscription',
     standalone: true,
-    imports: [CommonModule, FontAwesomeModule, FormsModule, MatExpansionModule, PaymentComponent],
+    imports: [CommonModule, FontAwesomeModule, FormsModule, MatExpansionModule, PaymentComponent, CustomPlanComponent],
     templateUrl: './subscription.component.html',
     styleUrl: './subscription.component.css'
 })
 export class SubscriptionComponent implements OnInit, OnDestroy {
     @ViewChild(PaymentComponent) paymentComponent!: PaymentComponent;
-
+    
+    currentUser: User | undefined = undefined;
     currentPlan: BaseSubscriptionPlan | undefined = undefined; 
     selectedPlanTier: PlanTier = PlanTier.NONE;   
     customPlan: CustomSubscriptionPlan = {
@@ -35,9 +42,12 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     uiUtilService: UIUtilService;
 
     constructor(
+        private userService: UserService,
         private currentPlanService: CurrentPlanService,
         private paymentCalculatorService: PaymentCalculatorService,
-        private utilService: UIUtilService
+        private utilService: UIUtilService,
+        private toastService: ToastService,
+        private router: Router
     ) {
         this.calculatorService = paymentCalculatorService;
         this.uiUtilService = utilService;
@@ -48,6 +58,38 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
             if (!data) return;
             this.customPlan = data;
         });
+        this.userService.getCurrentUser().subscribe(user => {
+            this.handleCurrentUser(user);
+        });
+    }
+
+    private handleCurrentUser(user: User | null): void {
+        if (!user) {
+            console.error('User not found');
+            return;
+        }
+        this.currentUser = user;
+        if (!this.currentUser.organization) {
+            this.toastService.addToast({
+                id: 0,
+                title: 'Organization not found',
+                message: 'Please create an organization first',
+                outcome: OperationOutcome.ERROR
+            });
+            this.router.navigate(['/dashboard/organization/create-organization']);
+            return;
+        }
+
+        if (!this.currentUser.organization.isPlanBasic) {
+            this.toastService.addToast({
+                id: 0,
+                title: 'Subscribed already',
+                message: 'You are already subscribed to a plan. Use the \'Edit Subscription\' feature in Organization page',
+                outcome: OperationOutcome.ERROR
+            });
+            this.router.navigate(['/dashboard/organization']);
+            return;
+        }
     }
     
     confirmSubscription(): void {

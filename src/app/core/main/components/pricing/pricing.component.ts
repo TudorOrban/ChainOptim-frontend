@@ -22,7 +22,7 @@ export class PricingComponent {
     scrollToCustomizePlan(): void {
         const element = document.getElementById('custom-plan');
         if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 }

@@ -60,6 +60,7 @@ export interface SubscriptionPlan {
 
 export interface CustomSubscriptionPlan {
     planTier: PlanTier;
+    isMonthly?: boolean;
     totalDollarsMonthly?: number;
     additionalFeatures: Record<Feature, number>;
 }

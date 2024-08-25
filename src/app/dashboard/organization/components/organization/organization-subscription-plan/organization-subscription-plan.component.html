@@ -1,7 +1,46 @@
 
 <div class="page-standard-horizontal-padding py-4 space-y-4">
-    <div class="page-title">
-        Subscription Plan
+    <div class="flex items-center justify-between w-full py-2">
+        <h2 class="page-title">
+            Subscription Plan
+        </h2>
+        
+        <div class="flex items-center space-x-2">
+            <button
+                *ngIf="!currentPlan"
+                (click)="handleCreatePlan()"
+                class="flex items-center space-x-2 standard-write-button"
+            >
+                <fa-icon [icon]="faPlus" class="text-white"></fa-icon>
+                <p class="label-medium">Add Plan</p>
+            </button>
+
+            <!-- Edit Plan -->
+            <button
+                *ngIf="!!currentPlan && !isEditingPlan"
+                (click)="handleEditPlan()"
+                class="flex items-center space-x-2 standard-write-button"
+            >
+                <fa-icon [icon]="faEdit" class="text-white"></fa-icon>
+                <p class="label-medium">Change Plan</p>
+            </button>
+            
+            <button
+                *ngIf="isEditingPlan"
+                (click)="handleCancelEditPlan()"
+                class="standard-button"
+            >
+                <p class="label-medium">Cancel</p>
+            </button>   
+            <button
+                *ngIf="isEditingPlan"
+                (click)="handleSavePlan()"
+                class="flex items-center space-x-2 standard-write-button"
+            >
+                <fa-icon [icon]="faSave" class="text-white"></fa-icon>
+                <p class="label-medium">Save Plan</p>
+            </button>
+        </div>
     </div>
 
     <div class="flex items-center space-x-2">
@@ -17,7 +56,7 @@
         </p>
     </div>
 
-    <div class="flex items-center space-x-2">
+    <div class="flex items-center space-x-4">
         <h2 class="label-medium-large">
             Status:
         </h2>
@@ -52,7 +91,7 @@
         <app-custom-plan
             [existingPlan]="currentPlan"
             [isEditing]="isEditingPlan"
-            class=""
+            [isExpanded]="isExpanded"
         >
 
         </app-custom-plan>

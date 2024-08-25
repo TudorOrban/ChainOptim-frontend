@@ -61,6 +61,12 @@ export class CustomPlanComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.handleInputChanges();
+        this.currentPlanService.currentPlan$.subscribe(data => {
+            if (!data) return;
+            console.log('CustomPlanComponent currentPlanService.currentPlan$ subscription:', data);
+            this.customPlan = data;
+            this.selectedPlanTier = data.planTier;
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -69,12 +75,14 @@ export class CustomPlanComponent implements OnInit, OnChanges {
 
     private handleInputChanges(changes?: SimpleChanges): void {
         if (!changes || (!changes['existingPlan'] && !changes['isEditing']) || !this.existingPlan) return;
+        console.log('CustomPlanComponent input changes:');
         this.selectedPlanTier = this.existingPlan.customPlan?.planTier ?? PlanTier.NONE;
         this.customPlan = {
             totalDollarsMonthly: this.existingPlan.customPlan?.totalDollarsMonthly ?? 0,
             planTier: this.existingPlan.customPlan?.planTier ?? PlanTier.NONE,
             additionalFeatures: this.existingPlan.customPlan?.additionalFeatures ?? this.initializeFeatures(0),
         }
+        this.isMonthly = this.existingPlan.customPlan?.isMonthly ?? true;
     }
     
     // Handlers
@@ -102,7 +110,7 @@ export class CustomPlanComponent implements OnInit, OnChanges {
                 return;
             }
 
-            this.router.navigate(['/subscribe']);
+            this.router.navigate(['/dashboard/organization/subscribe']);
         });
 
     }

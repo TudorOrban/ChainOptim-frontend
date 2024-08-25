@@ -18,7 +18,8 @@
 }
 
 .standard-button {
-    display: block; 
+    display: flex;
+    align-items: center; 
     height: 2.25rem;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
