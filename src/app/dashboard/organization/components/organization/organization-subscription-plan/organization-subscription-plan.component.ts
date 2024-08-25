@@ -64,9 +64,13 @@ export class OrganizationSubscriptionPlanComponent implements OnInit {
     }
 
     // Handlers
+    handleUnsubscribe(): void {
+        console.log('Unsubscribe');
+    }
+
     handleCreatePlan(): void {
         console.log('Create plan');
-
+        
         this.router.navigate(['/dashboard/organization/subscribe']);
     }
 
@@ -82,5 +86,6 @@ export class OrganizationSubscriptionPlanComponent implements OnInit {
 
     handleCancelEditPlan(): void {
         console.log('Cancel edit plan');
+        this.isEditingPlan = false;
     }
 }

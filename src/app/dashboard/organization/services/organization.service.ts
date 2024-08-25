@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateOrganizationDTO, Organization } from '../models/organization';
+import { CreateOrganizationDTO, Organization, UpdateOrganizationDTO } from '../models/organization';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -34,7 +34,7 @@ export class OrganizationService {
         return this.http.post<CreateOrganizationDTO>(this.apiUrl, organization);
     }
 
-    updateOrganization(organization: Organization): Observable<Organization> {
+    updateOrganization(organization: UpdateOrganizationDTO): Observable<Organization> {
         return this.http.put<Organization>(this.apiUrl, organization);
     }
 

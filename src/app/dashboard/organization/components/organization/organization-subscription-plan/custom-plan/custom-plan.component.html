@@ -9,7 +9,7 @@
                 <fa-icon [icon]="isEditing ? faChevronUp : faChevronDown" class="text-gray-700"></fa-icon>
             </button>
         </div>
-
+        
         <!-- Monthly/Yearly Switch -->
         <div *ngIf="isEditing" class="flex items-center space-x-4">
             <span class="font-semibold text-gray-700">Monthly</span>
@@ -30,6 +30,7 @@
     <div *ngIf="isExpanded" class="flex items-center justify-center w-full">
         <button
             (click)="selectPlanTier(this.calculatorService.getPlanTierEnum(planTierKey))"
+            disabled="!isEditing"
             *ngFor="let planTierKey of this.calculatorService.getObjectValues(PlanTier)" 
             [class]="planTierKey === selectedPlanTier ? 'bg-gray-100' : ''"
             class="flex flex-col items-center justify-center space-y-2 px-8 py-4 hover:bg-gray-100"

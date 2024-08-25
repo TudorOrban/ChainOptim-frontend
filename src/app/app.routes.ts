@@ -15,7 +15,6 @@ export const routes: Routes = [
     { path: 'signup', component: SignupComponent },
     { path: 'product', component: ProductComponent },
     { path: 'pricing', component: PricingComponent },
-    { path: 'subscribe', component: SubscriptionComponent },
     { path: 'subscribe/success', redirectTo: '/subscribe', pathMatch: 'full' },
     { path: 'subscribe/cancel', redirectTo: '/subscribe', pathMatch: 'full' },
     { path: 'resources', component: ResourcesComponent },

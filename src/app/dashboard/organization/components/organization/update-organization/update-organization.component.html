@@ -1,0 +1,36 @@
+<div class="std-form-container">
+    <form [formGroup]="organizationForm" (ngSubmit)="onSubmit()" class="w-2/3 space-y-6">
+        <h2 class="text-2xl font-semibold mb-4 text-center">Update Organization</h2>
+
+        <div>
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" formControlName="name" class="form-input">
+            <div *ngIf="organizationForm.get('name')?.touched && organizationForm.get('name')?.errors">
+                <p *ngIf="organizationForm.get('name')?.errors?.['required']" class="form-error">Name is required.</p>
+                <p *ngIf="organizationForm.get('name')?.errors?.['minlength']" class="form-error">Name must be at least 3 characters long.</p>
+            </div>
+        </div>
+
+        <div>
+            <label for="address" class="form-label">Address:</label>
+            <textarea id="address" formControlName="address" class="form-input"></textarea>
+            <div *ngIf="organizationForm.get('address')?.touched">
+                <p *ngIf="organizationForm.get('address')?.errors?.['maxlength']" class="form-error">Address must not exceed 200 characters.</p>
+            </div>
+        </div>
+
+        <div>
+            <label for="contactInfo" class="form-label">Contact Info:</label>
+            <textarea id="contactInfo" formControlName="contactInfo" class="form-input"></textarea>
+            <div *ngIf="organizationForm.get('contactInfo')?.touched">
+                <p *ngIf="organizationForm.get('contactInfo')?.errors?.['maxlength']" class="form-error">Contact Info must not exceed 200 characters.</p>
+            </div>
+        </div>
+
+        <div class="flex items-center w-full justify-end">
+            <button type="submit" class="standard-write-button">
+                Update Organization
+            </button>
+        </div>
+    </form>
+</div>

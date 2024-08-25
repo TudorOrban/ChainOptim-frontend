@@ -58,7 +58,7 @@ export class UpdateProductComponent implements OnInit {
 
     private loadProduct() {
         this.route.paramMap.subscribe((params) => {
-            this.productId = parseInt(params.get('productId') || "");
+            this.productId = parseInt(params.get('productId') ?? "");
             if (!this.productId) {
                 return;
             }
@@ -71,7 +71,7 @@ export class UpdateProductComponent implements OnInit {
                         this.product = product;
                         this.productForm.patchValue({
                             name: product.name,
-                            description: product.description || ''
+                            description: product.description ?? ''
                         });
                         this.fallbackManagerService.updateLoading(false);
                     },

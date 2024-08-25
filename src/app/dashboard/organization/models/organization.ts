@@ -38,6 +38,13 @@ export interface CreateOrganizationDTO {
     planTier: PlanTier;
 }
 
+export interface UpdateOrganizationDTO {
+    id: number;
+    name: string;
+    address?: string;
+    contactInfo?: string;
+}
+
 export interface OrganizationInvite {
     id: number;
     organizationId: number;

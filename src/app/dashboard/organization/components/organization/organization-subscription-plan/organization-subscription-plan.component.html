@@ -6,6 +6,16 @@
         </h2>
         
         <div class="flex items-center space-x-2">
+            <!-- Unsubscribe -->
+            <button
+                *ngIf="!!currentPlan && currentPlan?.isActive"
+                (click)="handleUnsubscribe()"
+                class="standard-delete-button"
+            >
+                <p class="label-medium">Unsubscribe</p>
+            </button>
+
+            <!-- Add Plan -->
             <button
                 *ngIf="!currentPlan"
                 (click)="handleCreatePlan()"

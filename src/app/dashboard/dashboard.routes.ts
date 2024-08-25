@@ -40,6 +40,7 @@ import { UpdateComponentComponent } from './goods/components/update-component/up
 import { CreateComponentComponent } from './goods/components/create-component/create-component.component';
 import { TransportRoutesComponent } from './goods/components/transport-routes/transport-routes.component';
 import { SubscriptionComponent } from '../core/payment/components/subscription/subscription.component';
+import { UpdateOrganizationComponent } from './organization/components/organization/update-organization/update-organization.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -57,6 +58,10 @@ export const dashboardRoutes: Routes = [
     {
         path: 'dashboard/organization/subscribe',
         component: SubscriptionComponent,
+    },
+    {
+        path: 'dashboard/organization/:organizationId/update-organization',
+        component: UpdateOrganizationComponent,
     },
     {
         path: 'dashboard/products',
