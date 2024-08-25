@@ -9,11 +9,21 @@ export class CurrentPlanService {
     private currentPlanSource = new BehaviorSubject<CustomSubscriptionPlan | undefined>(undefined);
     currentPlan$ = this.currentPlanSource.asObservable();
 
+    private isPreparingToSubscribe: boolean = false;
+
     setCurrentPlan(plan: CustomSubscriptionPlan): void {
         this.currentPlanSource.next(plan);
     }
 
     getCurrentPlan(): CustomSubscriptionPlan | undefined {
         return this.currentPlanSource.getValue();
+    }
+
+    setPreparingToSubscribe(preparing: boolean): void {
+        this.isPreparingToSubscribe = preparing;
+    }
+
+    getPreparingToSubscribe(): boolean {
+        return this.isPreparingToSubscribe;
     }
 }

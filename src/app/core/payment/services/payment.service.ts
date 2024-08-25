@@ -1,11 +1,9 @@
 import { Injectable } from "@angular/core";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
-import { CustomSubscriptionPlan } from "../../../dashboard/organization/models/SubscriptionPlan";
-import { environment } from "../../../../environments/environment";
 import { ConfigService } from "./config.service";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { UserService } from "../../auth/services/user.service";
+import { CreateSubscriptionPlanDTO } from "../models/SubscriptionPlan";
 
 @Injectable({
     providedIn: 'root'
@@ -24,12 +22,16 @@ export class PaymentService {
 
     private async initializeStripe() {
         const stripeKey = this.configService.getStripePublishableKey();
+        if (!stripeKey) {
+            console.error('Stripe key is missing or invalid');
+            return;
+        }
         this.stripe = await loadStripe(stripeKey);
-    }
+    }    
 
-    createCheckoutSession(customPlan: CustomSubscriptionPlan, organizationId: number): Observable<{ sessionId: string }> {
-        console.log('Creating checkout session for custom plan:', customPlan);
-        return this.http.post<{ sessionId: string }>(`${this.apiUrl}/create`, customPlan);
+    createCheckoutSession(planDTO: CreateSubscriptionPlanDTO): Observable<{ sessionId: string }> {
+        console.log('Creating checkout session for custom plan:', planDTO);
+        return this.http.post<{ sessionId: string }>(`${this.apiUrl}/create`, planDTO);
     }
 
     async redirectToCheckout(sessionId: string) {

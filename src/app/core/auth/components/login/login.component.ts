@@ -5,6 +5,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
+import { CurrentPlanService } from '../../../payment/services/currentplan.service';
 
 @Component({
     selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent {
         private http: HttpClient,
         public authService: AuthenticationService,
         public userService: UserService,
+        private currentPlanService: CurrentPlanService,
         private router: Router
     ) {}
 
@@ -32,12 +34,28 @@ export class LoginComponent {
         this.http.post<any>('api/v1/login', loginPayload).subscribe(
             (response) => {
                 console.log('Login successful', response);
+
                 this.authService.login(response.accessToken);
                 const username = this.authService.getUsernameFromToken();
-                if (username) {
-                    this.userService.fetchAndSetCurrentUser(username);
+                if (!username) {
+                    console.error('No username found in token');
+                    return;
                 }
-                this.router.navigate(['']);
+
+                this.userService.fetchAndSetCurrentUser(username);
+
+                this.userService.getCurrentUser().subscribe((user) => {
+                    console.log('User:', user);
+                    if (this.currentPlanService.getPreparingToSubscribe()) {
+                        if (!user?.organization?.id) {
+                            this.router.navigate(['/dashboard/organization/create-organization']);
+                        }
+
+                        this.router.navigate(['/subscribe']);
+                    } else {
+                        this.router.navigate(['']);
+                    }
+                });
             },
             (error) => {
                 console.log(error);

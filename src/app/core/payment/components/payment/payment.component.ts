@@ -4,6 +4,7 @@ import { CustomSubscriptionPlan } from '../../../../dashboard/organization/model
 import { StripeService } from '../../services/stripe.service';
 import { UserService } from '../../../auth/services/user.service';
 import { User } from '../../../user/model/user';
+import { CreateSubscriptionPlanDTO } from '../../models/SubscriptionPlan';
 
 @Component({
   selector: 'app-payment',
@@ -45,13 +46,20 @@ export class PaymentComponent implements OnInit{
             console.log('No custom plan to start session');
             return;
         }
-        this.paymentService.createCheckoutSession(this.customPlan, this.currentUser.organization.id).subscribe({
+        
+        const planDTO: CreateSubscriptionPlanDTO = {
+            organizationId: this.currentUser.organization.id,
+            customPlan: this.customPlan
+        };
+
+        this.paymentService.createCheckoutSession(planDTO).subscribe({
             next: response => {
                 console.log('Stripe session created:', response);
                 this.stripeService.redirectToCheckout(response.sessionId).then(result => {
-                    if (result.error) {
-                        console.error('Error redirecting to checkout:', result.error);
-                    }
+                    // if (result.error) {
+                    //     console.error('Error redirecting to checkout:', result.error);
+                    // }
+                    console.log('Redirecting to checkout:', result);
                 });
             },
             error: error => console.error('Error creating Stripe session:', error)

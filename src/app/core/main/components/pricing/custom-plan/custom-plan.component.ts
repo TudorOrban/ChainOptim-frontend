@@ -9,6 +9,7 @@ import { CurrentPlanService } from '../../../../payment/services/currentplan.ser
 import { Router } from '@angular/router';
 import { PaymentCalculatorService } from '../../../../payment/services/paymentcalculator.service';
 import { UIUtilService } from '../../../../../shared/common/services/uiutil.service';
+import { UserService } from '../../../../auth/services/user.service';
 
 @Component({
   selector: 'app-custom-plan',
@@ -40,6 +41,7 @@ export class CustomPlanComponent {
         private currentPlanService: CurrentPlanService,
         private paymentCalculatorService: PaymentCalculatorService,
         private utilService: UIUtilService,
+        private userService: UserService,
         private router: Router
     ) {
         this.planService = planService;
@@ -58,7 +60,21 @@ export class CustomPlanComponent {
         console.log('Custom plan:', this.customPlan);
         this.currentPlanService.setCurrentPlan(this.customPlan);
 
-        this.router.navigate(['/subscribe']);
+        this.userService.getCurrentUser().subscribe(user => {
+            console.log('User:', user);
+            if (!user) {
+                this.router.navigate(['/login']);
+                this.currentPlanService.setPreparingToSubscribe(true);
+                return;
+            } 
+            if (!user?.organization) {
+                this.router.navigate(['/dashboard/organization/create']);
+                return;
+            }
+
+            this.router.navigate(['/subscribe']);
+        });
+
     }
 
     // Utils
