@@ -1,1 +1,25 @@
-<p>organization-subscription-plan works!</p>
+
+<div class="page-standard-horizontal-padding py-4 space-y-4">
+    <div class="page-title">
+        Subscription Plan
+    </div>
+
+    <div>
+        <h2 class="label-large">
+            Plan: {{ currentPlan?.customPlan?.planTier ? currentPlan?.customPlan?.planTier : organization?.subscriptionPlanTier ? uiUtilService.formatEnum(organization?.subscriptionPlanTier?.toString() ?? '') : 'No Plan' }}
+        </h2>
+    </div>
+
+    <div *ngIf="!currentPlan?.isBasic">
+        <app-custom-plan
+            [existingPlan]="currentPlan"
+            [isEditing]="isEditingPlan"
+        >
+
+        </app-custom-plan>
+    </div>
+
+    <div *ngIf="noPlan" class="flex items-center justify-center w-full py-4">
+        You have not subscribed to any plan yet.
+    </div>
+</div>

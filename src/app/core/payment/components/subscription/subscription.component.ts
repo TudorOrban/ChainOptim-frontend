@@ -24,7 +24,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     currentPlan: BaseSubscriptionPlan | undefined = undefined; 
     selectedPlanTier: PlanTier = PlanTier.NONE;   
     customPlan: CustomSubscriptionPlan = {
-        basePlanTier: PlanTier.NONE,
+        planTier: PlanTier.NONE,
         additionalFeatures: this.initializeFeatures(0),
     }
     

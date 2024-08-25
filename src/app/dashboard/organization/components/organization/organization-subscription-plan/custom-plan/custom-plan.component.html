@@ -1,4 +1,4 @@
-<div class="w-full page-standard-horizontal-padding py-4 bg-white border border-gray-300 rounded-md shadow-sm">
+<div class="w-full page-standard-horizontal-padding py-4 bg-white rounded-md shadow-sm">
     <div class="flex items-center justify-between w-full px-4 py-6">
         <h2 class="text-2xl font-semibold">Custom Plan</h2>
 
@@ -27,7 +27,7 @@
             class="flex flex-col items-center justify-center space-y-2 px-8 py-4 hover:bg-gray-100"
         >
             <h2 class="font-semibold text-lg">
-                {{ decapitalize(planTierKey.toString()) }}
+                {{ uiUtilService.formatEnum(planTierKey.toString()) }}
             </h2>
 
             <span class="text-lg font-semibold text-gray-800">
@@ -58,12 +58,16 @@
                         <h2 class="text-lg font-semibold">{{ this.uiUtilService.formatEnum(featureKey) }}</h2>
                     </div>
                     <div class="col-span-1 text-lg text-gray-800">
-                        {{ this.calculatorService.getPlanFeatureDetail(this.calculatorService.getFeatureEnum(featureKey), selectedPlanTier, currentPlan) }}
+                        {{ this.uiUtilService.formatNumber(this.calculatorService.getPlanFeatureDetail(this.calculatorService.getFeatureEnum(featureKey), selectedPlanTier, currentPlan)) }}
                     </div>
-                    <div class="col-span-1">
+                    <div *ngIf="!isEditing" class="col-span-1">
+                        {{ this.calculatorService.getPlanFeatureQuantity(this.calculatorService.getFeatureEnum(featureKey), customPlan) }}
+                    </div>
+                    <div *ngIf="isEditing" class="col-span-1">
                         <input type="number" [(ngModel)]="customPlan.additionalFeatures[this.calculatorService.getFeatureEnum(featureKey)]"
                                class="w-20 h-10 border border-gray-300 rounded-md p-2 text-center font-semibold" />
                     </div>
+                    
                     <div class="col-span-1 text-lg font-semibold text-gray-800">
                         ${{ this.calculatorService.getFeaturePrice(this.calculatorService.getFeatureEnum(featureKey), customPlan, isMonthly) | number:'1.0-2' }}
                     </div>

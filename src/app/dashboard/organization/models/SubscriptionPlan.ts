@@ -58,7 +58,7 @@ export interface SubscriptionPlan {
 }
 
 export interface CustomSubscriptionPlan {
-    basePlanTier: PlanTier;
+    planTier: PlanTier;
     totalDollarsMonthly?: number;
     additionalFeatures: Record<Feature, number>;
 }

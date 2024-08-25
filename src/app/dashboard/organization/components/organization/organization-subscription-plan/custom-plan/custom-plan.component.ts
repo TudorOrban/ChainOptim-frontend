@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Feature } from '../../../../../shared/enums/commonEnums';
-import { CustomSubscriptionPlan, PlanTier, BaseSubscriptionPlan } from '../../../../../dashboard/organization/models/SubscriptionPlan';
-import { BaseSubscriptionPlanService } from '../../../../../dashboard/organization/services/basesubscriptionplan.service';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { CurrentPlanService } from '../../../../payment/services/currentplan.service';
 import { Router } from '@angular/router';
-import { PaymentCalculatorService } from '../../../../payment/services/paymentcalculator.service';
-import { UIUtilService } from '../../../../../shared/common/services/uiutil.service';
-import { UserService } from '../../../../auth/services/user.service';
+import { BaseSubscriptionPlan, CustomSubscriptionPlan, PlanTier, SubscriptionPlan } from '../../../../models/SubscriptionPlan';
+import { Feature } from '../../../../../../shared/enums/commonEnums';
+import { BaseSubscriptionPlanService } from '../../../../services/basesubscriptionplan.service';
+import { PaymentCalculatorService } from '../../../../../../core/payment/services/paymentcalculator.service';
+import { UIUtilService } from '../../../../../../shared/common/services/uiutil.service';
+import { CurrentPlanService } from '../../../../../../core/payment/services/currentplan.service';
+import { UserService } from '../../../../../../core/auth/services/user.service';
 
 @Component({
   selector: 'app-custom-plan',
@@ -18,14 +18,16 @@ import { UserService } from '../../../../auth/services/user.service';
   templateUrl: './custom-plan.component.html',
   styleUrl: './custom-plan.component.css'
 })
-export class CustomPlanComponent {
+export class CustomPlanComponent implements OnInit, OnChanges {
+    @Input() existingPlan: SubscriptionPlan | undefined = undefined;
+    @Input() isEditing?: boolean = false;
 
     isMonthly: boolean = true;
     selectedPlanTier: PlanTier = PlanTier.NONE;
     currentPlan: BaseSubscriptionPlan | undefined = undefined;
 
     customPlan: CustomSubscriptionPlan = {
-        basePlanTier: PlanTier.NONE,
+        planTier: PlanTier.NONE,
         additionalFeatures: this.initializeFeatures(0),
     }
 
@@ -49,6 +51,24 @@ export class CustomPlanComponent {
         this.uiUtilService = utilService;
         this.currentPlan = this.planService.getSubscriptionPlan(this.selectedPlanTier);
     }
+
+    ngOnInit() {
+        this.handleInputChanges();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        this.handleInputChanges(changes);
+    }
+
+    private handleInputChanges(changes?: SimpleChanges): void {
+        if (!changes || (!changes['existingPlan'] && !changes['isEditing']) || !this.existingPlan) return;
+        this.selectedPlanTier = this.existingPlan.customPlan?.planTier ?? PlanTier.NONE;
+        this.customPlan = {
+            totalDollarsMonthly: this.existingPlan.customPlan?.totalDollarsMonthly ?? 0,
+            planTier: this.existingPlan.customPlan?.planTier ?? PlanTier.NONE,
+            additionalFeatures: this.existingPlan.customPlan?.additionalFeatures ?? this.initializeFeatures(0),
+        }
+    }
     
     selectPlanTier(planTier: PlanTier): void {
         this.selectedPlanTier = planTier;
@@ -57,11 +77,9 @@ export class CustomPlanComponent {
     }
 
     continueWithCustomPlan(): void {
-        console.log('Custom plan:', this.customPlan);
         this.currentPlanService.setCurrentPlan(this.customPlan);
 
         this.userService.getCurrentUser().subscribe(user => {
-            console.log('User:', user);
             if (!user) {
                 this.router.navigate(['/login']);
                 this.currentPlanService.setPreparingToSubscribe(true);
@@ -80,7 +98,7 @@ export class CustomPlanComponent {
     // Utils
     private resetCustomPlan(planTier: PlanTier): void {
         this.customPlan = {
-            basePlanTier: planTier,
+            planTier: planTier,
             additionalFeatures: this.initializeFeatures(0),
         };
     }

@@ -38,9 +38,11 @@ export class PaymentCalculatorService {
         CLIENT_ORDER: 'maxClientOrders',
         CLIENT_SHIPMENT: 'maxClientShipments',
     };
-    
+
     getTotalPrice(customPlan: CustomSubscriptionPlan, isMonthly: boolean): number {
-        let total = this.planService.getSubscriptionPlan(customPlan.basePlanTier).dollarsPerMonth;
+        if (!customPlan) return 0;
+
+        let total = this.planService.getSubscriptionPlan(customPlan.planTier ?? PlanTier.NONE).dollarsPerMonth;
 
         for (const feature in customPlan.additionalFeatures) {
             total += this.getPriceByFeature(feature as Feature, customPlan, isMonthly);
@@ -57,8 +59,9 @@ export class PaymentCalculatorService {
     }
 
     getPriceByFeature(feature: Feature, customPlan: CustomSubscriptionPlan, isMonthly: boolean): number {
-        const pricing = this.planService.getFeaturePricing(feature);
+        if (!customPlan) return 0;
 
+        const pricing = this.planService.getFeaturePricing(feature);
         if (!pricing) {
             return 0;
         }
@@ -74,7 +77,7 @@ export class PaymentCalculatorService {
         return featureQuantity * pricePerUnit;
     }
     
-    getPlanFeatureDetail(feature: Feature, selectedPlanTier: PlanTier, plan?: BaseSubscriptionPlan): number | boolean {
+    getPlanFeatureDetail(feature: Feature, selectedPlanTier: PlanTier, plan?: BaseSubscriptionPlan): number {
         if (!plan) {
             plan = this.planService.getSubscriptionPlan(selectedPlanTier);
         }
@@ -82,12 +85,16 @@ export class PaymentCalculatorService {
         const planProp = this.featureToPlanPropMap[feature];
         if (planProp) {
             const value = plan[planProp];
-            if (typeof value === 'number' || typeof value === 'boolean') {
+            if (typeof value === 'number') {
                 return value;
             }
         }
         return 0;
     }    
+
+    getPlanFeatureQuantity(feature: Feature, customPlan: CustomSubscriptionPlan): number {
+        return customPlan.additionalFeatures[feature];
+    }
     
     private findClosestTier(pricing: FeaturePricing, quantity: number): number | undefined {
         let closest = undefined;

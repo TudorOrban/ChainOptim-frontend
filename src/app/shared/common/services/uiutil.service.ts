@@ -27,6 +27,7 @@ export class UIUtilService {
 
     formatNumber(value: number | null | undefined): string {
         if (!value) return '0';
+        if (value == -1) return 'Unlimited';
         return value.toFixed(2).replace(/\.?0+$/, '');
     }
     

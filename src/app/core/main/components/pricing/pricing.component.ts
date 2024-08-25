@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PlanTier } from '../../../../dashboard/organization/models/SubscriptionPlan';
 import { CommonModule } from '@angular/common';
 import { PlanBoxComponent } from './plan-box/plan-box.component';
-import { CustomPlanComponent } from './custom-plan/custom-plan.component';
+import { CustomPlanComponent } from '../../../../dashboard/organization/components/organization/organization-subscription-plan/custom-plan/custom-plan.component';
 
 @Component({
   selector: 'app-pricing',
