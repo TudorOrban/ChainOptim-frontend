@@ -41,17 +41,19 @@
 
         <!-- Auth -->
         <div class="">
-            <div
-                *ngIf="authService.isAuthenticated(); else notLoggedIn"
-                class="flex items-center space-x-4"
-            >
-                <img
-                    src="assets/images/blank-avatar-image.png"
-                    alt="Avatar"
-                    class="avatar-icon"
-                    class="w-10 h-10 rounded-full"
-                />
-                <button (click)="logout()" class="auth-button">Logout</button>
+            <div *ngIf="authService.isAuthenticated(); else notLoggedIn" class="relative lg:mr-8 xl:mr-16 min-w-6">
+                <div
+                    class="flex items-center cursor-pointer"
+                    (click)="toggleDropdown()"
+                >
+                    <img
+                        src="assets/images/blank-avatar-image.png"
+                        alt="Avatar"
+                        class="w-10 h-10 rounded-full"
+                    />
+                </div>
+                <app-userbar *ngIf="showDropdown" class="absolute -translate-x-1/2 left-1/2 mt-4 w-48 h-64 bg-white shadow-lg z-50">
+                </app-userbar>
             </div>
             <ng-template #notLoggedIn>
                 <div class="flex items-center space-x-4">
@@ -64,5 +66,6 @@
                 </div>
             </ng-template>
         </div>
+        
     </nav>
 </header>

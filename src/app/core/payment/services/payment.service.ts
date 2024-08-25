@@ -5,12 +5,13 @@ import { environment } from "../../../../environments/environment";
 import { ConfigService } from "./config.service";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { UserService } from "../../auth/services/user.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class PaymentService {
-    private apiUrl = 'http://localhost:8080/api/v1/payments';
+    private apiUrl = 'http://localhost:8080/api/v1/subscription-plans';
 
     private stripe: Stripe | null = null;
 
@@ -26,9 +27,9 @@ export class PaymentService {
         this.stripe = await loadStripe(stripeKey);
     }
 
-    createCheckoutSession(customPlan: CustomSubscriptionPlan): Observable<{ sessionId: string }> {
+    createCheckoutSession(customPlan: CustomSubscriptionPlan, organizationId: number): Observable<{ sessionId: string }> {
         console.log('Creating checkout session for custom plan:', customPlan);
-        return this.http.post<{ sessionId: string }>(`${this.apiUrl}/create-checkout-session`, customPlan);
+        return this.http.post<{ sessionId: string }>(`${this.apiUrl}/create`, customPlan);
     }
 
     async redirectToCheckout(sessionId: string) {

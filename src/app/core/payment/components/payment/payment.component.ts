@@ -2,6 +2,8 @@ import { Component, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { PaymentService } from '../../services/payment.service';
 import { CustomSubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
 import { StripeService } from '../../services/stripe.service';
+import { UserService } from '../../../auth/services/user.service';
+import { User } from '../../../user/model/user';
 
 @Component({
   selector: 'app-payment',
@@ -10,13 +12,28 @@ import { StripeService } from '../../services/stripe.service';
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.css'
 })
-export class PaymentComponent {
+export class PaymentComponent implements OnInit{
     @Input() customPlan: CustomSubscriptionPlan | undefined = undefined;
 
+    currentUser: User | undefined = undefined;
+
     constructor(
+        private userService: UserService,
         private paymentService: PaymentService,
         private stripeService: StripeService
     ) {}
+
+    ngOnInit(): void {
+        console.log('Payment component initialized');
+
+        this.userService.getCurrentUser().subscribe(user => {
+            if (!user) {
+                return;
+            }
+            this.currentUser = user;
+
+        });
+    }
 
     confirmPayment(): void {
         console.log('Confirm payment');
@@ -24,11 +41,11 @@ export class PaymentComponent {
     }
 
     private startStripeSession(): void {
-        if (!this.customPlan) {
+        if (!this.customPlan || !this.currentUser?.organization?.id) {
             console.log('No custom plan to start session');
             return;
         }
-        this.paymentService.createCheckoutSession(this.customPlan).subscribe({
+        this.paymentService.createCheckoutSession(this.customPlan, this.currentUser.organization.id).subscribe({
             next: response => {
                 console.log('Stripe session created:', response);
                 this.stripeService.redirectToCheckout(response.sessionId).then(result => {
