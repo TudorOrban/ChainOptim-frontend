@@ -1,11 +1,12 @@
 import { User, UserRole } from "../../../core/user/model/user";
+import { PlanTier } from "./SubscriptionPlan";
 
 export interface Organization {
     id: number;
     name: string;
     address?: string;
     contactInfo?: string;
-    subscriptionPlanTier: SubscriptionPlan;
+    subscriptionPlanTier: PlanTier;
     createdAt: Date;
     updatedAt: Date;
     isPlanBasic?: boolean;
@@ -34,10 +35,8 @@ export interface CreateOrganizationDTO {
     creatorId: string;
     existingUserIds?: string[];
     createdUsers?: CreateUserDTO[];
-    subscriptionPlan: SubscriptionPlan;
+    planTier: PlanTier;
 }
-
-export type SubscriptionPlan = "NONE" | "BASIC" | "PRO";
 
 export interface OrganizationInvite {
     id: number;

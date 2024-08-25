@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import {
     CreateOrganizationDTO,
     SearchUserDTO,
-    SubscriptionPlan,
 } from '../../models/organization';
 import { OrganizationService } from '../../services/organization.service';
 import { UserService } from '../../../../core/auth/services/user.service';
@@ -12,6 +11,7 @@ import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch, faUser, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { User } from '../../../../core/user/model/user';
+import { PlanTier } from '../../models/SubscriptionPlan';
 
 @Component({
     selector: 'app-create-organization',
@@ -25,7 +25,7 @@ export class CreateOrganizationComponent {
     name: string = '';
     address: string = '';
     contactInfo: string = '';
-    subscriptionPlan: SubscriptionPlan = 'NONE';
+    planTier: PlanTier = PlanTier.NONE;
     currentUser: User | null = null;
 
     // Other
@@ -47,6 +47,13 @@ export class CreateOrganizationComponent {
     ngOnInit() {
         this.userService.getCurrentUser().subscribe((data) => {
             this.currentUser = data;
+
+            if (!this.currentUser) {
+                console.error('No current user found');
+            }
+            if (this.currentUser?.organization) {
+                this.router.navigate(['/dashboard/organization']);
+            }
         });
     }
 
@@ -56,12 +63,11 @@ export class CreateOrganizationComponent {
                 name: this.name,
                 address: this.address,
                 contactInfo: this.contactInfo,
-                subscriptionPlan: this.subscriptionPlan,
+                planTier: this.planTier,
                 creatorId: this.currentUser?.id,
                 createdUsers: [],
                 existingUserIds: this.selectedUsers.map(user => user.id),
             };
-            console.log("EWQEQ", newOrganization);
 
             this.organizationService.createOrganization(newOrganization).subscribe({
                 next: (organization) => {

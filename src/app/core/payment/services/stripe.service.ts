@@ -20,29 +20,30 @@ export class StripeService {
 
     private initializeStripe(): void {
         const stripeKey = this.configService.getStripePublishableKey();
-        if (stripeKey) {
-            this.stripePromise = loadStripe(stripeKey);
-            this.stripePromise.then(stripe => {
-                console.log('Stripe is initialized:', !!stripe);
-            }).catch(error => {
-                console.error('Error initializing Stripe:', error);
-            });
-        } else {
+        if (!stripeKey) {
             console.error('Stripe key is missing or invalid');
             this.stripePromise = Promise.resolve(null);
+            return;
         }
+        
+        this.stripePromise = loadStripe(stripeKey);
+        this.stripePromise.then(stripe => {
+            console.log('Stripe is initialized:', !!stripe);
+        }).catch(error => {
+            console.error('Error initializing Stripe:', error);
+        });
     }
 
     async redirectToCheckout(sessionId: string): Promise<void> {
         const stripe = await this.stripePromise;
-        if (stripe) {
-            const { error } = await stripe.redirectToCheckout({ sessionId: sessionId });
-            if (error) {
-                console.error('Error redirecting to checkout:', error);
-                throw error;
-            }
-        } else {
+        if (!stripe) {
             throw new Error('Stripe is not initialized');
+        }
+
+        const { error } = await stripe.redirectToCheckout({ sessionId: sessionId });
+        if (error) {
+            console.error('Error redirecting to checkout:', error);
+            throw error;
         }
     }
 }

@@ -23,7 +23,6 @@ export class PaymentService {
     private async initializeStripe() {
         const stripeKey = this.configService.getStripePublishableKey();
         if (!stripeKey) {
-            console.error('Stripe key is missing or invalid');
             return;
         }
         this.stripe = await loadStripe(stripeKey);

@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrganizationDTO, Organization } from '../models/organization';
 import { BehaviorSubject, Observable } from 'rxjs';
-import {User} from "../../../core/user/model/user";
 
 @Injectable({
     providedIn: 'root',

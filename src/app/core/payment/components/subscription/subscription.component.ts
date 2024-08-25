@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PaymentComponent } from '../payment/payment.component';
-import { CustomSubscriptionPlan, FeaturePricing, PlanTier, BaseSubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
+import { CustomSubscriptionPlan, PlanTier, BaseSubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
 import { CurrentPlanService } from '../../services/currentplan.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';

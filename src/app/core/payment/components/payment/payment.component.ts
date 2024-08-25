@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PaymentService } from '../../services/payment.service';
 import { CustomSubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
 import { StripeService } from '../../services/stripe.service';
@@ -56,9 +56,6 @@ export class PaymentComponent implements OnInit{
             next: response => {
                 console.log('Stripe session created:', response);
                 this.stripeService.redirectToCheckout(response.sessionId).then(result => {
-                    // if (result.error) {
-                    //     console.error('Error redirecting to checkout:', result.error);
-                    // }
                     console.log('Redirecting to checkout:', result);
                 });
             },

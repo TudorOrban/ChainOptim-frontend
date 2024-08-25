@@ -11,4 +11,7 @@ import { Organization } from '../../../models/organization';
 export class OrganizationSubscriptionPlanComponent {
     @Input() organization: Organization | null = null;
 
+    constructor() {
+        
+    }
 }
