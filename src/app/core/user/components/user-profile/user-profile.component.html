@@ -3,7 +3,7 @@
     <div class="flex items-center space-x-4">
         <app-user-avatar [user]="accessedUser" class="w-10 h-10"></app-user-avatar>
 
-        <div>
+        <div *ngIf="!isEditing">
             <span class="page-title">
                 {{ accessedUser?.username }}
             </span>
@@ -12,10 +12,26 @@
                 <p class="value-medium">{{ accessedUser?.email }}</p>
             </div>
         </div>
+
+        <div *ngIf="isEditing">
+            <input
+                type="text"
+                class="form-input"
+                [(ngModel)]="updatedUser.username"
+                placeholder="Username"
+            >
+            <input
+                type="text"
+                class="form-input"
+                [ngModel]="updatedUser.email"
+                placeholder="Email"
+            >
+        </div>
     </div>
 
     <div class="flex items-center space-x-2">
         <button
+            *ngIf="!isEditing"
             class="standard-delete-button"
             (click)="handleDisplayConfirmDeleteDialog()"
         >
@@ -23,17 +39,45 @@
         </button>
 
         <button
+            *ngIf="accessedUser?.id === currentUser?.id && !isEditing"
             class="flex items-center space-x-2 standard-write-button"
             (click)="handleEditProfile()"
         >
             <fa-icon [icon]="faEdit" class="text-white"></fa-icon>
             <span class="font-semibold">Edit Profile</span>
         </button>
+
+        <button
+            class="standard-button"
+            (click)="handleCancelEditProfile()"
+            *ngIf="isEditing"
+        >
+            <fa-icon [icon]="faTimes" class="text-gray-800"></fa-icon>
+        </button>
+
+        <button
+            class="standard-write-button"
+            (click)="handleSaveProfile()"
+            *ngIf="isEditing"
+        >
+            <fa-icon [icon]="faSave" class="text-white mr-2"></fa-icon>
+            <span class="font-semibold">Save Profile</span>
+        </button>
     </div>
 </div>
 
- <!-- Content -->
- <div class="page-standard-horizontal-padding py-4 space-y-4">
+<!-- Content -->
+<div *ngIf="!isEditing" class="page-standard-horizontal-padding py-4 space-y-4">
+    <!-- Email not confirmed -->
+    <div *ngIf="accessedUser?.id === currentUser?.id && !accessedUser?.enabled" class="flex items-center space-x-2">
+        <div class="w-4 h-4 bg-red-600 rounded-full border border-gray-200">
+        </div>
+        <p class="label-medium-large">
+            Warning: 
+        </p>
+        <p class="font-semibold">Confirm your email to activate your account.</p>
+    </div>
+
     <div class="flex items-center space-x-2">
         <h2 class="label-medium-large">Joined At:</h2>
         <p class="value-medium font-semibold">{{ accessedUser?.createdAt | date: 'medium' }}</p>
@@ -60,15 +104,59 @@
     </div>
 </div>
 
+<!-- Edit Profile -->
+<div *ngIf="isEditing" class="page-standard-horizontal-padding py-4 space-y-4">
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Joined At:</h2>
+        <p class="value-medium font-semibold">{{ accessedUser?.createdAt | date: 'medium' }}</p>
+    </div>
+    
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Organization:</h2>
+        <p class="value-medium font-semibold">{{ accessedUser?.organization?.name ?? 'None' }}</p>
+        <button
+            class="standard-delete-button"
+            (click)="handleOpenExitOrganizationConfirmDialog()"
+        >
+            <fa-icon [icon]="faXmark" class="text-white"></fa-icon>
+        </button>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Subscription Plan:</h2>
+        <p class="value-medium font-semibold">{{ uiUtilService.formatEnum(accessedUser?.organization?.subscriptionPlanTier) }}</p>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Role:</h2>
+        <p class="value-medium font-semibold">{{ uiUtilService.formatEnum(accessedUser?.role) }}</p>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Custom Role:</h2>
+        <p class="value-medium font-semibold">{{ accessedUser?.customRole?.name ?? 'None' }}</p>
+    </div>
+</div>
 
 
-<!-- Confirm dialog -->
-<div class="overlay" *ngIf="isConfirmDialogOpen">
+<!-- Confirm dialogs -->
+<div class="overlay" *ngIf="isDeleteAccountConfirmDialogOpen">
     <div class="dialog-container">
         <app-generic-confirm-dialog 
-            [dialogInput]="deleteDialogInput"
+            [dialogInput]="deleteAccountDialogInput"
             (confirm)="handleDeleteAccount()"
             (cancel)="handleCancelDeletion()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>
+
+<div class="overlay" *ngIf="isExitOrganizationConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="exitOrganizationDialogInput"
+            (confirm)="handleConfirmExitOrganization()"
+            (cancel)="handleCancelExitOrganization()"
         >
         </app-generic-confirm-dialog>
     </div>
