@@ -1,7 +1,12 @@
 <!-- Header -->
 <div class="flex items-center justify-between w-full page-standard-horizontal-padding entity-page-header">
+    <!-- Left side -->
     <div class="flex items-center space-x-4">
-        <app-user-avatar [user]="accessedUser" class="w-10 h-10"></app-user-avatar>
+        <app-user-avatar 
+            [user]="accessedUser" 
+            [isEditing]="isEditing"
+            class="w-10 h-10"
+        ></app-user-avatar>
 
         <div *ngIf="!isEditing">
             <span class="page-title">
@@ -29,42 +34,70 @@
         </div>
     </div>
 
-    <div class="flex items-center space-x-2">
-        <button
-            *ngIf="!isEditing"
-            class="standard-delete-button"
-            (click)="handleDisplayConfirmDeleteDialog()"
-        >
-            <fa-icon [icon]="faTrash" class="text-white"></fa-icon>
-        </button>
+    <!-- Right side -->
+    <div class="space-y-2">
+        <!-- Is Profile Public -->
+        <div class="flex items-center justify-end">
+            <!-- Not editing -->
+            <div *ngIf="!isEditing" class="label-medium-large">
+                {{ accessedUser?.isProfilePublic ? 'Public' : 'Private' }} Profile
+            </div>
 
-        <button
-            *ngIf="accessedUser?.id === currentUser?.id && !isEditing"
-            class="flex items-center space-x-2 standard-write-button"
-            (click)="handleEditProfile()"
-        >
-            <fa-icon [icon]="faEdit" class="text-white"></fa-icon>
-            <span class="font-semibold">Edit Profile</span>
-        </button>
+            <!-- Editing -->
+            <div *ngIf="isEditing" class="flex items-center space-x-4">
+                <span class="font-semibold text-gray-700">Private</span>
+                <div class="toggle-switch">
+                    <label>
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="updatedUser.isProfilePublic"
+                        />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <span class="font-semibold text-gray-700">Public</span>
+            </div>
+        </div>
 
-        <button
-            class="standard-button"
-            (click)="handleCancelEditProfile()"
-            *ngIf="isEditing"
-        >
-            <fa-icon [icon]="faTimes" class="text-gray-800"></fa-icon>
-        </button>
-
-        <button
-            class="standard-write-button"
-            (click)="handleSaveProfile()"
-            *ngIf="isEditing"
-        >
-            <fa-icon [icon]="faSave" class="text-white mr-2"></fa-icon>
-            <span class="font-semibold">Save Profile</span>
-        </button>
+        <!-- CRUD ops buttons -->
+        <div class="flex items-center space-x-2">
+            <button
+                *ngIf="!isEditing"
+                class="standard-delete-button"
+                (click)="handleDisplayConfirmDeleteDialog()"
+            >
+                <fa-icon [icon]="faTrash" class="text-white"></fa-icon>
+            </button>
+    
+            <button
+                *ngIf="accessedUser?.id === currentUser?.id && !isEditing"
+                class="flex items-center space-x-2 standard-write-button"
+                (click)="handleEditProfile()"
+            >
+                <fa-icon [icon]="faEdit" class="text-white"></fa-icon>
+                <span class="font-semibold">Edit Profile</span>
+            </button>
+    
+            <button
+                class="standard-button"
+                (click)="handleCancelEditProfile()"
+                *ngIf="isEditing"
+            >
+                <fa-icon [icon]="faTimes" class="text-gray-800"></fa-icon>
+            </button>
+    
+            <button
+                class="standard-write-button"
+                (click)="handleSaveProfile()"
+                *ngIf="isEditing"
+            >
+                <fa-icon [icon]="faSave" class="text-white mr-2"></fa-icon>
+                <span class="font-semibold">Save Profile</span>
+            </button>
+        </div>
     </div>
 </div>
+
 
 <!-- Content -->
 <div *ngIf="!isEditing" class="page-standard-horizontal-padding py-4 space-y-4">
@@ -76,6 +109,16 @@
             Warning: 
         </p>
         <p class="font-semibold">Confirm your email to activate your account.</p>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Full Name:</h2>
+        <p class="value-medium font-semibold">{{ accessedUser?.fullName }}</p>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Phone:</h2>
+        <p class="value-medium font-semibold">{{ accessedUser?.phone ?? 'None' }}</p>
     </div>
 
     <div class="flex items-center space-x-2">
@@ -107,6 +150,26 @@
 <!-- Edit Profile -->
 <div *ngIf="isEditing" class="page-standard-horizontal-padding py-4 space-y-4">
     <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Full Name:</h2>
+        <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="updatedUser.fullName"
+            placeholder="Full Name"
+        >
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Phone:</h2>
+        <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="updatedUser.phone"
+            placeholder="Phone"
+        >
+    </div>
+
+    <div class="flex items-center space-x-2">
         <h2 class="label-medium-large">Joined At:</h2>
         <p class="value-medium font-semibold">{{ accessedUser?.createdAt | date: 'medium' }}</p>
     </div>
@@ -137,7 +200,6 @@
         <p class="value-medium font-semibold">{{ accessedUser?.customRole?.name ?? 'None' }}</p>
     </div>
 </div>
-
 
 <!-- Confirm dialogs -->
 <div class="overlay" *ngIf="isDeleteAccountConfirmDialogOpen">

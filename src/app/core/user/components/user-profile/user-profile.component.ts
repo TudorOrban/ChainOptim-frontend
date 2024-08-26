@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../model/user';
+import { UpdateUserProfileDTO, User } from '../../model/user';
 import { AuthenticationService } from '../../../auth/services/authentication.service';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,8 @@ import { GenericConfirmDialogComponent } from '../../../../shared/common/compone
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { UIUtilService } from '../../../../shared/common/services/uiutil.service';
 import { FormsModule } from '@angular/forms';
+import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
+import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
 
 @Component({
     selector: 'app-user-profile',
@@ -27,6 +29,7 @@ export class UserProfileComponent implements OnInit {
         username: "",
         role: "NONE",
         email: "",
+        isProfilePublic: false,
     };
 
     isEditing = false;
@@ -55,6 +58,7 @@ export class UserProfileComponent implements OnInit {
         private authService: AuthenticationService,
         private userService: UserService,
         uiUtilService: UIUtilService,
+        private toastService: ToastService,
         private router: Router,
         private route: ActivatedRoute,
     ) {
@@ -122,7 +126,38 @@ export class UserProfileComponent implements OnInit {
     }
 
     handleSaveProfile(): void {
-        console.log('Saving profile');
+        const updateUserDTO = this.getUpdateUserDTO(); // TODO: Add validation
+        console.log('Updating profile', updateUserDTO);
+        
+        this.userService.updateUser(updateUserDTO).subscribe({
+            next: user => {
+                console.log('Profile updated', user);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Profile Updated',
+                    message: 'Your profile has been successfully updated',
+                    outcome: OperationOutcome.SUCCESS,
+                });
+
+                if (this.updatedUser.username !== this.accessedUser?.username) {
+                    this.authService.logout();
+                    this.router.navigate([`login`]); // Prompt user to login again to refresh JWT token
+                    return;
+                }
+                
+                this.isEditing = false;
+                this.accessedUser = user;
+            },
+            error: error => {
+                console.error('Error updating profile', error);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Error Updating Profile',
+                    message: 'There was an error updating your profile',
+                    outcome: OperationOutcome.ERROR,
+                });
+            }
+        });
     }
 
     handleCancelEditProfile(): void {
@@ -141,7 +176,18 @@ export class UserProfileComponent implements OnInit {
     }
 
     handleCancelExitOrganization(): void {
-        console.log('Cancelling exit organization');
         this.isExitOrganizationConfirmDialogOpen = false;
+    }
+
+    private getUpdateUserDTO(): UpdateUserProfileDTO {
+        return {
+            id: this.updatedUser.id,
+            username: this.updatedUser.username,
+            fullName: this.updatedUser?.fullName,
+            email: this.updatedUser.email,
+            phone: this.updatedUser?.phone,
+            imageUrl: this.updatedUser?.imageUrl,
+            isProfilePublic: this.updatedUser?.isProfilePublic,
+        };
     }
 }

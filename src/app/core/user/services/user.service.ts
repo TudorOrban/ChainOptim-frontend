@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SearchUserDTO } from '../../../dashboard/organization/models/organization';
-import { User, UserRole } from '../model/user';
+import { UpdateUserProfileDTO, User, UserRole } from '../model/user';
 
 @Injectable({
     providedIn: 'root',
@@ -63,8 +63,8 @@ export class UserService {
         return this.http.post<User>(this.apiUrl, user);
     }
 
-    updateUser(user: User): Observable<User> {
-        return this.http.put<User>(this.apiUrl, user);
+    updateUser(userDTO: UpdateUserProfileDTO): Observable<User> {
+        return this.http.put<User>(`${this.apiUrl}/update`, userDTO);
     }
 
     deleteUser(id: number): Observable<void> {

@@ -1,7 +1,19 @@
 <div *ngIf="user?.imageUrl" class="w-12 h-12 flex items-center justify-center bg-white border border-gray-300 rounded-full shadow-sm">
-    <img alt="Profile" [src]="user?.imageUrl" class="w-12 h-12 rounded-full" />
+    <div *ngIf="!isEditing">
+        <img alt="Profile" [src]="user?.imageUrl" class="w-12 h-12 rounded-full" />
+    </div>
+    <button
+        *ngIf="isEditing"
+    >
+        <fa-icon [icon]="faEdit"></fa-icon>
+    </button>
 </div>
 
 <div *ngIf="!user?.imageUrl" class="w-12 h-12 flex items-center justify-center bg-white border border-gray-300 rounded-full shadow-sm text-lg font-semibold text-gray-800">
-    {{ getAvatarLetters() }}
+    <div *ngIf="!isEditing">{{ getAvatarLetters() }}</div>
+    <button
+        *ngIf="isEditing"
+    >
+        <fa-icon [icon]="faPlus"></fa-icon>
+    </button>
 </div>

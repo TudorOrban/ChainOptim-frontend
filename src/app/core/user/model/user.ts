@@ -4,7 +4,9 @@ import { Organization } from "../../../dashboard/organization/models/organizatio
 export interface User {
     id: string;
     username: string;
+    fullName?: string;
     email?: string;
+    phone?: string;
     createdAt?: Date;
     updatedAt?: Date;
     role: UserRole;
@@ -13,6 +15,16 @@ export interface User {
     isProfilePublic?: boolean;
     enabled?: boolean;
     imageUrl?: string;
+}
+
+export interface UpdateUserProfileDTO {
+    id: string;
+    username: string;
+    fullName?: string;
+    email?: string;
+    phone?: string;
+    imageUrl?: string;
+    isProfilePublic?: boolean;
 }
 
 export type UserRole = "ADMIN" | "MEMBER" | "NONE";

@@ -33,33 +33,37 @@ export class LoginComponent {
         };
         this.http.post<any>('api/v1/login', loginPayload).subscribe(
             (response) => {
-                console.log('Login successful', response);
-
-                this.authService.login(response.accessToken);
-                const username = this.authService.getUsernameFromToken();
-                if (!username) {
-                    console.error('No username found in token');
-                    return;
-                }
-
-                this.userService.fetchAndSetCurrentUser(username);
-
-                this.userService.getCurrentUser().subscribe((user) => {
-                    console.log('User:', user);
-                    if (this.currentPlanService.getPreparingToSubscribe()) {
-                        if (!user?.organization?.id) {
-                            this.router.navigate(['/dashboard/organization/create-organization']);
-                        }
-
-                        this.router.navigate(['/subscribe']);
-                    } else {
-                        this.router.navigate(['']);
-                    }
-                });
+                this.handleSubmitRespones(response);
             },
             (error) => {
                 console.log(error);
             }
         );
+    }
+
+    private handleSubmitRespones(response: any): void {
+        console.log('Login successful', response);
+
+        this.authService.login(response.accessToken);
+        const username = this.authService.getUsernameFromToken();
+        if (!username) {
+            console.error('No username found in token');
+            return;
+        }
+
+        this.userService.fetchAndSetCurrentUser(username);
+
+        this.userService.getCurrentUser().subscribe((user) => {
+            console.log('User:', user);
+            if (this.currentPlanService.getPreparingToSubscribe()) {
+                if (!user?.organization?.id) {
+                    this.router.navigate(['/dashboard/organization/create-organization']);
+                }
+
+                this.router.navigate(['/subscribe']);
+            } else {
+                this.router.navigate(['']);
+            }
+        });
     }
 }

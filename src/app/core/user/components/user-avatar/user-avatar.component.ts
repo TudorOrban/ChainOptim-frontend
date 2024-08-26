@@ -2,17 +2,23 @@ import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../../model/user';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
+import { faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
-  selector: 'app-user-avatar',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './user-avatar.component.html',
-  styleUrl: './user-avatar.component.css'
+    selector: 'app-user-avatar',
+    standalone: true,
+    imports: [CommonModule, FontAwesomeModule],
+    templateUrl: './user-avatar.component.html',
+    styleUrl: './user-avatar.component.css'
 })
 export class UserAvatarComponent implements OnInit {
     @Input() user?: User;
     @Input() shouldUseCurrentUser?: boolean = false;
+    @Input() isEditing?: boolean = false;
+
+    faPlus = faPlus;
+    faEdit = faEdit;
 
     constructor(
         private userService: UserService
