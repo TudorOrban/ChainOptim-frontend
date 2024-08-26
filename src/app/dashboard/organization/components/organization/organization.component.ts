@@ -17,6 +17,8 @@ import { NavigationItem } from '../../../../shared/common/models/uiTypes';
 import { UIUtilService } from '../../../../shared/common/services/uiutil.service';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
+import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
+import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
 
 @Component({
     selector: 'app-organization',
@@ -66,6 +68,7 @@ export class OrganizationComponent implements OnInit {
         private userService: UserService,
         private organizationService: OrganizationService,
         private fallbackManagerService: FallbackManagerService,
+        private toastService: ToastService,
         uiUtilService: UIUtilService,
         private router: Router
     ) {
@@ -91,19 +94,19 @@ export class OrganizationComponent implements OnInit {
     private getOrganization(): void {
         if (!this.currentUser?.organization?.id) {
             console.error('No organization found');
+            this.fallbackManagerService.updateLoading(false);
             return;
         }
 
         this.organizationService.getOrganizationById(this.currentUser?.organization?.id || 0).subscribe((orgData) => {
+            this.fallbackManagerService.updateLoading(false);
             if (!orgData) {
                 this.fallbackManagerService.updateError('Organization not found');
-                this.fallbackManagerService.updateLoading(false);
                 return;
             }
             
             console.log('Organization', orgData);
                 this.organization = orgData;
-                this.fallbackManagerService.updateLoading(false);
         });
     }
 
@@ -113,23 +116,40 @@ export class OrganizationComponent implements OnInit {
     }
 
     handleEditOrganization(): void {
-        console.log('Edit organization');
-
         if (!this.currentUser?.organization?.id) return;
         this.router.navigate([`dashboard/organization/${this.currentUser?.organization?.id ?? 0}/update-organization`]);
     }
 
     handleDisplayConfirmDeleteDialog(): void {
-        console.log('Display confirm delete dialog');
         this.isConfirmDialogOpen = true;
     }
 
     handleDeleteOrganization(): void {
-        console.log('Delete organization');
+        this.organizationService.deleteOrganization(this.organization?.id ?? 0).subscribe({
+            next: data => {
+
+                console.log('Organization deleted', data);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Organization Deleted',
+                    message: 'The organization has been successfully deleted',
+                    outcome: OperationOutcome.SUCCESS,
+                });
+                this.router.navigate(['/dashboard']);
+            },
+            error: error => {
+                console.error('Error deleting organization', error);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Error Deleting Organization',
+                    message: 'An error occurred while deleting the organization',
+                    outcome: OperationOutcome.ERROR,
+                });
+            }
+        });
     }
 
     handleCancelDeletion(): void {
-        console.log('Cancel delete');
         this.isConfirmDialogOpen = false;
     }
 }

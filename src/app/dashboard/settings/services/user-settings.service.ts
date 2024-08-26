@@ -23,9 +23,9 @@ export class UserSettingsService {
             (settings) => {
                 console.log('Fetched user settings:', settings);
                 this.setCurrentSettings(settings);
-            },
+            },  
             (error) => {
-                console.error('Error fetching user settings:', error);
+                console.log('Error fetching user settings:', error);
                 this.setCurrentSettings(null);
             }
         );

@@ -56,7 +56,7 @@ export class OrganizationSubscriptionPlanComponent implements OnInit {
                     this.currentPlan = plan;
                 },
                 error: error => {
-                    console.error('Error getting subscription plan:', error);
+                    console.log('Error getting subscription plan:', error);
                     this.noPlan = true;
                 }
             });
