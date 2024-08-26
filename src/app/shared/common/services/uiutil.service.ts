@@ -31,11 +31,12 @@ export class UIUtilService {
         return value.toFixed(2).replace(/\.?0+$/, '');
     }
     
-    formatEnum(text: string): string {
+    formatEnum(text: string | undefined): string {
+        if (!text) return '';
         return text.toLowerCase().replace(/(?:^|\s)\w/g, (match) => match.toUpperCase()).replace(/_/g, ' ');
     }
 
-    formatDate(dateStr: Date | string | null |undefined): Date {
+    formatDate(dateStr: Date | string | null | undefined): Date {
         if (!dateStr) return new Date();
         return new Date(`${dateStr}T00:00`);
     }

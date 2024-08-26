@@ -1,20 +1,75 @@
-<div class="page-standard-horizontal-padding entity-page-header">
+<!-- Header -->
+<div class="flex items-center justify-between w-full page-standard-horizontal-padding entity-page-header">
+    <div class="flex items-center space-x-4">
+        <app-user-avatar [user]="accessedUser" class="w-10 h-10"></app-user-avatar>
 
-    <div class="flex items-center justify-between w-full">
-        <div class="flex items-center space-x-4">
-            <app-user-avatar [user]="accessedUser" class="w-10 h-10"></app-user-avatar>
-
-            <div>
-                <span class="page-title">
-                    {{ accessedUser?.username }}
-                </span>
-                <div class="flex items-center space-x-2 pt-2 text-lg text-gray-900">
-                    <span class="label-medium-large">Email:</span>
-                    <p class="value-medium">{{ accessedUser?.email }}</p>
-                </div>
+        <div>
+            <span class="page-title">
+                {{ accessedUser?.username }}
+            </span>
+            <div class="flex items-center space-x-2 pt-2 text-lg text-gray-900">
+                <span class="label-medium-large">Email:</span>
+                <p class="value-medium">{{ accessedUser?.email }}</p>
             </div>
         </div>
-
     </div>
 
+    <div class="flex items-center space-x-2">
+        <button
+            class="standard-delete-button"
+            (click)="handleDisplayConfirmDeleteDialog()"
+        >
+            <fa-icon [icon]="faTrash" class="text-white"></fa-icon>
+        </button>
+
+        <button
+            class="flex items-center space-x-2 standard-write-button"
+            (click)="handleEditProfile()"
+        >
+            <fa-icon [icon]="faEdit" class="text-white"></fa-icon>
+            <span class="font-semibold">Edit Profile</span>
+        </button>
+    </div>
+</div>
+
+ <!-- Content -->
+ <div class="page-standard-horizontal-padding py-4 space-y-4">
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Joined At:</h2>
+        <p class="value-medium font-semibold">{{ accessedUser?.createdAt | date: 'medium' }}</p>
+    </div>
+    
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Organization:</h2>
+        <p class="value-medium font-semibold">{{ accessedUser?.organization?.name ?? 'None' }}</p>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Subscription Plan:</h2>
+        <p class="value-medium font-semibold">{{ uiUtilService.formatEnum(accessedUser?.organization?.subscriptionPlanTier) }}</p>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Role:</h2>
+        <p class="value-medium font-semibold">{{ uiUtilService.formatEnum(accessedUser?.role) }}</p>
+    </div>
+
+    <div class="flex items-center space-x-2">
+        <h2 class="label-medium-large">Custom Role:</h2>
+        <p class="value-medium font-semibold">{{ accessedUser?.customRole?.name ?? 'None' }}</p>
+    </div>
+</div>
+
+
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteAccount()"
+            (cancel)="handleCancelDeletion()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
 </div>
