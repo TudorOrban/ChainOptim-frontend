@@ -35,7 +35,7 @@ export class OrganizationService {
     }
 
     updateOrganization(organization: UpdateOrganizationDTO): Observable<Organization> {
-        return this.http.put<Organization>(this.apiUrl, organization);
+        return this.http.put<Organization>(`${this.apiUrl}/update`, organization);
     }
 
     deleteOrganization(id: number): Observable<void> {

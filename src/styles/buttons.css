@@ -2,6 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
     padding-left: 1rem;
     padding-right: 1rem;
     padding-top: 0.5rem;
@@ -49,7 +50,6 @@
     padding-right: 1rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    /* background-color: rgb(37 99 235); */
     background-color: rgb(20, 120, 230);
 
     color: white;
