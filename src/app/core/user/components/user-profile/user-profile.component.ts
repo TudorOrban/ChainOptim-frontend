@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../../user/model/user';
+import { User } from '../../model/user';
 import { AuthenticationService } from '../../../auth/services/authentication.service';
-import { UserService } from '../../../auth/services/user.service';
+import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';

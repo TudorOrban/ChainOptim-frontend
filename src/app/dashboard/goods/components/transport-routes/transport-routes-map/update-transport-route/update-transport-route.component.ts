@@ -10,7 +10,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../../../core/user/model/user';
 import { Pair, ResourceTransportRoute, SelectLocationModeType, TransportedEntity, TransportedEntityType, TransportType, UpdateRouteDTO } from '../../../../models/TransportRoute';
-import { UserService } from '../../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../../core/user/services/user.service';
 import { FallbackManagerService } from '../../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ToastService } from '../../../../../../shared/common/components/toast-system/toast.service';
 import { OperationOutcome } from '../../../../../../shared/common/components/toast-system/toastTypes';

@@ -41,7 +41,7 @@ import { CreateComponentComponent } from './goods/components/create-component/cr
 import { TransportRoutesComponent } from './goods/components/transport-routes/transport-routes.component';
 import { SubscriptionComponent } from './organization/components/organization/organization-subscription-plan/subscription/subscription.component';
 import { UpdateOrganizationComponent } from './organization/components/organization/update-organization/update-organization.component';
-import { UserProfileComponent } from '../core/main/components/user-profile/user-profile.component';
+import { UserProfileComponent } from '../core/user/components/user-profile/user-profile.component';
 
 export const dashboardRoutes: Routes = [
     {

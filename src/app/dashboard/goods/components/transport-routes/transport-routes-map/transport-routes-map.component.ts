@@ -3,7 +3,7 @@ import { FacilityCardComponent } from '../../../../overview/components/map/cards
 import { TransportRouteUIComponent } from '../../../../overview/components/map/transport-route-ui/transport-route-ui.component';
 import { SupplyChainMapService } from '../../../../overview/services/supplychainmap.service';
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
-import { UserService } from '../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../core/user/services/user.service';
 import { Organization } from '../../../../organization/models/organization';
 import { EntityType, Pair, ResourceTransportRoute, TransportRoute } from '../../../models/TransportRoute';
 import { TransportRouteService } from '../../../services/transportroute.service';

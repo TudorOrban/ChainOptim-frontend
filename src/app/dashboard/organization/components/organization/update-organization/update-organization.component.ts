@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Organization, UpdateOrganizationDTO } from '../../../models/organization';
 import { User } from '../../../../../core/user/model/user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserService } from '../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../core/user/services/user.service';
 import { FallbackManagerService } from '../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
 import { ActivatedRoute, Router } from '@angular/router';

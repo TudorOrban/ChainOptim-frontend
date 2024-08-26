@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ProductService } from '../../../../../dashboard/goods/services/product.service';
-import { UserService } from '../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../core/user/services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product, ProductSearchDTO } from '../../../../../dashboard/goods/models/Product';

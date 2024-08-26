@@ -14,7 +14,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent } from './core/main/components/sidebar/sidebar.component';
 import { filter, Observable, switchMap } from 'rxjs';
-import { UserService } from './core/auth/services/user.service';
+import { UserService } from './core/user/services/user.service';
 import { OrganizationService } from './dashboard/organization/services/organization.service';
 import { ToastManagerComponent } from './shared/common/components/toast-system/toast-manager/toast-manager.component';
 import { NotificationLiveService } from './dashboard/overview/services/notificationlive.service';

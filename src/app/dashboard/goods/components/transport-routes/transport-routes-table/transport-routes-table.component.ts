@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PaginatedResults } from '../../../../../shared/search/models/searchTypes';
-import { UserService } from '../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../core/user/services/user.service';
 import {
     FilterOption,
     SearchParams,

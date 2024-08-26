@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Organization } from '../../models/organization';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import { OrganizationService } from '../../services/organization.service';
 import { faBuilding, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';

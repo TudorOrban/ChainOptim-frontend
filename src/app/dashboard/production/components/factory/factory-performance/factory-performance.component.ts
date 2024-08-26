@@ -3,7 +3,7 @@ import { Factory, FactoryStageSearchDTO } from '../../../models/Factory';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FactoryPerformanceService } from '../../../services/factoryperformance.service';
 import { FactoryPerformance, FactoryStagePerformanceReport } from '../../../models/FactoryPerformance';
-import { UserService } from '../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../core/user/services/user.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { ScoreComponent } from '../../../../../shared/common/components/score/score.component';

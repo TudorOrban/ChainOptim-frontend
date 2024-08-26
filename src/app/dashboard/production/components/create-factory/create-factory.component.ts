@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateFactoryDTO } from '../../models/Factory';
 import { User } from '../../../../core/user/model/user';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { FactoryService } from '../../services/factory.service';
 import { Router } from '@angular/router';

@@ -9,7 +9,7 @@ import { FallbackManagerComponent } from '../../../../shared/fallback/components
 import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { UserSettingsService } from '../../services/user-settings.service';
 import { UserSettings } from '../../models/UserSettings';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import { User } from '../../../../core/user/model/user';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Organization } from '../../../models/organization';
 import { SubscriptionPlanService } from '../../../services/subscriptionplan.service';
-import { UserService } from '../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../core/user/services/user.service';
 import { SubscriptionPlan } from '../../../models/SubscriptionPlan';
 import { CommonModule } from '@angular/common';
 import { UIUtilService } from '../../../../../shared/common/services/uiutil.service';

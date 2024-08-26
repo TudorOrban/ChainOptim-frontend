@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CustomSubscriptionPlan } from '../../../../models/SubscriptionPlan';
 import { StripeService } from '../../../../services/stripe.service';
-import { UserService } from '../../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../../core/user/services/user.service';
 import { User } from '../../../../../../core/user/model/user';
 import { CreateSubscriptionPlanDTO } from "../../../../models/SubscriptionPlan";
 import { SubscriptionPlanService } from '../../../../services/subscriptionplan.service';

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SearchUserDTO } from '../../../dashboard/organization/models/organization';
-import { User, UserRole } from '../../user/model/user';
+import { User, UserRole } from '../model/user';
 
 @Injectable({
     providedIn: 'root',

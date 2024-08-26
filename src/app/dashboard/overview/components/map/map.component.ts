@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Facility, SupplyChainMap } from '../../types/supplyChainMapTypes';
 import { SupplyChainMapService } from '../../services/supplychainmap.service';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { Organization } from '../../../organization/models/organization';
 import { FacilityCardComponent } from './cards/facility-card/facility-card.component';

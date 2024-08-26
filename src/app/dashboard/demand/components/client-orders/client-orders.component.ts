@@ -6,7 +6,7 @@ import {
     UpdateClientOrderDTO,
 } from '../../models/ClientOrder';
 import { ClientOrderService } from '../../services/clientorder.service';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import {
     FilterOption,
     SearchParams,

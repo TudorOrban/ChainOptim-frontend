@@ -1,0 +1,7 @@
+<div *ngIf="user?.imageUrl" class="w-12 h-12 flex items-center justify-center bg-white border border-gray-200 rounded-full shadow-sm">
+    <img alt="Profile" [src]="user?.imageUrl" class="w-12 h-12 rounded-full" />
+</div>
+
+<div *ngIf="!user?.imageUrl" class="w-12 h-12 flex items-center justify-center bg-white border border-gray-200 rounded-full shadow-sm text-lg font-semibold text-gray-800">
+    {{ getAvatarLetters() }}
+</div>

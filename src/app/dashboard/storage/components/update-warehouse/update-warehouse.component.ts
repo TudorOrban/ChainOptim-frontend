@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateWarehouseDTO, Warehouse } from '../../models/Warehouse';
 import { User } from '../../../../core/user/model/user';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { WarehouseService } from '../../services/warehouse.service';
 import { ActivatedRoute, Router } from '@angular/router';

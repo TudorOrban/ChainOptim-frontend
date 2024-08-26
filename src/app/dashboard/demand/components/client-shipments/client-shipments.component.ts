@@ -7,7 +7,7 @@ import {
     UpdateClientShipmentDTO,
 } from '../../models/ClientShipment';
 import { ClientShipmentService } from '../../services/clientshipment.service';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import {
     FilterOption,
     SearchParams,

@@ -3,7 +3,7 @@
 >
     <nav class="h-14 flex items-center justify-between mx-4">
         <!-- Logo -->
-        <div class="w-10 h-10 min-w-10 mr-2">
+        <div class="w-10 h-10 min-w-10 r-2">
             <img
                 src="assets/images/science-logo.jpg"
                 alt="App Icon"
@@ -45,12 +45,10 @@
                 <div
                     class="flex items-center cursor-pointer"
                     (click)="toggleDropdown()"
-                >
-                    <img
-                        src="assets/images/blank-avatar-image.png"
-                        alt="Avatar"
-                        class="w-10 h-10 rounded-full"
-                    />
+                >   
+                    <app-user-avatar
+                        [shouldUseCurrentUser]="true"
+                    ></app-user-avatar>
                 </div>
                 <app-userbar *ngIf="showDropdown" class="absolute -translate-x-1/2 left-1/2 mt-4 w-48 h-64 bg-white shadow-lg z-50">
                 </app-userbar>

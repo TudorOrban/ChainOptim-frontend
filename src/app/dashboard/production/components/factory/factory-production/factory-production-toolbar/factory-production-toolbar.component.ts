@@ -9,7 +9,7 @@ import { FactoryEdge, NodeSelection } from '../../../../models/FactoryGraph';
 import { FactoryStageConnectionService } from '../../../../services/factorystageconnection.service';
 import { DeleteConnectionDTO } from '../../../../models/Factory';
 import { User } from '../../../../../../core/user/model/user';
-import { UserService } from '../../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../../core/user/services/user.service';
 import { ToastService } from '../../../../../../shared/common/components/toast-system/toast.service';
 import { GenericConfirmDialogComponent } from '../../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { ConfirmDialogInput } from '../../../../../../shared/common/models/confirmDialogTypes';

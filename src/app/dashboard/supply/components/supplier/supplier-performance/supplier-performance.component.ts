@@ -6,7 +6,7 @@ import { SupplierPerformanceService } from '../../../services/supplierperformanc
 import { SupplierPerformance, SupplierPerformanceReport } from '../../../models/SupplierPerformance';
 import { ComponentService } from '../../../../goods/services/component.service';
 import { ComponentSearchDTO } from '../../../../goods/models/Component';
-import { UserService } from '../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../core/user/services/user.service';
 import { SelectComponentComponent } from '../../../../../shared/common/components/select/select-component/select-component.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';

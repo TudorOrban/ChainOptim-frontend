@@ -5,7 +5,7 @@ import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { SelectDurationComponent } from '../../../../../../shared/common/components/select/select-duration/select-duration.component';
 import { DeleteConnectionDTO, ProductEdge } from '../../../../models/ProductGraph';
 import { User } from '../../../../../../core/user/model/user';
-import { UserService } from '../../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../../core/user/services/user.service';
 import { ToastService } from '../../../../../../shared/common/components/toast-system/toast.service';
 import { GenericConfirmDialogComponent } from '../../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { ConfirmDialogInput } from '../../../../../../shared/common/models/confirmDialogTypes';

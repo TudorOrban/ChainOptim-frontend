@@ -7,7 +7,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { ToastService } from '../../../../../../../shared/common/components/toast-system/toast.service';
-import { UserService } from '../../../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../../../core/user/services/user.service';
 import { FallbackManagerService } from '../../../../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { StageService } from '../../../../../services/stage.service';
 import { OperationOutcome } from '../../../../../../../shared/common/components/toast-system/toastTypes';

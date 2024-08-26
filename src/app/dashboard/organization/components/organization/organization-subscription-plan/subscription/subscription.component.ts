@@ -11,7 +11,7 @@ import { Feature } from '../../../../../../shared/enums/commonEnums';
 import { PaymentCalculatorService } from '../../../../services/paymentcalculator.service';
 import { UIUtilService } from '../../../../../../shared/common/services/uiutil.service';
 import { CustomPlanComponent } from '../custom-plan/custom-plan.component';
-import { UserService } from '../../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../../core/user/services/user.service';
 import { User } from '../../../../../../core/user/model/user';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../../../shared/common/components/toast-system/toast.service';

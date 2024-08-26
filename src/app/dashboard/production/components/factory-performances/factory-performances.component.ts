@@ -14,7 +14,7 @@ import {
 import { ListHeaderComponent } from '../../../../shared/common/components/list-header/list-header.component';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 import { SortOption } from '../../../../shared/search/models/searchTypes';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import { ScoreComponent } from '../../../../shared/common/components/score/score.component';
 
 @Component({

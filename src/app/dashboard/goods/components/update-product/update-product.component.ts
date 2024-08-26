@@ -6,7 +6,7 @@ import { UnitOfMeasurement } from '../../models/UnitOfMeasurement';
 import { StandardUnit, UnitMagnitude } from '../../../../shared/enums/unitEnums';
 import { Product, UpdateProductDTO } from '../../models/Product';
 import { User } from '../../../../core/user/model/user';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import { FallbackManagerService } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, Router } from '@angular/router';

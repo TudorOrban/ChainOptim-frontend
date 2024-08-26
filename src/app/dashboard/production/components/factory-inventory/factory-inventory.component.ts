@@ -6,7 +6,7 @@ import {
     UpdateFactoryInventoryItemDTO,
 } from '../../models/FactoryInventoryItem';
 import { FactoryInventoryItemService } from '../../services/factoryinventoryitem.service';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import {
     FilterOption,
     SearchParams,

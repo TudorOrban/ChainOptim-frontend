@@ -6,7 +6,7 @@ import {
     UpdateWarehouseInventoryItemDTO,
 } from '../../models/WarehouseInventoryItem';
 import { WarehouseInventoryItemService } from '../../services/warehouseinventoryitem.service';
-import { UserService } from '../../../../core/auth/services/user.service';
+import { UserService } from '../../../../core/user/services/user.service';
 import {
     FilterOption,
     SearchParams,

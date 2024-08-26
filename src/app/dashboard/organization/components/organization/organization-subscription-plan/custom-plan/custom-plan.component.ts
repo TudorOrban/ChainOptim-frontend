@@ -9,7 +9,7 @@ import { BaseSubscriptionPlanService } from '../../../../services/basesubscripti
 import { PaymentCalculatorService } from '../../../../services/paymentcalculator.service';
 import { UIUtilService } from '../../../../../../shared/common/services/uiutil.service';
 import { CurrentPlanService } from '../../../../services/currentplan.service';
-import { UserService } from '../../../../../../core/auth/services/user.service';
+import { UserService } from '../../../../../../core/user/services/user.service';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
