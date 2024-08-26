@@ -9,12 +9,16 @@ import { CustomPlanComponent } from './custom-plan/custom-plan.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEdit, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import { Router, RouterModule } from '@angular/router';
-import { CurrentPlanService } from '../../../../../core/payment/services/currentplan.service';
+import { GenericConfirmDialogComponent } from '../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
+import { ConfirmDialogInput } from '../../../../../shared/common/models/confirmDialogTypes';
+import { ToastService } from '../../../../../shared/common/components/toast-system/toast.service';
+import { OrganizationService } from '../../../services/organization.service';
+import { OperationOutcome } from '../../../../../shared/common/components/toast-system/toastTypes';
 
 @Component({
     selector: 'app-organization-subscription-plan',
     standalone: true,
-    imports: [CommonModule, FontAwesomeModule, RouterModule, CustomPlanComponent],
+    imports: [CommonModule, FontAwesomeModule, RouterModule, CustomPlanComponent, GenericConfirmDialogComponent],
     templateUrl: './organization-subscription-plan.component.html',
     styleUrl: './organization-subscription-plan.component.css'
 })
@@ -32,10 +36,17 @@ export class OrganizationSubscriptionPlanComponent implements OnInit {
 
     uiUtilService: UIUtilService;
 
+    deleteDialogInput: ConfirmDialogInput = {
+        dialogTitle: 'Cancel Subscription',
+        dialogMessage: 'Are you sure you want to unsubscribe? Resources belonging to this organization will be deleted beyond those covered by the \'None\' plan.',
+    };
+    isConfirmDialogOpen = false;
+
     constructor(
         private userService: UserService,
         private planService: SubscriptionPlanService,
-        private currentPlanService: CurrentPlanService,
+        private toastService: ToastService,
+        private organizationService: OrganizationService,
         uiUtilService: UIUtilService,
         private router: Router
     ) {
@@ -64,8 +75,35 @@ export class OrganizationSubscriptionPlanComponent implements OnInit {
     }
 
     // Handlers
+    handleOpenUnsubscribeConfirmDialog(): void {
+        this.isConfirmDialogOpen = true;
+    }
+
     handleUnsubscribe(): void {
-        console.log('Unsubscribe');
+        this.organizationService.unsubscribeOrganization(this.organization?.id ?? 0).subscribe({
+            next: () => {
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Unsubscribed successfully',
+                    message: 'You have successfully unsubscribed from the organization',
+                    outcome: OperationOutcome.SUCCESS
+                })
+                this.router.navigate(['/dashboard/organization']);
+            },
+            error: error => {
+                console.error('Error unsubscribing:', error);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Error unsubscribing',
+                    message: 'There was an error unsubscribing from the organization',
+                    outcome: OperationOutcome.ERROR
+                })
+            }
+        });
+    }
+
+    handleCancelUnsubscription(): void {
+        this.isConfirmDialogOpen = false;
     }
 
     handleCreatePlan(): void {

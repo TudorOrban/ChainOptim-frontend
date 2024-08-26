@@ -9,7 +9,7 @@
             <!-- Unsubscribe -->
             <button
                 *ngIf="!!currentPlan && currentPlan?.isActive"
-                (click)="handleUnsubscribe()"
+                (click)="handleOpenUnsubscribeConfirmDialog()"
                 class="standard-delete-button"
             >
                 <p class="label-medium">Unsubscribe</p>
@@ -109,5 +109,17 @@
 
     <div *ngIf="noPlan" class="flex items-center justify-center w-full py-4">
         You have not subscribed to any plan yet.
+    </div>
+</div>
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleUnsubscribe()"
+            (cancel)="handleCancelUnsubscription()"
+        >
+        </app-generic-confirm-dialog>
     </div>
 </div>

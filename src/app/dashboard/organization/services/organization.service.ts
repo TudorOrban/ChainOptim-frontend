@@ -39,9 +39,12 @@ export class OrganizationService {
     }
 
     deleteOrganization(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${id}`);
+        return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
     }
 
+    unsubscribeOrganization(id: number): Observable<void> {
+        return this.http.put<void>(`${this.apiUrl}/unsubscribe/${id}`, null);
+    }
 
     setCurrentOrganization(organization: Organization | null): void {
         this.currentOrganizationSubject.next(organization);
