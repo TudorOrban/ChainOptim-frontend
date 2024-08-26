@@ -10,6 +10,7 @@ export interface User {
     role: UserRole;
     customRole?: CustomRole;
     organization?: Organization;
+    imageUrl?: string;
 }
 
 export type UserRole = "ADMIN" | "MEMBER" | "NONE";

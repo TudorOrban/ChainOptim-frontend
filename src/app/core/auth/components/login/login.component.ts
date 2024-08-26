@@ -5,7 +5,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
-import { CurrentPlanService } from '../../../payment/services/currentplan.service';
+import { CurrentPlanService } from '../../../../dashboard/organization/services/currentplan.service';
 
 @Component({
     selector: 'app-login',

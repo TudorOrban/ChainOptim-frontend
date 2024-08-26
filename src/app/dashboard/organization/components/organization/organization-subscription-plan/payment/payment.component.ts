@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CustomSubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
-import { StripeService } from '../../services/stripe.service';
-import { UserService } from '../../../auth/services/user.service';
-import { User } from '../../../user/model/user';
-import { CreateSubscriptionPlanDTO } from '../../models/SubscriptionPlan';
-import { SubscriptionPlanService } from '../../../../dashboard/organization/services/subscriptionplan.service';
+import { CustomSubscriptionPlan } from '../../../../models/SubscriptionPlan';
+import { StripeService } from '../../../../services/stripe.service';
+import { UserService } from '../../../../../../core/auth/services/user.service';
+import { User } from '../../../../../../core/user/model/user';
+import { CreateSubscriptionPlanDTO } from "../../../../models/SubscriptionPlan";
+import { SubscriptionPlanService } from '../../../../services/subscriptionplan.service';
 
 @Component({
   selector: 'app-payment',

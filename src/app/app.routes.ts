@@ -8,7 +8,7 @@ import { dashboardRoutes } from './dashboard/dashboard.routes';
 import { PricingComponent } from './core/main/components/pricing/pricing.component';
 import { ResourcesComponent } from './core/main/components/resources/resources.component';
 import { ProductComponent } from './core/main/components/product/product.component';
-import { SubscriptionComponent } from './core/payment/components/subscription/subscription.component';
+import { SubscriptionComponent } from './dashboard/organization/components/organization/organization-subscription-plan/subscription/subscription.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },

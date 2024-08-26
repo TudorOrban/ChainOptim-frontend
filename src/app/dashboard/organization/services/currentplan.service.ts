@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CustomSubscriptionPlan } from "../../../dashboard/organization/models/SubscriptionPlan";
+import { CustomSubscriptionPlan } from "../models/SubscriptionPlan";
 import { BehaviorSubject } from "rxjs";
 
 @Injectable({

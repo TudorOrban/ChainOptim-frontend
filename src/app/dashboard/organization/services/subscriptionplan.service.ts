@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { SubscriptionPlan } from "../models/SubscriptionPlan";
 import { Observable } from "rxjs";
-import { CreateSubscriptionPlanDTO } from "../../../core/payment/models/SubscriptionPlan";
+import { CreateSubscriptionPlanDTO } from "../models/SubscriptionPlan";
 
 @Injectable({
     providedIn: 'root'

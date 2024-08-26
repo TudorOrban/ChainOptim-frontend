@@ -6,12 +6,12 @@
             class="w-10 h-10 rounded-full"
         />
         <h2 class="text-lg">
-            Tudor
+            {{ currentUser?.username }}
         </h2>
     </div>
-
+    
     <div>
-        <a routerLink="/profile">Profile</a>
+        <a [routerLink]="['/dashboard/organization/profile', currentUser?.username]">Profile</a>
     </div>
 
     <div>

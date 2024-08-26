@@ -1,0 +1,20 @@
+<div class="page-standard-horizontal-padding entity-page-header">
+
+    <div class="flex items-center justify-between w-full">
+        <div class="flex items-center space-x-4">
+            <app-user-avatar [user]="accessedUser" class="w-10 h-10"></app-user-avatar>
+
+            <div>
+                <span class="page-title">
+                    {{ accessedUser?.username }}
+                </span>
+                <div class="flex items-center space-x-2 pt-2 text-lg text-gray-900">
+                    <span class="label-medium-large">Email:</span>
+                    <p class="value-medium">{{ accessedUser?.email }}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

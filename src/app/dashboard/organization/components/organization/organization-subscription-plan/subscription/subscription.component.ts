@@ -2,20 +2,20 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PaymentComponent } from '../payment/payment.component';
-import { CustomSubscriptionPlan, PlanTier, BaseSubscriptionPlan, SubscriptionPlan } from '../../../../dashboard/organization/models/SubscriptionPlan';
-import { CurrentPlanService } from '../../services/currentplan.service';
+import { CustomSubscriptionPlan, PlanTier, BaseSubscriptionPlan, SubscriptionPlan } from '../../../../models/SubscriptionPlan';
+import { CurrentPlanService } from '../../../../services/currentplan.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { Feature } from '../../../../shared/enums/commonEnums';
-import { PaymentCalculatorService } from '../../services/paymentcalculator.service';
-import { UIUtilService } from '../../../../shared/common/services/uiutil.service';
-import { CustomPlanComponent } from '../../../../dashboard/organization/components/organization/organization-subscription-plan/custom-plan/custom-plan.component';
-import { UserService } from '../../../auth/services/user.service';
-import { User } from '../../../user/model/user';
+import { Feature } from '../../../../../../shared/enums/commonEnums';
+import { PaymentCalculatorService } from '../../../../services/paymentcalculator.service';
+import { UIUtilService } from '../../../../../../shared/common/services/uiutil.service';
+import { CustomPlanComponent } from '../custom-plan/custom-plan.component';
+import { UserService } from '../../../../../../core/auth/services/user.service';
+import { User } from '../../../../../../core/user/model/user';
 import { Router } from '@angular/router';
-import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
-import { OperationOutcome } from '../../../../shared/common/components/toast-system/toastTypes';
+import { ToastService } from '../../../../../../shared/common/components/toast-system/toast.service';
+import { OperationOutcome } from '../../../../../../shared/common/components/toast-system/toastTypes';
 
 @Component({
     selector: 'app-subscription',

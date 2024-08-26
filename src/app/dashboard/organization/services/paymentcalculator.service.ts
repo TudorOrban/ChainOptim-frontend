@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { CustomSubscriptionPlan, FeaturePricing, PlanTier, BaseSubscriptionPlan } from "../../../dashboard/organization/models/SubscriptionPlan";
+import { CustomSubscriptionPlan, FeaturePricing, PlanTier, BaseSubscriptionPlan } from "../models/SubscriptionPlan";
 import { Feature } from "../../../shared/enums/commonEnums";
-import { BaseSubscriptionPlanService } from "../../../dashboard/organization/services/basesubscriptionplan.service";
+import { BaseSubscriptionPlanService } from "./basesubscriptionplan.service";
 
 @Injectable({
     providedIn: 'root'

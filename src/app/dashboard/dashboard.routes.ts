@@ -39,8 +39,9 @@ import { ComponentComponent } from './goods/components/component/component.compo
 import { UpdateComponentComponent } from './goods/components/update-component/update-component.component';
 import { CreateComponentComponent } from './goods/components/create-component/create-component.component';
 import { TransportRoutesComponent } from './goods/components/transport-routes/transport-routes.component';
-import { SubscriptionComponent } from '../core/payment/components/subscription/subscription.component';
+import { SubscriptionComponent } from './organization/components/organization/organization-subscription-plan/subscription/subscription.component';
 import { UpdateOrganizationComponent } from './organization/components/organization/update-organization/update-organization.component';
+import { UserProfileComponent } from '../core/main/components/user-profile/user-profile.component';
 
 export const dashboardRoutes: Routes = [
     {
@@ -62,6 +63,10 @@ export const dashboardRoutes: Routes = [
     {
         path: 'dashboard/organization/:organizationId/update-organization',
         component: UpdateOrganizationComponent,
+    },
+    {
+        path: 'dashboard/organization/profile/:username',
+        component: UserProfileComponent,
     },
     {
         path: 'dashboard/products',
