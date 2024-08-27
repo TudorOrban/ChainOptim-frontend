@@ -23,6 +23,7 @@ import { GenericConfirmDialogComponent } from '../../../../shared/common/compone
 import { ToastComponent } from '../../../../shared/common/components/toast-system/toast/toast.component';
 import { OperationOutcome, ToastInfo } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
+import { ProductPricingComponent } from './product-pricing/product-pricing.component';
 
 @Component({
     selector: 'app-product',
@@ -34,6 +35,7 @@ import { ToastService } from '../../../../shared/common/components/toast-system/
         TabsComponent,
         ProductOverviewComponent,
         ProductProductionComponent,
+        ProductPricingComponent,
         ProductEvaluationComponent,
         FallbackManagerComponent,
         GenericConfirmDialogComponent,
@@ -53,6 +55,9 @@ export class ProductComponent implements OnInit {
         },
         {
             label: "Production",
+        },
+        {
+            label: "Pricing",
         },
         {
             label: "Evaluation",

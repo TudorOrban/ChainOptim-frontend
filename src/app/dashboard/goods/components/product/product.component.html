@@ -29,6 +29,7 @@
 
 <app-product-overview *ngIf="activeTab === 'Overview'" [product]="product"></app-product-overview>
 <app-product-production *ngIf="activeTab === 'Production'" [product]="product"></app-product-production>
+<app-product-pricing *ngIf="activeTab === 'Pricing'" [product]="product"></app-product-pricing>
 <app-product-evaluation *ngIf="activeTab === 'Evaluation'" [product]="product"></app-product-evaluation>
 
 <!-- Fallback manager -->
