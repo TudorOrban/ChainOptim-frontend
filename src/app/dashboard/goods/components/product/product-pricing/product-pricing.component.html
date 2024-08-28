@@ -1,1 +1,59 @@
-<p>product-pricing works!</p>
+<div class="page-standard-horizontal-padding py-4">
+    <div class="flex items-center justify-between w-full">
+        <h2 class="page-title">
+            Pricing
+        </h2>
+        
+        <div class="flex items-center space-x-2">
+            <!-- Delete -->
+            <button
+                (click)="openConfirmDeleteDialog()"
+                class="standard-delete-button"
+                *ngIf="!isEditing"
+            >
+                <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
+            </button>
+
+            <!-- Edit -->
+            <button
+                (click)="handleEditPricing()"
+                class="standard-write-button"
+                *ngIf="!isEditing"
+            >
+                <fa-icon [icon]="faEdit" class="w-4 h-4 mb-2 mr-2"></fa-icon>
+                <p>Edit</p>
+            </button>
+
+            <!-- Save -->
+            <button
+                (click)="handleSavePricing()"
+                class="standard-write-button"
+                *ngIf="isEditing"
+            >
+                <fa-icon [icon]="faSave" class="w-4 h-4 mb-2 mr-2"></fa-icon>
+                <p>Save</p>
+            </button>
+
+            <!-- Cancel -->
+            <button
+                (click)="handleCancelEditPricing()"
+                class="standard-button"
+                *ngIf="isEditing"
+            >
+                <fa-icon [icon]="faTimes" class="w-4 h-4"></fa-icon>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm dialog -->
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeletePricing()"
+            (cancel)="cancelDeletePricing()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>
