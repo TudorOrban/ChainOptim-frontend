@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SelectUnitOfMeasurementComponent } from '../../../../shared/common/components/select/select-unit-of-measurement/select-unit-of-measurement.component';
 import { UnitOfMeasurement } from '../../models/UnitOfMeasurement';
-import { Magnitudes, StandardUnit, UnitMagnitude, Units } from '../../../../shared/enums/unitEnums';
+import { StandardUnit, UnitMagnitude } from '../../../../shared/enums/unitEnums';
 import { Component as ProdComponent, UpdateComponentDTO } from '../../models/Component';
 import { User } from '../../../../core/user/model/user';
 import { UserService } from '../../../../core/user/services/user.service';
@@ -25,7 +25,7 @@ export class UpdateComponentComponent implements OnInit {
     component: ProdComponent | undefined = undefined;
     currentUser: User | undefined = undefined;
     componentForm: FormGroup = new FormGroup({});
-    unitOfMeasurement: UnitOfMeasurement = { standardUnit: Units.KILOGRAM, unitMagnitude: Magnitudes.BASE};
+    unitOfMeasurement: UnitOfMeasurement = { standardUnit: StandardUnit.KILOGRAM, unitMagnitude: UnitMagnitude.BASE };
   
     constructor(
         private componentService: ComponentService,

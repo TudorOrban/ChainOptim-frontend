@@ -1,10 +1,16 @@
 import { Injectable } from "@angular/core";
 import { UnitOfMeasurement } from "../../../dashboard/goods/models/UnitOfMeasurement";
+import { format } from "path";
+import { UnitService } from "./unit.service";
 
 @Injectable({
     providedIn: 'root',
 })
 export class UIUtilService {
+
+    constructor(
+        private unitService: UnitService
+    ) {}
 
     formatTimePeriod(days: number | undefined): string {
         if (!days) {
@@ -42,19 +48,35 @@ export class UIUtilService {
         return new Date(`${dateStr}T00:00`);
     }
 
-    formatUnitOfMeasurement(unit?: UnitOfMeasurement, abbreviation?: boolean): string {
+    formatUnitOfMeasurement(unit?: UnitOfMeasurement, fullName?: boolean, abbreviation?: boolean): string {
         if (!unit) return '';
-        console.log("Unit: ", unit);
-        const stdUnitStr = unit.standardUnit?.name?.toLowerCase();
-        const magnitudeStr = this.decapitalize(unit.unitMagnitude?.name);
-        if (!abbreviation) {
-            return magnitudeStr && stdUnitStr ? `${magnitudeStr} ${stdUnitStr}` : ''; 
+        
+        let formattedUnit = "";
+
+        if (fullName) {
+            formattedUnit = this.formatUnitFullName(unit);
         }
 
-        const stdUnitAbbreviationStr = unit.standardUnit?.abbreviation?.toLowerCase();
-        const magnitudeAbbreviationStr = unit.unitMagnitude?.abbreviation?.toLowerCase();
+        if (abbreviation) {
+            formattedUnit += formattedUnit ? ` (${this.formatUnitAbbreviation(unit)})` : this.formatUnitAbbreviation(unit);
+        };
+
+        return formattedUnit;
+    }
+
+    private formatUnitFullName(unit: UnitOfMeasurement): string {
+        const stdUnitStr = this.formatEnum(unit.standardUnit);
+        const magnitudeStr = this.formatEnum(unit.unitMagnitude);
+        if (!stdUnitStr || !magnitudeStr) return '';
+        if (magnitudeStr === 'Base') return stdUnitStr;
+        return `${magnitudeStr}${stdUnitStr.toLowerCase()}(s)`;
+    }
+
+    private formatUnitAbbreviation(unit: UnitOfMeasurement): string {
+        const stdUnitAbbreviationStr = this.unitService.getUnitAbbreviation(unit.standardUnit);
+        const magnitudeAbbreviationStr = this.unitService.getMagnitudeAbbreviation(unit.unitMagnitude);
         if (!stdUnitAbbreviationStr || !magnitudeAbbreviationStr) return '';
-        return `${stdUnitAbbreviationStr} ${magnitudeAbbreviationStr}`;
+        return `${stdUnitAbbreviationStr}${magnitudeAbbreviationStr.toLowerCase()}`;
     }
 
     decapitalize(text?: string): string {

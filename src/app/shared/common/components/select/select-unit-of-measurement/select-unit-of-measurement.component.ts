@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Magnitudes, StandardUnit, UnitMagnitude, Units } from '../../../../enums/unitEnums';
+import { StandardUnit, UnitMagnitude } from '../../../../enums/unitEnums';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -13,8 +13,8 @@ import { CommonModule } from '@angular/common';
 export class SelectUnitOfMeasurementComponent {
     standardUnits = Object.values(StandardUnit);
     unitMagnitudes = Object.values(UnitMagnitude);
-    selectedStandardUnit: StandardUnit =  Units.KILOGRAM;
-    selectedUnitMagnitude: UnitMagnitude = Magnitudes.BASE;
+    selectedStandardUnit: StandardUnit =  StandardUnit.KILOGRAM;
+    selectedUnitMagnitude: UnitMagnitude = UnitMagnitude.BASE;
   
     @Output() unitChange = new EventEmitter<{ standardUnit: StandardUnit, unitMagnitude: UnitMagnitude }>();
 

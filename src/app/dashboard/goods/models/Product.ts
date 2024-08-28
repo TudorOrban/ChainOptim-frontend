@@ -10,6 +10,7 @@ export interface Product {
     updatedAt: Date;
     stages?: Stage[];
     unit?: UnitOfMeasurement;
+    
 }
 
 export interface CreateProductDTO {
