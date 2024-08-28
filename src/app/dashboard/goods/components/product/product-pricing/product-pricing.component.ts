@@ -24,6 +24,8 @@ export class ProductPricingComponent implements OnInit {
 
     isEditing: boolean = false;
     maxSliderValue: number = 1000;
+    priceRanges: { range: string, price: string }[] = [];
+    
     quantity: number = 0;
     pricePerUnit: number = 0;
     totalPrice: number = 0;
@@ -63,6 +65,7 @@ export class ProductPricingComponent implements OnInit {
             this.pricing = pricing;
             console.log("Pricing:", pricing);
             this.updateMaxSliderValue();
+            this.preparePirceRanges();
         });
     }
 
@@ -72,6 +75,23 @@ export class ProductPricingComponent implements OnInit {
         const maxKey = Math.max(...keys);
         this.maxSliderValue = maxKey * 2; // Set slider range to be double the highest pricePerVolume key
         console.log("Max slider value:", this.maxSliderValue);
+    }
+
+    private preparePirceRanges(): void {
+        const pricePerVolume = new Map<number, number>(
+            Object.entries(this.pricing?.productPricing.pricePerVolume ?? {}).map(([key, value]) => [parseFloat(key), value])
+          );
+          let previousQuantity = 0;
+          pricePerVolume.forEach((price, quantity) => {
+            const rangeLabel = previousQuantity === 0
+              ? `0 - ${quantity.toFixed(2)}:`
+              : `${previousQuantity.toFixed(2)} - ${quantity.toFixed(2)}:`;
+            this.priceRanges.push({
+              range: rangeLabel,
+              price: `$${price.toFixed(2)} per unit`
+            });
+            previousQuantity = quantity;
+          });
     }
 
     updatePricing(): void {

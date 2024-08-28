@@ -69,7 +69,6 @@ export class InfoComponent implements OnInit {
                     return;
                 }
                 this.userSettings = settings;
-                console.log('Fetched user settings:', settings);
                 
                 this.decideVisibility();
             }

@@ -69,7 +69,6 @@ export class SettingsComponent implements OnInit {
             
             this.userSettingsService.getUserSettings(currentUser.id).subscribe((settings) => {
                 this.userSettings = settings;
-                console.log('User Settings:', settings);
                 this.fallbackManagerService.updateLoading(false);
             });
         });

@@ -4,6 +4,7 @@ import { ProductService } from '../../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { OverviewSectionComponent } from '../../../../../shared/common/components/overview-section/overview-section.component';
+import { UIUtilService } from '../../../../../shared/common/services/uiutil.service';
 
 @Component({
   selector: 'app-product-overview',
@@ -18,9 +19,14 @@ export class ProductOverviewComponent implements OnInit, OnChanges {
     productOverview: ProductOverviewDTO | undefined = undefined;
     hasLoadedOverview: boolean = false;
 
+    uiUtilService: UIUtilService;
+
     constructor(
-        private productService: ProductService
-    ) { }
+        private productService: ProductService,
+        uiUtilService: UIUtilService
+    ) { 
+        this.uiUtilService = uiUtilService;
+    }
 
 
     ngOnInit(): void {

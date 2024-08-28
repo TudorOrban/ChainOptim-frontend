@@ -42,14 +42,23 @@ export class UIUtilService {
         return new Date(`${dateStr}T00:00`);
     }
 
-    formatUnitOfMeasurement(unit?: UnitOfMeasurement): string {
+    formatUnitOfMeasurement(unit?: UnitOfMeasurement, abbreviation?: boolean): string {
         if (!unit) return '';
-        const stdUnitStr = unit.standardUnit.toLowerCase();
-        const magnitudeStr = this.decapitalize(unit.unitMagnitude);
-        return `${magnitudeStr}${stdUnitStr}`;
+        console.log("Unit: ", unit);
+        const stdUnitStr = unit.standardUnit?.name?.toLowerCase();
+        const magnitudeStr = this.decapitalize(unit.unitMagnitude?.name);
+        if (!abbreviation) {
+            return magnitudeStr && stdUnitStr ? `${magnitudeStr} ${stdUnitStr}` : ''; 
+        }
+
+        const stdUnitAbbreviationStr = unit.standardUnit?.abbreviation?.toLowerCase();
+        const magnitudeAbbreviationStr = unit.unitMagnitude?.abbreviation?.toLowerCase();
+        if (!stdUnitAbbreviationStr || !magnitudeAbbreviationStr) return '';
+        return `${stdUnitAbbreviationStr} ${magnitudeAbbreviationStr}`;
     }
 
-    decapitalize(text: string): string {
+    decapitalize(text?: string): string {
+        if (!text) return '';
         return text.charAt(0).toLowerCase() + text.slice(1);
     }
 }

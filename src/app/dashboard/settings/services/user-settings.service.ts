@@ -21,7 +21,6 @@ export class UserSettingsService {
     fetchAndSetUserSettings(userId: string): void {
         this.getUserSettings(userId).subscribe(
             (settings) => {
-                console.log('Fetched user settings:', settings);
                 this.setCurrentSettings(settings);
             },  
             (error) => {

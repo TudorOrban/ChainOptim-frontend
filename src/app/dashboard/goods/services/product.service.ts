@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { CreateProductDTO, Product, ProductOverviewDTO, UpdateProductDTO } from '../models/Product';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
+import { StandardUnit, UnitMagnitude } from '../../../shared/enums/unitEnums';
 
 @Injectable({
     providedIn: 'root',
@@ -70,6 +71,22 @@ export class ProductService {
         return this.http
             .get<Product>(`${this.apiUrl}/${id}/stages`)
             .pipe(
+                // map(product => {
+                //     console.log('PRODUCT', product);
+                //     if (product.unit) {
+                //         console.log('UNIT', product.unit);
+                //         const standardUnitInstance = StandardUnit.fromName(product.unit.standardUnit.name);
+                //         const unitMagnitudeInstance = UnitMagnitude.fromName(product.unit.unitMagnitude.name);
+    
+                //         console.log('STANDARD UNIT', standardUnitInstance);
+                //         if (standardUnitInstance && unitMagnitudeInstance) {
+                //             // Assuming unit might be a shallow copy from backend, reassigning instances
+                //             product.unit.standardUnit = standardUnitInstance;
+                //             product.unit.unitMagnitude = unitMagnitudeInstance;
+                //         }
+                //     }
+                //     return product;
+                // }),
                 catchError((error) =>
                     this.errorHandlerService.handleError(error)
                 )

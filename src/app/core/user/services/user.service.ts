@@ -16,7 +16,6 @@ export class UserService {
     fetchAndSetCurrentUser(username: string): void {
         this.getUserByUsername(username).subscribe(
             (user) => {
-                console.log('Fetched user:', user);
                 this.setCurrentUser(user);
             },
             (error) => {

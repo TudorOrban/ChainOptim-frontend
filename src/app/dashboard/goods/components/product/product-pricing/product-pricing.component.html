@@ -1,4 +1,4 @@
-<div class="page-standard-horizontal-padding py-4">
+<div class="page-standard-horizontal-padding py-4 space-y-4">
     <div class="flex items-center justify-between w-full">
         <h2 class="page-title">
             Pricing
@@ -55,7 +55,7 @@
     <div class="flex items-center space-x-8">
         <div class="flex items-center space-x-2">
             <span class="label-medium-large">Quantity: </span>
-            <span class="label-medium">{{ quantity + ' ' + uiUtilService.formatUnitOfMeasurement(product?.unit)}}</span>
+            <span class="label-medium">{{ quantity + ' ' + uiUtilService.formatUnitOfMeasurement(product?.unit, true)}}</span>
         </div>
 
         <div class="flex items-center space-x-2">
@@ -69,6 +69,14 @@
         </div>
     </div>
     
+    <div *ngIf="pricing" class="py-2">
+        <span class="label-large">Price Tiers</span>
+
+        <div *ngFor="let priceRange of priceRanges; let i = index" class="flex items-center space-x-4 my-2">
+            <span class="general-label-medium-large">{{ priceRange.range }}</span>
+            <span class="general-label-medium-large">{{ priceRange.price }}</span>
+        </div>
+    </div>    
 
 
 </div>
