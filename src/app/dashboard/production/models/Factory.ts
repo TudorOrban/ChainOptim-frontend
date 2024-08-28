@@ -1,5 +1,5 @@
 import { CreateLocationDTO, Location, SmallEntityDTO } from "../../../shared/common/models/reusableTypes";
-import { Stage } from "../../goods/models/Product";
+import { Stage } from "../../goods/models/Stage";
 
 export interface Factory {
     id: number;

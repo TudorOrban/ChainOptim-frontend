@@ -3,7 +3,7 @@ import { StageService } from '../../../../../dashboard/goods/services/stage.serv
 import { UserService } from '../../../../../core/user/services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Stage } from '../../../../../dashboard/goods/models/Product';
+import { Stage } from "../../../../../dashboard/goods/models/Stage";
 
 @Component({
   selector: 'app-select-stage',

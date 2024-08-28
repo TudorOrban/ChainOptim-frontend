@@ -1,7 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { CreateStageDTO, CreateStageOutputDTO, DeleteStageOutputDTO, Stage, StageOutput, UpdateStageDTO, UpdateStageOutputDTO } from '../models/Product';
+import { DeleteStageOutputDTO } from "../models/Stage";
+import { UpdateStageOutputDTO } from "../models/Stage";
+import { CreateStageOutputDTO } from "../models/Stage";
+import { UpdateStageDTO } from "../models/Stage";
+import { CreateStageDTO } from "../models/Stage";
+import { StageOutput } from "../models/Stage";
+import { Stage } from "../models/Stage";
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 
 @Injectable({

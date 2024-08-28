@@ -18,7 +18,7 @@ import { ShipmentStatus } from '../../../../../supply/models/SupplierShipment';
 import { SelectEnumComponent } from '../../../../../../shared/common/components/select/select-enum/select-enum.component';
 import { TransportRouteService } from '../../../../services/transportroute.service';
 import { ComponentSearchDTO } from '../../../../models/Component';
-import { ProductSearchDTO } from '../../../../models/Product';
+import { ProductSearchDTO } from "../../../../models/Product";
 import { SelectProductComponent } from '../../../../../../shared/common/components/select/select-product/select-product.component';
 import { SelectComponentComponent } from '../../../../../../shared/common/components/select/select-component/select-component.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';

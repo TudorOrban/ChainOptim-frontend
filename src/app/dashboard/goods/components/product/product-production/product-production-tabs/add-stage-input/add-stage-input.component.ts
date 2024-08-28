@@ -12,7 +12,8 @@ import { FallbackManagerService } from '../../../../../../../shared/fallback/ser
 import { OperationOutcome } from '../../../../../../../shared/common/components/toast-system/toastTypes';
 import { CommonModule } from '@angular/common';
 import { SelectStageComponent } from '../../../../../../../shared/common/components/select/select-stage/select-stage.component';
-import { CreateStageInputDTO, StageInput } from '../../../../../models/Product';
+import { CreateStageInputDTO } from "../../../../../models/Stage";
+import { StageInput } from "../../../../../models/Stage";
 import { StageInputService } from '../../../../../services/stageinput.service';
 import { SelectComponentComponent } from '../../../../../../../shared/common/components/select/select-component/select-component.component';
 import { ComponentSearchDTO } from '../../../../../models/Component';

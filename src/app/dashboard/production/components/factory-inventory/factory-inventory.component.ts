@@ -27,7 +27,7 @@ import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDial
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { SearchOptionsService } from '../../../../shared/search/services/searchoptions.service';
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
-import { ProductSearchDTO } from '../../../goods/models/Product';
+import { ProductSearchDTO } from "../../../goods/models/Product";
 import { ProductService } from '../../../goods/services/product.service';
 
 @Component({

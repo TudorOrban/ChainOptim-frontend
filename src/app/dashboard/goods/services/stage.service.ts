@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { CreateStageDTO, Stage, UpdateStageDTO } from '../models/Product';
+import { UpdateStageDTO } from "../models/Stage";
+import { CreateStageDTO } from "../models/Stage";
+import { Stage } from "../models/Stage";
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 
 @Injectable({

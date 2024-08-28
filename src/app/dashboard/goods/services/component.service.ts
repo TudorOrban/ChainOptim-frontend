@@ -11,7 +11,6 @@ import { Component, CreateComponentDTO, UpdateComponentDTO } from '../models/Com
 })
 export class ComponentService {
     private apiUrl = 'http://localhost:8080/api/v1/components';
-    // private currentComponentSubject = new BehaviorSubject<Component | null>(null);
 
     constructor(
         private http: HttpClient,

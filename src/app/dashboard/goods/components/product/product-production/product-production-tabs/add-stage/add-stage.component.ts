@@ -14,7 +14,8 @@ import { OperationOutcome } from '../../../../../../../shared/common/components/
 import { CommonModule } from '@angular/common';
 import { SelectDurationComponent } from '../../../../../../../shared/common/components/select/select-duration/select-duration.component';
 import { SelectStageComponent } from '../../../../../../../shared/common/components/select/select-stage/select-stage.component';
-import { CreateStageDTO, Stage } from '../../../../../models/Product';
+import { CreateStageDTO } from "../../../../../models/Stage";
+import { Stage } from "../../../../../models/Stage";
 
 @Component({
     selector: 'app-add-stage',

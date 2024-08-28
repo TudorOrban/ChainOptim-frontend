@@ -15,7 +15,8 @@ import { StageService } from '../../../../services/stage.service';
 import { ProductStageConnectionService } from '../../../../services/productstageconnection.service';
 import { StageInputService } from '../../../../services/stageinput.service';
 import { StageOutputService } from '../../../../services/stageoutput.service';
-import { DeleteStageInputDTO, DeleteStageOutputDTO } from '../../../../models/Product';
+import { DeleteStageOutputDTO } from "../../../../models/Stage";
+import { DeleteStageInputDTO } from "../../../../models/Stage";
 
 @Component({
   selector: 'app-product-production-toolbar',

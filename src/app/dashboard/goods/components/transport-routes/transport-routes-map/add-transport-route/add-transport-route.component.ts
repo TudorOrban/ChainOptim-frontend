@@ -18,7 +18,7 @@ import { ShipmentStatus } from '../../../../../supply/models/SupplierShipment';
 import { SelectEnumComponent } from '../../../../../../shared/common/components/select/select-enum/select-enum.component';
 import { TransportRouteService } from '../../../../services/transportroute.service';
 import { ComponentSearchDTO } from '../../../../models/Component';
-import { ProductSearchDTO } from '../../../../models/Product';
+import { ProductSearchDTO } from "../../../../models/Product";
 import { ComponentService } from '../../../../services/component.service';
 import { ProductService } from '../../../../services/product.service';
 import { SelectProductComponent } from '../../../../../../shared/common/components/select/select-product/select-product.component';

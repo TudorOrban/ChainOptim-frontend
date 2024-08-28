@@ -18,7 +18,7 @@ import { OperationOutcome } from '../../../../../../../shared/common/components/
 import { CommonModule } from '@angular/common';
 import { SelectDurationComponent } from '../../../../../../../shared/common/components/select/select-duration/select-duration.component';
 import { SelectStageComponent } from '../../../../../../../shared/common/components/select/select-stage/select-stage.component';
-import { Stage } from '../../../../../../goods/models/Product';
+import { Stage } from "../../../../../../goods/models/Stage";
 
 @Component({
     selector: 'app-update-factory-stage',

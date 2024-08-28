@@ -27,7 +27,7 @@ import { SearchOptionsService } from '../../../../shared/search/services/searcho
 import { PageSelectorComponent } from '../../../../shared/search/components/page-selector/page-selector.component';
 import { OrderStatus } from '../../../supply/models/SupplierOrder';
 import { ProductService } from '../../../goods/services/product.service';
-import { ProductSearchDTO } from '../../../goods/models/Product';
+import { ProductSearchDTO } from "../../../goods/models/Product";
 
 @Component({
     selector: 'app-client-orders',

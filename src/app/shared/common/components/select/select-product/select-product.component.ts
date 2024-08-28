@@ -3,7 +3,8 @@ import { ProductService } from '../../../../../dashboard/goods/services/product.
 import { UserService } from '../../../../../core/user/services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Product, ProductSearchDTO } from '../../../../../dashboard/goods/models/Product';
+import { Product } from '../../../../../dashboard/goods/models/Product';
+import { ProductSearchDTO } from "../../../../../dashboard/goods/models/Product";
 
 @Component({
     selector: 'app-select-product',
