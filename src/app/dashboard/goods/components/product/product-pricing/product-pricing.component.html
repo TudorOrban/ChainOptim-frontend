@@ -48,7 +48,7 @@
     <!-- Content -->
     <div *ngIf="pricing" class="py-4">
         <input type="range" id="pricePerUnitSlider" name="pricePerUnit"
-               min="0" [max]="maxSliderValue" step="0.01"
+               min="0" [max]="maxTierQuantity * 2" step="0.01"
                [(ngModel)]="quantity" (ngModelChange)="updatePricing()">
     </div>
 
@@ -69,12 +69,102 @@
         </div>
     </div>
     
+    <!-- Tiers -->
     <div *ngIf="pricing" class="py-2">
         <span class="label-large">Price Tiers</span>
+        
+        <!-- Existing tiers -->
+        <div *ngIf="!isEditing">
+            <div *ngFor="let priceRange of priceRanges; let i = index" class="flex items-center space-x-4 my-2">
+                <span class="label-medium-large">
+                    {{ priceRange.min | number:'1.2-2' }} - {{ priceRange.max | number:'1.2-2' }}:
+                </span>
+                <div class="flex items-center space-x-2">
+                    <span class="label-medium-large">
+                        ${{ priceRange.price | number:'1.2-2' }}
+                    </span>
+                    <p class="value-medium">per unit</p>
+                </div>
+                
+            </div>
+        </div>
 
-        <div *ngFor="let priceRange of priceRanges; let i = index" class="flex items-center space-x-4 my-2">
-            <span class="general-label-medium-large">{{ priceRange.range }}</span>
-            <span class="general-label-medium-large">{{ priceRange.price }}</span>
+        <div *ngIf="isEditing">
+            <div *ngFor="let priceRange of editedRanges; let i = index" class="flex items-center space-x-4 my-2">
+                <!-- Non-edited row -->
+                <span *ngIf="!priceRange?.isEdited" class="label-medium-large">
+                    {{ priceRange.min | number:'1.2-2' }} - {{ priceRange.max | number:'1.2-2' }}:
+                </span>
+                <div *ngIf="!priceRange?.isEdited" class="flex items-center space-x-2">
+                    <span class="label-medium-large">
+                        ${{ priceRange.price | number:'1.2-2' }}
+                    </span>
+                    <span class="value-medium">per unit</span>
+                </div>
+
+                <!-- Edited row -->
+                <div *ngIf="priceRange?.isEdited" class="flex items-center space-x-4">
+                    <input
+                        type="number"
+                        class="form-input w-20"
+                        [(ngModel)]="priceRange.min"
+                        placeholder="Min"
+                    >
+                    <p class="label-medium">-</p>
+                    <input
+                        type="number"
+                        class="form-input w-20"
+                        [(ngModel)]="priceRange.max"
+                        placeholder="Max"
+                    >
+                    <p class="label-medium">:</p>
+                    <input
+                        type="number"
+                        class="form-input w-20"
+                        [(ngModel)]="priceRange.price"
+                        placeholder="Price"
+                    >
+                </div>
+
+                <!-- Buttons -->
+                <button
+                    (click)="removeTier(i)"
+                    class="standard-delete-button"
+                >
+                    <fa-icon [icon]="faTrash" class="w-4 h-4 mb-1"></fa-icon>
+                </button>
+
+                <button
+                    *ngIf="!priceRange?.isEdited"
+                    (click)="editTier(i)"
+                    class="standard-write-button"
+                >
+                    <fa-icon [icon]="faEdit" class="w-4 h-4 mb-1"></fa-icon>
+                </button>
+                
+                <button
+                    *ngIf="priceRange?.isEdited"
+                    (click)="saveTier(i)"
+                    class="standard-write-button"
+                >
+                    <fa-icon [icon]="faSave" class="w-4 h-4 mb-1"></fa-icon>
+                </button>
+
+                <button
+                    *ngIf="priceRange?.isEdited"
+                    (click)="cancelEditTier(i)"
+                    class="standard-button"
+                >
+                    <fa-icon [icon]="faTimes" class="w-4 h-4"></fa-icon>
+                </button>
+            </div>
+
+            <button
+                (click)="addTier()"
+                class="standard-write-button"
+            >
+                <fa-icon [icon]="faPlus" class="w-4 h-4 mb-1"></fa-icon>
+            </button>
         </div>
     </div>    
 

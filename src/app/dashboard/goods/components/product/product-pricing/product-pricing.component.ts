@@ -3,7 +3,7 @@ import { Pricing, Product } from '../../../models/Product';
 import { PricingService } from '../../../services/pricing.service';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEdit, faSave, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faPlus, faSave, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { GenericConfirmDialogComponent } from '../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
 import { ConfirmDialogInput } from '../../../../../shared/common/models/confirmDialogTypes';
 import { OperationOutcome, ToastInfo } from '../../../../../shared/common/components/toast-system/toastTypes';
@@ -23,8 +23,9 @@ export class ProductPricingComponent implements OnInit {
     pricing: Pricing | undefined = undefined;
 
     isEditing: boolean = false;
-    maxSliderValue: number = 1000;
-    priceRanges: { range: string, price: string }[] = [];
+    maxTierQuantity: number = 1000;
+    priceRanges: { min: number; max: number; price: number; isEdited?: boolean }[] = [];
+    editedRanges: { min: number; max: number; price: number; isEdited?: boolean }[] = [];
     
     quantity: number = 0;
     pricePerUnit: number = 0;
@@ -45,6 +46,7 @@ export class ProductPricingComponent implements OnInit {
     faEdit = faEdit;
     faTimes = faTimes;
     faSave = faSave;
+    faPlus = faPlus;
     faTrash = faTrash;
 
     uiUtilService: UIUtilService;
@@ -64,34 +66,32 @@ export class ProductPricingComponent implements OnInit {
         this.pricingService.getPricingByProductId(this.product.id).subscribe((pricing) => {
             this.pricing = pricing;
             console.log("Pricing:", pricing);
-            this.updateMaxSliderValue();
-            this.preparePirceRanges();
+            this.updateMaxTierQuantity();
+            this.preparePriceRanges();
         });
     }
 
-    private updateMaxSliderValue(): void {
+    private updateMaxTierQuantity(): void {
         const pricePerVolumeEntries = Object.entries(this.pricing?.productPricing.pricePerVolume ?? {});
         const keys = pricePerVolumeEntries.map(([key, _]) => Number(key));
-        const maxKey = Math.max(...keys);
-        this.maxSliderValue = maxKey * 2; // Set slider range to be double the highest pricePerVolume key
-        console.log("Max slider value:", this.maxSliderValue);
+        this.maxTierQuantity = Math.max(...keys);
     }
 
-    private preparePirceRanges(): void {
-        const pricePerVolume = new Map<number, number>(
-            Object.entries(this.pricing?.productPricing.pricePerVolume ?? {}).map(([key, value]) => [parseFloat(key), value])
-          );
-          let previousQuantity = 0;
-          pricePerVolume.forEach((price, quantity) => {
-            const rangeLabel = previousQuantity === 0
-              ? `0 - ${quantity.toFixed(2)}:`
-              : `${previousQuantity.toFixed(2)} - ${quantity.toFixed(2)}:`;
-            this.priceRanges.push({
-              range: rangeLabel,
-              price: `$${price.toFixed(2)} per unit`
-            });
-            previousQuantity = quantity;
-          });
+    private preparePriceRanges(): void {
+        const pricePerVolumeEntries = Object.entries(this.pricing?.productPricing.pricePerVolume ?? {});
+        const sortedEntries = pricePerVolumeEntries.map(([key, value]) => [parseFloat(key), value])
+                                                    .sort((a, b) => a[0] - b[0]);
+    
+        this.priceRanges = sortedEntries.map((current, index, array) => {
+            const [currentQuantity, currentPrice] = current;
+            const previousQuantity = index > 0 ? array[index - 1][0] : 0;
+            return {
+                min: previousQuantity,
+                max: currentQuantity,
+                price: currentPrice,
+                isEdited: false
+            };
+        });
     }
 
     updatePricing(): void {
@@ -116,38 +116,61 @@ export class ProductPricingComponent implements OnInit {
     
         return quantity * (pricePerVolume.get(closestVolume) ?? this.pricing?.productPricing.pricePerUnit ?? 0);
     }
-    
 
-    onPriceChange(): void {
-        console.log("Price changed:");
-    }
-
+    // Delete
     openConfirmDeleteDialog(): void {
-        console.log("Open confirm dialog");
         this.isConfirmDialogOpen = true;
     }
 
     cancelDeletePricing(): void {
-        console.log("Cancel delete pricing");
         this.isConfirmDialogOpen = false;
     }
 
     handleDeletePricing(): void {
-        console.log("Delete pricing");
         this.isConfirmDialogOpen = false;
+        // TODO: Implement delete pricing
     }
 
+    // Edit
     handleEditPricing(): void {
         console.log("Edit pricing");
         this.isEditing = true;
+        this.editedRanges = this.priceRanges.map((range) => ({ ...range }));
+    }
+
+    removeTier(index: number): void {
+        console.log("Remove tier", index);
+        this.editedRanges.splice(index, 1);
+    }
+
+    editTier(index: number): void {
+        console.log("Edit tier", index);
+        this.editedRanges[index].isEdited = true;
+    }
+
+    addTier(): void {
+        console.log("Add tier");
+        this.editedRanges.push({ min: this.maxTierQuantity, max: this.maxTierQuantity + 1, price: 0 });
+        this.updateMaxTierQuantity();
+    }
+
+    saveTier(index: number): void {
+        console.log("Save tier", index);
+        this.editedRanges[index].isEdited = false;
+    }
+
+    cancelEditTier(index: number): void {
+        console.log("Cancel edit tier", index);
+        this.editedRanges[index] = { ...this.priceRanges[index] };
+        this.editedRanges[index].isEdited = false;
     }
 
     handleSavePricing(): void {
         console.log("Save pricing");
+        // TODO: Implement save pricing
     }
 
     handleCancelEditPricing(): void {
-        console.log("Cancel edit pricing");
         this.isEditing = false;
     }
 }
