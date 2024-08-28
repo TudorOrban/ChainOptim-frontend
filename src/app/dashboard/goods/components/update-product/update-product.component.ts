@@ -120,7 +120,7 @@ export class UpdateProductComponent implements OnInit {
             id: this.productId ?? 0,
             name: this.productForm.value.name,
             description: this.productForm.value.description,
-            newUnit: this.unitOfMeasurement,
+            unit: this.unitOfMeasurement,
             organizationId: this.currentUser?.organization?.id ?? 0
         };
 

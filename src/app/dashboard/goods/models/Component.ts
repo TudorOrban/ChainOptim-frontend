@@ -13,7 +13,7 @@ export interface CreateComponentDTO {
     name: string;
     description: string;
     organizationId: number;
-    newUnit: UnitOfMeasurement;    
+    unit: UnitOfMeasurement;    
 }
 
 export interface UpdateComponentDTO {
@@ -21,7 +21,7 @@ export interface UpdateComponentDTO {
     name: string;
     description: string;
     organizationId: number;
-    newUnit: UnitOfMeasurement;    
+    unit: UnitOfMeasurement;    
 }
 
 export interface ComponentSearchDTO {

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { UnitOfMeasurement } from "../../../dashboard/goods/models/UnitOfMeasurement";
 
 @Injectable({
     providedIn: 'root',
@@ -39,5 +40,16 @@ export class UIUtilService {
     formatDate(dateStr: Date | string | null | undefined): Date {
         if (!dateStr) return new Date();
         return new Date(`${dateStr}T00:00`);
+    }
+
+    formatUnitOfMeasurement(unit?: UnitOfMeasurement): string {
+        if (!unit) return '';
+        const stdUnitStr = unit.standardUnit.toLowerCase();
+        const magnitudeStr = this.decapitalize(unit.unitMagnitude);
+        return `${magnitudeStr}${stdUnitStr}`;
+    }
+
+    decapitalize(text: string): string {
+        return text.charAt(0).toLowerCase() + text.slice(1);
     }
 }

@@ -9,14 +9,14 @@ export interface Product {
     createdAt: Date;
     updatedAt: Date;
     stages?: Stage[];
-    newUnit?: UnitOfMeasurement;
+    unit?: UnitOfMeasurement;
 }
 
 export interface CreateProductDTO {
     name: string;
     description: string;
     organizationId: number;
-    newUnit: UnitOfMeasurement;    
+    unit: UnitOfMeasurement;    
 }
 
 export interface UpdateProductDTO {
@@ -24,7 +24,7 @@ export interface UpdateProductDTO {
     name: string;
     description: string;
     organizationId: number;
-    newUnit: UnitOfMeasurement;    
+    unit: UnitOfMeasurement;    
 }
 
 export interface ProductOverviewDTO {

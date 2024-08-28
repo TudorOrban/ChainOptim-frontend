@@ -95,7 +95,7 @@ export class CreateProductComponent implements OnInit {
         const productDTO: CreateProductDTO = {
             name: this.productForm.value.name,
             description: this.productForm.value.description,
-            newUnit: this.unitOfMeasurement,
+            unit: this.unitOfMeasurement,
             organizationId: this.currentUser?.organization?.id ?? 0
         };
 

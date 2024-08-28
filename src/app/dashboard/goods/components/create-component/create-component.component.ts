@@ -95,7 +95,7 @@ export class CreateComponentComponent implements OnInit {
         const componentDTO: CreateComponentDTO = {
             name: this.componentForm.value.name,
             description: this.componentForm.value.description,
-            newUnit: this.unitOfMeasurement,
+            unit: this.unitOfMeasurement,
             organizationId: this.currentUser?.organization?.id ?? 0
         };
 

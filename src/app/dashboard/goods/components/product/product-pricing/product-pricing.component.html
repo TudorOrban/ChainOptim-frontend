@@ -44,6 +44,33 @@
             </button>
         </div>
     </div>
+
+    <!-- Content -->
+    <div *ngIf="pricing" class="py-4">
+        <input type="range" id="pricePerUnitSlider" name="pricePerUnit"
+               min="0" [max]="maxSliderValue" step="0.01"
+               [(ngModel)]="quantity" (ngModelChange)="updatePricing()">
+    </div>
+
+    <div class="flex items-center space-x-8">
+        <div class="flex items-center space-x-2">
+            <span class="label-medium-large">Quantity: </span>
+            <span class="label-medium">{{ quantity + ' ' + uiUtilService.formatUnitOfMeasurement(product?.unit)}}</span>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <span class="label-medium-large">Total Price: </span>
+            <span class="label-medium">$ {{ totalPrice }}</span>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+            <span class="label-medium-large">Price per Unit: </span>
+            <span class="label-medium">$ {{ pricePerUnit }}</span>
+        </div>
+    </div>
+    
+
+
 </div>
 
 <!-- Confirm dialog -->
