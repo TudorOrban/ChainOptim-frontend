@@ -8,7 +8,7 @@
         <div class="flex items-center space-x-2">
             <!-- Unsubscribe -->
             <button
-                *ngIf="!!currentPlan && currentPlan?.isActive"
+                *ngIf="!!currentPlan && currentPlan?.isActive && !isEditingPlan"
                 (click)="handleOpenUnsubscribeConfirmDialog()"
                 class="standard-delete-button"
             >
