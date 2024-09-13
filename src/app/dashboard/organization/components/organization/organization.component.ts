@@ -10,6 +10,7 @@ import { User } from '../../../../core/user/model/user';
 import { TabsComponent } from '../../../../shared/common/components/tabs/tabs.component';
 import { OrganizationOverviewComponent } from './organization-overview/organization-overview.component';
 import { OrganizationCustomRolesComponent } from './organization-custom-roles/organization-custom-roles.component';
+import { OrganizationCustomRolesNewComponent } from './organization-custom-roles-new/organization-custom-roles-new.component';
 import { OrganizationSubscriptionPlanComponent } from './organization-subscription-plan/organization-subscription-plan.component';
 import { FallbackManagerComponent } from '../../../../shared/fallback/components/fallback-manager/fallback-manager.component';
 import { FallbackManagerService, FallbackManagerState } from '../../../../shared/fallback/services/fallback-manager/fallback-manager.service';
@@ -30,6 +31,7 @@ import { OperationOutcome } from '../../../../shared/common/components/toast-sys
         TabsComponent,
         OrganizationOverviewComponent,
         OrganizationCustomRolesComponent,
+        OrganizationCustomRolesNewComponent,
         OrganizationSubscriptionPlanComponent,
         FallbackManagerComponent,
         GenericConfirmDialogComponent
@@ -47,6 +49,9 @@ export class OrganizationComponent implements OnInit {
         },
         {
             label: "Custom Roles",
+        },
+        {
+            label: "Custom Roles New",
         },
         {
             label: "Subscription Plan",

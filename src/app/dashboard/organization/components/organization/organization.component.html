@@ -50,6 +50,7 @@
 <ng-container *ngIf="organization as org">
     <app-organization-overview *ngIf="activeTab === 'Overview'" [organization]="org"></app-organization-overview>
     <app-organization-custom-roles *ngIf="activeTab === 'Custom Roles'" [organization]="org"></app-organization-custom-roles>
+    <app-organization-custom-roles-new *ngIf="activeTab === 'Custom Roles New'" [organization]="org"></app-organization-custom-roles-new>
     <app-organization-subscription-plan *ngIf="activeTab === 'Subscription Plan'" [organization]="org"></app-organization-subscription-plan>
 </ng-container>
 
