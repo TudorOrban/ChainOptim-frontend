@@ -38,14 +38,21 @@ import { UIUtilService } from '../../../../../shared/common/services/uiutil.serv
 })
 export class OrganizationCustomRolesNewComponent {
     @Input() organization: Organization | null = null;
-    
+
     customRoles: CustomRole[] = [];
 
     fallbackManagerState: FallbackManagerState = {};
-    customRolesNumber: number = 0;
-    
+
     calculatorService: PaymentCalculatorService;
     uiUtilService: UIUtilService;
+
+    faEdit = faEdit;
+    faPlus = faPlus;
+    faTrash = faTrash;
+    faXmark = faXmark;
+    faAngleDown = faAngleDown;
+    faAngleUp = faAngleUp;
+    faSave = faSave;
 
     constructor(
         private customRoleService: CustomRoleService,
@@ -73,10 +80,16 @@ export class OrganizationCustomRolesNewComponent {
             this.fallbackManagerService.updateError('Organization not found');
             return;
         }
+        
         this.customRoleService.getCustomRolesByOrganizationId(this.organization.id).subscribe({
             next: (customRoles: CustomRole[]) : void => {
-                this.customRoles = customRoles;
-                this.customRolesNumber = customRoles.length;
+                this.customRoles = customRoles.map(role => ({
+                    ...role,
+                    permissions: {
+                        ...role.permissions,
+                        featurePermissions: this.initializeNullPermissions(role.permissions.featurePermissions)
+                    }
+                }));
                 this.fallbackManagerService.updateLoading(false);
                 console.log('Custom roles:', customRoles);
             },
@@ -86,4 +99,17 @@ export class OrganizationCustomRolesNewComponent {
         })
     }
 
+    private initializeNullPermissions(featurePermissions?: Record<string, FeaturePermissions>): Record<string, FeaturePermissions> {
+        const initializedPermissions: Record<string, FeaturePermissions> = {};
+        const defaultPermissions: FeaturePermissions = { canRead: false, canCreate: false, canUpdate: false, canDelete: false };
+        
+        if (featurePermissions) {
+            for (const key in featurePermissions) {
+            initializedPermissions[key] = featurePermissions[key] || defaultPermissions;
+            }
+        }
+        
+        return initializedPermissions;
+    }
+      
 }
