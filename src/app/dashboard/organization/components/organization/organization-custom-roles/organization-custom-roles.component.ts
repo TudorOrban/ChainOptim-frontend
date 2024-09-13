@@ -83,15 +83,18 @@ export class OrganizationCustomRolesComponent implements OnInit {
             }
         })
     }
-
-    getPermissionsArray(permissions: Permissions): { feature: string, permissions: FeaturePermissions }[] {
-        return Object.keys(permissions)
-            .filter(key => key !== 'organization')
-            .map(key => ({
-                feature: key,
-                permissions: permissions[key as keyof Permissions]
-            }));
-    }
+    
+    // getPermissionsArray(permissions: Permissions): { feature: string, permissions: FeaturePermissions }[] {
+    //     return Object.keys(permissions)
+    //         .filter(key => key !== 'organization')
+    //         .map(key => ({
+    //             feature: key,
+    //             permissions: {
+    //                 ...permissions[key as keyof Permissions],
+    //                 featurePermissions: {}
+    //             }
+    //         }));
+    // }
 
     areAllPermissionsGranted(permissions: Permissions, action: keyof FeaturePermissions): boolean {
         for (const key in permissions) {

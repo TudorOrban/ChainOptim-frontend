@@ -1,3 +1,5 @@
+import { Feature } from "../../../shared/enums/commonEnums";
+
 export interface CustomRole {
     id: number;
     name: string;
@@ -13,6 +15,8 @@ export interface Permissions {
     warehouses: FeaturePermissions;
     suppliers: FeaturePermissions;
     clients: FeaturePermissions;
+
+    featurePermissions: Record<Feature, FeaturePermissions>;
 }
 
 export interface FeaturePermissions {

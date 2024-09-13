@@ -1,38 +1,63 @@
-<mat-accordion multi="true" class="overflow-y-auto pt-6">
-    <div class="grid grid-cols-4 gap-4 px-8 py-4 font-semibold text-xl bg-white">
-        <div>Features</div>
-        <div>Base</div>
-        <div>Quantity</div>
-        <div>Price</div>
+<div class=" py-4 space-y-4">
+    <div class="page-standard-horizontal-padding flex items-center justify-between w-full py-2">
+        <h2 class="page-title">
+            Custom Roles
+        </h2>
     </div>
-
-    <mat-expansion-panel *ngFor="let group of this.calculatorService.getObjectValues(this.calculatorService.getFeaturesByGroup())" class="border-t border-gray-300">
-        <mat-expansion-panel-header class="border-0 shadow-none">
-            <mat-panel-title class="text-xl font-semibold p-2">
-                {{ group }}
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <div *ngFor="let featureKey of this.calculatorService.getFeaturesByGroup()[group]" class="pt-2 pl-8">
-            <div class="grid grid-cols-4 gap-4 items-center">
-                <div class="col-span-1">
-                    <h2 class="text-lg font-semibold">{{ this.uiUtilService.formatEnum(featureKey) }}</h2>
-                </div>
-                <!-- <div class="col-span-1 text-lg text-gray-800">
-                    {{ this.uiUtilService.formatNumber(this.calculatorService.getPlanFeatureDetail(this.calculatorService.getFeatureEnum(featureKey), selectedPlanTier, currentPlan)) }}
-                </div> -->
-                <!-- <div *ngIf="!isEditing" class="col-span-1">
-                    {{ this.calculatorService.getPlanFeatureQuantity(this.calculatorService.getFeatureEnum(featureKey), customPlan) }}
-                </div>
-                <div *ngIf="isEditing" class="col-span-1">
-                    <input type="number" [(ngModel)]="customPlan.additionalFeatures[this.calculatorService.getFeatureEnum(featureKey)]"
-                           class="w-20 h-10 border border-gray-300 rounded-md p-2 text-center font-semibold" />
-                </div>
-                
-                <div class="col-span-1 text-lg font-semibold text-gray-800">
-                    ${{ this.calculatorService.getFeaturePrice(this.calculatorService.getFeatureEnum(featureKey), customPlan, isMonthly) | number:'1.0-2' }}
-                </div> -->
-            </div>
+    
+    <mat-accordion multi="true" class="overflow-y-auto pt-6 whitespace-nowrap">
+        <div class="grid grid-cols-5 gap-4 px-8 py-4 font-semibold text-xl bg-white" style="grid-template-columns: 2fr 1fr 1fr 1fr 1fr;">
+            <div>Role Name</div>
+            <div>Read</div>
+            <div>Create</div>
+            <div>Update</div>
+            <div>Delete</div>
         </div>
-    </mat-expansion-panel>
-</mat-accordion>
+    
+        <mat-expansion-panel *ngFor="let customRole of customRoles" class="border-t border-gray-300">
+            <mat-expansion-panel-header class="border-0 shadow-none">
+                <div class="grid grid-cols-5 items-center" style="grid-template-columns: 2fr 1fr 1fr 1fr 1fr;">
+                    <div class="text-xl font-semibold py-2">
+                        {{ customRole?.name }}
+                    </div>
+                    <div class="">
+                        <input type="checkbox"/>
+                    </div>
+                    <div class="">
+                        <input type="checkbox"/>
+                    </div>
+                    <div class="">
+                        <input type="checkbox"/>
+                    </div>
+                    <div class="">
+                        <input type="checkbox"/>
+                    </div>
+                </div>
+            </mat-expansion-panel-header>
+            
+            
+            <div *ngFor="let group of this.calculatorService.getObjectValues(this.calculatorService.getFeaturesByGroup())" class="border-t border-gray-300">
+                <div *ngFor="let featureKey of this.calculatorService.getFeaturesByGroup()[group]" class="py-1 pl-8">
+                    <div class="grid grid-cols-5 items-center" style="grid-template-columns: 2fr 1fr 1fr 1fr 1fr;">
+                        <div class="col-span-1">
+                            <h2 class="text-lg font-semibold whitespace-nowrap">{{ this.uiUtilService.formatEnum(featureKey) }}</h2>
+                        </div>
+                        <div class="">
+                            <input type="checkbox"/>
+                        </div>
+                        <div class="">
+                            <input type="checkbox"/>
+                        </div>
+                        <div class="">
+                            <input type="checkbox"/>
+                        </div>
+                        <div class="">
+                            <input type="checkbox"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    
+</div>

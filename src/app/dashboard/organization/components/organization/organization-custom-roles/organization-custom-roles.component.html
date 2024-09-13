@@ -72,7 +72,7 @@
                     </td>
                 </tr>
 
-                @if(showPermissions[role.id]) {
+                <!-- @if(showPermissions[role.id]) {
                     @for(permission of getPermissionsArray(role.permissions); track permission.feature) {
                         <tr class="text-center text-base">
                             <td class="py-2 capitalize">{{ permission.feature }}</td>
@@ -82,7 +82,7 @@
                             <td><input type="checkbox" [checked]="permission.permissions?.canDelete" [disabled]="!isEditing[role.id]"/></td>
                         </tr>
                     }
-                }
+                } -->
             }
         </tbody>
     </table>

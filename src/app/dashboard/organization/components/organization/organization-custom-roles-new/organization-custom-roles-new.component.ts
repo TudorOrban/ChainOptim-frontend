@@ -38,6 +38,7 @@ import { UIUtilService } from '../../../../../shared/common/services/uiutil.serv
 })
 export class OrganizationCustomRolesNewComponent {
     @Input() organization: Organization | null = null;
+    
     customRoles: CustomRole[] = [];
 
     fallbackManagerState: FallbackManagerState = {};
