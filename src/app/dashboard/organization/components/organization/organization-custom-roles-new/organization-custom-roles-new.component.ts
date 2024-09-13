@@ -45,6 +45,13 @@ export class OrganizationCustomRolesNewComponent {
     temporaryRole: CustomRole | undefined = undefined;
     initialPermissions: Permissions | undefined = undefined;
     editedRoleId: number | undefined = undefined;
+    isDeleteModeOn: boolean = false;
+    toBeDeletedRoleId: number | undefined = undefined;
+    isConfirmDialogOpen: boolean = false;
+    deleteDialogInput: ConfirmDialogInput = {
+        dialogTitle: 'Delete Role',
+        dialogMessage: 'Are you sure you want to delete this role? All members having it will lose their privileges.',
+    };
 
     fallbackManagerState: FallbackManagerState = {};
 
@@ -159,6 +166,12 @@ export class OrganizationCustomRolesNewComponent {
             },
             error: (error) => {
                 console.error('Error creating role:', error);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Error creating role',
+                    message: 'Error creating role',
+                    outcome: OperationOutcome.ERROR
+                });
             }
         });
     }
@@ -212,6 +225,12 @@ export class OrganizationCustomRolesNewComponent {
             },
             error: (error) => {
                 console.error('Error updating role:', error);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Error updating role',
+                    message: 'Error updating role',
+                    outcome: OperationOutcome.ERROR
+                });
             }
         });
     }
@@ -231,4 +250,49 @@ export class OrganizationCustomRolesNewComponent {
     }
 
     // - Delete
+    toggleDeleteMode(): void {
+        this.isDeleteModeOn = !this.isDeleteModeOn;
+    }
+
+    openDeleteConfirmDialog(event: MouseEvent, roleId: number): void {
+        event.stopPropagation();
+        this.toBeDeletedRoleId = roleId;
+        this.isConfirmDialogOpen = true;
+    }
+
+    handleDeleteRole(): void {
+        console.log('Deleting role:', this.toBeDeletedRoleId);
+        if (!this.toBeDeletedRoleId) {
+            console.error('No role ID to delete');
+            return;
+        }
+
+        this.customRoleService.deleteCustomRole(this.toBeDeletedRoleId).subscribe({
+            next: () => {
+                this.customRoles = this.customRoles.filter(role => role.id !== this.toBeDeletedRoleId);
+                this.toBeDeletedRoleId = undefined;
+                this.isConfirmDialogOpen = false;
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Role deleted',
+                    message: 'Role deleted successfully',
+                    outcome: OperationOutcome.SUCCESS
+                });
+            },
+            error: (error) => {
+                console.error('Error deleting role:', error);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Error deleting role',
+                    message: 'Error deleting role',
+                    outcome: OperationOutcome.ERROR
+                });
+            }
+        });
+    }
+
+    handleCancelDelete(): void {
+        this.toBeDeletedRoleId = undefined;
+        this.isConfirmDialogOpen = false;
+    }
 }

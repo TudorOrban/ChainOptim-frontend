@@ -9,6 +9,13 @@
 
         <div class="flex items-center space-x-2">
             <button
+                *ngIf="!temporaryRole && !editedRoleId"
+                (click)="toggleDeleteMode()"
+                class="standard-delete-button"
+            >
+                <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+            <button
                 *ngIf="!!temporaryRole"
                 (click)="cancelAddRole()"
                 class="standard-button"
@@ -110,6 +117,14 @@
                     <!-- CRUD ops Buttons -->
                     <div class="flex items-center mr-4 space-x-2">
                         <button
+                            *ngIf="!editedRoleId && !temporaryRole && isDeleteModeOn"
+                            (click)="openDeleteConfirmDialog($event, customRole.id)"
+                            class="standard-delete-button"
+                        >
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                        </button>
+
+                        <button
                             *ngIf="customRole.id === editedRoleId"
                             (click)="cancelEditRole($event)"
                             class="standard-button"
@@ -179,4 +194,15 @@
         </mat-expansion-panel>
     </mat-accordion>
     
+</div>
+
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteRole()"
+            (cancel)="handleCancelDelete()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
 </div>
