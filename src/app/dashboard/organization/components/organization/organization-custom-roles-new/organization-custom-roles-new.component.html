@@ -1,9 +1,21 @@
 <div class="py-4 space-y-4">
-    <div class="page-standard-horizontal-padding flex items-end space-x-2 w-full pt-2 pb-4">
-        <h2 class="page-title">
-            Custom Roles
-        </h2>
-        <span class="label-large">({{ customRoles?.length ?? 0 }})</span>
+    <div class="flex items-center justify-between w-full page-standard-horizontal-padding pt-2 pb-4">
+        <div class="flex items-end space-x-2">
+            <h2 class="page-title">
+                Custom Roles
+            </h2>
+            <span class="label-large">({{ customRoles?.length ?? 0 }})</span>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <button
+                (click)="addTemporaryRole()"
+                class="standard-write-button space-x-2"
+            >
+                <fa-icon [icon]="faPlus"></fa-icon>
+                <span>Add Role</span>
+            </button>
+        </div>
     </div>
 
     <mat-accordion multi="true" class="overflow-y-auto pt-6 whitespace-nowrap">
@@ -25,10 +37,25 @@
 
                     <!-- CRUD ops Buttons -->
                     <div class="flex items-center mr-4 space-x-2">
-                        <button class="standard-write-button">
+                        <button
+                            *ngIf="customRole.id === editedRoleId"
+                            (click)="cancelEditRole($event)"
+                            class="standard-button"
+                        >
+                            <fa-icon [icon]="faXmark"></fa-icon>
+                        </button>
+                        <button 
+                            *ngIf="customRole.id === editedRoleId"
+                            (click)="saveEditedRole($event)"
+                            class="standard-write-button"
+                        >
                             <fa-icon [icon]="faSave"></fa-icon>
                         </button>
-                        <button class="standard-write-button">
+                        <button 
+                            *ngIf="!editedRoleId"
+                            (click)="editRole($event, customRole.id)"
+                            class="standard-write-button"
+                        >
                             <fa-icon [icon]="faEdit"></fa-icon>
                         </button>
                     </div>
@@ -43,24 +70,36 @@
                             <h2 class="text-lg font-semibold whitespace-nowrap">{{ this.uiUtilService.formatEnum(featureKey) }}</h2>
                         </div>
                         <div>
-                            <input type="checkbox"
-                                   [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canRead"
-                                   name="{{ featureKey + '_canRead' }}" />
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canRead"
+                                [disabled]="customRole.id !== editedRoleId"
+                                name="{{ featureKey + '_canRead' }}" 
+                            />
                         </div>
                         <div>
-                            <input type="checkbox"
-                                   [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canCreate"
-                                   name="{{ featureKey + '_canCreate' }}" />
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canCreate"
+                                [disabled]="customRole.id !== editedRoleId"
+                                name="{{ featureKey + '_canCreate' }}" 
+                            />
                         </div>
                         <div>
-                            <input type="checkbox"
-                                   [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canUpdate"
-                                   name="{{ featureKey + '_canUpdate' }}" />
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canUpdate"
+                                [disabled]="customRole.id !== editedRoleId"
+                                name="{{ featureKey + '_canUpdate' }}" 
+                            />
                         </div>
                         <div>
-                            <input type="checkbox"
-                                   [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canDelete"
-                                   name="{{ featureKey + '_canDelete' }}" />
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canDelete"
+                                [disabled]="customRole.id !== editedRoleId"
+                                name="{{ featureKey + '_canDelete' }}" 
+                            />
                         </div>
                         <div></div>
                     </div>

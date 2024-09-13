@@ -41,6 +41,9 @@ export class OrganizationCustomRolesNewComponent {
 
     customRoles: CustomRole[] = [];
 
+    initialPermissions: Permissions | undefined = undefined;
+    editedRoleId: number | undefined = undefined;
+
     fallbackManagerState: FallbackManagerState = {};
 
     calculatorService: PaymentCalculatorService;
@@ -80,7 +83,7 @@ export class OrganizationCustomRolesNewComponent {
             this.fallbackManagerService.updateError('Organization not found');
             return;
         }
-        
+
         this.customRoleService.getCustomRolesByOrganizationId(this.organization.id).subscribe({
             next: (customRoles: CustomRole[]) : void => {
                 this.customRoles = customRoles.map(role => ({
@@ -111,5 +114,48 @@ export class OrganizationCustomRolesNewComponent {
         
         return initializedPermissions;
     }
-      
+    
+    // Handlers
+    // - Add
+    addTemporaryRole(): void {
+        console.log('Adding temporary role');
+    }
+
+    // - Edit
+    editRole(event: MouseEvent, roleId: number): void {
+        event.stopPropagation();
+        
+        if (this.editedRoleId === roleId) {
+            return;
+        }
+
+        const role = this.customRoles.find(role => role.id === roleId);
+        if (role) {
+            // Creating a deep copy of permissions
+            this.initialPermissions = JSON.parse(JSON.stringify(role.permissions));
+            console.log("Initial permissions set:", this.initialPermissions);
+        }
+        this.editedRoleId = roleId;
+    }
+
+    saveEditedRole(event: MouseEvent): void {
+        event.stopPropagation();
+        console.log('Saving role:', this.editedRoleId);
+    }
+
+    cancelEditRole(event: MouseEvent): void {
+        event.stopPropagation();
+        this.customRoles = this.customRoles.map(role => {
+            if (role.id === this.editedRoleId) {
+                return {
+                    ...role,
+                    permissions: this.initialPermissions ?? role.permissions
+                }
+            }
+            return role;
+        });
+        this.editedRoleId = undefined;
+    }
+
+    // - Delete
 }
