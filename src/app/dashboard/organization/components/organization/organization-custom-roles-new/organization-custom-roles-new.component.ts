@@ -21,6 +21,7 @@ import {ToastService} from "../../../../../shared/common/components/toast-system
 import {CreateCustomRoleDTO, UpdateCustomRoleDTO} from "../../../models/dto";
 import { PaymentCalculatorService } from '../../../services/paymentcalculator.service';
 import { UIUtilService } from '../../../../../shared/common/services/uiutil.service';
+import { Feature } from '../../../../../shared/enums/commonEnums';
 
 @Component({
   selector: 'app-organization-custom-roles-new',
@@ -41,6 +42,7 @@ export class OrganizationCustomRolesNewComponent {
 
     customRoles: CustomRole[] = [];
 
+    temporaryRole: CustomRole | undefined = undefined;
     initialPermissions: Permissions | undefined = undefined;
     editedRoleId: number | undefined = undefined;
 
@@ -104,11 +106,14 @@ export class OrganizationCustomRolesNewComponent {
 
     private initializeNullPermissions(featurePermissions?: Record<string, FeaturePermissions>): Record<string, FeaturePermissions> {
         const initializedPermissions: Record<string, FeaturePermissions> = {};
-        const defaultPermissions: FeaturePermissions = { canRead: false, canCreate: false, canUpdate: false, canDelete: false };
         
         if (featurePermissions) {
             for (const key in featurePermissions) {
-            initializedPermissions[key] = featurePermissions[key] || defaultPermissions;
+                initializedPermissions[key] = featurePermissions[key] || { canRead: false, canCreate: false, canUpdate: false, canDelete: false };
+            }
+        } else {
+            for (const key in Feature) {
+                initializedPermissions[key] = { canRead: false, canCreate: false, canUpdate: false, canDelete: false };
             }
         }
         
@@ -119,6 +124,47 @@ export class OrganizationCustomRolesNewComponent {
     // - Add
     addTemporaryRole(): void {
         console.log('Adding temporary role');
+        this.temporaryRole = {
+            id: 0,
+            name: 'New Role',
+            permissions: {
+                featurePermissions: this.initializeNullPermissions()
+            },
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            organizationId: this.organization?.id ?? 0
+        };
+    }
+
+    saveTemporaryRole(): void {
+        if (!this.temporaryRole) return;
+
+        const roleDTO: CreateCustomRoleDTO = {
+            name: this.temporaryRole.name,
+            permissions: this.temporaryRole.permissions,
+            organizationId: this.temporaryRole.organizationId
+        };
+
+        this.customRoleService.createCustomRole(roleDTO).subscribe({
+            next: (createdRole: CustomRole) => {
+                console.log('Role created:', createdRole);
+                this.customRoles.push(createdRole);
+                this.temporaryRole = undefined;
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Role created',
+                    message: 'Role created successfully',
+                    outcome: OperationOutcome.SUCCESS
+                });
+            },
+            error: (error) => {
+                console.error('Error creating role:', error);
+            }
+        });
+    }
+
+    cancelAddRole(): void {
+        this.temporaryRole = undefined;
     }
 
     // - Edit
@@ -141,6 +187,33 @@ export class OrganizationCustomRolesNewComponent {
     saveEditedRole(event: MouseEvent): void {
         event.stopPropagation();
         console.log('Saving role:', this.editedRoleId);
+        const editedRole = this.customRoles.find(role => role.id === this.editedRoleId);
+        if (!editedRole) {
+            return;
+        }
+
+        const roleDTO: UpdateCustomRoleDTO = {
+            id: editedRole.id,
+            name: editedRole.name,
+            permissions: editedRole.permissions ?? {}
+        };
+
+        this.customRoleService.updateCustomRole(roleDTO).subscribe({
+            next: (updatedRole: CustomRole) => {
+                console.log('Role updated:', updatedRole);
+                this.editedRoleId = undefined;
+                this.initialPermissions = undefined;
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Role updated',
+                    message: 'Role updated successfully',
+                    outcome: OperationOutcome.SUCCESS
+                });
+            },
+            error: (error) => {
+                console.error('Error updating role:', error);
+            }
+        });
     }
 
     cancelEditRole(event: MouseEvent): void {

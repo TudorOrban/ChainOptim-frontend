@@ -1,3 +1,4 @@
+import { Permissions } from "./custom-role";
 
 export interface CreateCustomRoleDTO {
     name: string;

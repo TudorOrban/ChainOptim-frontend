@@ -10,11 +10,11 @@ export interface CustomRole {
 }
 
 export interface Permissions {
-    products: FeaturePermissions;
-    factories: FeaturePermissions;
-    warehouses: FeaturePermissions;
-    suppliers: FeaturePermissions;
-    clients: FeaturePermissions;
+    products?: FeaturePermissions;
+    factories?: FeaturePermissions;
+    warehouses?: FeaturePermissions;
+    suppliers?: FeaturePermissions;
+    clients?: FeaturePermissions;
 
     featurePermissions: Record<Feature, FeaturePermissions>;
 }
