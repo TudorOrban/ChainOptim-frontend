@@ -28,13 +28,13 @@ export class UpdateComponentComponent implements OnInit {
     unitOfMeasurement: UnitOfMeasurement = { standardUnit: StandardUnit.KILOGRAM, unitMagnitude: UnitMagnitude.BASE };
   
     constructor(
-        private componentService: ComponentService,
-        private userService: UserService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private fb: FormBuilder,
+        private readonly componentService: ComponentService,
+        private readonly userService: UserService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router,
+        private readonly route: ActivatedRoute,
+        private readonly fb: FormBuilder,
     ) {}
   
     ngOnInit() {
@@ -58,7 +58,7 @@ export class UpdateComponentComponent implements OnInit {
 
     private loadComponent() {
         this.route.paramMap.subscribe((params) => {
-            this.componentId = parseInt(params.get('componentId') || "");
+            this.componentId = parseInt(params.get('componentId') ?? "");
             if (!this.componentId) {
                 return;
             }
@@ -71,7 +71,7 @@ export class UpdateComponentComponent implements OnInit {
                         this.component = component;
                         this.componentForm.patchValue({
                             name: component.name,
-                            description: component.description || ''
+                            description: component.description ?? ''
                         });
                         this.fallbackManagerService.updateLoading(false);
                     },

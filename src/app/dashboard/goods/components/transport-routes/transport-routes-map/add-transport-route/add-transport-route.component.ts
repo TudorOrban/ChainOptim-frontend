@@ -19,13 +19,11 @@ import { SelectEnumComponent } from '../../../../../../shared/common/components/
 import { TransportRouteService } from '../../../../services/transportroute.service';
 import { ComponentSearchDTO } from '../../../../models/Component';
 import { ProductSearchDTO } from "../../../../models/Product";
-import { ComponentService } from '../../../../services/component.service';
-import { ProductService } from '../../../../services/product.service';
 import { SelectProductComponent } from '../../../../../../shared/common/components/select/select-product/select-product.component';
 import { SelectComponentComponent } from '../../../../../../shared/common/components/select/select-component/select-component.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { Facility, FacilityType } from '../../../../../overview/types/supplyChainMapTypes';
+import { Facility } from '../../../../../overview/types/supplyChainMapTypes';
 
 @Component({
     selector: 'app-add-transport-route',
@@ -86,11 +84,11 @@ export class AddTransportRouteComponent {
     faTimes = faTimes;
 
     constructor(
-        private fb: FormBuilder,
-        private userService: UserService,
-        private routeService: TransportRouteService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService
+        private readonly fb: FormBuilder,
+        private readonly userService: UserService,
+        private readonly routeService: TransportRouteService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService
     ) {}
 
     ngOnInit() {

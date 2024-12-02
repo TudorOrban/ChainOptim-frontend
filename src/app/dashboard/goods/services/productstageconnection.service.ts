@@ -11,12 +11,12 @@ import { Product } from '../models/Product';
     providedIn: 'root',
 })
 export class ProductStageConnectionService {
-    private apiUrl = 'http://localhost:8080/api/v1/product-stage-connections';
+    private readonly apiUrl = 'http://localhost:8080/api/v1/product-stage-connections';
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
-        private cachingService: CachingService<PaginatedResults<Product>>
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
+        private readonly cachingService: CachingService<PaginatedResults<Product>>
     ) {}
 
     getConnectionsByProductId(productId: number): Observable<ProductStageConnection[]> {

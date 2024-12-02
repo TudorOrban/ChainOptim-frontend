@@ -52,7 +52,7 @@ export class ProductPricingComponent implements OnInit {
     uiUtilService: UIUtilService;
 
     constructor(
-        private pricingService: PricingService,
+        private readonly pricingService: PricingService,
         uiUtilService: UIUtilService
     ) {
         this.uiUtilService = uiUtilService;

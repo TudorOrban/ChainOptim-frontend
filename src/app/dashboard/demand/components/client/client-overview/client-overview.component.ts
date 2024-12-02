@@ -19,7 +19,7 @@ export class ClientOverviewComponent implements OnInit, OnChanges {
     hasLoadedOverview: boolean = false;
 
     constructor(
-        private clientService: ClientService
+        private readonly clientService: ClientService
     ) { }
 
 
@@ -28,7 +28,7 @@ export class ClientOverviewComponent implements OnInit, OnChanges {
             return;
         }
 
-        this.clientService.getClientOverview(this.client!.id).subscribe((overview) => {
+        this.clientService.getClientOverview(this.client?.id).subscribe((overview) => {
             this.clientOverview = overview
             this.hasLoadedOverview = true;
         });

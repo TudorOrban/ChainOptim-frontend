@@ -52,9 +52,9 @@ export class ProductsComponent implements OnInit {
     Feature = Feature;
     
     constructor(
-        private userService: UserService,
-        private productService: ProductService,
-        private fallbackManagerService: FallbackManagerService
+        private readonly userService: UserService,
+        private readonly productService: ProductService,
+        private readonly fallbackManagerService: FallbackManagerService
     ) {}
 
     ngOnInit() {
@@ -71,7 +71,7 @@ export class ProductsComponent implements OnInit {
                 next: (user) => {
                     console.log('Current User:', user);
                     this.currentOrganization = user?.organization;
-                    if (user && user.organization) {
+                    if (user?.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
                         this.loadProducts(this.currentOrganization?.id ?? 0);

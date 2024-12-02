@@ -35,9 +35,9 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     private L: any;
 
     isMapInitialized: boolean = false;
-    private openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent | TransportRouteUIComponent>> = new Map();
-    private routePolylines: Map<string, L.Polyline> = new Map(); // Key: route ID
-    private arrowHeads: Map<string, L.Marker[]> = new Map(); // Key: route ID
+    private readonly openCardComponentRef: Map<string, ComponentRef<FacilityCardComponent | TransportRouteUIComponent>> = new Map();
+    private readonly routePolylines: Map<string, L.Polyline> = new Map(); // Key: route ID
+    private readonly arrowHeads: Map<string, L.Marker[]> = new Map(); // Key: route ID
     
     supplyChainMap: SupplyChainMap | undefined;
     private routes: ResourceTransportRoute[] = [];
@@ -76,14 +76,14 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
     faLocationPin = faLocationPin;
 
     constructor(
-        @Inject(PLATFORM_ID) private platformId: Object,
-        private viewContainerRef: ViewContainerRef,
-        private userService: UserService,
-        private transportRouteService: TransportRouteService,
-        private supplyChainMapService: SupplyChainMapService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private cdr: ChangeDetectorRef
+        @Inject(PLATFORM_ID) private readonly platformId: Object,
+        private readonly viewContainerRef: ViewContainerRef,
+        private readonly userService: UserService,
+        private readonly transportRouteService: TransportRouteService,
+        private readonly supplyChainMapService: SupplyChainMapService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -495,7 +495,6 @@ export class TransportRoutesMapComponent implements OnInit, AfterViewChecked {
             `Latitude: ${clickedLat}, Longitude: ${clickedLng}`
         );
         
-        // this.deselectRoute();
         this.informAddRouteComponentOnLocationClicked(clickedLat, clickedLng);
         this.informUpdateRouteComponentOnLocationClicked(clickedLat, clickedLng);
            

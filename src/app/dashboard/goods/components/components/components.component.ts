@@ -49,9 +49,9 @@ export class ComponentsComponent implements OnInit {
     itemsPerPage = 10;
 
     constructor(
-        private userService: UserService,
-        private componentService: ComponentService,
-        private fallbackManagerService: FallbackManagerService
+        private readonly userService: UserService,
+        private readonly componentService: ComponentService,
+        private readonly fallbackManagerService: FallbackManagerService
     ) {}
 
     ngOnInit() {
@@ -67,7 +67,7 @@ export class ComponentsComponent implements OnInit {
             .subscribe({
                 next: (user) => {
                     this.currentOrganization = user?.organization;
-                    if (user && user.organization) {
+                    if (user?.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
                         this.loadComponents(this.currentOrganization?.id ?? 0);

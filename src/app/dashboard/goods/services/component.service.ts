@@ -10,12 +10,12 @@ import { Component, CreateComponentDTO, UpdateComponentDTO } from '../models/Com
     providedIn: 'root',
 })
 export class ComponentService {
-    private apiUrl = 'http://localhost:8080/api/v1/components';
+    private readonly apiUrl = 'http://localhost:8080/api/v1/components';
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
-        private cachingService: CachingService<PaginatedResults<Component>>
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
+        private readonly cachingService: CachingService<PaginatedResults<Component>>
     ) {}
 
     getComponentsByOrganizationId(organizationId: number, small: boolean): Observable<Component[]> {

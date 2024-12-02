@@ -10,13 +10,13 @@ import { CachingService } from '../../../shared/search/services/caching.service'
     providedIn: 'root',
 })
 export class TransportRouteService {
-    private apiUrl = 'http://localhost:8080/api/v1/resource-transport-routes';
-    private STALE_TIME = 300000; // 5 minutes
+    private readonly apiUrl = 'http://localhost:8080/api/v1/resource-transport-routes';
+    private readonly STALE_TIME = 300000; // 5 minutes
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
-        private cachingService: CachingService<PaginatedResults<ResourceTransportRoute>>
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
+        private readonly cachingService: CachingService<PaginatedResults<ResourceTransportRoute>>
     ) {}
 
     getResourceTransportRoutesByOrganizationId(organizationId: number): Observable<ResourceTransportRoute[]> {

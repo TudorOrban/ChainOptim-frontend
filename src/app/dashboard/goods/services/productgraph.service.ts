@@ -8,11 +8,11 @@ import { ProductProductionGraph } from '../models/ProductGraph';
     providedIn: 'root',
 })
 export class ProductGraphService {
-    private apiUrl = 'http://localhost:8080/api/v1/product-graphs';
+    private readonly apiUrl = 'http://localhost:8080/api/v1/product-graphs';
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
     ) {}
 
     getProductProductionGraphByProductId(productId: number): Observable<ProductProductionGraph[]> {

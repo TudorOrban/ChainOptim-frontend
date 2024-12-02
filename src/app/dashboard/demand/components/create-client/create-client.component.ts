@@ -30,12 +30,12 @@ export class CreateClientComponent implements OnInit {
     isLocationFormValid: boolean = false;
   
     constructor(
-        private fb: FormBuilder,
-        private clientService: ClientService,
-        private userService: UserService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router
+        private readonly fb: FormBuilder,
+        private readonly clientService: ClientService,
+        private readonly userService: UserService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router
     ) {}
   
     ngOnInit() {
@@ -100,7 +100,7 @@ export class CreateClientComponent implements OnInit {
         return this.clientForm.invalid || 
             (!this.createLocation && !this.locationId) || 
             (this.createLocation && (!this.isLocationFormValid || 
-                (!this.newLocationData || (this.newLocationData as CreateLocationDTO).organizationId === 0)));
+                (!this.newLocationData || this.newLocationData.organizationId === 0)));
     }
 
     private getClientDTO(): CreateClientDTO {

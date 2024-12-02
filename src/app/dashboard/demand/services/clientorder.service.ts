@@ -3,21 +3,20 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { CreateClientOrderDTO, ClientOrder, UpdateClientOrderDTO } from '../models/ClientOrder';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
-import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
-import { SearchParams } from '../../../shared/search/models/searchTypes';
+import { SearchParams, PaginatedResults } from '../../../shared/search/models/searchTypes';
 import { SearchMode } from '../../../shared/enums/commonEnums';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ClientOrderService {
-    private apiUrl = 'http://localhost:8080/api/v1/client-orders';
+    private readonly apiUrl = 'http://localhost:8080/api/v1/client-orders';
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
-        private cachingService: CachingService<PaginatedResults<ClientOrder>>
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
+        private readonly cachingService: CachingService<PaginatedResults<ClientOrder>>
     ) {}
 
     getClientOrdersByOrganizationId(organizationId: number): Observable<ClientOrder[]> {

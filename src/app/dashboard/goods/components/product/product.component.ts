@@ -20,7 +20,6 @@ import { ProductOverviewComponent } from './product-overview/product-overview.co
 import { ProductEvaluationComponent } from './product-evaluation/product-evaluation.component';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
-import { ToastComponent } from '../../../../shared/common/components/toast-system/toast/toast.component';
 import { OperationOutcome, ToastInfo } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
 import { ProductPricingComponent } from './product-pricing/product-pricing.component';
@@ -39,7 +38,6 @@ import { ProductPricingComponent } from './product-pricing/product-pricing.compo
         ProductEvaluationComponent,
         FallbackManagerComponent,
         GenericConfirmDialogComponent,
-        ToastComponent
     ],
     templateUrl: './product.component.html',
     styleUrl: './product.component.css',
@@ -77,11 +75,11 @@ export class ProductComponent implements OnInit {
     };
 
     constructor(
-        private route: ActivatedRoute,
-        private productService: ProductService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router
+        private readonly route: ActivatedRoute,
+        private readonly productService: ProductService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router
     ) {}
 
     ngOnInit() {

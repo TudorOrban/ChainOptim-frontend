@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PaginatedResults } from '../../../../shared/search/models/searchTypes';
 import {
     CreateClientOrderDTO,
     ClientOrder,
@@ -11,6 +10,7 @@ import {
     FilterOption,
     SearchParams,
     UIItem,
+    PaginatedResults
 } from '../../../../shared/search/models/searchTypes';
 import { Feature, SearchMode } from '../../../../shared/enums/commonEnums';
 import { TableToolbarComponent } from '../../../../shared/table/table-toolbar/table-toolbar.component';
@@ -80,12 +80,12 @@ export class ClientOrdersComponent implements OnInit {
     Feature = Feature;
     
     constructor(
-        private userService: UserService,
-        private clientOrderService: ClientOrderService,
-        private clientService: ClientService,
-        private productService: ProductService,
-        private toastService: ToastService,
-        private searchOptionsService: SearchOptionsService
+        private readonly userService: UserService,
+        private readonly clientOrderService: ClientOrderService,
+        private readonly clientService: ClientService,
+        private readonly productService: ProductService,
+        private readonly toastService: ToastService,
+        private readonly searchOptionsService: SearchOptionsService
     ) {
         this.filterOptions =
             this.searchOptionsService.getSearchOptions(Feature.CLIENT_ORDER)
@@ -117,8 +117,8 @@ export class ClientOrdersComponent implements OnInit {
         this.clientOrderService
             .getClientOrdersByOrganizationIdAdvanced(
                 this.searchMode == SearchMode.SECONDARY
-                    ? this.clientId || 0
-                    : this.currentUser?.organization?.id || 0,
+                    ? this.clientId ?? 0
+                    : this.currentUser?.organization?.id ?? 0,
                 this.searchParams,
                 this.searchMode
             )
@@ -130,7 +130,7 @@ export class ClientOrdersComponent implements OnInit {
     private loadClients(): void {
         this.clientService
             .getClientsByOrganizationId(
-                this.currentUser?.organization?.id || 0
+                this.currentUser?.organization?.id ?? 0
             )
             .subscribe((clients) => {
                 this.clients = clients;
@@ -140,7 +140,7 @@ export class ClientOrdersComponent implements OnInit {
     private loadProducts(): void {
         this.productService
             .getProductsByOrganizationId(
-                this.currentUser?.organization?.id || 0,
+                this.currentUser?.organization?.id ?? 0,
                 true
             )
             .subscribe((products) => {
@@ -219,7 +219,7 @@ export class ClientOrdersComponent implements OnInit {
         this.newRawOrders = [];
         this.selectedOrderIds.clear();
         this.isEditing = false;
-        if (this.clientOrders && this.clientOrders.results) {
+        if (this.clientOrders?.results) {
             this.clientOrders.results = this.clientOrders.results.map(
                 (order) => {
                     return { ...order, selected: false, isEditing: false };

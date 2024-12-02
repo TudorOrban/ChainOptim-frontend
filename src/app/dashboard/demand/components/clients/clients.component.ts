@@ -52,9 +52,9 @@ export class ClientsComponent implements OnInit {
     Feature = Feature;
     
     constructor(
-        private userService: UserService,
-        private clientService: ClientService,
-        private fallbackManagerService: FallbackManagerService
+        private readonly userService: UserService,
+        private readonly clientService: ClientService,
+        private readonly fallbackManagerService: FallbackManagerService
     ) {}
 
     ngOnInit() {
@@ -71,7 +71,7 @@ export class ClientsComponent implements OnInit {
                 next: (user) => {
                     console.log('Current User:', user);
                     this.currentOrganization = user?.organization;
-                    if (user && user.organization) {
+                    if (user?.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
                         this.loadClients(this.currentOrganization?.id ?? 0);

@@ -85,11 +85,11 @@ export class UpdateTransportRouteComponent {
     faTimes = faTimes;
     
     constructor(
-        private fb: FormBuilder,
-        private userService: UserService,
-        private routeService: TransportRouteService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService
+        private readonly fb: FormBuilder,
+        private readonly userService: UserService,
+        private readonly routeService: TransportRouteService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService
     ) {}
 
     ngOnInit() {

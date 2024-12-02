@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PaginatedResults } from '../../../../shared/search/models/searchTypes';
 import {
     CreateClientShipmentDTO,
     ShipmentStatus,
@@ -12,6 +11,7 @@ import {
     FilterOption,
     SearchParams,
     UIItem,
+    PaginatedResults
 } from '../../../../shared/search/models/searchTypes';
 import { Feature, SearchMode } from '../../../../shared/enums/commonEnums';
 import { TableToolbarComponent } from '../../../../shared/table/table-toolbar/table-toolbar.component';
@@ -80,12 +80,12 @@ export class ClientShipmentsComponent implements OnInit {
     Feature = Feature;
 
     constructor(
-        private userService: UserService,
-        private clientShipmentService: ClientShipmentService,
-        private clientService: ClientService,
-        private componentService: ComponentService,
-        private toastService: ToastService,
-        private searchOptionsService: SearchOptionsService
+        private readonly userService: UserService,
+        private readonly clientShipmentService: ClientShipmentService,
+        private readonly clientService: ClientService,
+        private readonly componentService: ComponentService,
+        private readonly toastService: ToastService,
+        private readonly searchOptionsService: SearchOptionsService
     ) {
         this.filterOptions =
             this.searchOptionsService.getSearchOptions(Feature.CLIENT_SHIPMENT)
@@ -117,8 +117,8 @@ export class ClientShipmentsComponent implements OnInit {
         this.clientShipmentService
             .getClientShipmentsByOrganizationIdAdvanced(
                 this.searchMode == SearchMode.SECONDARY
-                    ? this.clientId || 0
-                    : this.currentUser?.organization?.id || 0,
+                    ? this.clientId ?? 0
+                    : this.currentUser?.organization?.id ?? 0,
                 this.searchParams,
                 this.searchMode
             )
@@ -130,7 +130,7 @@ export class ClientShipmentsComponent implements OnInit {
     private loadClients(): void {
         this.clientService
             .getClientsByOrganizationId(
-                this.currentUser?.organization?.id || 0
+                this.currentUser?.organization?.id ?? 0
             )
             .subscribe((clients) => {
                 this.clients = clients;
@@ -140,7 +140,7 @@ export class ClientShipmentsComponent implements OnInit {
     private loadComponents(): void {
         this.componentService
             .getComponentsByOrganizationId(
-                this.currentUser?.organization?.id || 0,
+                this.currentUser?.organization?.id ?? 0,
                 true
             )
             .subscribe((components) => {
@@ -219,7 +219,7 @@ export class ClientShipmentsComponent implements OnInit {
         this.newRawShipments = [];
         this.selectedShipmentIds.clear();
         this.isEditing = false;
-        if (this.clientShipments && this.clientShipments.results) {
+        if (this.clientShipments?.results) {
             this.clientShipments.results = this.clientShipments.results.map(
                 (shipment) => {
                     return { ...shipment, selected: false, isEditing: false };

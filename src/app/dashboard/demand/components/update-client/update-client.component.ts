@@ -32,13 +32,13 @@ export class UpdateClientComponent implements OnInit {
     isLocationFormValid: boolean = false;
   
     constructor(
-        private clientService: ClientService,
-        private userService: UserService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private fb: FormBuilder,
+        private readonly clientService: ClientService,
+        private readonly userService: UserService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router,
+        private readonly route: ActivatedRoute,
+        private readonly fb: FormBuilder,
     ) {}
   
     ngOnInit() {
@@ -72,7 +72,7 @@ export class UpdateClientComponent implements OnInit {
 
     private loadClient(): void {
         this.route.paramMap.subscribe((params) => {
-            this.clientId = parseInt(params.get('clientId') || "");
+            this.clientId = parseInt(params.get('clientId') ?? "");
             if (!this.clientId) {
                 return;
             }
@@ -132,7 +132,7 @@ export class UpdateClientComponent implements OnInit {
         return this.clientForm.invalid || 
             (!this.createLocation && !this.locationId) || 
             (this.createLocation && (!this.isLocationFormValid || 
-                (!this.newLocationData || (this.newLocationData as CreateLocationDTO).organizationId === 0)));
+                (!this.newLocationData || this.newLocationData.organizationId === 0)));
     }
 
     private getClientDTO(): CreateClientDTO {

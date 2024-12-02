@@ -26,12 +26,12 @@ export class CreateProductComponent implements OnInit {
     unitOfMeasurement: UnitOfMeasurement = { standardUnit: StandardUnit.KILOGRAM, unitMagnitude: UnitMagnitude.BASE };
   
     constructor(
-        private fb: FormBuilder,
-        private productService: ProductService,
-        private userService: UserService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router
+        private readonly fb: FormBuilder,
+        private readonly productService: ProductService,
+        private readonly userService: UserService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router
     ) {}
   
     ngOnInit() {

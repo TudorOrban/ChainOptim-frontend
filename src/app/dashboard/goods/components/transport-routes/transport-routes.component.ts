@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { SearchMode } from '../../../../shared/enums/commonEnums';
+import { Component } from '@angular/core';
 import { TransportRoutesTableComponent } from './transport-routes-table/transport-routes-table.component';
 import { CommonModule } from '@angular/common';
 import { TransportRoutesMapComponent } from './transport-routes-map/transport-routes-map.component';

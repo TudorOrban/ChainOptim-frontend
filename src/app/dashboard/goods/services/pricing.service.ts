@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CreatePricingDTO, Pricing, ProductPricing, UpdatePricingDTO } from "../models/Product";
+import { CreatePricingDTO, Pricing, UpdatePricingDTO } from "../models/Product";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
@@ -7,10 +7,10 @@ import { Observable } from "rxjs";
     providedIn: 'root'
 })
 export class PricingService {
-    private apiUrl = 'http://localhost:8080/api/v1/pricings';
+    private readonly apiUrl = 'http://localhost:8080/api/v1/pricings';
 
     constructor(
-        private http: HttpClient,
+        private readonly http: HttpClient,
     ) { }
 
     getPricingByProductId(productId: number): Observable<Pricing> {

@@ -70,11 +70,11 @@ export class ClientComponent implements OnInit {
     };
 
     constructor(
-        private route: ActivatedRoute,
-        private clientService: ClientService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router
+        private readonly route: ActivatedRoute,
+        private readonly clientService: ClientService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router
     ) {}
 
     ngOnInit() {

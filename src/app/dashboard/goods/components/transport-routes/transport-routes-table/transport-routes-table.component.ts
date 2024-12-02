@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { PaginatedResults } from '../../../../../shared/search/models/searchTypes';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../../../core/user/services/user.service';
 import {
     FilterOption,
     SearchParams,
     UIItem,
+    PaginatedResults
 } from '../../../../../shared/search/models/searchTypes';
 import { Feature, SearchMode } from '../../../../../shared/enums/commonEnums';
 import { TableToolbarComponent } from '../../../../../shared/table/table-toolbar/table-toolbar.component';
@@ -67,11 +67,11 @@ export class TransportRoutesTableComponent implements OnInit {
     filterOptions: FilterOption[] = [];
 
     constructor(
-        private userService: UserService,
-        private resourceTransportRouteService: TransportRouteService,
-        private componentService: ComponentService,
-        private toastService: ToastService,
-        private searchOptionsService: SearchOptionsService
+        private readonly userService: UserService,
+        private readonly resourceTransportRouteService: TransportRouteService,
+        private readonly componentService: ComponentService,
+        private readonly toastService: ToastService,
+        private readonly searchOptionsService: SearchOptionsService
     ) {
         this.filterOptions =
             this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_SHIPMENT)
@@ -101,7 +101,7 @@ export class TransportRoutesTableComponent implements OnInit {
     private loadResourceTransportRoutes(): void {
         this.resourceTransportRouteService
             .getResourceTransportRoutesByOrganizationIdAdvanced(
-                this.currentUser?.organization?.id || 0,
+                this.currentUser?.organization?.id ?? 0,
                 this.searchParams,
             )
             .subscribe((routes) => {
@@ -112,7 +112,7 @@ export class TransportRoutesTableComponent implements OnInit {
     private loadComponents(): void {
         this.componentService
             .getComponentsByOrganizationId(
-                this.currentUser?.organization?.id || 0,
+                this.currentUser?.organization?.id ?? 0,
                 true
             )
             .subscribe((components) => {
@@ -191,7 +191,7 @@ export class TransportRoutesTableComponent implements OnInit {
         this.newRawRoutes = [];
         this.selectedRouteIds.clear();
         this.isEditing = false;
-        if (this.routes && this.routes.results) {
+        if (this.routes?.results) {
             this.routes.results = this.routes.results.map(
                 (route) => {
                     return { ...route, selected: false, isEditing: false };

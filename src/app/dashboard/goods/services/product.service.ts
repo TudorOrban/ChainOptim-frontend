@@ -1,23 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 import { CreateProductDTO, Product, ProductOverviewDTO, UpdateProductDTO } from '../models/Product';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
 import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
-import { StandardUnit, UnitMagnitude } from '../../../shared/enums/unitEnums';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ProductService {
-    private apiUrl = 'http://localhost:8080/api/v1/products';
-    // private currentProductSubject = new BehaviorSubject<Product | null>(null);
+    private readonly apiUrl = 'http://localhost:8080/api/v1/products';
+    // private readonly currentProductSubject = new BehaviorSubject<Product | null>(null);
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
-        private cachingService: CachingService<PaginatedResults<Product>>
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
+        private readonly cachingService: CachingService<PaginatedResults<Product>>
     ) {}
 
     getProductsByOrganizationId(organizationId: number, small: boolean): Observable<Product[]> {

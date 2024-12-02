@@ -71,7 +71,7 @@
             <div class="flex items-start justify-between space-x-2">
                 <div>
                     <div class="form-label">Source Facility</div>
-                    <select [ngModel]="routeForm?.get('srcFacility')?.value?.id" [ngModelOptions]="{standalone: true}" class="custom-select mt-2 max-w-40">
+                    <select [ngModel]="routeForm.get('srcFacility')?.value?.id" [ngModelOptions]="{standalone: true}" class="custom-select mt-2 max-w-40">
                         <option *ngFor="let facility of sortFacilitiesByCloseness(confirmedSrcDestLocations?.[0])" [value]="facility.id">
                             {{ facility.name }}
                         </option>
@@ -82,7 +82,7 @@
                 
                 <div>
                     <div class="form-label">Destination Facility</div>
-                    <select [ngModel]="routeForm?.get('destFacility')?.value?.id" [ngModelOptions]="{standalone: true}" class="custom-select mt-2 max-w-40">
+                    <select [ngModel]="routeForm.get('destFacility')?.value?.id" [ngModelOptions]="{standalone: true}" class="custom-select mt-2 max-w-40">
                         <option *ngFor="let facility of sortFacilitiesByCloseness(confirmedSrcDestLocations?.[1])" [value]="facility.id">
                             {{ facility.name }}
                         </option>

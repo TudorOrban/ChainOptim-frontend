@@ -6,10 +6,10 @@ import { ProductProductionTabType, ProductTab } from '../../production/models/Pr
     providedIn: 'root',
 })
 export class ProductProductionTabsService {
-    private tabs: ProductTab<any>[] = [];
-    private activeTabId = new BehaviorSubject<string | null>(null);
+    private readonly tabs: ProductTab<any>[] = [];
+    private readonly activeTabId = new BehaviorSubject<string | null>(null);
     private idCounter = 0; 
-    private componentRefs = new Map<string, ComponentRef<ProductProductionTabType>>();
+    private readonly componentRefs = new Map<string, ComponentRef<ProductProductionTabType>>();
 
     getTabs(): ProductTab<any>[] {
         return this.tabs;

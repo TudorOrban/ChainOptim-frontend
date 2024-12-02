@@ -14,7 +14,6 @@ import { FallbackManagerComponent } from '../../../../shared/fallback/components
 import { NavigationItem } from '../../../../shared/common/models/uiTypes';
 import { ConfirmDialogInput } from '../../../../shared/common/models/confirmDialogTypes';
 import { GenericConfirmDialogComponent } from '../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component';
-import { ToastComponent } from '../../../../shared/common/components/toast-system/toast/toast.component';
 import { OperationOutcome, ToastInfo } from '../../../../shared/common/components/toast-system/toastTypes';
 import { ToastService } from '../../../../shared/common/components/toast-system/toast.service';
 import { ComponentService } from '../../services/component.service';
@@ -28,7 +27,6 @@ import { ComponentService } from '../../services/component.service';
         FontAwesomeModule,
         FallbackManagerComponent,
         GenericConfirmDialogComponent,
-        ToastComponent
     ],
     templateUrl: './component.component.html',
     styleUrl: './component.component.css',
@@ -63,11 +61,11 @@ export class ComponentComponent implements OnInit {
     };
 
     constructor(
-        private route: ActivatedRoute,
-        private componentService: ComponentService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router
+        private readonly route: ActivatedRoute,
+        private readonly componentService: ComponentService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router
     ) {}
 
     ngOnInit() {

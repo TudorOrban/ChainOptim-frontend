@@ -1,24 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { DeleteStageOutputDTO } from "../models/Stage";
-import { UpdateStageOutputDTO } from "../models/Stage";
-import { CreateStageOutputDTO } from "../models/Stage";
-import { UpdateStageDTO } from "../models/Stage";
-import { CreateStageDTO } from "../models/Stage";
-import { StageOutput } from "../models/Stage";
-import { Stage } from "../models/Stage";
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
+import { CreateStageOutputDTO, DeleteStageOutputDTO, StageOutput, UpdateStageOutputDTO } from '../models/Stage';
 
 @Injectable({
     providedIn: 'root',
 })
 export class StageOutputService {
-    private apiUrl = 'http://localhost:8080/api/v1/stage-outputs';
+    private readonly apiUrl = 'http://localhost:8080/api/v1/stage-outputs';
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
     ) {}
 
     getStageOutputsByStageId(stageId: number): Observable<StageOutput[]> {

@@ -3,21 +3,20 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { CreateClientShipmentDTO, ClientShipment, UpdateClientShipmentDTO } from '../models/ClientShipment';
 import { ErrorHandlerService } from '../../../shared/fallback/services/error/error-handler.service';
-import { PaginatedResults } from "../../../shared/search/models/searchTypes";
 import { CachingService } from '../../../shared/search/services/caching.service';
-import { SearchParams } from '../../../shared/search/models/searchTypes';
+import { SearchParams, PaginatedResults } from '../../../shared/search/models/searchTypes';
 import { SearchMode } from '../../../shared/enums/commonEnums';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ClientShipmentService {
-    private apiUrl = 'http://localhost:8080/api/v1/client-shipments';
+    private readonly apiUrl = 'http://localhost:8080/api/v1/client-shipments';
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
-        private cachingService: CachingService<PaginatedResults<ClientShipment>>
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
+        private readonly cachingService: CachingService<PaginatedResults<ClientShipment>>
     ) {}
 
     getClientShipmentsByOrganizationId(organizationId: number): Observable<ClientShipment[]> {

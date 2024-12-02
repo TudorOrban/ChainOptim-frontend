@@ -22,7 +22,7 @@ export class ProductOverviewComponent implements OnInit, OnChanges {
     uiUtilService: UIUtilService;
 
     constructor(
-        private productService: ProductService,
+        private readonly productService: ProductService,
         uiUtilService: UIUtilService
     ) { 
         this.uiUtilService = uiUtilService;
@@ -34,7 +34,7 @@ export class ProductOverviewComponent implements OnInit, OnChanges {
             return;
         }
 
-        this.productService.getProductOverview(this.product!.id).subscribe((overview) => {
+        this.productService.getProductOverview(this.product?.id).subscribe((overview) => {
             this.productOverview = overview
             this.hasLoadedOverview = true;
         });
