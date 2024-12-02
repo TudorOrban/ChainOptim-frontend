@@ -13,9 +13,8 @@ import { AuthenticationService } from './core/auth/services/authentication.servi
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent } from './core/main/components/sidebar/sidebar.component';
-import { filter, Observable, switchMap } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { UserService } from './core/user/services/user.service';
-import { OrganizationService } from './dashboard/organization/services/organization.service';
 import { ToastManagerComponent } from './shared/common/components/toast-system/toast-manager/toast-manager.component';
 import { NotificationLiveService } from './dashboard/overview/services/notificationlive.service';
 import { User } from './core/user/model/user';
@@ -47,12 +46,12 @@ export class AppComponent implements OnInit {
     faSearch = faSearch;
 
     constructor(
-        @Inject(PLATFORM_ID) private platformId: Object,
+        @Inject(PLATFORM_ID) private readonly platformId: Object,
         public authService: AuthenticationService,
-        private userService: UserService,
-        private userSettingsService: UserSettingsService,
-        private notificationLiveService: NotificationLiveService,
-        private router: Router
+        private readonly userService: UserService,
+        private readonly userSettingsService: UserSettingsService,
+        private readonly notificationLiveService: NotificationLiveService,
+        private readonly router: Router
     ) {
         // Hide header on dashboard routes
         this.router.events

@@ -10,12 +10,12 @@ import { CachingService } from '../../../shared/search/services/caching.service'
     providedIn: 'root',
 })
 export class SupplierService {
-    private apiUrl = 'http://localhost:8080/api/v1/suppliers';
+    private readonly apiUrl = 'http://localhost:8080/api/v1/suppliers';
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
-        private cachingService: CachingService<PaginatedResults<Supplier>>
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
+        private readonly cachingService: CachingService<PaginatedResults<Supplier>>
     ) {}
 
     getSuppliersByOrganizationId(organizationId: number): Observable<Supplier[]> {

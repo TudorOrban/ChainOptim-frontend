@@ -19,7 +19,7 @@ export class SupplierOverviewComponent implements OnInit, OnChanges {
     hasLoadedOverview: boolean = false;
 
     constructor(
-        private supplierService: SupplierService
+        private readonly supplierService: SupplierService
     ) { }
 
 
@@ -28,7 +28,7 @@ export class SupplierOverviewComponent implements OnInit, OnChanges {
             return;
         }
 
-        this.supplierService.getSupplierOverview(this.supplier!.id).subscribe((overview) => {
+        this.supplierService.getSupplierOverview(this.supplier?.id).subscribe((overview) => {
             this.supplierOverview = overview
             this.hasLoadedOverview = true;
         });

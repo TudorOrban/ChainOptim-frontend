@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { SearchParams } from "../models/searchTypes";
-import { CacheEntry } from "../models/searchTypes";
+import { SearchParams, CacheEntry } from "../models/searchTypes";
 
 /**
  * Service for caching search query results for the pages Products, Factories etc.
@@ -10,7 +9,7 @@ import { CacheEntry } from "../models/searchTypes";
 })
 export class CachingService<T> {
 
-    private cache: Map<string, CacheEntry<T>> = new Map<string, CacheEntry<T>>();
+    private readonly cache: Map<string, CacheEntry<T>> = new Map<string, CacheEntry<T>>();
 
     isCached(key: string): boolean {
         return this.cache.has(key);
@@ -19,7 +18,7 @@ export class CachingService<T> {
     isStale(key: string): boolean {
         if (this.isCached(key)) {
             let entry = this.cache.get(key);
-            let isStale = Date.now() - (entry?.lastFetched || 0) > (entry?.staleTime || 0);
+            let isStale = Date.now() - (entry?.lastFetched ?? 0) > (entry?.staleTime ?? 0);
             if (isStale) {
                 this.invalidateCache(key);
             }

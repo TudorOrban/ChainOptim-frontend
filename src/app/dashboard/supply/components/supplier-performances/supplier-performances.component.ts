@@ -51,9 +51,9 @@ export class SupplierPerformancesComponent implements OnInit {
     itemsPerPage = 10;
     
     constructor(
-        private userService: UserService,
-        private supplierService: SupplierService,
-        private fallbackManagerService: FallbackManagerService
+        private readonly userService: UserService,
+        private readonly supplierService: SupplierService,
+        private readonly fallbackManagerService: FallbackManagerService
     ) {}
 
     ngOnInit() {
@@ -70,7 +70,7 @@ export class SupplierPerformancesComponent implements OnInit {
                 next: (user) => {
                     console.log('Current User:', user);
                     this.currentOrganization = user?.organization;
-                    if (user && user.organization) {
+                    if (user?.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);
 
                         // Load suppliers

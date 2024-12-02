@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PaginatedResults } from '../../../../shared/search/models/searchTypes';
 import {
     CreateSupplierShipmentDTO,
     ShipmentStatus,
@@ -12,6 +11,7 @@ import {
     FilterOption,
     SearchParams,
     UIItem,
+    PaginatedResults
 } from '../../../../shared/search/models/searchTypes';
 import { Feature, SearchMode } from '../../../../shared/enums/commonEnums';
 import { TableToolbarComponent } from '../../../../shared/table/table-toolbar/table-toolbar.component';
@@ -80,12 +80,12 @@ export class SupplierShipmentsComponent implements OnInit {
     Feature = Feature;
     
     constructor(
-        private userService: UserService,
-        private supplierShipmentService: SupplierShipmentService,
-        private supplierService: SupplierService,
-        private componentService: ComponentService,
-        private toastService: ToastService,
-        private searchOptionsService: SearchOptionsService
+        private readonly userService: UserService,
+        private readonly supplierShipmentService: SupplierShipmentService,
+        private readonly supplierService: SupplierService,
+        private readonly componentService: ComponentService,
+        private readonly toastService: ToastService,
+        private readonly searchOptionsService: SearchOptionsService
     ) {
         this.filterOptions =
             this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_SHIPMENT)
@@ -117,8 +117,8 @@ export class SupplierShipmentsComponent implements OnInit {
         this.supplierShipmentService
             .getSupplierShipmentsByOrganizationIdAdvanced(
                 this.searchMode == SearchMode.SECONDARY
-                    ? this.supplierId || 0
-                    : this.currentUser?.organization?.id || 0,
+                    ? this.supplierId ?? 0
+                    : this.currentUser?.organization?.id ?? 0,
                 this.searchParams,
                 this.searchMode
             )
@@ -130,7 +130,7 @@ export class SupplierShipmentsComponent implements OnInit {
     private loadSuppliers(): void {
         this.supplierService
             .getSuppliersByOrganizationId(
-                this.currentUser?.organization?.id || 0
+                this.currentUser?.organization?.id ?? 0
             )
             .subscribe((suppliers) => {
                 this.suppliers = suppliers;
@@ -140,7 +140,7 @@ export class SupplierShipmentsComponent implements OnInit {
     private loadComponents(): void {
         this.componentService
             .getComponentsByOrganizationId(
-                this.currentUser?.organization?.id || 0,
+                this.currentUser?.organization?.id ?? 0,
                 true
             )
             .subscribe((components) => {
@@ -219,7 +219,7 @@ export class SupplierShipmentsComponent implements OnInit {
         this.newRawShipments = [];
         this.selectedShipmentIds.clear();
         this.isEditing = false;
-        if (this.supplierShipments && this.supplierShipments.results) {
+        if (this.supplierShipments?.results) {
             this.supplierShipments.results = this.supplierShipments.results.map(
                 (shipment) => {
                     return { ...shipment, selected: false, isEditing: false };

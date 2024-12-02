@@ -52,9 +52,9 @@ export class SuppliersComponent implements OnInit {
     Feature = Feature;
     
     constructor(
-        private userService: UserService,
-        private supplierService: SupplierService,
-        private fallbackManagerService: FallbackManagerService
+        private readonly userService: UserService,
+        private readonly supplierService: SupplierService,
+        private readonly fallbackManagerService: FallbackManagerService
     ) {}
 
     ngOnInit() {
@@ -69,7 +69,6 @@ export class SuppliersComponent implements OnInit {
             .getCurrentUser()
             .subscribe({
                 next: (user) => {
-                    console.log('Current User:', user);
                     this.currentOrganization = user?.organization;
                     if (user?.organization) {
                         this.fallbackManagerService.updateNoOrganization(false);

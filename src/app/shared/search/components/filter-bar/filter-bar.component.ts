@@ -34,7 +34,7 @@ export class FilterBarComponent {
                 value = this.selectedEnumValue;
                 break;
             case FilterType.DATE:
-                value = this.formatAsLocalDateTime(this.selectedDate || "");
+                value = this.formatAsLocalDateTime(this.selectedDate ?? "");
                 break;
         }
 

@@ -20,7 +20,7 @@ export interface FallbackManagerState {
 
 @Injectable({ providedIn: 'root' })
 export class FallbackManagerService {
-    private _fallbackManagerState = new BehaviorSubject<FallbackManagerState>({});
+    private readonly _fallbackManagerState = new BehaviorSubject<FallbackManagerState>({});
     fallbackManagerState$ = this._fallbackManagerState.asObservable();
 
     updateError(message?: string) {

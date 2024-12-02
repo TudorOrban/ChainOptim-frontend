@@ -32,13 +32,13 @@ export class UpdateSupplierComponent implements OnInit {
     isLocationFormValid: boolean = false;
   
     constructor(
-        private supplierService: SupplierService,
-        private userService: UserService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private fb: FormBuilder,
+        private readonly supplierService: SupplierService,
+        private readonly userService: UserService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router,
+        private readonly route: ActivatedRoute,
+        private readonly fb: FormBuilder,
     ) {}
   
     ngOnInit() {
@@ -72,7 +72,7 @@ export class UpdateSupplierComponent implements OnInit {
 
     private loadSupplier(): void {
         this.route.paramMap.subscribe((params) => {
-            this.supplierId = parseInt(params.get('supplierId') || "");
+            this.supplierId = parseInt(params.get('supplierId') ?? "");
             if (!this.supplierId) {
                 return;
             }
@@ -132,7 +132,7 @@ export class UpdateSupplierComponent implements OnInit {
         return this.supplierForm.invalid || 
             (!this.createLocation && !this.locationId) || 
             (this.createLocation && (!this.isLocationFormValid || 
-                (!this.newLocationData || (this.newLocationData as CreateLocationDTO).organizationId === 0)));
+                (!this.newLocationData || this.newLocationData.organizationId === 0)));
     }
 
     private getSupplierDTO(): CreateSupplierDTO {

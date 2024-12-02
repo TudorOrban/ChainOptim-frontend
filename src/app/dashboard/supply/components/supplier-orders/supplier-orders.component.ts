@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PaginatedResults } from '../../../../shared/search/models/searchTypes';
 import {
     CreateSupplierOrderDTO,
     OrderStatus,
@@ -12,6 +11,7 @@ import {
     FilterOption,
     SearchParams,
     UIItem,
+    PaginatedResults
 } from '../../../../shared/search/models/searchTypes';
 import { Feature, SearchMode } from '../../../../shared/enums/commonEnums';
 import { TableToolbarComponent } from '../../../../shared/table/table-toolbar/table-toolbar.component';
@@ -80,12 +80,12 @@ export class SupplierOrdersComponent implements OnInit {
     Feature = Feature;
 
     constructor(
-        private userService: UserService,
-        private supplierOrderService: SupplierOrderService,
-        private supplierService: SupplierService,
-        private componentService: ComponentService,
-        private toastService: ToastService,
-        private searchOptionsService: SearchOptionsService
+        private readonly userService: UserService,
+        private readonly supplierOrderService: SupplierOrderService,
+        private readonly supplierService: SupplierService,
+        private readonly componentService: ComponentService,
+        private readonly toastService: ToastService,
+        private readonly searchOptionsService: SearchOptionsService
     ) {
         this.filterOptions =
             this.searchOptionsService.getSearchOptions(Feature.SUPPLIER_ORDER)
@@ -117,8 +117,8 @@ export class SupplierOrdersComponent implements OnInit {
         this.supplierOrderService
             .getSupplierOrdersByOrganizationIdAdvanced(
                 this.searchMode == SearchMode.SECONDARY
-                    ? this.supplierId || 0
-                    : this.currentUser?.organization?.id || 0,
+                    ? this.supplierId ?? 0
+                    : this.currentUser?.organization?.id ?? 0,
                 this.searchParams,
                 this.searchMode
             )
@@ -130,7 +130,7 @@ export class SupplierOrdersComponent implements OnInit {
     private loadSuppliers(): void {
         this.supplierService
             .getSuppliersByOrganizationId(
-                this.currentUser?.organization?.id || 0
+                this.currentUser?.organization?.id ?? 0
             )
             .subscribe((suppliers) => {
                 this.suppliers = suppliers;
@@ -140,7 +140,7 @@ export class SupplierOrdersComponent implements OnInit {
     private loadComponents(): void {
         this.componentService
             .getComponentsByOrganizationId(
-                this.currentUser?.organization?.id || 0,
+                this.currentUser?.organization?.id ?? 0,
                 true
             )
             .subscribe((components) => {
@@ -219,7 +219,7 @@ export class SupplierOrdersComponent implements OnInit {
         this.newRawOrders = [];
         this.selectedOrderIds.clear();
         this.isEditing = false;
-        if (this.supplierOrders && this.supplierOrders.results) {
+        if (this.supplierOrders?.results) {
             this.supplierOrders.results = this.supplierOrders.results.map(
                 (order) => {
                     return { ...order, selected: false, isEditing: false };

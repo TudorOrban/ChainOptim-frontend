@@ -30,12 +30,12 @@ export class CreateSupplierComponent implements OnInit {
     isLocationFormValid: boolean = false;
   
     constructor(
-        private fb: FormBuilder,
-        private supplierService: SupplierService,
-        private userService: UserService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router
+        private readonly fb: FormBuilder,
+        private readonly supplierService: SupplierService,
+        private readonly userService: UserService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router
     ) {}
   
     ngOnInit() {
@@ -100,7 +100,7 @@ export class CreateSupplierComponent implements OnInit {
         return this.supplierForm.invalid || 
             (!this.createLocation && !this.locationId) || 
             (this.createLocation && (!this.isLocationFormValid || 
-                (!this.newLocationData || (this.newLocationData as CreateLocationDTO).organizationId === 0)));
+                (!this.newLocationData || this.newLocationData.organizationId === 0)));
     }
 
     private getSupplierDTO(): CreateSupplierDTO {

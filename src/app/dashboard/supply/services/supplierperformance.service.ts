@@ -8,11 +8,11 @@ import { SupplierPerformance } from "../models/SupplierPerformance";
     providedIn: 'root',
 })
 export class SupplierPerformanceService {
-    private apiUrl = 'http://localhost:8080/api/v1/supplier-performance';
+    private readonly apiUrl = 'http://localhost:8080/api/v1/supplier-performance';
 
     constructor(
-        private http: HttpClient,
-        private errorHandlerService: ErrorHandlerService,
+        private readonly http: HttpClient,
+        private readonly errorHandlerService: ErrorHandlerService,
     ) {}
 
     getSupplierPerformanceBySupplierId(supplierId: number, refresh: boolean): Observable<SupplierPerformance> {

@@ -72,11 +72,11 @@ export class SupplierComponent implements OnInit {
     };
 
     constructor(
-        private route: ActivatedRoute,
-        private supplierService: SupplierService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
-        private router: Router
+        private readonly route: ActivatedRoute,
+        private readonly supplierService: SupplierService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
+        private readonly router: Router
     ) {}
 
     ngOnInit() {
@@ -93,7 +93,6 @@ export class SupplierComponent implements OnInit {
                 .getSupplierById(Number(this.supplierId))
                 .subscribe({
                     next: (supplier) => {
-                        console.log('SUPPLIER', supplier);
                         this.supplier = supplier;
                         this.fallbackManagerService.updateLoading(false);
                     },

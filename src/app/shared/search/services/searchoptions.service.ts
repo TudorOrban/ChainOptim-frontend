@@ -11,7 +11,7 @@ import { FilterType, SearchOptions } from "../models/searchTypes";
 })
 export class SearchOptionsService {
 
-    private searchOptions: Map<Feature, SearchOptions>;
+    private readonly searchOptions: Map<Feature, SearchOptions>;
 
     constructor() {
         this.searchOptions = new Map<Feature, SearchOptions>([

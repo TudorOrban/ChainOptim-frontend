@@ -1,9 +1,9 @@
-import { Component, ComponentRef, Inject, Input, OnInit, PLATFORM_ID, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, Inject, Input, OnInit, PLATFORM_ID, ViewChild, ViewContainerRef } from '@angular/core';
 import { Supplier } from '../../../models/Supplier';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ApexChartComponent, ChartOptions } from '../../../../../shared/common/components/charts/apex-chart/apex-chart.component';
+import { ApexChartComponent } from '../../../../../shared/common/components/charts/apex-chart/apex-chart.component';
 import { SupplierPerformanceService } from '../../../services/supplierperformance.service';
-import { SupplierPerformance, SupplierPerformanceReport } from '../../../models/SupplierPerformance';
+import { SupplierPerformance } from '../../../models/SupplierPerformance';
 import { ComponentService } from '../../../../goods/services/component.service';
 import { ComponentSearchDTO } from '../../../../goods/models/Component';
 import { UserService } from '../../../../../core/user/services/user.service';
@@ -39,9 +39,9 @@ export class SupplierPerformanceComponent implements OnInit {
 
     constructor(
         @Inject(PLATFORM_ID) platformId: Object,
-        private userService: UserService,
-        private performanceService: SupplierPerformanceService,
-        private componentService: ComponentService,
+        private readonly userService: UserService,
+        private readonly performanceService: SupplierPerformanceService,
+        private readonly componentService: ComponentService,
         uiUtilService: UIUtilService,
     ) {
         this.uiUtilService = uiUtilService;

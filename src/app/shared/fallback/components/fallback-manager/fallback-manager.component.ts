@@ -25,7 +25,7 @@ import { LoadingFallbackComponent } from '../loading-fallback/loading-fallback.c
 export class FallbackManagerComponent implements OnInit {
     @Input() fallbackManagerState: FallbackManagerState = {};
 
-    constructor(private fallbackManagerService: FallbackManagerService) {}
+    constructor(private readonly fallbackManagerService: FallbackManagerService) {}
 
     ngOnInit() {
         // Subscribe to state changes
