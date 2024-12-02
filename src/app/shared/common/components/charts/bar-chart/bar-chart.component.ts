@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { HistoryChartData, ProductionHistory } from '../../../../../dashboard/production/models/ResourceAllocation';
+import { HistoryChartData } from '../../../../../dashboard/production/models/ResourceAllocation';
 import { CommonModule } from '@angular/common';
 import { NgApexchartsModule, ChartType } from 'ng-apexcharts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';

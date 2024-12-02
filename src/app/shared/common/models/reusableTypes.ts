@@ -11,6 +11,7 @@ export interface Location {
     organizationId: number;
 }
 
+
 export interface CreateLocationDTO {
     address?: string;
     city?: string;

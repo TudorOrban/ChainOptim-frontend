@@ -20,8 +20,6 @@ export class SelectUnitOfMeasurementComponent {
 
     constructor() {}
   
-    ngOnInit(): void {}
-  
     initialize(unit: StandardUnit, magnitude: UnitMagnitude): void {
         this.selectedStandardUnit = unit;
         this.selectedUnitMagnitude = magnitude;

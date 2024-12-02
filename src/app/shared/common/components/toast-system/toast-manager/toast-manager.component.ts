@@ -14,10 +14,10 @@ import { Subscription, timer } from 'rxjs';
 })
 export class ToastManagerComponent implements OnInit, OnDestroy {
     toasts: ToastInfo[] = [];
-    private subscriptions = new Map<number, Subscription>();
+    private readonly subscriptions = new Map<number, Subscription>();
 
     constructor(
-        private toastService: ToastService
+        private readonly toastService: ToastService
     ) {}
 
     ngOnInit(): void {

@@ -13,7 +13,7 @@ import { Stage } from "../../../../../dashboard/goods/models/Stage";
   styleUrl: './select-stage.component.css'
 })
 export class SelectStageComponent implements OnChanges {    
-    @Input() initialData?: { stage?: Stage, stageId?: number } | undefined = undefined;
+    @Input() initialData: { stage?: Stage, stageId?: number } | undefined = undefined;
 
     stages: Stage[] = [];
     selectedStageId: number | undefined = undefined;
@@ -21,8 +21,8 @@ export class SelectStageComponent implements OnChanges {
     @Output() stageSelected = new EventEmitter<number>();
 
     constructor(
-        private stageService: StageService,
-        private userService: UserService,
+        private readonly stageService: StageService,
+        private readonly userService: UserService,
     ) {}
 
     ngOnInit(): void {
@@ -64,7 +64,7 @@ export class SelectStageComponent implements OnChanges {
                 console.log("Stages: ", stages);
                 this.stages = stages;
 
-                if (this.initialData && this.initialData.stageId) {
+                if (this.initialData?.stageId) {
                     this.selectStage(this.initialData.stageId);
                 }
             });

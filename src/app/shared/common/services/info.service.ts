@@ -9,7 +9,7 @@ import { InfoLevel } from "../../../dashboard/settings/models/UserSettings";
 })
 export class InfoService {
 
-    private infoConfiguration: FeatureConfiguration = {
+    private readonly infoConfiguration: FeatureConfiguration = {
         [Feature.MEMBER]: {
             tooltipText: "A User is any person that has access to the resources of the organization. " +
                 "You can assign different roles to Users, each with different permissions and access levels.",

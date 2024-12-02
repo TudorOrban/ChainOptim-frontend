@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
     ApexAxisChartSeries,
     ApexChart,
@@ -7,7 +7,6 @@ import {
     ApexXAxis,
     NgApexchartsModule,
 } from 'ng-apexcharts';
-import { SupplierPerformanceReport } from '../../../../../dashboard/supply/models/SupplierPerformance';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule, formatDate } from '@angular/common';
@@ -118,7 +117,7 @@ export class ApexChartComponent implements OnInit {
 
             const sum = segmentPoints.reduce((acc, day) => {
                 const value = flooredDeliveredQuantityOverTime[day];
-                return acc + (value !== undefined ? value : 0);
+                return acc + (value ?? 0);
             }, 0);
 
             seriesData.push({

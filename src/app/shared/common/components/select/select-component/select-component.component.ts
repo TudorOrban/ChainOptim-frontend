@@ -13,7 +13,7 @@ import { ComponentSearchDTO, Component as ProdComponent } from '../../../../../d
   styleUrl: './select-component.component.css'
 })
 export class SelectComponentComponent implements OnChanges {    
-    @Input() initialData?: { component?: ProdComponent, componentId?: number, initialComponents?: ProdComponent[] | ComponentSearchDTO[], preventComponentLoading?: boolean } | undefined = undefined;
+    @Input() initialData: { component?: ProdComponent, componentId?: number, initialComponents?: ProdComponent[] | ComponentSearchDTO[], preventComponentLoading?: boolean } | undefined = undefined;
 
     components: ProdComponent[] | ComponentSearchDTO[] = [];
     selectedComponentId: number | undefined = undefined;
@@ -21,12 +21,12 @@ export class SelectComponentComponent implements OnChanges {
     @Output() componentSelected = new EventEmitter<ComponentSearchDTO>();
 
     constructor(
-        private componentService: ComponentService,
-        private userService: UserService,
+        private readonly componentService: ComponentService,
+        private readonly userService: UserService,
     ) {}
 
     ngOnInit(): void {
-        this.handleInitialData(undefined);
+        this.handleInitialData();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -79,7 +79,7 @@ export class SelectComponentComponent implements OnChanges {
                 console.log("Components: ", components);
                 this.components = components;
 
-                if (this.initialData && this.initialData.component) {
+                if (this.initialData?.component) {
                     this.selectComponent(this.initialData.component.id);
                 }
             });

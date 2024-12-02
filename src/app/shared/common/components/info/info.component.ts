@@ -36,8 +36,8 @@ export class InfoComponent implements OnInit {
     @ViewChild('iconWrapper', { static: false }) iconWrapper!: ElementRef;
 
     constructor(
-        private userSettingsService: UserSettingsService,
-        private infoService: InfoService
+        private readonly userSettingsService: UserSettingsService,
+        private readonly infoService: InfoService
     ) {}
 
     @HostListener('mouseenter')

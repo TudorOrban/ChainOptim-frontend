@@ -13,7 +13,7 @@ import { FactoryStageService } from '../../../../../dashboard/production/service
   styleUrl: './select-factory-stage.component.css'
 })
 export class SelectFactoryStageComponent implements OnChanges {    
-    @Input() initialData?: { stage?: FactoryStage, stageId?: number, initialStages?: FactoryStageSearchDTO[], preventStageLoading?: boolean } | undefined = undefined;
+    @Input() initialData: { stage?: FactoryStage, stageId?: number, initialStages?: FactoryStageSearchDTO[], preventStageLoading?: boolean } | undefined = undefined;
 
     stages: FactoryStageSearchDTO[] = [];
     selectedStageId: number | undefined = undefined;
@@ -21,12 +21,12 @@ export class SelectFactoryStageComponent implements OnChanges {
     @Output() stageSelected = new EventEmitter<number>();
 
     constructor(
-        private stageService: FactoryStageService,
-        private userService: UserService,
+        private readonly stageService: FactoryStageService,
+        private readonly userService: UserService,
     ) {}
 
     ngOnInit(): void {
-        this.handleInitialData(undefined);
+        this.handleInitialData();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -79,7 +79,7 @@ export class SelectFactoryStageComponent implements OnChanges {
                 console.log("Stages: ", stages);
                 this.stages = stages;
 
-                if (this.initialData && this.initialData.stage) {
+                if (this.initialData?.stage) {
                     this.selectStage(this.initialData.stage.id);
                 }
             });

@@ -3,8 +3,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LocationService } from '../../../services/location.service';
 import { UserService } from '../../../../../core/user/services/user.service';
-import { CreateLocationDTO, Location } from '../../../models/reusableTypes';
 import { User } from '../../../../../core/user/model/user';
+import { CreateLocationDTO, Location } from '../../../models/reusableTypes';
 
 @Component({
   selector: 'app-select-or-create-location',
@@ -28,9 +28,9 @@ export class SelectOrCreateLocationComponent implements OnInit, OnChanges {
     currentUser: User | undefined = undefined;
 
     constructor(
-        private fb: FormBuilder,
-        private locationService: LocationService,
-        private userService: UserService
+        private readonly fb: FormBuilder,
+        private readonly locationService: LocationService,
+        private readonly userService: UserService
     ) {}
 
     ngOnInit(): void {
@@ -68,12 +68,12 @@ export class SelectOrCreateLocationComponent implements OnInit, OnChanges {
             latitude: ['', [   
                 Validators.min(-90),
                 Validators.max(90),
-                Validators.pattern("^-?[0-9]+(\.[0-9]+)?$")
+                Validators.pattern("^-?[0-9]+(.[0-9]+)?$")
             ]],
             longitude: ['', [
                 Validators.min(-90),
                 Validators.max(90),
-                Validators.pattern("^-?[0-9]+(\.[0-9]+)?$")
+                Validators.pattern("^-?[0-9]+(.[0-9]+)?$")
             ]]
         });
         
@@ -130,7 +130,7 @@ export class SelectOrCreateLocationComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes['initialLocationData']) {
             const locationData = changes['initialLocationData'].currentValue;
-            if (locationData && locationData.id) {
+            if (locationData?.id) {
                 this.locationChoice = 'select';
                 this.locationChoiceChange.emit(this.locationChoice);
                 this.selectedLocationId = locationData.id; 

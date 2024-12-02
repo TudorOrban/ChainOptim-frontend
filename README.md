@@ -3,6 +3,7 @@
 ChainOptim is a comprehensive Enterprise Resource Planning (ERP) system designed to streamline and optimize the end-to-end processes of modern businesses. Designed to meet the diverse needs of companies across various sizes and sectors, ChainOptim delivers robust management tools and detailed insights into every aspect of the supply chain, enhancing operational efficiency and decision-making capabilities.
 
 This repository contains the source code for the [Angular Web Frontend](https://github.com/TudorOrban/ChainOptim-frontend). For the Spring Boot baackend, see [this](https://github.com/TudorOrban/ChainOptim-backend) repository, and for the JavaFX desktop frontend, visit [this](https://github.com/SorinPopteanu/ChainOptim-DesktopApp) link.
+
 ### Features
 
 There are six main domains in ChainOptim: **Organization**, **Goods**, **Supply**, **Production**, **Storage** and **Demand**.

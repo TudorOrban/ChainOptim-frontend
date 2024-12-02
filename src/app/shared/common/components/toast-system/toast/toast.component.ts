@@ -23,7 +23,7 @@ export class ToastComponent {
     }
 
     closeToast() {
-        this.close.emit(this.toastInfo?.id || -1);
+        this.close.emit(this.toastInfo?.id ?? -1);
     }
 
     updateOutcomeIcon() {

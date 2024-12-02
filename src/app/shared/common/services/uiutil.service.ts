@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { UnitOfMeasurement } from "../../../dashboard/goods/models/UnitOfMeasurement";
-import { format } from "path";
 import { UnitService } from "./unit.service";
 
 @Injectable({
@@ -9,7 +8,7 @@ import { UnitService } from "./unit.service";
 export class UIUtilService {
 
     constructor(
-        private unitService: UnitService
+        private readonly unitService: UnitService
     ) {}
 
     formatTimePeriod(days: number | undefined): string {

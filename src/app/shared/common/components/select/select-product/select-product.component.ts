@@ -3,8 +3,7 @@ import { ProductService } from '../../../../../dashboard/goods/services/product.
 import { UserService } from '../../../../../core/user/services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Product } from '../../../../../dashboard/goods/models/Product';
-import { ProductSearchDTO } from "../../../../../dashboard/goods/models/Product";
+import { Product, ProductSearchDTO } from '../../../../../dashboard/goods/models/Product';
 
 @Component({
     selector: 'app-select-product',
@@ -14,7 +13,7 @@ import { ProductSearchDTO } from "../../../../../dashboard/goods/models/Product"
     styleUrl: './select-product.component.css'
 })
 export class SelectProductComponent implements OnChanges {    
-    @Input() initialData?: { product?: Product, productId?: number } | undefined = undefined;
+    @Input() initialData: { product?: Product, productId?: number } | undefined = undefined;
 
     products: Product[] = [];
     selectedProductId: number | undefined = undefined;
@@ -22,8 +21,8 @@ export class SelectProductComponent implements OnChanges {
     @Output() productSelected = new EventEmitter<ProductSearchDTO>();
 
     constructor(
-        private productService: ProductService,
-        private userService: UserService,
+        private readonly productService: ProductService,
+        private readonly userService: UserService,
     ) {}
 
     ngOnInit(): void {
@@ -64,7 +63,7 @@ export class SelectProductComponent implements OnChanges {
 
                 this.products = products;
 
-                if (this.initialData && this.initialData.product) {
+                if (this.initialData?.product) {
                     this.selectProduct(this.initialData.product.id);
                 }
             });
