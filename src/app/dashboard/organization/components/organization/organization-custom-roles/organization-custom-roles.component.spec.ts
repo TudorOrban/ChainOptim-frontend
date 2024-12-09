@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OrganizationCustomRolesComponent } from './organization-custom-roles.component';
+import { OrganizationCustomRolesNewComponent } from './organization-custom-roles.component';
 
-describe('OrganizationCustomRolesComponent', () => {
-  let component: OrganizationCustomRolesComponent;
-  let fixture: ComponentFixture<OrganizationCustomRolesComponent>;
+describe('OrganizationCustomRolesNewComponent', () => {
+  let component: OrganizationCustomRolesNewComponent;
+  let fixture: ComponentFixture<OrganizationCustomRolesNewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OrganizationCustomRolesComponent]
+      imports: [OrganizationCustomRolesNewComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(OrganizationCustomRolesComponent);
+
+    fixture = TestBed.createComponent(OrganizationCustomRolesNewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

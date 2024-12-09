@@ -1,103 +1,208 @@
-<div class="flex px-6 py-6">
-    @if(customRolesNumber != 0) {
-        <p class="flex-1 font-bold text-lg">Custom Roles ({{ customRolesNumber }})</p>
-    } @else {
-        <p class="flex-1 font-bold text-lg">No custom roles found!</p>
-    }
-    <button (click)="expandDeleteButtons()" class="standard-delete-button">
-        <fa-icon [icon]="faTrash"/>
-    </button>
-    <a [routerLink]="createLink" class="standard-write-button flex items-center">
-        <fa-icon [icon]="faPlus" class="text-white mr-2"></fa-icon>
-        Add New Role
-    </a>
+<div class="py-4 space-y-4">
+    <div class="flex items-center justify-between w-full page-standard-horizontal-padding pt-2 pb-4">
+        <div class="flex items-end space-x-2">
+            <h2 class="page-title">
+                Custom Roles
+            </h2>
+            <span class="label-large">({{ customRoles?.length ?? 0 }})</span>
+        </div>
 
-</div>
-<hr>
-<div class="px-6 py-8">
-    <table class="w-full">
-        <thead>
-        <tr class="text-lg text-center p-2 underline decoration-lightgrey decoration-1 underline-offset-4 ">
-            <th class="w-[12.5%]">Role Name</th>
-            <th class="w-[12.5%]">Read</th>
-            <th class="w-[12.5%]">Create</th>
-            <th class="w-[12.5%]">Update</th>
-            <th class="w-[12.5%]">Delete</th>
-            <th class="w-[12.5%]"></th>
-            <th class="w-[12.5%]"></th>
-            <th class="w-[12.5%]"></th>
-        </tr>
-        </thead>
-        <tbody>
-            @for(role of customRoles; track role.id) {
-                <tr class="text-center text-base">
-                    <td class="py-4 font-bold">{{ role.name }}</td>
-                    <td><input type="checkbox" [checked]="areAllPermissionsGranted(role.permissions, 'canRead')" [disabled]="!isEditing[role.id]"/></td>
-                    <td><input type="checkbox" [checked]="areAllPermissionsGranted(role.permissions, 'canCreate')" [disabled]="!isEditing[role.id]"/></td>
-                    <td><input type="checkbox" [checked]="areAllPermissionsGranted(role.permissions, 'canUpdate')" [disabled]="!isEditing[role.id]"/></td>
-                    <td><input type="checkbox" [checked]="areAllPermissionsGranted(role.permissions, 'canDelete')" [disabled]="!isEditing[role.id]"/></td>
-                    <td>
-                        <button (click)="togglePermissions(role.id)">
-                            @if(!showPermissions[role.id]){
-                                <fa-icon [icon]="faAngleDown"/>
-                            } @else {
-                                <fa-icon [icon]="faAngleUp"/>
-                            }
-                        </button>
-                    </td>
-                    <td>
-                        @if(isEditing[role.id]) {
-                            <div class="flex justify-center space-x-2">
-                                <button (click)="cancelEdit(role.id)" class="standard-write-button">
-                                    <fa-icon [icon]="faXmark"/>
-                                </button>
-                                <button (click)="saveEdit(role.id)" class="standard-write-button">
-                                    <fa-icon [icon]="faSave"/>
-                                </button>
-                            </div>
-                        } @else {
-                            <div class="flex justify-center">
-                                <button (click)="editRole(role.id)" class="standard-write-button">
-                                    <fa-icon [icon]="faEdit"/>
-                                </button>
-                            </div>
-                        }
-                    </td>
-                    <td>
-                        @if(isDeleting) {
-                            <button (click)="openConfirmDialog(role.id)" class="standard-delete-button">
-                                <fa-icon [icon]="faTrash"/>
-                            </button>
-                        }
-                    </td>
-                </tr>
-
-                <!-- @if(showPermissions[role.id]) {
-                    @for(permission of getPermissionsArray(role.permissions); track permission.feature) {
-                        <tr class="text-center text-base">
-                            <td class="py-2 capitalize">{{ permission.feature }}</td>
-                            <td><input type="checkbox" [checked]="permission.permissions?.canRead" [disabled]="!isEditing[role.id]"/></td>
-                            <td><input type="checkbox" [checked]="permission.permissions?.canCreate" [disabled]="!isEditing[role.id]"/></td>
-                            <td><input type="checkbox" [checked]="permission.permissions?.canUpdate" [disabled]="!isEditing[role.id]"/></td>
-                            <td><input type="checkbox" [checked]="permission.permissions?.canDelete" [disabled]="!isEditing[role.id]"/></td>
-                        </tr>
-                    }
-                } -->
-            }
-        </tbody>
-    </table>
-</div>
-
-<!--Confirm dialog-->
-@if(isConfirmDialogOpen) {
-    <div class="overlay">
-        <div class="dialog-container">
-            <app-generic-confirm-dialog
-                [dialogInput]="deleteDialogInput"
-                (confirm)="handleDeleteCustomRole(selectedRoleId)"
-                (cancel)="handleCancel()"
+        <div class="flex items-center space-x-2">
+            <button
+                *ngIf="!temporaryRole && !editedRoleId"
+                (click)="toggleDeleteMode()"
+                class="standard-delete-button"
             >
-            </app-generic-confirm-dialog>
+                <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+            <button
+                *ngIf="!!temporaryRole"
+                (click)="cancelAddRole()"
+                class="standard-button"
+            >
+                <fa-icon [icon]="faXmark"></fa-icon>
+            </button>
+            <button
+                *ngIf="!!temporaryRole"
+                (click)="saveTemporaryRole()"
+                class="standard-write-button"
+            >
+                <fa-icon [icon]="faSave"></fa-icon>
+            </button>
+            <button
+                *ngIf="!temporaryRole"
+                (click)="addTemporaryRole()"
+                class="standard-write-button space-x-2"
+            >
+                <fa-icon [icon]="faPlus"></fa-icon>
+                <span>Add Role</span>
+            </button>
         </div>
     </div>
-}
+
+    <mat-accordion multi="true" class="overflow-y-auto pt-6 whitespace-nowrap">
+        <div class="grid grid-cols-6 gap-4 px-8 py-4 font-semibold text-xl bg-white" style="grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;">
+            <div>Role Name</div>
+            <div>Read</div>
+            <div>Create</div>
+            <div>Update</div>
+            <div>Delete</div>
+            <div></div>
+        </div>
+    
+        <!-- Temporary Role -->
+        <mat-expansion-panel *ngIf="!!temporaryRole" class="border-t border-gray-300">
+            <mat-expansion-panel-header class="border-0 shadow-none">
+                <div class="py-4">
+                    <input 
+                        type="text"
+                        [(ngModel)]="temporaryRole.name"
+                        class="form-input w-64 text-xl "
+                    />
+                </div>
+            </mat-expansion-panel-header>
+
+            <div *ngFor="let group of this.calculatorService.getObjectValues(this.calculatorService.getFeaturesByGroup())" class="py-2 border-t border-gray-300">
+                <div *ngFor="let featureKey of this.calculatorService.getFeaturesByGroup()[group]" class="py-2 pl-8">
+                    <div class="grid grid-cols-6 items-center" style="grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;">
+                        <div class="col-span-1">
+                            <h2 class="text-lg font-semibold whitespace-nowrap">{{ this.uiUtilService.formatEnum(featureKey) }}</h2>
+                        </div>
+                        <div>
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="temporaryRole.permissions.featurePermissions[featureKey].canRead"
+                                [disabled]="!temporaryRole"
+                                name="{{ featureKey + '_canRead' }}" 
+                            />
+                        </div>
+                        <div>
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="temporaryRole.permissions.featurePermissions[featureKey].canCreate"
+                                [disabled]="!temporaryRole"
+                                name="{{ featureKey + '_canCreate' }}" 
+                            />
+                        </div>
+                        <div>
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="temporaryRole.permissions.featurePermissions[featureKey].canUpdate"
+                                [disabled]="!temporaryRole"
+                                name="{{ featureKey + '_canUpdate' }}" 
+                            />
+                        </div>
+                        <div>
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="temporaryRole.permissions.featurePermissions[featureKey].canDelete"
+                                [disabled]="!temporaryRole"
+                                name="{{ featureKey + '_canDelete' }}" 
+                            />
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+
+        <!-- Existing Roles -->
+        <mat-expansion-panel *ngFor="let customRole of customRoles" class="border-t border-gray-300">
+            <mat-expansion-panel-header class="border-0 shadow-none">
+                <div class="flex items-center justify-between w-full">
+                    <div class="text-xl font-semibold py-4">
+                        {{ customRole?.name }}
+                    </div>
+
+                    <!-- CRUD ops Buttons -->
+                    <div class="flex items-center mr-4 space-x-2">
+                        <button
+                            *ngIf="!editedRoleId && !temporaryRole && isDeleteModeOn"
+                            (click)="openDeleteConfirmDialog($event, customRole.id)"
+                            class="standard-delete-button"
+                        >
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                        </button>
+
+                        <button
+                            *ngIf="customRole.id === editedRoleId"
+                            (click)="cancelEditRole($event)"
+                            class="standard-button"
+                        >
+                            <fa-icon [icon]="faXmark"></fa-icon>
+                        </button>
+                        <button 
+                            *ngIf="customRole.id === editedRoleId"
+                            (click)="saveEditedRole($event)"
+                            class="standard-write-button"
+                        >
+                            <fa-icon [icon]="faSave"></fa-icon>
+                        </button>
+                        <button 
+                            *ngIf="!editedRoleId"
+                            (click)="editRole($event, customRole.id)"
+                            class="standard-write-button"
+                        >
+                            <fa-icon [icon]="faEdit"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </mat-expansion-panel-header>
+
+            <div *ngFor="let group of this.calculatorService.getObjectValues(this.calculatorService.getFeaturesByGroup())" class="py-2 border-t border-gray-300">
+                <div *ngFor="let featureKey of this.calculatorService.getFeaturesByGroup()[group]" class="py-2 pl-8">
+                    <div class="grid grid-cols-6 items-center" style="grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;">
+                        <div class="col-span-1">
+                            <h2 class="text-lg font-semibold whitespace-nowrap">{{ this.uiUtilService.formatEnum(featureKey) }}</h2>
+                        </div>
+                        <div>
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canRead"
+                                [disabled]="customRole.id !== editedRoleId"
+                                name="{{ featureKey + '_canRead' }}" 
+                            />
+                        </div>
+                        <div>
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canCreate"
+                                [disabled]="customRole.id !== editedRoleId"
+                                name="{{ featureKey + '_canCreate' }}" 
+                            />
+                        </div>
+                        <div>
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canUpdate"
+                                [disabled]="customRole.id !== editedRoleId"
+                                name="{{ featureKey + '_canUpdate' }}" 
+                            />
+                        </div>
+                        <div>
+                            <input 
+                                type="checkbox"
+                                [(ngModel)]="customRole.permissions.featurePermissions[featureKey].canDelete"
+                                [disabled]="customRole.id !== editedRoleId"
+                                name="{{ featureKey + '_canDelete' }}" 
+                            />
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    
+</div>
+
+<div class="overlay" *ngIf="isConfirmDialogOpen">
+    <div class="dialog-container">
+        <app-generic-confirm-dialog 
+            [dialogInput]="deleteDialogInput"
+            (confirm)="handleDeleteRole()"
+            (cancel)="handleCancelDelete()"
+        >
+        </app-generic-confirm-dialog>
+    </div>
+</div>

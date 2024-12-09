@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { Organization } from '../../../models/organization';
 import {
     FallbackManagerService,
@@ -7,10 +8,9 @@ import {
 import {CustomRole, Permissions, FeaturePermissions} from "../../../models/custom-role";
 import {CustomRoleService} from "../../../services/custom-role.service";
 import {faAngleDown, faAngleUp, faEdit, faPlus, faSave, faTrash, faXmark} from "@fortawesome/free-solid-svg-icons";
-import {RouterLink} from "@angular/router";
-import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {FormsModule} from "@angular/forms";
-import {NgClass} from "@angular/common";
+import {CommonModule} from "@angular/common";
 import {
     GenericConfirmDialogComponent
 } from "../../../../../shared/common/components/generic-confirm-dialog/generic-confirm-dialog.component";
@@ -18,44 +18,62 @@ import {ConfirmDialogInput} from "../../../../../shared/common/models/confirmDia
 import {OperationOutcome} from "../../../../../shared/common/components/toast-system/toastTypes";
 import {ToastService} from "../../../../../shared/common/components/toast-system/toast.service";
 import {CreateCustomRoleDTO, UpdateCustomRoleDTO} from "../../../models/dto";
+import { PaymentCalculatorService } from '../../../services/paymentcalculator.service';
+import { UIUtilService } from '../../../../../shared/common/services/uiutil.service';
+import { Feature } from '../../../../../shared/enums/commonEnums';
 
 @Component({
   selector: 'app-organization-custom-roles',
   standalone: true,
-    imports: [
-        RouterLink,
-        FaIconComponent,
-        FormsModule,
-        NgClass,
-        GenericConfirmDialogComponent
-    ],
+  imports: [
+      MatExpansionModule,
+      FormsModule,
+      CommonModule,
+      FontAwesomeModule,
+      GenericConfirmDialogComponent
+  ],
   templateUrl: './organization-custom-roles.component.html',
   styleUrl: './organization-custom-roles.component.css'
 })
-export class OrganizationCustomRolesComponent implements OnInit {
-    @Input({required: true}) organization!: Organization;
-    @Input() updateCustomRoleDTO?: UpdateCustomRoleDTO;
-    @Input() createCustomRoleDTO?: CreateCustomRoleDTO;
-    createLink: string = '';
-    fallbackManagerState: FallbackManagerState = {};
-    customRolesNumber: number = 0;
-    customRoles: CustomRole[] = [];
-    showPermissions: { [key: number]: boolean } = {};
-    isEditing: { [key: number]: boolean } = {};
-    isDeleting: boolean = false;
-    isConfirmDialogOpen: boolean = false;
-    selectedRoleId!: number;
+export class OrganizationCustomRolesComponent {
+    @Input() organization: Organization | null = null;
 
+    customRoles: CustomRole[] = [];
+
+    temporaryRole: CustomRole | undefined = undefined;
+    initialPermissions: Permissions | undefined = undefined;
+    editedRoleId: number | undefined = undefined;
+    isDeleteModeOn: boolean = false;
+    toBeDeletedRoleId: number | undefined = undefined;
+    isConfirmDialogOpen: boolean = false;
     deleteDialogInput: ConfirmDialogInput = {
-        dialogTitle: 'Delete Custom Role',
-        dialogMessage: 'Are you sure you want to delete this custom role?',
+        dialogTitle: 'Delete Role',
+        dialogMessage: 'Are you sure you want to delete this role? All members having it will lose their privileges.',
     };
+
+    fallbackManagerState: FallbackManagerState = {};
+
+    calculatorService: PaymentCalculatorService;
+    uiUtilService: UIUtilService;
+
+    faEdit = faEdit;
+    faPlus = faPlus;
+    faTrash = faTrash;
+    faXmark = faXmark;
+    faAngleDown = faAngleDown;
+    faAngleUp = faAngleUp;
+    faSave = faSave;
 
     constructor(
         private customRoleService: CustomRoleService,
         private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService
-    ) {}
+        private toastService: ToastService,
+        calculatorService: PaymentCalculatorService,
+        uiUtilService: UIUtilService
+    ) {
+        this.calculatorService = calculatorService;
+        this.uiUtilService = uiUtilService;
+    }
 
     ngOnInit() {
         this.fetchCustomRoles();
@@ -72,105 +90,207 @@ export class OrganizationCustomRolesComponent implements OnInit {
             this.fallbackManagerService.updateError('Organization not found');
             return;
         }
+
         this.customRoleService.getCustomRolesByOrganizationId(this.organization.id).subscribe({
             next: (customRoles: CustomRole[]) : void => {
-                this.customRoles = customRoles;
-                this.customRolesNumber = customRoles.length;
+                this.customRoles = customRoles.map(role => ({
+                    ...role,
+                    permissions: {
+                        ...role.permissions,
+                        featurePermissions: this.initializeNullPermissions(role.permissions.featurePermissions)
+                    }
+                }));
                 this.fallbackManagerService.updateLoading(false);
+                console.log('Custom roles:', customRoles);
             },
             error: () : void => {
                 this.fallbackManagerService.updateError('Error fetching custom roles');
             }
         })
     }
-    
-    // getPermissionsArray(permissions: Permissions): { feature: string, permissions: FeaturePermissions }[] {
-    //     return Object.keys(permissions)
-    //         .filter(key => key !== 'organization')
-    //         .map(key => ({
-    //             feature: key,
-    //             permissions: {
-    //                 ...permissions[key as keyof Permissions],
-    //                 featurePermissions: {}
-    //             }
-    //         }));
-    // }
 
-    areAllPermissionsGranted(permissions: Permissions, action: keyof FeaturePermissions): boolean {
-        for (const key in permissions) {
-            if (permissions.hasOwnProperty(key) && key !== 'organization') {
-                const featurePermissions = permissions[key as keyof Permissions] as FeaturePermissions;
-                if (!featurePermissions || !featurePermissions[action]) {
-                    return false;
-                }
+    private initializeNullPermissions(featurePermissions?: Record<string, FeaturePermissions>): Record<string, FeaturePermissions> {
+        const initializedPermissions: Record<string, FeaturePermissions> = {};
+        
+        if (featurePermissions) {
+            for (const key in featurePermissions) {
+                initializedPermissions[key] = featurePermissions[key] || { canRead: false, canCreate: false, canUpdate: false, canDelete: false };
+            }
+        } else {
+            for (const key in Feature) {
+                initializedPermissions[key] = { canRead: false, canCreate: false, canUpdate: false, canDelete: false };
             }
         }
-        return true;
+        
+        return initializedPermissions;
+    }
+    
+    // Handlers
+    // - Add
+    addTemporaryRole(): void {
+        console.log('Adding temporary role');
+        this.temporaryRole = {
+            id: 0,
+            name: 'New Role',
+            permissions: {
+                featurePermissions: this.initializeNullPermissions()
+            },
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            organizationId: this.organization?.id ?? 0
+        };
     }
 
-    togglePermissions(roleId: number): void {
-        this.showPermissions[roleId] = !this.showPermissions[roleId];
+    saveTemporaryRole(): void {
+        if (!this.temporaryRole) return;
+
+        const roleDTO: CreateCustomRoleDTO = {
+            name: this.temporaryRole.name,
+            permissions: this.temporaryRole.permissions,
+            organizationId: this.temporaryRole.organizationId
+        };
+
+        this.customRoleService.createCustomRole(roleDTO).subscribe({
+            next: (createdRole: CustomRole) => {
+                console.log('Role created:', createdRole);
+                this.customRoles.push(createdRole);
+                this.temporaryRole = undefined;
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Role created',
+                    message: 'Role created successfully',
+                    outcome: OperationOutcome.SUCCESS
+                });
+            },
+            error: (error) => {
+                console.error('Error creating role:', error);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Error creating role',
+                    message: 'Error creating role',
+                    outcome: OperationOutcome.ERROR
+                });
+            }
+        });
     }
 
-    // Delete
-    expandDeleteButtons() {
-        this.isDeleting = !this.isDeleting;
+    cancelAddRole(): void {
+        this.temporaryRole = undefined;
     }
 
-    openConfirmDialog(roleId: number) {
+    // - Edit
+    editRole(event: MouseEvent, roleId: number): void {
+        event.stopPropagation();
+        
+        if (this.editedRoleId === roleId) {
+            return;
+        }
+
+        const role = this.customRoles.find(role => role.id === roleId);
+        if (role) {
+            // Creating a deep copy of permissions
+            this.initialPermissions = JSON.parse(JSON.stringify(role.permissions));
+            console.log("Initial permissions set:", this.initialPermissions);
+        }
+        this.editedRoleId = roleId;
+    }
+
+    saveEditedRole(event: MouseEvent): void {
+        event.stopPropagation();
+        console.log('Saving role:', this.editedRoleId);
+        const editedRole = this.customRoles.find(role => role.id === this.editedRoleId);
+        if (!editedRole) {
+            return;
+        }
+
+        const roleDTO: UpdateCustomRoleDTO = {
+            id: editedRole.id,
+            name: editedRole.name,
+            permissions: editedRole.permissions ?? {}
+        };
+
+        this.customRoleService.updateCustomRole(roleDTO).subscribe({
+            next: (updatedRole: CustomRole) => {
+                console.log('Role updated:', updatedRole);
+                this.editedRoleId = undefined;
+                this.initialPermissions = undefined;
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Role updated',
+                    message: 'Role updated successfully',
+                    outcome: OperationOutcome.SUCCESS
+                });
+            },
+            error: (error) => {
+                console.error('Error updating role:', error);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Error updating role',
+                    message: 'Error updating role',
+                    outcome: OperationOutcome.ERROR
+                });
+            }
+        });
+    }
+
+    cancelEditRole(event: MouseEvent): void {
+        event.stopPropagation();
+        this.customRoles = this.customRoles.map(role => {
+            if (role.id === this.editedRoleId) {
+                return {
+                    ...role,
+                    permissions: this.initialPermissions ?? role.permissions
+                }
+            }
+            return role;
+        });
+        this.editedRoleId = undefined;
+    }
+
+    // - Delete
+    toggleDeleteMode(): void {
+        this.isDeleteModeOn = !this.isDeleteModeOn;
+    }
+
+    openDeleteConfirmDialog(event: MouseEvent, roleId: number): void {
+        event.stopPropagation();
+        this.toBeDeletedRoleId = roleId;
         this.isConfirmDialogOpen = true;
-        this.selectedRoleId = roleId;
     }
 
-    handleDeleteCustomRole(roleId: number) {
-        this.customRoleService
-            .deleteCustomRole(roleId)
-            .subscribe({
-                next: (success) => {
-                    this.toastService.addToast({
-                        id: 123,
-                        title: 'Success',
-                        message: 'Custom role deleted successfully.',
-                        outcome: OperationOutcome.SUCCESS
-                    });
-                    this.isConfirmDialogOpen = false;
-                    // this.fetchCustomRoles();
-                },
-                error: (error: Error) => {
-                    this.toastService.addToast({
-                        id: 123,
-                        title: 'Error',
-                        message: 'Custom role deletion failed.',
-                        outcome: OperationOutcome.ERROR
-                    });
-                    console.error('Error deleting custom role:', error);
-                },
-            });
-        this.handleCancel();
+    handleDeleteRole(): void {
+        console.log('Deleting role:', this.toBeDeletedRoleId);
+        if (!this.toBeDeletedRoleId) {
+            console.error('No role ID to delete');
+            return;
+        }
+
+        this.customRoleService.deleteCustomRole(this.toBeDeletedRoleId).subscribe({
+            next: () => {
+                this.customRoles = this.customRoles.filter(role => role.id !== this.toBeDeletedRoleId);
+                this.toBeDeletedRoleId = undefined;
+                this.isConfirmDialogOpen = false;
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Role deleted',
+                    message: 'Role deleted successfully',
+                    outcome: OperationOutcome.SUCCESS
+                });
+            },
+            error: (error) => {
+                console.error('Error deleting role:', error);
+                this.toastService.addToast({
+                    id: 0,
+                    title: 'Error deleting role',
+                    message: 'Error deleting role',
+                    outcome: OperationOutcome.ERROR
+                });
+            }
+        });
     }
 
-    handleCancel() {
+    handleCancelDelete(): void {
+        this.toBeDeletedRoleId = undefined;
         this.isConfirmDialogOpen = false;
     }
-
-    editRole(roleId: number) {
-        this.isEditing[roleId] = true;
-    }
-
-    cancelEdit(roleId: number) {
-        this.isEditing[roleId] = false;
-    }
-
-    saveEdit(roleId: number) {
-
-        this.isEditing[roleId] = false
-    }
-
-    protected readonly faPlus = faPlus;
-    protected readonly faEdit = faEdit;
-    protected readonly faAngleDown = faAngleDown;
-    protected readonly faAngleUp = faAngleUp;
-    protected readonly faXmark = faXmark;
-    protected readonly faSave = faSave;
-    protected readonly faTrash = faTrash;
 }
