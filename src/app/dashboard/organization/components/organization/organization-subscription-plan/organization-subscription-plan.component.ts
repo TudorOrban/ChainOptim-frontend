@@ -43,12 +43,12 @@ export class OrganizationSubscriptionPlanComponent implements OnInit {
     isConfirmDialogOpen = false;
 
     constructor(
-        private userService: UserService,
-        private planService: SubscriptionPlanService,
-        private toastService: ToastService,
-        private organizationService: OrganizationService,
+        private readonly userService: UserService,
+        private readonly planService: SubscriptionPlanService,
+        private readonly toastService: ToastService,
+        private readonly organizationService: OrganizationService,
         uiUtilService: UIUtilService,
-        private router: Router
+        private readonly router: Router
     ) {
         this.uiUtilService = uiUtilService;
     }
@@ -107,13 +107,10 @@ export class OrganizationSubscriptionPlanComponent implements OnInit {
     }
 
     handleCreatePlan(): void {
-        console.log('Create plan');
-        
         this.router.navigate(['/dashboard/organization/subscribe']);
     }
 
     handleEditPlan(): void {
-        console.log('Edit plan');
         this.isEditingPlan = true;
         this.isExpanded = true;
     }
@@ -123,7 +120,6 @@ export class OrganizationSubscriptionPlanComponent implements OnInit {
     }
 
     handleCancelEditPlan(): void {
-        console.log('Cancel edit plan');
         this.isEditingPlan = false;
     }
 }

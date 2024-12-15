@@ -65,12 +65,12 @@ export class OrganizationComponent implements OnInit {
     faBuilding = faBuilding;
     
     constructor(
-        private userService: UserService,
-        private organizationService: OrganizationService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
+        private readonly userService: UserService,
+        private readonly organizationService: OrganizationService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
         uiUtilService: UIUtilService,
-        private router: Router
+        private readonly router: Router
     ) {
         this.uiUtilService = uiUtilService;
     }

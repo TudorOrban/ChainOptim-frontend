@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Organization } from '../../../models/organization';
 import { User } from "../../../../../core/user/model/user";
 import { OrganizationService } from "../../../services/organization.service";
-import { DatePipe, NgForOf } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { CustomRole } from "../../../models/custom-role";
 import { CustomRoleService } from "../../../services/custom-role.service";
 import { FallbackManagerService, FallbackManagerState } from "../../../../../shared/fallback/services/fallback-manager/fallback-manager.service";
@@ -14,7 +14,6 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
   selector: 'app-organization-overview',
   standalone: true,
     imports: [
-        NgForOf,
         DatePipe,
         RouterLink,
         FaIconComponent
@@ -30,9 +29,9 @@ export class OrganizationOverviewComponent implements OnInit {
     membersNumber: number = 0;
 
     constructor(
-        private organizationService: OrganizationService,
-        private customRoleService: CustomRoleService,
-        private fallbackManagerService: FallbackManagerService
+        private readonly organizationService: OrganizationService,
+        private readonly customRoleService: CustomRoleService,
+        private readonly fallbackManagerService: FallbackManagerService
     ) {}
 
     ngOnInit() {
@@ -56,22 +55,10 @@ export class OrganizationOverviewComponent implements OnInit {
                     return;
                 }
                 this.users = organization.users;
-                this.customRoleService.getCustomRolesByOrganizationId(this.organization.id).subscribe({
-                    next: (customRoles: CustomRole[]) : void => {
-                        this.users.forEach(user  => {
-                            const userRole: CustomRole | undefined = customRoles.find(role => role.id === user.customRole?.id);
-                            if (userRole) {
-                                user.customRole = userRole;
-                            }
-                        });
-                        this.fallbackManagerService.updateLoading(false);
-                    },
-                    error: () => {
-                        this.fallbackManagerService.updateError('Error fetching custom roles');
-                        this.fallbackManagerService.updateLoading(false);
-                    }
-                });
                 this.membersNumber = this.users.length;
+
+                this.fetchCustomRoles();
+
                 console.log('MembersNumber', this.membersNumber);
             },
             error: () => {
@@ -82,4 +69,22 @@ export class OrganizationOverviewComponent implements OnInit {
     }
 
     faPlus = faPlus;
+
+    private fetchCustomRoles(): void {
+        this.customRoleService.getCustomRolesByOrganizationId(this.organization.id).subscribe({
+            next: (customRoles: CustomRole[]) : void => {
+                this.users.forEach(user  => {
+                    const userRole: CustomRole | undefined = customRoles.find(role => role.id === user.customRole?.id);
+                    if (userRole) {
+                        user.customRole = userRole;
+                    }
+                });
+                this.fallbackManagerService.updateLoading(false);
+            },
+            error: () => {
+                this.fallbackManagerService.updateError('Error fetching custom roles');
+                this.fallbackManagerService.updateLoading(false);
+            }
+        });
+    }
 }

@@ -65,9 +65,9 @@ export class OrganizationCustomRolesComponent {
     faSave = faSave;
 
     constructor(
-        private customRoleService: CustomRoleService,
-        private fallbackManagerService: FallbackManagerService,
-        private toastService: ToastService,
+        private readonly customRoleService: CustomRoleService,
+        private readonly fallbackManagerService: FallbackManagerService,
+        private readonly toastService: ToastService,
         calculatorService: PaymentCalculatorService,
         uiUtilService: UIUtilService
     ) {

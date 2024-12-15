@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CustomSubscriptionPlan } from '../../../../models/SubscriptionPlan';
 import { StripeService } from '../../../../services/stripe.service';
 import { UserService } from '../../../../../../core/user/services/user.service';
 import { User } from '../../../../../../core/user/model/user';
-import { CreateSubscriptionPlanDTO } from "../../../../models/SubscriptionPlan";
+import { CustomSubscriptionPlan, CreateSubscriptionPlanDTO } from "../../../../models/SubscriptionPlan";
 import { SubscriptionPlanService } from '../../../../services/subscriptionplan.service';
 
 @Component({
@@ -19,9 +18,9 @@ export class PaymentComponent implements OnInit{
     currentUser: User | undefined = undefined;
 
     constructor(
-        private userService: UserService,
-        private planService: SubscriptionPlanService,
-        private stripeService: StripeService
+        private readonly userService: UserService,
+        private readonly planService: SubscriptionPlanService,
+        private readonly stripeService: StripeService
     ) {}
 
     ngOnInit(): void {

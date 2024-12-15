@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PaymentComponent } from '../payment/payment.component';
-import { CustomSubscriptionPlan, PlanTier, BaseSubscriptionPlan, SubscriptionPlan } from '../../../../models/SubscriptionPlan';
+import { CustomSubscriptionPlan, PlanTier, BaseSubscriptionPlan } from '../../../../models/SubscriptionPlan';
 import { CurrentPlanService } from '../../../../services/currentplan.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -42,12 +42,12 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     uiUtilService: UIUtilService;
 
     constructor(
-        private userService: UserService,
-        private currentPlanService: CurrentPlanService,
-        private paymentCalculatorService: PaymentCalculatorService,
-        private utilService: UIUtilService,
-        private toastService: ToastService,
-        private router: Router
+        private readonly userService: UserService,
+        private readonly currentPlanService: CurrentPlanService,
+        private readonly paymentCalculatorService: PaymentCalculatorService,
+        private readonly utilService: UIUtilService,
+        private readonly toastService: ToastService,
+        private readonly router: Router
     ) {
         this.calculatorService = paymentCalculatorService;
         this.uiUtilService = utilService;
@@ -88,7 +88,6 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
                 outcome: OperationOutcome.ERROR
             });
             this.router.navigate(['/dashboard/organization']);
-            return;
         }
     }
     

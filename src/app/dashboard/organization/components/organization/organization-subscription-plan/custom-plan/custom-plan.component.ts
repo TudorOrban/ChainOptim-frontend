@@ -47,11 +47,11 @@ export class CustomPlanComponent implements OnInit, OnChanges {
 
     constructor(
         planService: BaseSubscriptionPlanService,
-        private currentPlanService: CurrentPlanService,
-        private paymentCalculatorService: PaymentCalculatorService,
-        private utilService: UIUtilService,
-        private userService: UserService,
-        private router: Router
+        private readonly currentPlanService: CurrentPlanService,
+        private readonly paymentCalculatorService: PaymentCalculatorService,
+        private readonly utilService: UIUtilService,
+        private readonly userService: UserService,
+        private readonly router: Router
     ) {
         this.planService = planService;
         this.calculatorService = paymentCalculatorService;
