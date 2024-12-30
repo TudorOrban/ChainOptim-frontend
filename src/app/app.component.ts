@@ -72,22 +72,26 @@ export class AppComponent implements OnInit {
 
     // Fetch current user and organization data on init
     ngOnInit() {
-        if (isPlatformBrowser(this.platformId)) {
-            const username = this.authService.getUsernameFromToken();
-            if (username) {
-                this.userService.fetchAndSetCurrentUser(username);
-                this.userService.getCurrentUser().subscribe((user: User | null) => {
-                    if (!user) {
-                        console.log('Error fetching current user');
-                        return;
-                    }
-                    
-                    this.messages$ = this.notificationLiveService.connect(`ws://localhost:8080/ws?userId=${user.id}`);
-                    
-                    this.userSettingsService.fetchAndSetUserSettings(user.id);
-                });
-            }
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
         }
+
+        const username = this.authService.getUsernameFromToken();
+        if (!username) {
+            return;
+        }
+
+        this.userService.fetchAndSetCurrentUser(username);
+        this.userService.getCurrentUser().subscribe((user: User | null) => {
+            if (!user) {
+                console.log('Error fetching current user');
+                return;
+            }
+            
+            this.messages$ = this.notificationLiveService.connect(`ws://localhost:8080/ws?userId=${user.id}`);
+            
+            this.userSettingsService.fetchAndSetUserSettings(user.id);
+        });
     }
 
     logout() {
