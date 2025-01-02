@@ -87,9 +87,9 @@ export class AppComponent implements OnInit {
                 console.log('Error fetching current user');
                 return;
             }
-            
+
             this.messages$ = this.notificationLiveService.connect(`ws://localhost:8080/ws?userId=${user.id}`);
-            
+
             this.userSettingsService.fetchAndSetUserSettings(user.id);
         });
     }

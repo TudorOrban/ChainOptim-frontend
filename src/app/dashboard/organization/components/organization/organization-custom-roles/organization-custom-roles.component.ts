@@ -40,7 +40,7 @@ export class OrganizationCustomRolesComponent {
 
     customRoles: CustomRole[] = [];
 
-    temporaryRole: CustomRole | undefined = undefined;
+    temporaryRole?: CustomRole;
     initialPermissions: Permissions | undefined = undefined;
     editedRoleId: number | undefined = undefined;
     isDeleteModeOn: boolean = false;
@@ -111,7 +111,7 @@ export class OrganizationCustomRolesComponent {
 
     private initializeNullPermissions(featurePermissions?: Record<string, FeaturePermissions>): Record<string, FeaturePermissions> {
         const initializedPermissions: Record<string, FeaturePermissions> = {};
-        
+
         if (featurePermissions) {
             for (const key in featurePermissions) {
                 initializedPermissions[key] = featurePermissions[key] || { canRead: false, canCreate: false, canUpdate: false, canDelete: false };
@@ -121,10 +121,10 @@ export class OrganizationCustomRolesComponent {
                 initializedPermissions[key] = { canRead: false, canCreate: false, canUpdate: false, canDelete: false };
             }
         }
-        
+
         return initializedPermissions;
     }
-    
+
     // Handlers
     // - Add
     addTemporaryRole(): void {
@@ -181,7 +181,7 @@ export class OrganizationCustomRolesComponent {
     // - Edit
     editRole(event: MouseEvent, roleId: number): void {
         event.stopPropagation();
-        
+
         if (this.editedRoleId === roleId) {
             return;
         }
